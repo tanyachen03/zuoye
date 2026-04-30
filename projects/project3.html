@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目3：用户复购率分析 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .project-page { padding-top: 70px; min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .project-header { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); color: white; padding: 3rem 2rem; position: relative; overflow: hidden; }
+        .project-header::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
+        .project-header-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .project-back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.9); text-decoration: none; margin-bottom: 1.5rem; transition: all 0.2s ease; }
+        .project-back-link:hover { color: white; transform: translateX(-5px); }
+        .project-title-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .project-title-row h1 { font-size: 2.5rem; font-weight: 800; margin: 0; }
+        .project-meta-info { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .project-meta-item { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
+        .project-container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .project-main { display: flex; flex-direction: column; gap: 2rem; }
+        .project-section { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        .section-header i { font-size: 1.5rem; color: #1e40af; }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .section-content { color: #475569; line-height: 1.8; }
+        .task-description { background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.05)); border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid #1e40af; }
+        .task-description h3 { font-size: 1.125rem; font-weight: 600; color: #1e293b; margin-bottom: 1rem; }
+        .task-list { list-style: none; }
+        .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
+        .task-list li:last-child { border-bottom: none; }
+        .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
+        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table tr:hover { background-color: #f8fafc; }
+        .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
+        .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        .code-controls { display: flex; gap: 0.75rem; }
+        .run-btn, .reset-btn, .answer-btn { padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.375rem; }
+        .run-btn { background: #10b981; color: white; }
+        .run-btn:hover { background: #059669; }
+        .reset-btn { background: rgba(255, 255, 255, 0.2); color: white; }
+        .reset-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .answer-btn { background: #f59e0b; color: white; }
+        .answer-btn:hover { background: #d97706; }
+        .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
+        .code-editor-panel { background: #1e293b; }
+        .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
+        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
+        .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
+        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output .placeholder { color: #64748b; font-style: italic; }
+        .code-output .error { color: #f87171; }
+        .code-output .success { color: #4ade80; }
+        .answer-section { margin-top: 1.5rem; display: none; }
+        .answer-section.show { display: block; }
+        .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
+        .project-sidebar { position: sticky; top: 90px; height: fit-content; }
+        .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
+        .tips-card h3 { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tips-card h3 i { color: #f59e0b; }
+        .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
+        .tip-item:last-child { border-bottom: none; }
+        .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
+        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
+        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'"><i class="fas fa-chart-bar"></i><span>数析学院</span></div>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="#courses" class="nav-link">课程中心</a>
+                <a href="../projects.html" class="nav-link active">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar"><span id="user-name">用户名</span></div>
+                <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="project-page">
+        <div class="project-header">
+            <div class="project-header-content">
+                <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
+                <div class="project-title-row">
+                    <h1>项目3：用户复购率分析</h1>
+                    <span class="difficulty-badge intermediate">中级</span>
+                </div>
+                <div class="project-meta-info">
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：35分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：200条订单</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-container">
+            <div class="project-main">
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
+                    <div class="section-content">
+                        <p>复购率是电商平台的核心指标之一，高复购率意味着用户粘性强、客户价值高。本项目需要分析用户的购买行为，计算复购率，并找出高价值复购用户群体。</p>
+                        <ul style="margin-top: 1rem;">
+                            <li>统计用户的购买次数分布</li>
+                            <li>计算整体复购率</li>
+                            <li>识别复购用户和流失用户</li>
+                            <li>分析复购用户的特征</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-database"></i><h2>用户购买记录</h2></div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="sales-data-table">
+                            <thead>
+                                <tr><th>订单ID</th><th>用户ID</th><th>用户名</th><th>购买日期</th><th>商品类别</th><th>订单金额</th></tr>
+                            </thead>
+                            <tbody id="data-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="task-description">
+                        <h3>请完成以下分析：</h3>
+                        <ul class="task-list">
+                            <li>统计每个用户的购买次数</li>
+                            <li>计算用户的购买次数分布（1次/2次/3次+）</li>
+                            <li>计算整体复购率（购买2次及以上的用户占比）</li>
+                            <li>找出购买次数最多的Top10用户</li>
+                            <li>分析复购用户的总消费金额</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
+                    <div class="code-playground">
+                        <div class="code-playground-header">
+                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-controls">
+                                <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
+                                <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
+                                <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            </div>
+                        </div>
+                        <div class="code-editor-wrapper">
+                            <div class="code-editor-panel">
+                                <div class="code-editor-label">编辑器</div>
+                                <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
+
+# 用户购买记录
+data = [
+    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
+    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
+    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
+    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
+    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
+]
+
+df = pd.DataFrame(data)
+print("=" * 50)
+print("原始购买记录：")
+print(df.to_string(index=False))
+
+# TODO: 在下方编写分析代码
+# 1. 统计每个用户的购买次数
+# 2. 计算购买次数分布
+# 3. 计算复购率
+# 4. 找出Top用户
+
+print("\n" + "=" * 50)
+print("用户购买次数统计：")
+# 你的代码...
+
+print("\n" + "=" * 50)
+print("复购率分析：")
+# 你的代码...</textarea>
+                            </div>
+                            <div class="code-output-panel">
+                                <div class="code-output-label">运行结果</div>
+                                <div class="code-output" id="code-output"><div class="placeholder">点击"运行代码"按钮执行代码</div></div>
+                            </div>
+                        </div>
+                        <div class="answer-section" id="answer-section">
+                            <div class="answer-content">
+                                <h4>参考答案代码：</h4>
+                                <pre>import pandas as pd
+
+# 用户购买记录
+data = [
+    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
+    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
+    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
+    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
+    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
+    {"order_id": "O006", "user_id": "U002", "user_name": "李四", "date": "2024-03-15", "category": "服装", "amount": 299},
+    {"order_id": "O007", "user_id": "U004", "user_name": "赵六", "date": "2024-03-20", "category": "电子产品", "amount": 1999},
+]
+
+df = pd.DataFrame(data)
+
+print("=" * 60)
+print("【第1步】统计每个用户的购买次数")
+user_counts = df.groupby('user_id').size().reset_index(name='purchase_count')
+user_counts = user_counts.merge(df[['user_id', 'user_name']].drop_duplicates(), on='user_id')
+print(user_counts.to_string(index=False))
+
+print("\n" + "=" * 60)
+print("【第2步】购买次数分布")
+purchase_dist = user_counts['purchase_count'].value_counts().sort_index()
+for count, num in purchase_dist.items():
+    print(f"购买 {count} 次的用户: {num} 人")
+print(f"\n总用户数: {len(user_counts)}")
+
+print("\n" + "=" * 60)
+print("【第3步】计算复购率")
+repeat_users = len(user_counts[user_counts['purchase_count'] >= 2])
+total_users = len(user_counts)
+repeat_rate = repeat_users / total_users * 100
+print(f"复购用户数（购买2次及以上）: {repeat_users}")
+print(f"整体复购率: {repeat_rate:.1f}%")
+
+print("\n" + "=" * 60)
+print("【第4步】Top购买次数用户")
+top_users = user_counts.nlargest(5, 'purchase_count')
+print(top_users.to_string(index=False))
+
+print("\n" + "=" * 60)
+print("【第5步】复购用户消费分析")
+repeat_user_ids = user_counts[user_counts['purchase_count'] >= 2]['user_id']
+repeat_df = df[df['user_id'].isin(repeat_user_ids)]
+repeat_spending = repeat_df.groupby('user_id')['amount'].sum()
+print(f"复购用户总消费: {repeat_spending.sum():.0f} 元")
+print(f"复购用户平均消费: {repeat_spending.mean():.2f} 元")</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-sidebar">
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
+                    <div class="tip-item"><strong>value_counts()</strong> - 统计各值的出现次数</div>
+                    <div class="tip-item"><strong>size()</strong> - 统计分组后的记录数</div>
+                    <div class="tip-item"><strong>nlargest(n, col)</strong> - 返回最大的n行</div>
+                    <div class="tip-item"><strong>isin()</strong> - 判断是否在列表中</div>
+                    <div class="tip-item"><strong>merge()</strong> - 数据表合并</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
+                    <div class="tip-item">掌握分组统计方法</div>
+                    <div class="tip-item">理解复购率计算逻辑</div>
+                    <div class="tip-item">学会用户分层分析</div>
+                    <div class="tip-item">培养精细化运营思维</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        const rawData = [
+            {order_id: "O001", user_id: "U001", user_name: "张三", date: "2024-01-15", category: "电子产品", amount: 2999},
+            {order_id: "O002", user_id: "U002", user_name: "李四", date: "2024-01-16", category: "服装", amount: 399},
+            {order_id: "O003", user_id: "U001", user_name: "张三", date: "2024-02-20", category: "服装", amount: 599},
+            {order_id: "O004", user_id: "U003", user_name: "王五", date: "2024-02-25", category: "家居", amount: 1299},
+            {order_id: "O005", user_id: "U001", user_name: "张三", date: "2024-03-10", category: "电子产品", amount: 4599},
+            {order_id: "O006", user_id: "U002", user_name: "李四", date: "2024-03-15", category: "服装", amount: 299},
+            {order_id: "O007", user_id: "U004", user_name: "赵六", date: "2024-03-20", category: "电子产品", amount: 1999},
+            {order_id: "O008", user_id: "U005", user_name: "钱七", date: "2024-03-22", category: "家居", amount: 899},
+            {order_id: "O009", user_id: "U003", user_name: "王五", date: "2024-04-05", category: "电子产品", amount: 2599},
+            {order_id: "O010", user_id: "U001", user_name: "张三", date: "2024-04-10", category: "服装", amount: 799},
+        ];
+
+        function renderDataTable() {
+            const tbody = document.getElementById('data-tbody');
+            tbody.innerHTML = rawData.map(row => `
+                <tr>
+                    <td>${row.order_id}</td>
+                    <td>${row.user_id}</td>
+                    <td>${row.user_name}</td>
+                    <td>${row.date}</td>
+                    <td>${row.category}</td>
+                    <td>${row.amount}</td>
+                </tr>
+            `).join('');
+        }
+
+        let answerVisible = false;
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            answerVisible = !answerVisible;
+            if (answerVisible) answerSection.classList.add('show');
+            else answerSection.classList.remove('show');
+        }
+
+        function resetCode() {
+            const editor = document.getElementById('code-editor');
+            editor.value = `import pandas as pd
+
+# 用户购买记录
+data = [
+    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
+    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
+    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
+    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
+    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
+]
+
+df = pd.DataFrame(data)
+print("=" * 50)
+print("原始购买记录：")
+print(df.to_string(index=False))
+
+# TODO: 在下方编写分析代码
+# 1. 统计每个用户的购买次数
+# 2. 计算购买次数分布
+# 3. 计算复购率
+# 4. 找出Top用户
+
+print("\\n" + "=" * 50)
+print("用户购买次数统计：")
+# 你的代码...
+
+print("\\n" + "=" * 50)
+print("复购率分析：")
+# 你的代码...`;
+            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
+        }
+
+        function runProjectCode() {
+            const output = document.getElementById('code-output');
+            const code = document.getElementById('code-editor').value;
+            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
+
+            if (typeof Sk !== 'undefined') {
+                Sk.configure({
+                    output: function(text) {
+                        const existing = output.querySelector('.output-text');
+                        if (existing) existing.textContent += text;
+                        else output.innerHTML = '<pre class="output-text">' + text + '</pre>';
+                    },
+                    read: function(filename) {
+                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) throw 'File not found: ' + filename;
+                        return Sk.builtinFiles['files'][filename];
+                    }
+                });
+                Sk.misceval.asyncToPromise(function() { return Sk.importMainWithBody('<stdin>', false, code, true); })
+                    .then(function(mod) { output.classList.remove('error'); output.classList.add('success'); },
+                    function(err) { output.innerHTML = '<pre class="output-text error">❌ 运行错误: ' + err.toString() + '</pre>'; });
+            } else {
+                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDataTable();
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
+            script.onload = function() {
+                const stdlib = document.createElement('script');
+                stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
+                document.head.appendChild(stdlib);
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>

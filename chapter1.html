@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一章：数据分析思维</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1.html" class="sidebar-item active"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第一章</span>
+            <h1 class="course-title">数据分析思维</h1>
+            <p class="course-subtitle">建立数据驱动决策的核心思维模式，掌握业务指标拆解、AARRR海盗模型和数据驱动决策流程</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-target"></i> 章节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解数据分析的核心价值和意义</li>
+                    <li>掌握业务指标拆解方法</li>
+                    <li>理解AARRR海盗模型的应用</li>
+                    <li>建立数据驱动决策的思维方式</li>
+                    <li>学会提出有效的数据分析问题</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、业务指标拆解</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-puzzle-piece"></i> 指标拆解原理</h3>
+                <div class="section-content">
+                    <p>业务指标拆解是将复杂的业务目标分解为可量化、可执行的子指标的过程。通过指标拆解，可以：</p>
+                    <ul>
+                        <li>明确影响业务目标的关键因素</li>
+                        <li>定位问题所在环节</li>
+                        <li>制定针对性的优化策略</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">指标拆解示意图</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">总销售额</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">订单数 × 客单价</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">(访客数 × 转化率) × (平均单价 × 购买数量)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 指标拆解实战</h3>
+                <div class="section-content">
+                    <p>以下是使用Python进行指标拆解分析的示例：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 指标拆解分析示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 销售数据</span>
+sales_data = {
+    <span class="string">'月份'</span>: [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>],
+    <span class="string">'访客数'</span>: [10000, 12000, 11000, 13000, 14000, 15000],
+    <span class="string">'转化率'</span>: [0.05, 0.055, 0.052, 0.058, 0.06, 0.062],
+    <span class="string">'客单价'</span>: [200, 210, 205, 220, 225, 230]
+}
+df = pd.DataFrame(sales_data)
+
+<span class="comment"># 计算订单数和销售额</span>
+df[<span class="string">'订单数'</span>] = df[<span class="string">'访客数'</span>] * df[<span class="string">'转化率'</span>]
+df[<span class="string">'销售额'</span>] = df[<span class="string">'订单数'</span>] * df[<span class="string">'客单价'</span>]
+
+<span class="comment"># 计算环比增长率</span>
+df[<span class="string">'销售额增长率'</span>] = df[<span class="string">'销售额'</span>].pct_change() * 100
+df[<span class="string">'访客数增长率'</span>] = df[<span class="string">'访客数'</span>].pct_change() * 100
+df[<span class="string">'转化率增长率'</span>] = df[<span class="string">'转化率'</span>].pct_change() * 100
+df[<span class="string">'客单价增长率'</span>] = df[<span class="string">'客单价'</span>].pct_change() * 100
+
+<span class="string">print</span>(df.round(2))</code>
+                </div>
+
+                <div class="tip-box">
+        <p><strong>提示：</strong>指标拆解时要遵循MECE原则（Mutually Exclusive, Collectively Exhaustive），即各个子指标相互独立且完全穷尽，确保拆解的完整性和无重叠。</p>
+    </div>
+    
+    <!-- 知识点测验1 -->
+    <div class="quiz-container" data-quiz-id="chapter1-quiz1">
+        <div class="quiz-title">
+            <i class="fas fa-question-circle"></i>
+            知识点测验
+        </div>
+        <p class="quiz-question">MECE原则是指什么？</p>
+        <div class="quiz-options">
+            <div class="quiz-option" data-correct="false">互相重叠，完全穷尽</div>
+            <div class="quiz-option" data-correct="true">相互独立，完全穷尽</div>
+            <div class="quiz-option" data-correct="false">互相重叠，部分穷尽</div>
+            <div class="quiz-option" data-correct="false">相互独立，部分穷尽</div>
+        </div>
+        <div class="quiz-explanation hidden">
+            <p><strong>解析：</strong>MECE原则是Mutually Exclusive, Collectively Exhaustive的缩写，意思是各个子指标相互独立且完全穷尽，确保拆解的完整性和无重叠。</p>
+        </div>
+    </div>
+</section>
+
+            <section>
+                <h2 class="section-title">二、AARRR海盗模型</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-ship"></i> AARRR模型概述</h3>
+                <div class="section-content">
+                    <p>AARRR模型是用户增长领域的经典框架，包含五个关键环节：获取(Acquisition)、激活(Activation)、留存(Retention)、变现(Revenue)、推荐(Referral)。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">AARRR海盗模型</div>
+                    <div class="diagram" style="width: 100%; max-width: 700px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="diagram-node" style="min-width: 100px;">获取</div>
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                            <div class="diagram-node" style="min-width: 100px;">激活</div>
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                            <div class="diagram-node" style="min-width: 100px;">留存</div>
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                            <div class="diagram-node" style="min-width: 100px;">变现</div>
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                            <div class="diagram-node" style="min-width: 100px;">推荐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-list-check"></i> 各环节核心指标</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-users"></i><span>获取：新增用户数、渠道转化率、获客成本</span></div>
+                    <div class="feature-item"><i class="fas fa-power-off"></i><span>激活：首日留存、核心功能使用率、激活率</span></div>
+                    <div class="feature-item"><i class="fas fa-repeat"></i><span>留存：7日留存率、30日留存率、用户生命周期</span></div>
+                    <div class="feature-item"><i class="fas fa-dollar-sign"></i><span>变现：客单价、复购率、ARPU、LTV</span></div>
+                    <div class="feature-item"><i class="fas fa-share-alt"></i><span>推荐：推荐率、邀请转化率、K因子</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> AARRR分析示例</h3>
+                <div class="code-block">
+                    <code><span class="comment"># AARRR模型分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># AARRR各环节数据</span>
+arrrr_data = {
+    <span class="string">'环节'</span>: [<span class="string">'获取'</span>, <span class="string">'激活'</span>, <span class="string">'留存'</span>, <span class="string">'变现'</span>, <span class="string">'推荐'</span>],
+    <span class="string">'指标值'</span>: [10000, 6000, 3500, 2800, 800],
+    <span class="string">'目标值'</span>: [12000, 7200, 4200, 3360, 1000],
+    <span class="string">'权重'</span>: [0.25, 0.2, 0.25, 0.2, 0.1]
+}
+df = pd.DataFrame(arrrr_data)
+
+<span class="comment"># 计算达成率和贡献度</span>
+df[<span class="string">'达成率(%)'</span>] = (df[<span class="string">'指标值'</span>] / df[<span class="string">'目标值'</span>]) * 100
+df[<span class="string">'贡献度(%)'</span>] = df[<span class="string">'达成率(%)'</span>] * df[<span class="string">'权重'</span>]
+
+<span class="string">print</span>(df.round(2))
+
+<span class="comment"># 计算综合达成率</span>
+overall_achievement = df[<span class="string">'贡献度(%)'</span>].sum()
+<span class="string">print</span>(<span class="string">f"\n综合达成率: {overall_achievement:.2f}%"</span>)</code>
+                </div>
+    
+    <!-- 知识点测验2 -->
+    <div class="quiz-container" data-quiz-id="chapter1-quiz2">
+        <div class="quiz-title">
+            <i class="fas fa-question-circle"></i>
+            知识点测验
+        </div>
+        <p class="quiz-question">AARRR模型中的第二个A代表什么？</p>
+        <div class="quiz-options">
+            <div class="quiz-option" data-correct="false">Acquisition（获取）</div>
+            <div class="quiz-option" data-correct="true">Activation（激活）</div>
+            <div class="quiz-option" data-correct="false">Retention（留存）</div>
+            <div class="quiz-option" data-correct="false">Revenue（变现）</div>
+        </div>
+        <div class="quiz-explanation hidden">
+            <p><strong>解析：</strong>AARRR模型依次是Acquisition（获取）、Activation（激活）、Retention（留存）、Revenue（变现）、Referral（推荐）。第二个A代表Activation（激活）。</p>
+        </div>
+    </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、数据驱动决策流程</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-route"></i> 决策流程概述</h3>
+                <div class="section-content">
+                    <p>数据驱动决策是一种基于数据和分析做出业务决策的方法论，遵循"提出问题→收集数据→分析数据→得出结论→执行决策→复盘优化"的流程。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">数据驱动决策流程</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">提出问题</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">收集数据</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">分析数据</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">得出结论</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">执行决策</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">复盘优化</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-question-circle"></i> 提出有效的分析问题</h3>
+                <div class="section-content">
+                    <p>好的问题是成功分析的一半。一个有效的分析问题应该具备以下特点：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-check-circle"></i><span>具体明确：避免模糊不清的表述</span></div>
+                    <div class="feature-item"><i class="fas fa-bullseye"></i><span>可量化：能够用数据衡量和验证</span></div>
+                    <div class="feature-item"><i class="fas fa-link"></i><span>有因果关系：关注"为什么"和"如何"</span></div>
+                    <div class="feature-item"><i class="fas fa-lightbulb"></i><span>有业务价值：能够指导业务决策</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 数据驱动决策实战</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 数据驱动决策分析模板</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 问题：为什么3月份销售额下降？</span>
+<span class="comment"># 拆解分析数据</span>
+analysis_data = {
+    <span class="string">'维度'</span>: [<span class="string">'访客数'</span>, <span class="string">'转化率'</span>, <span class="string">'客单价'</span>, <span class="string">'订单数'</span>],
+    <span class="string">'2月值'</span>: [12000, 0.055, 210, 660],
+    <span class="string">'3月值'</span>: [11000, 0.052, 205, 572],
+    <span class="string">'变化率'</span>: [-8.33, -5.45, -2.38, -13.33]
+}
+df = pd.DataFrame(analysis_data)
+
+<span class="comment"># 计算各因素对销售额变化的贡献</span>
+df[<span class="string">'贡献度(%)'</span>] = df[<span class="string">'变化率'</span>] * [0.3, 0.4, 0.3, 0]
+
+<span class="string">print</span>(<span class="string">"=== 销售额下降原因分析 ==="</span>)
+print(df.round(2))
+
+<span class="string">print</span>(<span class="string">"\n结论：访客数下降和转化率下降是主要原因，"</span>)
+<span class="string">print</span>(<span class="string">"建议优先优化获客渠道和提升产品转化体验。"</span>)</code>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>注意：</strong>数据驱动决策不是拍脑袋，也不是唯数据论。需要结合业务经验和数据证据，形成闭环的决策体系。</p>
+                </div>
+    
+    <!-- 知识点测验3 -->
+    <div class="quiz-container" data-quiz-id="chapter1-quiz3">
+        <div class="quiz-title">
+            <i class="fas fa-question-circle"></i>
+            知识点测验
+        </div>
+        <p class="quiz-question">数据驱动决策流程的第一步是什么？</p>
+        <div class="quiz-options">
+            <div class="quiz-option" data-correct="false">收集数据</div>
+            <div class="quiz-option" data-correct="true">提出问题</div>
+            <div class="quiz-option" data-correct="false">分析数据</div>
+            <div class="quiz-option" data-correct="false">得出结论</div>
+        </div>
+        <div class="quiz-explanation hidden">
+            <p><strong>解析：</strong>数据驱动决策流程是"提出问题→收集数据→分析数据→得出结论→执行决策→复盘优化"，第一步是提出问题。</p>
+        </div>
+    </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、数据分析思维培养</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-brain"></i> 核心思维能力</h3>
+                <div class="section-content">
+                    <p>成为优秀的数据分析师需要培养以下核心思维能力：</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">数据分析思维框架</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div class="diagram-box">
+                                <h4>逻辑思维</h4>
+                                <p>结构化分析、因果推理</p>
+                            </div>
+                            <div class="diagram-box">
+                                <h4>量化思维</h4>
+                                <p>用数据说话、指标驱动</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4>批判性思维</h4>
+                                <p>质疑数据、验证假设</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4>业务思维</h4>
+                                <p>理解业务、落地价值</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-book-open"></i> 学习路径建议</h3>
+                <div class="section-content">
+                    <p>培养数据分析思维是一个持续学习的过程，建议按照以下路径逐步提升：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-graduation-cap"></i><span>基础阶段：掌握Excel、SQL、统计学基础</span></div>
+                    <div class="feature-item"><i class="fas fa-code"></i><span>进阶阶段：学习Python、数据可视化工具</span></div>
+                    <div class="feature-item"><i class="fas fa-briefcase"></i><span>实战阶段：参与真实业务分析项目</span></div>
+                    <div class="feature-item"><i class="fas fa-lightbulb"></i><span>深化阶段：形成方法论和思维体系</span></div>
+                </div>
+            </section>
+    
+    <!-- 综合测评 -->
+    <div class="chapter-test-container" data-chapter-test="chapter1">
+        <div class="chapter-test-title">
+            <i class="fas fa-pencil-alt"></i>
+            第一章综合测评
+        </div>
+        
+        <div class="test-questions">
+            <div class="test-question" data-correct="B">
+                <div class="question-number">第1题</div>
+                <div class="question-text">以下哪个不是AARRR模型的环节？</div>
+                <div class="question-options">
+                    <label class="question-option">
+                        <input type="radio" name="q1" value="A">
+                        Acquisition（获取）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q1" value="B">
+                        Analysis（分析）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q1" value="C">
+                        Activation（激活）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q1" value="D">
+                        Retention（留存）
+                    </label>
+                </div>
+            </div>
+            
+            <div class="test-question" data-correct="A">
+                <div class="question-number">第2题</div>
+                <div class="question-text">MECE原则中的E代表什么？</div>
+                <div class="question-options">
+                    <label class="question-option">
+                        <input type="radio" name="q2" value="A">
+                        Exhaustive（穷尽）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q2" value="B">
+                        Exclusive（独立）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q2" value="C">
+                        Effective（有效）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q2" value="D">
+                        Efficient（高效）
+                    </label>
+                </div>
+            </div>
+            
+            <div class="test-question" data-correct="D">
+                <div class="question-number">第3题</div>
+                <div class="question-text">数据驱动决策流程的最后一步是什么？</div>
+                <div class="question-options">
+                    <label class="question-option">
+                        <input type="radio" name="q3" value="A">
+                        得出结论
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q3" value="B">
+                        执行决策
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q3" value="C">
+                        收集数据
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q3" value="D">
+                        复盘优化
+                    </label>
+                </div>
+            </div>
+            
+            <div class="test-question" data-correct="C">
+                <div class="question-number">第4题</div>
+                <div class="question-text">以下哪个不属于数据分析师的核心思维能力？</div>
+                <div class="question-options">
+                    <label class="question-option">
+                        <input type="radio" name="q4" value="A">
+                        逻辑思维
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q4" value="B">
+                        量化思维
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q4" value="C">
+                        艺术思维
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q4" value="D">
+                        业务思维
+                    </label>
+                </div>
+            </div>
+            
+            <div class="test-question" data-correct="B">
+                <div class="question-number">第5题</div>
+                <div class="question-text">AARRR模型中的R不代表以下哪个？</div>
+                <div class="question-options">
+                    <label class="question-option">
+                        <input type="radio" name="q5" value="A">
+                        Retention（留存）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q5" value="B">
+                        Research（研究）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q5" value="C">
+                        Revenue（变现）
+                    </label>
+                    <label class="question-option">
+                        <input type="radio" name="q5" value="D">
+                        Referral（推荐）
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <button class="submit-test-btn" onclick="submitChapterTest('chapter1')">提交测评</button>
+        
+        <div class="test-result hidden"></div>
+    </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAchievements('chapter_complete', { chapter: 1 });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

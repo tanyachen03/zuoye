@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五章：销售与运营分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="chapter5.html" class="sidebar-item active"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第五章</span>
+            <h1 class="course-title">销售与运营分析</h1>
+            <p class="course-subtitle">掌握关联规则分析、毛利率计算和库存周转等核心运营指标</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-target"></i> 章节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解关联规则分析的原理和应用场景</li>
+                    <li>掌握毛利率和净利率的计算方法</li>
+                    <li>学会分析库存周转天数</li>
+                    <li>能够进行销售数据的深度分析</li>
+                    <li>理解运营指标之间的关联关系</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、关联规则分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-link"></i> 关联规则概述</h3>
+                <div class="section-content">
+                    <p>关联规则分析是数据挖掘中的重要技术，用于发现数据集中项之间的关联关系。最经典的应用场景是购物篮分析，发现顾客购买商品之间的关联。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">关联规则示意图</div>
+                    <div class="diagram" style="width: 100%; max-width: 500px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 2rem;">
+                            <div class="diagram-node" style="min-width: 100px;">牛奶</div>
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                            <div class="diagram-node" style="min-width: 100px;">面包</div>
+                        </div>
+                        <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.875rem;">购买牛奶的顾客中有60%也购买了面包</p>
+                    </div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter5-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">关联规则分析中，同时包含A和B的交易占总交易的比例称为？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">支持度</div>
+                        <div class="quiz-option" data-correct="false">置信度</div>
+                        <div class="quiz-option" data-correct="false">提升度</div>
+                        <div class="quiz-option" data-correct="false">准确率</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>支持度是指同时包含A和B的交易占总交易的比例。</p>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-percentage"></i> 支持度、置信度与提升度</h3>
+                <div class="section-content">
+                    <p>关联规则有三个核心度量指标：</p>
+                    <ul>
+                        <li><strong>支持度(Support)：</strong>同时包含A和B的交易占总交易的比例</li>
+                        <li><strong>置信度(Confidence)：</strong>购买A的顾客中同时购买B的比例</li>
+                        <li><strong>提升度(Lift)：</strong>置信度与B购买概率的比值，表示关联强度</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 关联规则分析示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> mlxtend.frequent_patterns <span class="keyword">import</span> apriori
+<span class="keyword">from</span> mlxtend.frequent_patterns <span class="keyword">import</span> association_rules
+
+<span class="comment"># 创建交易数据</span>
+data = {
+    <span class="string">'交易ID'</span>: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+    <span class="string">'商品'</span>: [<span class="string">'牛奶'</span>, <span class="string">'面包'</span>, <span class="string">'牛奶'</span>, <span class="string">'鸡蛋'</span>, 
+               <span class="string">'面包'</span>, <span class="string">'鸡蛋'</span>, <span class="string">'牛奶'</span>, <span class="string">'面包'</span>,
+               <span class="string">'牛奶'</span>, <span class="string">'鸡蛋'</span>]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 转换为稀疏矩阵</span>
+basket = df.groupby([<span class="string">'交易ID'</span>, <span class="string">'商品'</span>])[<span class="string">'商品'</span>].count().unstack().fillna(0)
+basket = basket.astype(<span class="string">'int'</span>)
+
+<span class="comment"># 挖掘频繁项集</span>
+frequent_itemsets = apriori(basket, min_support=0.3, use_colnames=<span class="keyword">True</span>)
+
+<span class="comment"># 生成关联规则</span>
+rules = association_rules(frequent_itemsets, metric=<span class="string">'lift'</span>, min_threshold=1)
+
+<span class="comment"># 输出结果</span>
+print(rules[[<span class="string">'antecedents'</span>, <span class="string">'consequents'</span>, <span class="string">'support'</span>, <span class="string">'confidence'</span>, <span class="string">'lift'</span>]])</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、毛利率与净利率分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 核心财务指标</h3>
+                <div class="section-content">
+                    <p>毛利率和净利率是衡量企业盈利能力的关键指标，对于商务数据分析至关重要。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">利润计算流程</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">营业收入</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">营业成本</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">毛利</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">期间费用</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">净利润</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 利润率计算</h3>
+                <div class="section-content">
+                    <p><strong>毛利率 = (营业收入 - 营业成本) / 营业收入 × 100%</strong></p>
+                    <p><strong>净利率 = 净利润 / 营业收入 × 100%</strong></p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 利润率计算示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建财务数据</span>
+financial_data = {
+    <span class="string">'月份'</span>: [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>],
+    <span class="string">'营业收入'</span>: [500, 580, 620, 680, 720, 800],
+    <span class="string">'营业成本'</span>: [320, 370, 390, 430, 450, 500],
+    <span class="string">'期间费用'</span>: [80, 85, 90, 95, 100, 110]
+}
+df = pd.DataFrame(financial_data)
+
+<span class="comment"># 计算毛利率和净利率</span>
+df[<span class="string">'毛利'</span>] = df[<span class="string">'营业收入'</span>] - df[<span class="string">'营业成本'</span>]
+df[<span class="string">'毛利率(%)'</span>] = (df[<span class="string">'毛利'</span>] / df[<span class="string">'营业收入'</span>]) * 100
+df[<span class="string">'净利润'</span>] = df[<span class="string">'毛利'</span>] - df[<span class="string">'期间费用'</span>]
+df[<span class="string">'净利率(%)'</span>] = (df[<span class="string">'净利润'</span>] / df[<span class="string">'营业收入'</span>]) * 100
+
+<span class="comment"># 输出结果</span>
+print(df[[<span class="string">'月份'</span>, <span class="string">'毛利率(%)'</span>, <span class="string">'净利率(%)'</span>]].round(2))</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>提示：</strong>毛利率反映产品本身的盈利能力，净利率反映企业整体盈利能力。通过对比分析可以发现成本控制和费用管理中的问题。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter5-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">毛利率的计算公式是？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">(营业收入-营业成本)/营业收入×100%</div>
+                        <div class="quiz-option" data-correct="false">净利润/营业收入×100%</div>
+                        <div class="quiz-option" data-correct="false">营业成本/营业收入×100%</div>
+                        <div class="quiz-option" data-correct="false">(净利润+期间费用)/营业收入×100%</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>毛利率=(营业收入-营业成本)/营业收入×100%。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、库存周转分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-warehouse"></i> 库存周转天数</h3>
+                <div class="section-content">
+                    <p>库存周转天数是衡量库存管理效率的重要指标，反映企业库存转化为销售收入的速度。</p>
+                    <p><strong>库存周转天数 = 平均库存 × 365 / 营业成本</strong></p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 库存周转分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建库存数据</span>
+inventory_data = {
+    <span class="string">'季度'</span>: [<span class="string">'Q1'</span>, <span class="string">'Q2'</span>, <span class="string">'Q3'</span>, <span class="string">'Q4'</span>],
+    <span class="string">'期初库存'</span>: [200, 180, 150, 160],
+    <span class="string">'期末库存'</span>: [180, 150, 160, 140],
+    <span class="string">'营业成本'</span>: [600, 680, 720, 800]
+}
+df = pd.DataFrame(inventory_data)
+
+<span class="comment"># 计算平均库存和周转天数</span>
+df[<span class="string">'平均库存'</span>] = (df[<span class="string">'期初库存'</span>] + df[<span class="string">'期末库存'</span>]) / 2
+df[<span class="string">'库存周转次数'</span>] = df[<span class="string">'营业成本'</span>] / df[<span class="string">'平均库存'</span>]
+df[<span class="string">'库存周转天数'</span>] = 90 / df[<span class="string">'库存周转次数'</span>]
+
+<span class="comment"># 输出结果</span>
+print(df[[<span class="string">'季度'</span>, <span class="string">'库存周转次数'</span>, <span class="string">'库存周转天数'</span>]].round(2))</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-trending-up"></i> 库存周转与运营效率</h3>
+                <div class="section-content">
+                    <p>库存周转天数越短，说明库存管理效率越高，资金占用越少。但库存过低也可能导致缺货风险。</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-clock"></i><span>周转天数短 → 效率高</span></div>
+                    <div class="feature-item"><i class="fas fa-exclamation-triangle"></i><span>周转天数长 → 积压风险</span></div>
+                    <div class="feature-item"><i class="fas fa-balance-scale"></i><span>合理库存 → 平衡效率与风险</span></div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter5-quiz3">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">库存周转天数越短说明什么？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">库存管理效率越高</div>
+                        <div class="quiz-option" data-correct="false">库存积压风险越大</div>
+                        <div class="quiz-option" data-correct="false">资金占用越多</div>
+                        <div class="quiz-option" data-correct="false">运营效率越低</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>库存周转天数越短说明库存管理效率越高，资金占用越少。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、销售数据分析实战</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 多维度销售分析</h3>
+                <div class="section-content">
+                    <p>综合运用各种分析方法，从多个维度深入分析销售数据，发现业务洞察。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 综合销售数据分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建销售数据</span>
+sales_data = {
+    <span class="string">'日期'</span>: [<span class="string">'2024-01-01'</span>, <span class="string">'2024-01-01'</span>, <span class="string">'2024-01-02'</span>, <span class="string">'2024-01-02'</span>,
+              <span class="string">'2024-01-03'</span>, <span class="string">'2024-01-03'</span>],
+    <span class="string">'产品类别'</span>: [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'电子产品'</span>, 
+                   <span class="string">'食品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>],
+    <span class="string">'销售额'</span>: [2800, 1500, 3200, 800, 1800, 950],
+    <span class="string">'成本'</span>: [1800, 900, 2000, 500, 1100, 600]
+}
+df = pd.DataFrame(sales_data)
+
+<span class="comment"># 按产品类别汇总</span>
+category_analysis = df.groupby(<span class="string">'产品类别'</span>).agg({
+    <span class="string">'销售额'</span>: <span class="string">'sum'</span>,
+    <span class="string">'成本'</span>: <span class="string">'sum'</span>
+}).reset_index()
+
+category_analysis[<span class="string">'毛利'</span>] = category_analysis[<span class="string">'销售额'</span>] - category_analysis[<span class="string">'成本'</span>]
+category_analysis[<span class="string">'毛利率'</span>] = (category_analysis[<span class="string">'毛利'</span>] / category_analysis[<span class="string">'销售额'</span>]) * 100
+
+print(category_analysis.round(2))</code>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>注意：</strong>在进行销售分析时，需要结合业务背景理解数据。同样的数字在不同行业、不同时期可能有不同的含义。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter5-quiz4">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">关联规则分析中，"购买A的顾客中同时购买B的比例"称为？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">支持度</div>
+                        <div class="quiz-option" data-correct="true">置信度</div>
+                        <div class="quiz-option" data-correct="false">提升度</div>
+                        <div class="quiz-option" data-correct="false">召回率</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>置信度是指购买A的顾客中同时购买B的比例。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        Python代码挑战
+                    </div>
+                    <div class="challenge-description">
+                        <h4>挑战任务</h4>
+                        <p>计算销售数据的毛利率和库存周转天数。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 导入必要的库
+import pandas as pd
+
+# 创建销售数据
+sales_data = {
+    '月份': ['1月', '2月', '3月', '4月', '5月', '6月'],
+    '营业收入': [500, 580, 620, 680, 720, 800],
+    '营业成本': [320, 370, 390, 430, 450, 500],
+    '期间费用': [80, 85, 90, 95, 100, 110],
+    '期初库存': [200, 180, 160, 170, 190, 200],
+    '期末库存': [180, 160, 170, 190, 200, 210]
+}
+df = pd.DataFrame(sales_data)
+
+# 计算毛利率和净利率
+df['毛利'] = df['营业收入'] - df['营业成本']
+df['毛利率(%)'] = (df['毛利'] / df['营业收入']) * 100
+df['净利润'] = df['毛利'] - df['期间费用']
+df['净利率(%)'] = (df['净利润'] / df['营业收入']) * 100
+
+# 计算库存周转
+df['平均库存'] = (df['期初库存'] + df['期末库存']) / 2
+df['库存周转次数'] = df['营业成本'] / df['平均库存']
+df['库存周转天数'] = 30 / df['库存周转次数']
+
+# 输出结果
+print('销售分析结果：')
+print(df[['月份', '营业收入', '营业成本', '毛利率(%)', '净利率(%)', '库存周转天数']].round(2))</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter5">
+                <div class="chapter-test-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    第五章综合测评
+                </div>
+
+                <div class="test-questions">
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">置信度是指什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="A">
+                                购买A的顾客中同时购买B的比例
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="B">
+                                同时包含A和B的交易占总交易的比例
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="C">
+                                置信度与B购买概率的比值
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="D">
+                                预测准确率
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">净利率的计算公式是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="A">
+                                (营业收入-营业成本)/营业收入×100%
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="B">
+                                净利润/营业收入×100%
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="C">
+                                营业成本/营业收入×100%
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="D">
+                                期间费用/营业收入×100%
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">库存周转天数越短说明？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="A">
+                                库存积压风险越大
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="B">
+                                资金占用越多
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="C">
+                                库存管理效率越高
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="D">
+                                运营效率越低
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">以下哪个指标反映产品本身的盈利能力？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="A">
+                                净利率
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="B">
+                                期间费用
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="C">
+                                库存周转天数
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="D">
+                                毛利率
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">关联规则分析最经典的应用场景是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="A">
+                                购物篮分析
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="B">
+                                用户画像
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="C">
+                                市场集中度分析
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="D">
+                                SWOT分析
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter5')">提交测评</button>
+
+                <div class="test-result hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAchievements('chapter_complete', { chapter: 5 });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

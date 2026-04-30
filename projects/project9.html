@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目9：评论情感分析简版 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .project-page { padding-top: 70px; min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .project-header { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); color: white; padding: 3rem 2rem; position: relative; overflow: hidden; }
+        .project-header::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
+        .project-header-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .project-back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.9); text-decoration: none; margin-bottom: 1.5rem; transition: all 0.2s ease; }
+        .project-back-link:hover { color: white; transform: translateX(-5px); }
+        .project-title-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .project-title-row h1 { font-size: 2.5rem; font-weight: 800; margin: 0; }
+        .project-meta-info { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .project-meta-item { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
+        .project-container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .project-main { display: flex; flex-direction: column; gap: 2rem; }
+        .project-section { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        .section-header i { font-size: 1.5rem; color: #1e40af; }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .section-content { color: #475569; line-height: 1.8; }
+        .task-description { background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.05)); border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid #1e40af; }
+        .task-description h3 { font-size: 1.125rem; font-weight: 600; color: #1e293b; margin-bottom: 1rem; }
+        .task-list { list-style: none; }
+        .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
+        .task-list li:last-child { border-bottom: none; }
+        .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
+        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table tr:hover { background-color: #f8fafc; }
+        .positive { color: #10b981; font-weight: 600; }
+        .negative { color: #ef4444; font-weight: 600; }
+        .neutral { color: #64748b; font-weight: 600; }
+        .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
+        .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        .code-controls { display: flex; gap: 0.75rem; }
+        .run-btn, .reset-btn, .answer-btn { padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.375rem; }
+        .run-btn { background: #10b981; color: white; }
+        .run-btn:hover { background: #059669; }
+        .reset-btn { background: rgba(255, 255, 255, 0.2); color: white; }
+        .reset-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .answer-btn { background: #f59e0b; color: white; }
+        .answer-btn:hover { background: #d97706; }
+        .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
+        .code-editor-panel { background: #1e293b; }
+        .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
+        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
+        .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
+        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output .placeholder { color: #64748b; font-style: italic; }
+        .code-output .error { color: #f87171; }
+        .code-output .success { color: #4ade80; }
+        .answer-section { margin-top: 1.5rem; display: none; }
+        .answer-section.show { display: block; }
+        .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
+        .project-sidebar { position: sticky; top: 90px; height: fit-content; }
+        .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
+        .tips-card h3 { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tips-card h3 i { color: #f59e0b; }
+        .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
+        .tip-item:last-child { border-bottom: none; }
+        .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
+        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
+        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'"><i class="fas fa-chart-bar"></i><span>数析学院</span></div>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="#courses" class="nav-link">课程中心</a>
+                <a href="../projects.html" class="nav-link active">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar"><span id="user-name">用户名</span></div>
+                <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="project-page">
+        <div class="project-header">
+            <div class="project-header-content">
+                <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
+                <div class="project-title-row">
+                    <h1>项目9：评论情感分析简版</h1>
+                    <span class="difficulty-badge advanced">高级</span>
+                </div>
+                <div class="project-meta-info">
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：40分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：20条评论</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-container">
+            <div class="project-main">
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
+                    <div class="section-content">
+                        <p>情感分析是NLP（自然语言处理）的重要应用场景，通过分析用户评论的情感倾向，企业可以了解用户对产品或服务的态度，及时发现问题并改进。</p>
+                        <ul style="margin-top: 1rem;">
+                            <li><strong>正面评论</strong>：表达满意、喜欢、推荐等积极情感</li>
+                            <li><strong>负面评论</strong>：表达不满、抱怨、失望等消极情感</li>
+                            <li><strong>中性评论</strong>：客观描述，不带明显情感倾向</li>
+                        </ul>
+                        <p style="margin-top: 1rem;">本项目使用基于关键词规则的简单情感分析方法。</p>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-database"></i><h2>商品评论数据</h2></div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="sales-data-table">
+                            <thead>
+                                <tr><th>评论ID</th><th>用户名</th><th>商品</th><th>评论内容</th></tr>
+                            </thead>
+                            <tbody id="data-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="task-description">
+                        <h3>请完成以下情感分析：</h3>
+                        <ul class="task-list">
+                            <li>定义正面情感关键词列表（如：好、棒、满意、喜欢等）</li>
+                            <li>定义负面情感关键词列表（如：差、烂、失望、后悔等）</li>
+                            <li>编写函数分析单条评论的情感倾向</li>
+                            <li>对所有评论进行情感分类</li>
+                            <li>统计正面、负面、中性评论占比</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
+                    <div class="code-playground">
+                        <div class="code-playground-header">
+                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-controls">
+                                <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
+                                <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
+                                <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            </div>
+                        </div>
+                        <div class="code-editor-wrapper">
+                            <div class="code-editor-panel">
+                                <div class="code-editor-label">编辑器</div>
+                                <textarea class="code-editor" id="code-editor" spellcheck="false"># 商品评论数据
+reviews = [
+    {"id": "R001", "user": "用户A", "product": "手机", "text": "手机很好用，运行流畅，拍照清晰"},
+    {"id": "R002", "user": "用户B", "product": "手机", "text": "屏幕太小了，电池也不耐用"},
+    {"id": "R003", "user": "用户C", "product": "电脑", "text": "电脑配置不错，性价比高"},
+]
+
+# TODO: 在下方编写情感分析代码
+# 1. 定义正面关键词列表
+# 2. 定义负面关键词列表
+# 3. 编写情感分析函数
+# 4. 分析所有评论
+
+print("=" * 60)
+print("情感分析结果：")
+# 你的代码...</textarea>
+                            </div>
+                            <div class="code-output-panel">
+                                <div class="code-output-label">运行结果</div>
+                                <div class="code-output" id="code-output"><div class="placeholder">点击"运行代码"按钮执行代码</div></div>
+                            </div>
+                        </div>
+                        <div class="answer-section" id="answer-section">
+                            <div class="answer-content">
+                                <h4>参考答案代码：</h4>
+                                <pre># 商品评论数据
+reviews = [
+    {"id": "R001", "user": "用户A", "product": "手机", "text": "手机很好用，运行流畅，拍照清晰"},
+    {"id": "R002", "user": "用户B", "product": "手机", "text": "屏幕太小了，电池也不耐用"},
+    {"id": "R003", "user": "用户C", "product": "电脑", "text": "电脑配置不错，性价比高"},
+    {"id": "R004", "user": "用户D", "product": "耳机", "text": "音质一般，降噪效果不好"},
+    {"id": "R005", "user": "用户E", "product": "平板", "text": "屏幕大，看剧很舒服，推荐购买"},
+]
+
+# 【第1步】定义情感关键词
+positive_words = ["好", "棒", "满意", "喜欢", "推荐", "不错", "清晰", "流畅", "舒服", "高", "大", "清晰"]
+negative_words = ["差", "烂", "失望", "后悔", "小", "不", "不好", "一般", "慢", "贵", "噪音", "坏"]
+
+def analyze_sentiment(text):
+    text_lower = text
+    pos_count = sum(1 for word in positive_words if word in text_lower)
+    neg_count = sum(1 for word in negative_words if word in text_lower)
+    
+    if pos_count > neg_count:
+        return "正面", pos_count, neg_count
+    elif neg_count > pos_count:
+        return "负面", pos_count, neg_count
+    else:
+        return "中性", pos_count, neg_count
+
+print("=" * 60)
+print("【第2步】情感分析结果")
+print("-" * 60)
+results = []
+for review in reviews:
+    sentiment, pos, neg = analyze_sentiment(review["text"])
+    results.append(sentiment)
+    print(f"[{sentiment:4s}] {review['user']}: {review['text']}")
+    print(f"          正面词:{pos} 负面词:{neg}")
+    print()
+
+print("=" * 60)
+print("【第3步】情感统计")
+positive_count = results.count("正面")
+negative_count = results.count("负面")
+neutral_count = results.count("中性")
+total = len(results)
+
+print(f"正面评论: {positive_count} ({positive_count/total*100:.1f}%)")
+print(f"负面评论: {negative_count} ({negative_count/total*100:.1f}%)")
+print(f"中性评论: {neutral_count} ({neutral_count/total*100:.1f}%)")
+print(f"\n总评论数: {total}")
+print(f"好评率: {positive_count/total*100:.1f}%")</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-sidebar">
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> 情感分析技巧</h3>
+                    <div class="tip-item"><strong>关键词匹配</strong> - 统计正/负面词出现次数</div>
+                    <div class="tip-item"><strong>情感得分</strong> = 正面词数 - 负面词数</div>
+                    <div class="tip-item"><strong>阈值判断</strong> - 根据得分判断情感倾向</div>
+                    <div class="tip-item"><strong>否定词处理</strong> - 考虑"不"等否定词</div>
+                    <div class="tip-item"><strong>扩展词库</strong> - 增加更多关键词提高准确率</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
+                    <div class="tip-item">理解情感分析基本原理</div>
+                    <div class="tip-item">掌握基于规则的情感分析方法</div>
+                    <div class="tip-item">学会关键词匹配算法</div>
+                    <div class="tip-item">了解NLP入门知识</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        const rawData = [
+            {id: "R001", user: "用户A", product: "手机", text: "手机很好用，运行流畅，拍照清晰"},
+            {id: "R002", user: "用户B", product: "手机", text: "屏幕太小了，电池也不耐用"},
+            {id: "R003", user: "用户C", product: "电脑", text: "电脑配置不错，性价比高"},
+            {id: "R004", user: "用户D", product: "耳机", text: "音质一般，降噪效果不好"},
+            {id: "R005", user: "用户E", product: "平板", text: "屏幕大，看剧很舒服，推荐购买"},
+            {id: "R006", user: "用户F", product: "手表", text: "功能强大，外观时尚"},
+            {id: "R007", user: "用户G", product: "充电器", text: "充电太慢了，很失望"},
+            {id: "R008", user: "用户H", product: "键盘", text: "手感不错，打字很顺畅"},
+        ];
+
+        function renderDataTable() {
+            const tbody = document.getElementById('data-tbody');
+            tbody.innerHTML = rawData.map(row => {
+                let sentiment = '';
+                const posWords = ["好", "棒", "满意", "喜欢", "推荐", "不错", "清晰", "流畅", "舒服", "高", "大", "强", "时尚"];
+                const negWords = ["差", "烂", "失望", "后悔", "小", "不", "不好", "一般", "慢", "贵", "噪音", "坏"];
+                const posCount = posWords.filter(w => row.text.includes(w)).length;
+                const negCount = negWords.filter(w => row.text.includes(w)).length;
+                
+                if (posCount > negCount) sentiment = '<span class="positive">正面</span>';
+                else if (negCount > posCount) sentiment = '<span class="negative">负面</span>';
+                else sentiment = '<span class="neutral">中性</span>';
+                
+                return `<tr>
+                    <td>${row.id}</td>
+                    <td>${row.user}</td>
+                    <td>${row.product}</td>
+                    <td>${row.text} ${sentiment}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        let answerVisible = false;
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            answerVisible = !answerVisible;
+            if (answerVisible) answerSection.classList.add('show');
+            else answerSection.classList.remove('show');
+        }
+
+        function resetCode() {
+            const editor = document.getElementById('code-editor');
+            editor.value = `# 商品评论数据
+reviews = [
+    {"id": "R001", "user": "用户A", "product": "手机", "text": "手机很好用，运行流畅，拍照清晰"},
+    {"id": "R002", "user": "用户B", "product": "手机", "text": "屏幕太小了，电池也不耐用"},
+    {"id": "R003", "user": "用户C", "product": "电脑", "text": "电脑配置不错，性价比高"},
+]
+
+# TODO: 在下方编写情感分析代码
+# 1. 定义正面关键词列表
+# 2. 定义负面关键词列表
+# 3. 编写情感分析函数
+# 4. 分析所有评论
+
+print("=" * 60)
+print("情感分析结果：")
+# 你的代码...`;
+            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
+        }
+
+        function runProjectCode() {
+            const output = document.getElementById('code-output');
+            const code = document.getElementById('code-editor').value;
+            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
+
+            if (typeof Sk !== 'undefined') {
+                Sk.configure({
+                    output: function(text) {
+                        const existing = output.querySelector('.output-text');
+                        if (existing) existing.textContent += text;
+                        else output.innerHTML = '<pre class="output-text">' + text + '</pre>';
+                    },
+                    read: function(filename) {
+                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) throw 'File not found: ' + filename;
+                        return Sk.builtinFiles['files'][filename];
+                    }
+                });
+                Sk.misceval.asyncToPromise(function() { return Sk.importMainWithBody('<stdin>', false, code, true); })
+                    .then(function(mod) { output.classList.remove('error'); output.classList.add('success'); },
+                    function(err) { output.innerHTML = '<pre class="output-text error">❌ 运行错误: ' + err.toString() + '</pre>'; });
+            } else {
+                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDataTable();
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
+            script.onload = function() {
+                const stdlib = document.createElement('script');
+                stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
+                document.head.appendChild(stdlib);
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>

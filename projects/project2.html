@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目2：门店销售对比 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .project-page { padding-top: 70px; min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .project-header { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); color: white; padding: 3rem 2rem; position: relative; overflow: hidden; }
+        .project-header::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
+        .project-header-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .project-back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.9); text-decoration: none; margin-bottom: 1.5rem; transition: all 0.2s ease; }
+        .project-back-link:hover { color: white; transform: translateX(-5px); }
+        .project-title-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .project-title-row h1 { font-size: 2.5rem; font-weight: 800; margin: 0; }
+        .project-meta-info { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .project-meta-item { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
+        .project-container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .project-main { display: flex; flex-direction: column; gap: 2rem; }
+        .project-section { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        .section-header i { font-size: 1.5rem; color: #1e40af; }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .section-content { color: #475569; line-height: 1.8; }
+        .section-content ul { margin-top: 1rem; padding-left: 1.5rem; }
+        .section-content li { margin-bottom: 0.5rem; }
+        .task-description { background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.05)); border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid #1e40af; }
+        .task-description h3 { font-size: 1.125rem; font-weight: 600; color: #1e293b; margin-bottom: 1rem; }
+        .task-list { list-style: none; }
+        .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
+        .task-list li:last-child { border-bottom: none; }
+        .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
+        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table tr:hover { background-color: #f8fafc; }
+        .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
+        .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        .code-controls { display: flex; gap: 0.75rem; }
+        .run-btn, .reset-btn, .answer-btn { padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.375rem; }
+        .run-btn { background: #10b981; color: white; }
+        .run-btn:hover { background: #059669; }
+        .reset-btn { background: rgba(255, 255, 255, 0.2); color: white; }
+        .reset-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .answer-btn { background: #f59e0b; color: white; }
+        .answer-btn:hover { background: #d97706; }
+        .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
+        .code-editor-panel { background: #1e293b; }
+        .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
+        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
+        .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
+        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output .placeholder { color: #64748b; font-style: italic; }
+        .code-output .error { color: #f87171; }
+        .code-output .success { color: #4ade80; }
+        .answer-section { margin-top: 1.5rem; display: none; }
+        .answer-section.show { display: block; }
+        .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
+        .project-sidebar { position: sticky; top: 90px; height: fit-content; }
+        .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
+        .tips-card h3 { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tips-card h3 i { color: #f59e0b; }
+        .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
+        .tip-item:last-child { border-bottom: none; }
+        .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
+        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
+        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'"><i class="fas fa-chart-bar"></i><span>数析学院</span></div>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="#courses" class="nav-link">课程中心</a>
+                <a href="../projects.html" class="nav-link active">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar"><span id="user-name">用户名</span></div>
+                <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="project-page">
+        <div class="project-header">
+            <div class="project-header-content">
+                <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
+                <div class="project-title-row">
+                    <h1>项目2：门店销售对比</h1>
+                    <span class="difficulty-badge beginner">初级</span>
+                </div>
+                <div class="project-meta-info">
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：25分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas + Matplotlib</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：50条记录</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-container">
+            <div class="project-main">
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
+                    <div class="section-content">
+                        <p>某连锁零售企业在华东地区拥有5家门店，管理层希望了解各门店的销售表现，进行横向对比分析。</p>
+                        <ul style="margin-top: 1rem;">
+                            <li>分析各门店的总销售额和平均销售额</li>
+                            <li>按区域分组统计销售数据</li>
+                            <li>绘制柱状图进行可视化对比</li>
+                            <li>找出销售冠军门店和待改进门店</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-database"></i><h2>门店销售数据</h2></div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="sales-data-table">
+                            <thead>
+                                <tr><th>门店编号</th><th>门店名称</th><th>所在区域</th><th>月份</th><th>销售额(万元)</th><th>订单数</th></tr>
+                            </thead>
+                            <tbody id="data-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="task-description">
+                        <h3>请完成以下数据分析：</h3>
+                        <ul class="task-list">
+                            <li>使用 groupby() 按门店分组计算总销售额</li>
+                            <li>按区域分组统计销售总额</li>
+                            <li>计算每个门店的平均订单金额</li>
+                            <li>找出销售额最高的门店</li>
+                            <li>绘制各门店销售额对比柱状图（使用模拟输出）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
+                    <div class="code-playground">
+                        <div class="code-playground-header">
+                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-controls">
+                                <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
+                                <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
+                                <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            </div>
+                        </div>
+                        <div class="code-editor-wrapper">
+                            <div class="code-editor-panel">
+                                <div class="code-editor-label">编辑器</div>
+                                <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
+
+# 门店销售数据
+data = [
+    {"store_id": "S001", "store_name": "南京路旗舰店", "region": "浦东区", "month": "2024-01", "sales": 125.5, "orders": 320},
+    {"store_id": "S002", "store_name": "淮海路分店", "region": "黄浦区", "month": "2024-01", "sales": 98.3, "orders": 256},
+    {"store_id": "S003", "store_name": "徐家汇店", "region": "徐汇区", "month": "2024-01", "sales": 87.2, "orders": 198},
+    {"store_id": "S004", "store_name": "静安寺店", "region": "静安区", "month": "2024-01", "sales": 110.8, "orders": 285},
+    {"store_id": "S005", "store_name": "中山公园店", "region": "长宁区", "month": "2024-01", "sales": 76.5, "orders": 178},
+]
+
+df = pd.DataFrame(data)
+print("=" * 50)
+print("原始门店销售数据：")
+print(df.to_string(index=False))
+
+# TODO: 在下方编写分析代码
+# 1. 按门店分组统计总销售额
+# 2. 按区域分组统计
+# 3. 计算平均订单金额
+# 4. 找出销售冠军门店
+
+print("\n" + "=" * 50)
+print("各门店总销售额统计：")
+# 你的代码...
+
+print("\n" + "=" * 50)
+print("各区域销售统计：")
+# 你的代码...
+
+print("\n" + "=" * 50)
+print("销售冠军门店：")
+# 你的代码...</textarea>
+                            </div>
+                            <div class="code-output-panel">
+                                <div class="code-output-label">运行结果</div>
+                                <div class="code-output" id="code-output"><div class="placeholder">点击"运行代码"按钮执行代码</div></div>
+                            </div>
+                        </div>
+                        <div class="answer-section" id="answer-section">
+                            <div class="answer-content">
+                                <h4>参考答案代码：</h4>
+                                <pre>import pandas as pd
+
+# 门店销售数据
+data = [
+    {"store_id": "S001", "store_name": "南京路旗舰店", "region": "浦东区", "month": "2024-01", "sales": 125.5, "orders": 320},
+    {"store_id": "S002", "store_name": "淮海路分店", "region": "黄浦区", "month": "2024-01", "sales": 98.3, "orders": 256},
+    {"store_id": "S003", "store_name": "徐家汇店", "region": "徐汇区", "month": "2024-01", "sales": 87.2, "orders": 198},
+    {"store_id": "S004", "store_name": "静安寺店", "region": "静安区", "month": "2024-01", "sales": 110.8, "orders": 285},
+    {"store_id": "S005", "store_name": "中山公园店", "region": "长宁区", "month": "2024-01", "sales": 76.5, "orders": 178},
+]
+
+df = pd.DataFrame(data)
+
+print("=" * 60)
+print("【第1步】各门店总销售额统计")
+store_sales = df.groupby('store_name')['sales'].sum().sort_values(ascending=False)
+print(store_sales.to_string())
+
+print("\n" + "=" * 60)
+print("【第2步】各区域销售统计")
+region_sales = df.groupby('region')['sales'].sum().sort_values(ascending=False)
+print(region_sales.to_string())
+print(f"\n销售总额: {region_sales.sum():.1f} 万元")
+
+print("\n" + "=" * 60)
+print("【第3步】计算平均订单金额")
+df['avg_order_value'] = df['sales'] / df['orders'] * 10000
+print(df[['store_name', 'avg_order_value']].to_string(index=False))
+
+print("\n" + "=" * 60)
+print("【第4步】找出销售冠军门店")
+top_store = df.loc[df['sales'].idxmax()]
+print(f"销售冠军: {top_store['store_name']}")
+print(f"销售额: {top_store['sales']:.1f} 万元")
+print(f"区域: {top_store['region']}")
+
+print("\n" + "=" * 60)
+print("【可视化输出 - 柱状图 ASCII版】")
+print("\n各门店销售额柱状图：")
+for idx, row in store_sales.items():
+    bar = "█" * int(row / 5)
+    print(f"{idx:10s} | {bar} {row:.1f}万")</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-sidebar">
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
+                    <div class="tip-item"><strong>groupby()</strong> - 按列分组进行聚合计算</div>
+                    <div class="tip-item"><strong>sum()</strong> - 求和统计</div>
+                    <div class="tip-item"><strong>sort_values()</strong> - 按值排序</div>
+                    <div class="tip-item"><strong>idxmax()</strong> - 返回最大值索引</div>
+                    <div class="tip-item"><strong>agg()</strong> - 多种聚合函数组合</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
+                    <div class="tip-item">掌握 Pandas 分组聚合操作</div>
+                    <div class="tip-item">学会多维度数据分析</div>
+                    <div class="tip-item">理解业务数据可视化方法</div>
+                    <div class="tip-item">培养数据驱动决策思维</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        const rawData = [
+            {store_id: "S001", store_name: "南京路旗舰店", region: "浦东区", month: "2024-01", sales: 125.5, orders: 320},
+            {store_id: "S002", store_name: "淮海路分店", region: "黄浦区", month: "2024-01", sales: 98.3, orders: 256},
+            {store_id: "S003", store_name: "徐家汇店", region: "徐汇区", month: "2024-01", sales: 87.2, orders: 198},
+            {store_id: "S004", store_name: "静安寺店", region: "静安区", month: "2024-01", sales: 110.8, orders: 285},
+            {store_id: "S005", store_name: "中山公园店", region: "长宁区", month: "2024-01", sales: 76.5, orders: 178},
+            {store_id: "S001", store_name: "南京路旗舰店", region: "浦东区", month: "2024-02", sales: 138.2, orders: 345},
+            {store_id: "S002", store_name: "淮海路分店", region: "黄浦区", month: "2024-02", sales: 105.7, orders: 278},
+            {store_id: "S003", store_name: "徐家汇店", region: "徐汇区", month: "2024-02", sales: 92.4, orders: 215},
+            {store_id: "S004", store_name: "静安寺店", region: "静安区", month: "2024-02", sales: 118.3, orders: 302},
+            {store_id: "S005", store_name: "中山公园店", region: "长宁区", month: "2024-02", sales: 82.1, orders: 192},
+        ];
+
+        function renderDataTable() {
+            const tbody = document.getElementById('data-tbody');
+            tbody.innerHTML = rawData.map(row => `
+                <tr>
+                    <td>${row.store_id}</td>
+                    <td>${row.store_name}</td>
+                    <td>${row.region}</td>
+                    <td>${row.month}</td>
+                    <td>${row.sales}</td>
+                    <td>${row.orders}</td>
+                </tr>
+            `).join('');
+        }
+
+        let answerVisible = false;
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            answerVisible = !answerVisible;
+            if (answerVisible) answerSection.classList.add('show');
+            else answerSection.classList.remove('show');
+        }
+
+        function resetCode() {
+            const editor = document.getElementById('code-editor');
+            editor.value = `import pandas as pd
+
+# 门店销售数据
+data = [
+    {"store_id": "S001", "store_name": "南京路旗舰店", "region": "浦东区", "month": "2024-01", "sales": 125.5, "orders": 320},
+    {"store_id": "S002", "store_name": "淮海路分店", "region": "黄浦区", "month": "2024-01", "sales": 98.3, "orders": 256},
+    {"store_id": "S003", "store_name": "徐家汇店", "region": "徐汇区", "month": "2024-01", "sales": 87.2, "orders": 198},
+    {"store_id": "S004", "store_name": "静安寺店", "region": "静安区", "month": "2024-01", "sales": 110.8, "orders": 285},
+    {"store_id": "S005", "store_name": "中山公园店", "region": "长宁区", "month": "2024-01", "sales": 76.5, "orders": 178},
+]
+
+df = pd.DataFrame(data)
+print("=" * 50)
+print("原始门店销售数据：")
+print(df.to_string(index=False))
+
+# TODO: 在下方编写分析代码
+# 1. 按门店分组统计总销售额
+# 2. 按区域分组统计
+# 3. 计算平均订单金额
+# 4. 找出销售冠军门店
+
+print("\\n" + "=" * 50)
+print("各门店总销售额统计：")
+# 你的代码...
+
+print("\\n" + "=" * 50)
+print("各区域销售统计：")
+# 你的代码...
+
+print("\\n" + "=" * 50)
+print("销售冠军门店：")
+# 你的代码...`;
+            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
+        }
+
+        function runProjectCode() {
+            const output = document.getElementById('code-output');
+            const code = document.getElementById('code-editor').value;
+            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
+
+            if (typeof Sk !== 'undefined') {
+                Sk.configure({
+                    output: function(text) {
+                        const existing = output.querySelector('.output-text');
+                        if (existing) existing.textContent += text;
+                        else output.innerHTML = '<pre class="output-text">' + text + '</pre>';
+                    },
+                    read: function(filename) {
+                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) throw 'File not found: ' + filename;
+                        return Sk.builtinFiles['files'][filename];
+                    }
+                });
+                Sk.misceval.asyncToPromise(function() { return Sk.importMainWithBody('<stdin>', false, code, true); })
+                    .then(function(mod) { output.classList.remove('error'); output.classList.add('success'); },
+                    function(err) { output.innerHTML = '<pre class="output-text error">❌ 运行错误: ' + err.toString() + '</pre>'; });
+            } else {
+                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDataTable();
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
+            script.onload = function() {
+                const stdlib = document.createElement('script');
+                stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
+                document.head.appendChild(stdlib);
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>

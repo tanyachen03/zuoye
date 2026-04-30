@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六章：数据可视化叙事</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="chapter6.html" class="sidebar-item active"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第六章</span>
+            <h1 class="course-title">数据可视化叙事</h1>
+            <p class="course-subtitle">掌握商务图表设计原则，使用Matplotlib和Seaborn创建专业数据可视化作品</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-target"></i> 章节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解商务图表的核心设计原则</li>
+                    <li>掌握Matplotlib基础图表绘制方法</li>
+                    <li>学会使用Seaborn创建统计图表</li>
+                    <li>能够选择合适的图表类型讲述数据故事</li>
+                    <li>理解图表配色和布局的最佳实践</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、商务图表原则</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 图表设计的核心原则</h3>
+                <div class="section-content">
+                    <p>优秀的数据可视化不仅是展示数据，更是讲述数据背后的故事。以下是商务图表设计的核心原则：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-eye"></i><span>清晰易懂</span></div>
+                    <div class="feature-item"><i class="fas fa-balance-scale"></i><span>准确无误</span></div>
+                    <div class="feature-item"><i class="fas fa-bolt"></i><span>突出重点</span></div>
+                    <div class="feature-item"><i class="fas fa-palette"></i><span>美观大方</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-list-check"></i> 图表类型选择指南</h3>
+                <div class="section-content">
+                    <p>选择正确的图表类型是有效传达信息的关键。以下是常见场景的图表选择建议：</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">图表类型选择矩阵</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="diagram-box">
+                                <h4>比较数据</h4>
+                                <p>柱状图、条形图、雷达图</p>
+                            </div>
+                            <div class="diagram-box">
+                                <h4>展示趋势</h4>
+                                <p>折线图、面积图</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4>显示构成</h4>
+                                <p>饼图、环形图、堆叠图</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4>分析关系</h4>
+                                <p>散点图、热力图、相关矩阵</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-paint-brush"></i> 配色原则</h3>
+                <div class="section-content">
+                    <p>颜色是图表设计中至关重要的元素。有效的配色方案能够：</p>
+                    <ul>
+                        <li><strong>区分数据类别：</strong>使用不同颜色代表不同数据系列</li>
+                        <li><strong>引导视觉焦点：</strong>使用对比色突出重要数据</li>
+                        <li><strong>传达情感：</strong>暖色调传达热情和活力，冷色调传达专业和冷静</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>提示：</strong>在商务场景中，建议使用专业稳重的配色方案，避免过于花哨的颜色组合。保持配色方案简洁一致。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">以下哪种图表适合展示数据随时间变化的趋势？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">柱状图</div>
+                        <div class="quiz-option" data-correct="true">折线图</div>
+                        <div class="quiz-option" data-correct="false">饼图</div>
+                        <div class="quiz-option" data-correct="false">热力图</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>折线图适合展示数据随时间变化的趋势。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、Matplotlib基础</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 绘制柱状图</h3>
+                <div class="section-content">
+                    <p>柱状图是最常用的数据可视化形式之一，用于比较不同类别之间的数据。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 导入Matplotlib库</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+categories = [<span class="string">'Q1'</span>, <span class="string">'Q2'</span>, <span class="string">'Q3'</span>, <span class="string">'Q4'</span>]
+sales = [120, 150, 180, 220]
+
+<span class="comment"># 创建柱状图</span>
+plt.figure(figsize=(10, 6))
+plt.bar(categories, sales, color=<span class="string">'#3b82f6'</span>)
+
+<span class="comment"># 添加标题和标签</span>
+plt.title(<span class="string">'季度销售额对比'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+plt.xlabel(<span class="string">'季度'</span>, fontsize=12)
+plt.ylabel(<span class="string">'销售额(万元)'</span>, fontsize=12)
+
+<span class="comment"># 添加数据标签</span>
+<span class="keyword">for</span> i, v <span class="keyword">in</span> enumerate(sales):
+    plt.text(i, v + 5, <span class="string">f'</span>{v}<span class="string">'</span>, ha=<span class="string">'center'</span>)
+
+plt.grid(axis=<span class="string">'y'</span>, linestyle=<span class="string">'-'</span>, alpha=0.7)
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 绘制折线图</h3>
+                <div class="section-content">
+                    <p>折线图适合展示数据随时间变化的趋势，能够清晰地展示数据的变化方向和速率。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 导入Matplotlib库</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 准备数据</span>
+months = [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>]
+revenue = [80, 95, 110, 105, 125, 140]
+profit = [20, 25, 30, 28, 35, 42]
+
+<span class="comment"># 创建折线图</span>
+plt.figure(figsize=(12, 6))
+plt.plot(months, revenue, marker=<span class="string">'o'</span>, linestyle=<span class="string">'-'</span>, linewidth=2, color=<span class="string">'#1e40af'</span>, label=<span class="string">'营收'</span>)
+plt.plot(months, profit, marker=<span class="string">'s'</span>, linestyle=<span class="string">'--'</span>, linewidth=2, color=<span class="string">'#10b981'</span>, label=<span class="string">'利润'</span>)
+
+<span class="comment"># 添加标题和标签</span>
+plt.title(<span class="string">'月度营收与利润趋势'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+plt.xlabel(<span class="string">'月份'</span>, fontsize=12)
+plt.ylabel(<span class="string">'金额(万元)'</span>, fontsize=12)
+
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">折线图结构示意图</div>
+                    <div class="diagram" style="width: 100%; max-width: 500px;">
+                        <div style="background: linear-gradient(to right, #1e40af 0%, #3b82f6 50%, #10b981 100%); height: 8px; border-radius: 4px; margin-bottom: 1rem;"></div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary);">
+                            <span>起点 →</span>
+                            <span>↑ 上升趋势</span>
+                            <span>↓ 下降趋势</span>
+                            <span>→ 终点</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">以下哪种图表适合比较不同类别之间的数据？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">柱状图</div>
+                        <div class="quiz-option" data-correct="false">饼图</div>
+                        <div class="quiz-option" data-correct="false">热力图</div>
+                        <div class="quiz-option" data-correct="false">雷达图</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>柱状图适合比较不同类别之间的数据。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、Seaborn高级可视化</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-heatmap"></i> 绘制热力图</h3>
+                <div class="section-content">
+                    <p>热力图是一种用颜色深浅来表示数据值大小的可视化方式，常用于展示矩阵数据或相关性分析结果。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 导入Seaborn和相关库</span>
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建相关性矩阵数据</span>
+data = np.array([
+    [1.0, 0.85, 0.72, 0.45],
+    [0.85, 1.0, 0.68, 0.38],
+    [0.72, 0.68, 1.0, 0.55],
+    [0.45, 0.38, 0.55, 1.0]
+])
+
+labels = [<span class="string">'销售额'</span>, <span class="string">'访问量'</span>, <span class="string">'转化率'</span>, <span class="string">'复购率'</span>]
+
+<span class="comment"># 创建热力图</span>
+plt.figure(figsize=(8, 6))
+ax = sns.heatmap(data, 
+                 annot=<span class="keyword">True</span>, 
+                 fmt=<span class="string">'.2f'</span>, 
+                 cmap=<span class="string">'Blues'</span>,
+                 xticklabels=labels,
+                 yticklabels=labels,
+                 cbar=<span class="keyword">True</span>,
+                 square=<span class="keyword">True</span>)
+
+plt.title(<span class="string">'业务指标相关性矩阵'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> Seaborn柱状图增强</h3>
+                <div class="section-content">
+                    <p>Seaborn提供了更高级的柱状图功能，支持分组、聚合统计等高级特性。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 使用Seaborn绘制分组柱状图</span>
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建数据</span>
+data = {
+    <span class="string">'产品类别'</span>: [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>] * 2,
+    <span class="string">'渠道'</span>: [<span class="string">'线上'</span>] * 4 + [<span class="string">'线下'</span>] * 4,
+    <span class="string">'销售额'</span>: [320, 280, 180, 220, 240, 350, 260, 190]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 创建分组柱状图</span>
+plt.figure(figsize=(10, 6))
+sns.barplot(x=<span class="string">'产品类别'</span>, y=<span class="string">'销售额'</span>, hue=<span class="string">'渠道'</span>, 
+            data=df, palette=[<span class="string">'#1e40af'</span>, <span class="string">'#10b981'</span>])
+
+plt.title(<span class="string">'各渠道产品销售额对比'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+plt.xlabel(<span class="string">'产品类别'</span>, fontsize=12)
+plt.ylabel(<span class="string">'销售额(万元)'</span>, fontsize=12)
+plt.legend(title=<span class="string">'销售渠道'</span>)
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>注意：</strong>选择合适的颜色映射(cmap)对于热力图的可读性至关重要。常用的颜色映射包括Blues、Greens、RdBu（红蓝对比）等。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-quiz3">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">热力图适合用于展示什么？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">数据随时间变化的趋势</div>
+                        <div class="quiz-option" data-correct="false">不同类别的数据比较</div>
+                        <div class="quiz-option" data-correct="true">矩阵数据或相关性分析结果</div>
+                        <div class="quiz-option" data-correct="false">数据的构成比例</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>热力图适合展示矩阵数据或相关性分析结果。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、数据叙事技巧</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-book-open"></i> 讲述数据故事</h3>
+                <div class="section-content">
+                    <p>数据可视化的最终目的是传达信息和讲述故事。以下是有效的数据叙事技巧：</p>
+                    <ol>
+                        <li><strong>确定核心信息：</strong>明确你想要传达的主要观点</li>
+                        <li><strong>构建叙事结构：</strong>按照逻辑顺序组织图表</li>
+                        <li><strong>突出关键发现：</strong>使用视觉手段强调重要数据点</li>
+                        <li><strong>保持简洁：</strong>避免信息过载，只展示必要数据</li>
+                    </ol>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">数据叙事流程</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">确定目标</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">选择图表</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">设计呈现</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">讲述故事</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-check-circle"></i> 图表检查清单</h3>
+                <div class="section-content">
+                    <p>在完成图表设计后，请检查以下几点：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-tag"></i><span>标题清晰</span></div>
+                    <div class="feature-item"><i class="fas fa-align-center"></i><span>坐标轴标注完整</span></div>
+                    <div class="feature-item"><i class="fas fa-list"></i><span>图例说明明确</span></div>
+                    <div class="feature-item"><i class="fas fa-calendar"></i><span>数据来源注明</span></div>
+                    <div class="feature-item"><i class="fas fa-eye"></i><span>视觉层次分明</span></div>
+                    <div class="feature-item"><i class="fas fa-mobile-alt"></i><span>可读性良好</span></div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-quiz4">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">以下哪种图表适合展示数据的构成比例？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">柱状图</div>
+                        <div class="quiz-option" data-correct="false">折线图</div>
+                        <div class="quiz-option" data-correct="true">饼图</div>
+                        <div class="quiz-option" data-correct="false">雷达图</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>饼图适合展示数据的构成比例。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        Python代码挑战
+                    </div>
+                    <div class="challenge-description">
+                        <h4>挑战任务</h4>
+                        <p>使用Matplotlib绘制柱状图和折线图，展示季度销售数据。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 导入必要的库
+import matplotlib.pyplot as plt
+
+# 准备数据
+categories = ['Q1', 'Q2', 'Q3', 'Q4']
+sales = [120, 150, 180, 220]
+profit = [25, 30, 40, 50]
+
+# 创建柱状图
+plt.figure(figsize=(12, 5))
+
+# 第一个子图：柱状图
+plt.subplot(1, 2, 1)
+plt.bar(categories, sales, color='#3b82f6')
+plt.title('季度销售额', fontsize=12, fontweight='bold')
+plt.xlabel('季度', fontsize=10)
+plt.ylabel('销售额(万元)', fontsize=10)
+for i, v in enumerate(sales):
+    plt.text(i, v + 5, str(v), ha='center')
+
+# 第二个子图：折线图
+plt.subplot(1, 2, 2)
+plt.plot(categories, profit, marker='o', linestyle='-', linewidth=2, color='#10b981', label='利润')
+plt.title('季度利润', fontsize=12, fontweight='bold')
+plt.xlabel('季度', fontsize=10)
+plt.ylabel('利润(万元)', fontsize=10)
+for i, v in enumerate(profit):
+    plt.text(i, v + 2, str(v), ha='center')
+
+plt.tight_layout()
+plt.show()
+
+print('图表绘制完成！')</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter6">
+                <div class="chapter-test-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    第六章综合测评
+                </div>
+
+                <div class="test-questions">
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">以下哪种图表适合展示数据随时间变化的趋势？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="A">
+                                折线图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="B">
+                                饼图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="C">
+                                雷达图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="D">
+                                热力图
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">以下哪种图表适合比较不同类别之间的数据？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="A">
+                                饼图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="B">
+                                柱状图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="C">
+                                雷达图
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="D">
+                                热力图
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">热力图适合用于展示什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="A">
+                                数据随时间变化的趋势
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="B">
+                                不同类别的数据比较
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="C">
+                                矩阵数据或相关性分析结果
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="D">
+                                数据的构成比例
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">在商务场景中，以下哪种配色方案较为合适？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="A">
+                                过于花哨的颜色组合
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="B">
+                                高饱和度的彩虹色
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="C">
+                                闪烁的动画效果
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="D">
+                                专业稳重的配色方案
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">数据可视化的最终目的是什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="A">
+                                传达信息和讲述数据故事
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="B">
+                                使用复杂的图表类型
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="C">
+                                尽可能展示更多数据
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="D">
+                                使用花哨的配色方案
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter6')">提交测评</button>
+
+                <div class="test-result hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAchievements('chapter_complete', { chapter: 6 });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

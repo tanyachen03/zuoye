@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三章：市场与行业分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="chapter3.html" class="sidebar-item active"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第三章</span>
+            <h1 class="course-title">市场与行业分析</h1>
+            <p class="course-subtitle">掌握市场集中度计算、PEST分析法和SWOT分析量化等核心分析方法</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-target"></i> 章节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解市场集中度的概念和计算方法</li>
+                    <li>掌握PEST分析框架</li>
+                    <li>学会SWOT分析量化方法</li>
+                    <li>能够进行行业竞争格局分析</li>
+                    <li>理解市场规模估算方法</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、市场集中度分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-percentage"></i> 市场集中度概述</h3>
+                <div class="section-content">
+                    <p>市场集中度是衡量市场竞争程度的重要指标，反映了市场份额在企业之间的分布情况。常用的衡量指标包括CRn指数和HHI指数。</p>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> CRn指数计算</h3>
+                <div class="section-content">
+                    <p>CRn指数是指市场上前n家企业的市场份额之和。例如CR4表示前4家企业的市场份额总和。</p>
+                    <p><strong>CRn = Σ(第i家企业市场份额)，i=1到n</strong></p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 计算CRn指数</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 市场份额数据（按降序排列）</span>
+market_data = {
+    <span class="string">'企业'</span>: [<span class="string">'企业A'</span>, <span class="string">'企业B'</span>, <span class="string">'企业C'</span>, <span class="string">'企业D'</span>, <span class="string">'其他'</span>],
+    <span class="string">'市场份额(%)'</span>: [35, 25, 15, 10, 15]
+}
+df = pd.DataFrame(market_data)
+
+<span class="comment"># 计算CR4</span>
+cr4 = df[<span class="string">'市场份额(%)'</span>].iloc[:4].sum()
+
+<span class="comment"># 计算CR3</span>
+cr3 = df[<span class="string">'市场份额(%)'</span>].iloc[:3].sum()
+
+<span class="comment"># 计算HHI指数</span>
+hhi = sum([(share / 100) ** 2 <span class="keyword">for</span> share <span class="keyword">in</span> df[<span class="string">'市场份额(%)'</span>]]) * 10000
+
+<span class="string">print</span>(<span class="string">f"CR3: {cr3}%"</span>)
+<span class="string">print</span>(<span class="string">f"CR4: {cr4}%"</span>)
+<span class="string">print</span>(<span class="string">f"HHI指数: {hhi:.2f}"</span>)</code>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">市场集中度判定标准</div>
+                    <div class="diagram" style="width: 100%; max-width: 500px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                            <div style="text-align: center;">
+                                <div style="background-color: var(--success-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem;">低集中</div>
+                                <div style="color: var(--text-secondary);">HHI < 1500</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background-color: var(--warning-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem;">中集中</div>
+                                <div style="color: var(--text-secondary);">1500 ≤ HHI < 2500</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background-color: var(--danger-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem;">高集中</div>
+                                <div style="color: var(--text-secondary);">HHI ≥ 2500</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter3-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">CR4指数表示什么？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">市场上所有企业的市场份额之和</div>
+                        <div class="quiz-option" data-correct="true">市场上前4家企业的市场份额之和</div>
+                        <div class="quiz-option" data-correct="false">市场上前4个行业的市场份额之和</div>
+                        <div class="quiz-option" data-correct="false">市场上排名第4家企业的市场份额</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>CR4指数表示市场上前4家企业的市场份额之和，用于衡量市场集中度。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、PEST分析法</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-globe"></i> PEST框架概述</h3>
+                <div class="section-content">
+                    <p>PEST分析是一种宏观环境分析方法，用于评估政治(Political)、经济(Economic)、社会(Social)和技术(Technological)因素对企业的影响。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">PEST分析框架</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div class="diagram-box">
+                                <h4>政治因素</h4>
+                                <p>政策法规、税收政策、政府稳定性</p>
+                            </div>
+                            <div class="diagram-box">
+                                <h4>经济因素</h4>
+                                <p>GDP增长、通货膨胀、利率汇率</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4>社会因素</h4>
+                                <p>人口结构、消费习惯、文化趋势</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4>技术因素</h4>
+                                <p>技术创新、数字化转型、AI发展</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-file-alt"></i> PEST分析实战</h3>
+                <div class="section-content">
+                    <p>以下是使用Python进行PEST分析数据整理和可视化的示例：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># PEST分析数据整理</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建PEST分析数据</span>
+pest_data = {
+    <span class="string">'维度'</span>: [<span class="string">'政治'</span>, <span class="string">'政治'</span>, <span class="string">'经济'</span>, <span class="string">'经济'</span>, 
+              <span class="string">'社会'</span>, <span class="string">'社会'</span>, <span class="string">'技术'</span>, <span class="string">'技术'</span>],
+    <span class="string">'因素'</span>: [<span class="string">'数据隐私法规'</span>, <span class="string">'税收政策'</span>, 
+              <span class="string">'消费升级'</span>, <span class="string">'利率变化'</span>,
+              <span class="string">'老龄化趋势'</span>, <span class="string">'线上消费习惯'</span>,
+              <span class="string">'AI技术发展'</span>, <span class="string">'云计算普及'</span>],
+    <span class="string">'影响程度'</span>: [3, 2, 4, 2, 3, 4, 5, 4],
+    <span class="string">'趋势'</span>: [<span class="string">'负向'</span>, <span class="string">'中性'</span>, <span class="string">'正向'</span>, <span class="string">'负向'</span>,
+            <span class="string">'负向'</span>, <span class="string">'正向'</span>, <span class="string">'正向'</span>, <span class="string">'正向'</span>]
+}
+df = pd.DataFrame(pest_data)
+
+<span class="comment"># 按维度分组统计</span>
+pest_summary = df.groupby(<span class="string">'维度'</span>).agg({
+    <span class="string">'影响程度'</span>: <span class="string">'mean'</span>,
+    <span class="string">'因素'</span>: <span class="string">'count'</span>
+}).rename(columns={<span class="string">'因素'</span>: <span class="string">'因素数量'</span>})
+
+<span class="string">print</span>(pest_summary.round(2))</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>提示：</strong>PEST分析结果需要结合企业自身情况进行解读，同一个因素对不同企业可能产生不同影响。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter3-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">PEST分析中的"S"代表什么？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">Political（政治）</div>
+                        <div class="quiz-option" data-correct="false">Economic（经济）</div>
+                        <div class="quiz-option" data-correct="true">Social（社会）</div>
+                        <div class="quiz-option" data-correct="false">Technological（技术）</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>PEST分析中的四个维度分别是Political（政治）、Economic（经济）、Social（社会）、Technological（技术）。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、SWOT分析量化</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-balance-scale"></i> SWOT分析概述</h3>
+                <div class="section-content">
+                    <p>SWOT分析是一种战略分析工具，用于评估企业的优势(Strengths)、劣势(Weaknesses)、机会(Opportunities)和威胁(Threats)。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">SWOT分析矩阵</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div class="diagram-box">
+                                <h4>优势(S)</h4>
+                                <p>核心技术、品牌优势、人才储备</p>
+                            </div>
+                            <div class="diagram-box weak">
+                                <h4>劣势(W)</h4>
+                                <p>资金不足、技术落后、管理薄弱</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4>机会(O)</h4>
+                                <p>市场增长、政策支持、技术突破</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4>威胁(T)</h4>
+                                <p>竞争加剧、政策变化、技术替代</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> SWOT量化方法</h3>
+                <div class="section-content">
+                    <p>通过赋予权重和评分，将定性分析转化为定量结果，便于比较和决策。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># SWOT量化分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># SWOT因素数据</span>
+swot_data = {
+    <span class="string">'维度'</span>: [<span class="string">'优势'</span>, <span class="string">'优势'</span>, <span class="string">'劣势'</span>, <span class="string">'劣势'</span>,
+              <span class="string">'机会'</span>, <span class="string">'机会'</span>, <span class="string">'威胁'</span>, <span class="string">'威胁'</span>],
+    <span class="string">'因素'</span>: [<span class="string">'品牌知名度'</span>, <span class="string">'技术研发能力'</span>,
+              <span class="string">'资金压力'</span>, <span class="string">'人才流失'</span>,
+              <span class="string">'市场需求增长'</span>, <span class="string">'政策支持'</span>,
+              <span class="string">'竞争对手进入'</span>, <span class="string">'原材料涨价'</span>],
+    <span class="string">'权重'</span>: [0.3, 0.2, 0.25, 0.15, 0.2, 0.3, 0.25, 0.2],
+    <span class="string">'评分'</span>: [8, 7, 5, 4, 8, 9, 6, 5]
+}
+df = pd.DataFrame(swot_data)
+
+<span class="comment"># 计算加权得分</span>
+df[<span class="string">'加权得分'</span>] = df[<span class="string">'权重'</span>] * df[<span class="string">'评分'</span>]
+
+<span class="comment"># 按维度汇总</span>
+swot_summary = df.groupby(<span class="string">'维度'</span>).agg({
+    <span class="string">'加权得分'</span>: <span class="string">'sum'</span>
+})
+
+<span class="string">print</span>(swot_summary)</code>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>注意：</strong>SWOT量化结果依赖于权重和评分的主观设定，不同的评估者可能得出不同结果，需要多人评估取平均值。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter3-quiz3">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">SWOT分析中的"O"代表什么？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">Strengths（优势）</div>
+                        <div class="quiz-option" data-correct="false">Weaknesses（劣势）</div>
+                        <div class="quiz-option" data-correct="true">Opportunities（机会）</div>
+                        <div class="quiz-option" data-correct="false">Threats（威胁）</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>SWOT分析包括Strengths（优势）、Weaknesses（劣势）、Opportunities（机会）和Threats（威胁）。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、行业竞争格局分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-users"></i> 竞争格局分析框架</h3>
+                <div class="section-content">
+                    <p>综合运用多种分析方法，全面评估行业竞争格局和企业定位。</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-chart-bar"></i><span>市场份额分析</span></div>
+                    <div class="feature-item"><i class="fas fa-trending-up"></i><span>增长趋势分析</span></div>
+                    <div class="feature-item"><i class="fas fa-crosshair"></i><span>竞争定位分析</span></div>
+                    <div class="feature-item"><i class="fas fa-lightbulb"></i><span>差异化分析</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-pie"></i> 市场份额可视化</h3>
+                <div class="section-content">
+                    <p>通过图表直观展示市场份额分布情况。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">市场份额分布示例</div>
+                    <div class="diagram" style="width: 100%; max-width: 400px;">
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--primary-color); font-weight: 600;">头部企业</span>
+                                    <span>60%</span>
+                                </div>
+                                <div style="height: 20px; background: linear-gradient(to right, var(--primary-color) 60%, #e2e8f0 60%); border-radius: 0.5rem;"></div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--secondary-color); font-weight: 600;">中型企业</span>
+                                    <span>25%</span>
+                                </div>
+                                <div style="height: 20px; background: linear-gradient(to right, var(--secondary-color) 25%, #e2e8f0 25%); border-radius: 0.5rem;"></div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--text-secondary); font-weight: 600;">小型企业</span>
+                                    <span>15%</span>
+                                </div>
+                                <div style="height: 20px; background: linear-gradient(to right, var(--text-secondary) 15%, #e2e8f0 15%); border-radius: 0.5rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter3-quiz4">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">HHI指数达到多少时市场属于高集中？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">HHI < 1000</div>
+                        <div class="quiz-option" data-correct="false">1000 ≤ HHI < 2000</div>
+                        <div class="quiz-option" data-correct="true">HHI ≥ 2500</div>
+                        <div class="quiz-option" data-correct="false">HHI ≥ 5000</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>当HHI指数≥2500时，市场属于高集中状态。</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter3">
+                <div class="chapter-test-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    第三章综合测评
+                </div>
+
+                <div class="test-questions">
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">CR3指数表示什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="A">
+                                市场上前3家企业的市场份额之和
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="B">
+                                市场上前3个行业的市场份额之和
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="C">
+                                市场上排名第3家企业的市场份额
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="D">
+                                市场上所有企业的市场份额之和
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">PEST分析中的"E"代表什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="A">
+                                Political（政治）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="B">
+                                Economic（经济）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="C">
+                                Social（社会）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="D">
+                                Technological（技术）
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">SWOT分析中的"W"代表什么？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="A">
+                                Strengths（优势）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="B">
+                                Opportunities（机会）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="C">
+                                Weaknesses（劣势）
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="D">
+                                Threats（威胁）
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">以下哪个不是PEST分析的维度？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="A">
+                                政治因素
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="B">
+                                经济因素
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="C">
+                                技术因素
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="D">
+                                文化因素
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">关于SWOT量化分析，以下说法正确的是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="A">
+                                依赖于权重和评分的主观设定
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="B">
+                                结果是绝对客观的
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="C">
+                                不需要多人评估
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="D">
+                                不同评估者一定会得出相同结果
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter3')">提交测评</button>
+
+                <div class="test-result hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAchievements('chapter_complete', { chapter: 3 });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

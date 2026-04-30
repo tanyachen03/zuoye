@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二章：Python分析基础</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="chapter2.html" class="sidebar-item active"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第二章</span>
+            <h1 class="course-title">Python分析基础</h1>
+            <p class="course-subtitle">掌握Pandas DataFrame操作、数据清洗和数据合并连接等核心技能</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-target"></i> 章节目标</h3>
+                <ul class="objectives-list">
+                    <li>熟练使用Pandas进行DataFrame基本操作</li>
+                    <li>掌握数据清洗的常用方法</li>
+                    <li>学会数据合并与连接技术</li>
+                    <li>能够处理缺失值和异常值</li>
+                    <li>理解数据类型转换和格式处理</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、Pandas DataFrame操作</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-table"></i> 创建DataFrame</h3>
+                <div class="section-content">
+                    <p>DataFrame是Pandas中最核心的数据结构，类似于Excel表格，由行和列组成。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 创建DataFrame的几种方式</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 方式1：从字典创建</span>
+data = {
+    <span class="string">'姓名'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="string">'王五'</span>],
+    <span class="string">'年龄'</span>: [25, 30, 28],
+    <span class="string">'城市'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 方式2：从CSV文件读取</span>
+<span class="comment"># df = pd.read_csv('data.csv')</span>
+
+<span class="comment"># 方式3：从Excel文件读取</span>
+<span class="comment"># df = pd.read_excel('data.xlsx')</span>
+
+<span class="string">print</span>(df)</code>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter2-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">在Pandas中，创建DataFrame的方式不包括以下哪一项？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">从字典创建</div>
+                        <div class="quiz-option" data-correct="true">从图片文件创建</div>
+                        <div class="quiz-option" data-correct="false">从CSV文件读取</div>
+                        <div class="quiz-option" data-correct="false">从Excel文件读取</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>Pandas支持从字典、列表、CSV、Excel等多种数据源创建DataFrame，但不直接支持从图片文件创建。</p>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-search"></i> 数据选取与筛选</h3>
+                <div class="section-content">
+                    <p>掌握DataFrame的数据选取方法是数据分析的基础技能。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 数据选取与筛选</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建示例数据</span>
+data = {
+    <span class="string">'姓名'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="string">'王五'</span>, <span class="string">'赵六'</span>],
+    <span class="string">'年龄'</span>: [25, 30, 28, 35],
+    <span class="string">'城市'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, <span class="string">'深圳'</span>],
+    <span class="string">'工资'</span>: [8000, 12000, 10000, 15000]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 选取列</span>
+print(<span class="string">"=== 选取单列 ==="</span>)
+print(df[<span class="string">'姓名'</span>])
+
+<span class="comment"># 选取多列</span>
+print(<span class="string">"\n=== 选取多列 ==="</span>)
+print(df[[<span class="string">'姓名'</span>, <span class="string">'工资'</span>]])
+
+<span class="comment"># 按条件筛选</span>
+print(<span class="string">"\n=== 工资大于10000 ==="</span>)
+print(df[df[<span class="string">'工资'</span>] > 10000])
+
+<span class="comment"># 使用loc选取</span>
+print(<span class="string">"\n=== 使用loc选取 ==="</span>)
+print(df.loc[1:2, [<span class="string">'姓名'</span>, <span class="string">'城市'</span>]])</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、数据清洗</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-filter"></i> 处理缺失值</h3>
+                <div class="section-content">
+                    <p>缺失值是数据分析中常见的问题，需要合理处理以避免影响分析结果。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 处理缺失值</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建含缺失值的DataFrame</span>
+data = {
+    <span class="string">'姓名'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, np.nan, <span class="string">'赵六'</span>],
+    <span class="string">'年龄'</span>: [25, np.nan, 28, 35],
+    <span class="string">'城市'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, np.nan],
+    <span class="string">'工资'</span>: [8000, 12000, 10000, 15000]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 查看缺失值</span>
+print(<span class="string">"=== 缺失值统计 ==="</span>)
+print(df.isnull().sum())
+
+<span class="comment"># 方法1：删除含缺失值的行</span>
+df_drop = df.dropna()
+print(<span class="string">"\n=== 删除缺失值后 ==="</span>)
+print(df_drop)
+
+<span class="comment"># 方法2：填充缺失值</span>
+df_fill = df.copy()
+df_fill[<span class="string">'年龄'</span>] = df_fill[<span class="string">'年龄'</span>].fillna(df_fill[<span class="string">'年龄'</span>].mean())
+df_fill[<span class="string">'姓名'</span>] = df_fill[<span class="string">'姓名'</span>].fillna(<span class="string">'未知'</span>)
+print(<span class="string">"\n=== 填充缺失值后 ==="</span>)
+print(df_fill)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-exclamation-triangle"></i> 处理异常值</h3>
+                <div class="section-content">
+                    <p>异常值会严重影响数据分析结果，需要识别和处理。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 处理异常值</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建含异常值的DataFrame</span>
+data = {
+    <span class="string">'产品'</span>: [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>],
+    <span class="string">'销量'</span>: [100, 120, 95, 1000, 110],  <span class="comment"># 1000是异常值</span>
+    <span class="string">'价格'</span>: [50, 60, 55, 500, 58]      <span class="comment"># 500是异常值</span>
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 使用Z-score检测异常值</span>
+<span class="keyword">def</span> <span class="function">detect_outliers</span>(df, column):
+    z_scores = np.abs((df[column] - df[column].mean()) / df[column].std())
+    <span class="keyword">return</span> z_scores > 2
+
+<span class="comment"># 检测销量异常值</span>
+sales_outliers = detect_outliers(df, <span class="string">'销量'</span>)
+print(<span class="string">"=== 销量异常值 ==="</span>)
+print(df[sales_outliers])
+
+<span class="comment"># 使用IQR方法处理异常值</span>
+<span class="keyword">def</span> <span class="function">remove_outliers</span>(df, column):
+    q1 = df[column].quantile(0.25)
+    q3 = df[column].quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    <span class="keyword">return</span> df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+
+df_clean = remove_outliers(df, <span class="string">'销量'</span>)
+print(<span class="string">"\n=== 移除异常值后 ==="</span>)
+print(df_clean)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>提示：</strong>处理缺失值和异常值时，需要结合业务背景，不能盲目删除或填充。了解数据产生缺失或异常的原因非常重要。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter2-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">关于缺失值处理，以下说法正确的是？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">必须删除所有含缺失值的行</div>
+                        <div class="quiz-option" data-correct="false">缺失值只能用平均值填充</div>
+                        <div class="quiz-option" data-correct="true">应结合业务背景选择合适的处理方式</div>
+                        <div class="quiz-option" data-correct="false">缺失值对分析没有影响</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>处理缺失值时应结合业务背景选择合适的方式，包括删除、填充等，而不是一概而论。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、数据合并与连接</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-link"></i> 数据合并</h3>
+                <div class="section-content">
+                    <p>数据分析中经常需要将多个数据源合并在一起进行分析。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 数据合并</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建两个DataFrame</span>
+df1 = pd.DataFrame({
+    <span class="string">'ID'</span>: [1, 2, 3, 4],
+    <span class="string">'姓名'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="string">'王五'</span>, <span class="string">'赵六'</span>],
+    <span class="string">'部门'</span>: [<span class="string">'销售'</span>, <span class="string">'研发'</span>, <span class="string">'销售'</span>, <span class="string">'研发'</span>]
+})
+
+df2 = pd.DataFrame({
+    <span class="string">'ID'</span>: [1, 2, 3, 5],
+    <span class="string">'工资'</span>: [8000, 12000, 10000, 9000],
+    <span class="string">'入职日期'</span>: [<span class="string">'2022-01-01'</span>, <span class="string">'2021-06-01'</span>, 
+                   <span class="string">'2022-03-15'</span>, <span class="string">'2023-01-01'</span>]
+})
+
+<span class="comment"># 内连接</span>
+inner_join = pd.merge(df1, df2, on=<span class="string">'ID'</span>, how=<span class="string">'inner'</span>)
+print(<span class="string">"=== 内连接 ==="</span>)
+print(inner_join)
+
+<span class="comment"># 左连接</span>
+left_join = pd.merge(df1, df2, on=<span class="string">'ID'</span>, how=<span class="string">'left'</span>)
+print(<span class="string">"\n=== 左连接 ==="</span>)
+print(left_join)
+
+<span class="comment"># 右连接</span>
+right_join = pd.merge(df1, df2, on=<span class="string">'ID'</span>, how=<span class="string">'right'</span>)
+print(<span class="string">"\n=== 右连接 ==="</span>)
+print(right_join)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-layer-group"></i> 数据拼接</h3>
+                <div class="section-content">
+                    <p>当数据结构相同时，可以使用concat进行纵向或横向拼接。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 数据拼接</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建两个结构相同的DataFrame</span>
+df_a = pd.DataFrame({
+    <span class="string">'日期'</span>: [<span class="string">'2024-01-01'</span>, <span class="string">'2024-01-02'</span>, <span class="string">'2024-01-03'</span>],
+    <span class="string">'销售额'</span>: [1000, 1200, 800],
+    <span class="string">'订单数'</span>: [10, 12, 8]
+})
+
+df_b = pd.DataFrame({
+    <span class="string">'日期'</span>: [<span class="string">'2024-01-04'</span>, <span class="string">'2024-01-05'</span>, <span class="string">'2024-01-06'</span>],
+    <span class="string">'销售额'</span>: [1500, 900, 1100],
+    <span class="string">'订单数'</span>: [15, 9, 11]
+})
+
+<span class="comment"># 纵向拼接（合并行）</span>
+df_concat = pd.concat([df_a, df_b], ignore_index=<span class="keyword">True</span>)
+print(<span class="string">"=== 纵向拼接 ==="</span>)
+print(df_concat)
+
+<span class="comment"># 创建额外数据用于横向拼接</span>
+df_extra = pd.DataFrame({
+    <span class="string">'日期'</span>: [<span class="string">'2024-01-01'</span>, <span class="string">'2024-01-02'</span>, <span class="string">'2024-01-03'</span>],
+    <span class="string">'访客数'</span>: [100, 120, 80]
+})
+
+<span class="comment"># 横向拼接（合并列）</span>
+df_merge = pd.concat([df_a, df_extra], axis=1)
+print(<span class="string">"\n=== 横向拼接 ==="</span>)
+print(df_merge)</code>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>注意：</strong>在进行数据合并时，确保用于连接的键列具有相同的数据类型和格式，否则可能导致意外的结果。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter2-quiz3">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">在Pandas中，pd.merge()函数的how参数设置为'inner'表示什么连接？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">内连接（只保留匹配的行）</div>
+                        <div class="quiz-option" data-correct="false">左连接（保留左表所有行）</div>
+                        <div class="quiz-option" data-correct="false">右连接（保留右表所有行）</div>
+                        <div class="quiz-option" data-correct="false">全连接（保留所有行）</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>how='inner'表示内连接，只保留两个表中键匹配的行。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、数据类型转换</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-exchange-alt"></i> 类型转换方法</h3>
+                <div class="section-content">
+                    <p>正确的数据类型对于数据分析至关重要，需要掌握常用的类型转换方法。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 数据类型转换</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建DataFrame</span>
+data = {
+    <span class="string">'日期'</span>: [<span class="string">'2024-01-01'</span>, <span class="string">'2024-01-02'</span>, <span class="string">'2024-01-03'</span>],
+    <span class="string">'销售额'</span>: [<span class="string">'1000'</span>, <span class="string">'1200'</span>, <span class="string">'800'</span>],
+    <span class="string">'订单数'</span>: [<span class="string">'10'</span>, <span class="string">'12'</span>, <span class="string">'8'</span>],
+    <span class="string">'利润率'</span>: [<span class="string">'25%'</span>, <span class="string">'30%'</span>, <span class="string">'20%'</span>]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 查看数据类型</span>
+print(<span class="string">"=== 原始数据类型 ==="</span>)
+print(df.dtypes)
+
+<span class="comment"># 转换日期类型</span>
+df[<span class="string">'日期'</span>] = pd.to_datetime(df[<span class="string">'日期'</span>])
+
+<span class="comment"># 转换数值类型</span>
+df[<span class="string">'销售额'</span>] = df[<span class="string">'销售额'</span>].astype(<span class="string">'int'</span>)
+df[<span class="string">'订单数'</span>] = pd.to_numeric(df[<span class="string">'订单数'</span>])
+
+<span class="comment"># 处理百分比</span>
+df[<span class="string">'利润率'</span>] = df[<span class="string">'利润率'</span>].str.replace(<span class="string">'%'</span>, <span class="string">''</span>).astype(<span class="string">'float'</span>) / 100
+
+<span class="comment"># 查看转换后类型</span>
+print(<span class="string">"\n=== 转换后数据类型 ==="</span>)
+print(df.dtypes)
+print(<span class="string">"\n=== 转换后数据 ==="</span>)
+print(df)</code>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-calendar"></i><span>日期类型：pd.to_datetime()</span></div>
+                    <div class="feature-item"><i class="fas fa-hashtag"></i><span>数值类型：pd.to_numeric()</span></div>
+                    <div class="feature-item"><i class="fas fa-typewriter"></i><span>字符串类型：astype('str')</span></div>
+                    <div class="feature-item"><i class="fas fa-percentage"></i><span>百分比处理：str.replace()</span></div>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter2-quiz4">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">将字符串类型的日期转换为日期类型应使用哪个函数？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">pd.to_numeric()</div>
+                        <div class="quiz-option" data-correct="true">pd.to_datetime()</div>
+                        <div class="quiz-option" data-correct="false">astype('str')</div>
+                        <div class="quiz-option" data-correct="false">str.replace()</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>pd.to_datetime()用于将字符串转换为日期时间类型。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        Python代码挑战
+                    </div>
+                    <div class="challenge-description">
+                        <h4>挑战任务</h4>
+                        <p>创建一个包含姓名、年龄、城市的DataFrame，筛选出年龄大于25岁的记录，并计算这些人的平均年龄。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 导入必要的库
+import pandas as pd
+
+# 1. 创建示例数据
+data = {
+    '姓名': ['张三', '李四', '王五', '赵六', '钱七'],
+    '年龄': [22, 28, 25, 32, 27],
+    '城市': ['北京', '上海', '广州', '深圳', '杭州']
+}
+
+# 2. 创建DataFrame
+df = pd.DataFrame(data)
+
+# 3. 筛选年龄大于25岁的记录
+df_filtered = df[df['年龄'] > 25]
+
+# 4. 计算平均年龄
+average_age = df_filtered['年龄'].mean()
+
+# 输出结果
+print('筛选后的记录：')
+print(df_filtered)
+print(f'\n平均年龄：{average_age:.1f}岁')">
+# 导入必要的库
+import pandas as pd
+
+# 1. 创建示例数据
+data = {
+    '姓名': ['张三', '李四', '王五', '赵六', '钱七'],
+    '年龄': [22, 28, 25, 32, 27],
+    '城市': ['北京', '上海', '广州', '深圳', '杭州']
+}
+
+# 2. 创建DataFrame
+df = pd.DataFrame(data)
+
+# 3. 筛选年龄大于25岁的记录
+df_filtered = df[df['年龄'] > 25]
+
+# 4. 计算平均年龄
+average_age = df_filtered['年龄'].mean()
+
+# 输出结果
+print('筛选后的记录：')
+print(df_filtered)
+print(f'\n平均年龄：{average_age:.1f}岁')</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter2">
+                <div class="chapter-test-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    第二章综合测评
+                </div>
+
+                <div class="test-questions">
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">Pandas中用于读取CSV文件的函数是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="A">
+                                pd.read_csv()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="B">
+                                pd.read_excel()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="C">
+                                pd.read_json()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="D">
+                                pd.read_sql()
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">DataFrame中，用于统计缺失值数量的方法是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="A">
+                                df.count()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="B">
+                                df.isnull().sum()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="C">
+                                df.dropna()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="D">
+                                df.fillna()
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">使用pd.merge()进行数据合并时，默认的连接方式是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="A">
+                                left
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="B">
+                                right
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="C">
+                                inner
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="D">
+                                outer
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">在Pandas中，用于将列转换为数值类型的函数是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="A">
+                                pd.to_numeric()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="B">
+                                pd.to_datetime()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="C">
+                                pd.to_string()
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="D">
+                                pd.to_float()
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">关于异常值处理，以下说法正确的是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="A">
+                                异常值必须直接删除
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="B">
+                                异常值不会影响分析结果
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="C">
+                                所有异常值都是错误数据
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="D">
+                                应结合业务背景判断异常值的处理方式
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter2')">提交测评</button>
+
+                <div class="test-result hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAchievements('chapter_complete', { chapter: 2 });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

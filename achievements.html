@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成就殿堂 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="achievements-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#courses" class="nav-link">课程中心</a>
+                <a href="index.html#projects" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link active">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <span id="user-progress-info" class="user-progress-info hidden">
+                        <i class="fas fa-trophy"></i>
+                        <span id="progress-percent">0%</span>
+                    </span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="achievements-page-container">
+        <div class="achievements-page-header">
+            <h1><i class="fas fa-trophy" style="color: var(--warning-color);"></i> 成就殿堂</h1>
+            <p>记录你的学习历程，见证每一次成长与突破</p>
+        </div>
+
+        <div class="achievement-progress-container">
+            <div class="achievement-progress-header">
+                <div class="achievement-progress-title">
+                    <i class="fas fa-chart-line" style="color: var(--primary-color);"></i>
+                    学习进度总览
+                </div>
+                <div id="progress-text" class="achievement-progress-percent">0%</div>
+            </div>
+            <div class="achievement-progress-bar">
+                <div id="progress-bar" class="achievement-progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div class="achievement-progress-stats">
+                <div class="achievement-stat-item">
+                    <div id="stat-chapters" class="achievement-stat-number">0</div>
+                    <div class="achievement-stat-label">完成章节</div>
+                </div>
+                <div class="achievement-stat-item">
+                    <div id="stat-quizzes" class="achievement-stat-number">0</div>
+                    <div class="achievement-stat-label">完成测验</div>
+                </div>
+                <div class="achievement-stat-item">
+                    <div id="stat-score" class="achievement-stat-number">0%</div>
+                    <div class="achievement-stat-label">最高得分</div>
+                </div>
+                <div class="achievement-stat-item">
+                    <div id="stat-streak" class="achievement-stat-number">0</div>
+                    <div class="achievement-stat-label">连续学习</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="achievements-grid" class="achievements-grid">
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html#courses">课程中心</a></li>
+                    <li><a href="index.html#projects">实战项目</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderAchievementsPage === 'function') {
+                renderAchievementsPage();
+            }
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const progressInfo = document.getElementById('user-progress-info');
+            
+            if (currentUser && progressInfo) {
+                progressInfo.classList.remove('hidden');
+                const progress = getLearningProgress();
+                document.getElementById('progress-percent').textContent = progress + '%';
+                
+                const userData = getUserAchievementData();
+                if (userData) {
+                    document.getElementById('stat-chapters').textContent = userData.chaptersCompleted;
+                    document.getElementById('stat-quizzes').textContent = userData.quizzesCompleted;
+                    document.getElementById('stat-score').textContent = userData.bestScore + '%';
+                    document.getElementById('stat-streak').textContent = userData.streakDays;
+                }
+            }
+            
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const user = users.find(u => u.email === email && u.password === password);
+                    
+                    if (user) {
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        closeModal('login-modal');
+                        checkAuth();
+                        showNotification('登录成功！', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showNotification('邮箱或密码错误', 'error');
+                    }
+                });
+            }
+            
+            const registerForm = document.getElementById('register-form');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('register-name').value;
+                    const email = document.getElementById('register-email').value;
+                    const password = document.getElementById('register-password').value;
+                    
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    
+                    if (users.find(u => u.email === email)) {
+                        showNotification('该邮箱已被注册', 'error');
+                        return;
+                    }
+                    
+                    const newUser = {
+                        id: Date.now().toString(),
+                        name,
+                        email,
+                        password
+                    };
+                    
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(newUser));
+                    
+                    closeModal('register-modal');
+                    checkAuth();
+                    showNotification('注册成功！', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                });
+            }
+            
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('currentUser');
+                    checkAuth();
+                    showNotification('已退出登录', 'info');
+                    setTimeout(() => location.reload(), 1000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
