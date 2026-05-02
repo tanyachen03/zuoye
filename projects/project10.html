@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目10：销售趋势预测-移动平均法 - 数析学院</title>
+    <title>项目10：销售趋势预测 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
+    
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    
     <style>
-
-        :root {
-            --editor-bg: #ffffff;
-            --editor-line-num: #999999;
-            --editor-line-num-bg: #f5f5f5;
-            --editor-selection: #b3d7ff;
-            --editor-word: #333333;
-        }
-
         .project-page {
             padding-top: 70px;
             min-height: 100vh;
@@ -81,27 +82,6 @@
             padding: 1.5rem;
         }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .section-header i {
-            font-size: 1.25rem;
-            color: #3b82f6;
-        }
-
-        .section-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin: 0;
-        }
-
         .section-content {
             color: #475569;
             line-height: 1.6;
@@ -113,72 +93,6 @@
             border-radius: 6px;
             padding: 1rem;
             border-left: 3px solid #3b82f6;
-        }
-
-        .tip-box {
-            background: #fffbeb;
-            border-left: 3px solid #f59e0b;
-            padding: 0.875rem 1rem;
-            margin: 0.75rem 0;
-            border-radius: 0 6px 6px 0;
-        }
-
-        .tip-box .tip-title {
-            font-weight: 600;
-            color: #92400e;
-            margin-bottom: 0.375rem;
-        }
-
-        .tip-box .tip-content {
-            color: #78350f;
-        }
-
-        .error-box {
-            background: #fef2f2;
-            border-left: 3px solid #ef4444;
-            padding: 0.875rem 1rem;
-            margin: 0.75rem 0;
-            border-radius: 0 6px 6px 0;
-        }
-
-        .error-box .error-title {
-            font-weight: 600;
-            color: #991b1b;
-            margin-bottom: 0.375rem;
-        }
-
-        .error-box .error-content {
-            color: #7f1d1d;
-        }
-
-        .code-example {
-            background: #f8fafc;
-            border-radius: 6px;
-            padding: 0.875rem;
-            margin: 0.75rem 0;
-            border: 1px solid #e2e8f0;
-        }
-
-        .code-example pre {
-            margin: 0;
-            color: #1e293b;
-            font-family: 'Fira Code', 'Consolas', monospace;
-            font-size: 0.85rem;
-        }
-
-        .learning-step {
-            background: #f0f9ff;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            border-left: 3px solid #3b82f6;
-        }
-
-        .learning-step h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 0.5rem;
         }
 
         .description-toggle {
@@ -214,313 +128,103 @@
         .description-inner {
             padding-top: 1rem;
         }
-
-        .code-playground {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+        
+        .editor-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid #e2e8f0;
         }
-
-        .code-playground.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            border-radius: 0;
-        }
-
-        .code-playground.split-view {
-            display: grid;
-            grid-template-columns: 50% 50%;
-        }
-
-        .code-playground-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
+        
+        .editor-toolbar {
             background: #f8fafc;
+            padding: 12px 16px;
             border-bottom: 1px solid #e2e8f0;
-        }
-
-        .code-playground-title {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: #1e293b;
+            gap: 10px;
         }
-
-        .code-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .run-btn, .reset-btn, .answer-btn, .fullscreen-btn, .split-btn {
-            padding: 0.5rem 0.875rem;
+        
+        .editor-toolbar button {
+            padding: 8px 16px;
             border: none;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.375rem;
+            gap: 6px;
+            transition: all 0.2s;
         }
-
-        .run-btn { background: #22c55e; color: white; }
-        .run-btn:hover { background: #16a34a; }
-        .reset-btn { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-        .reset-btn:hover { background: #e2e8f0; }
-        .answer-btn { background: #f59e0b; color: white; }
-        .answer-btn:hover { background: #d97706; }
-        .fullscreen-btn { background: #64748b; color: white; }
-        .fullscreen-btn:hover { background: #475569; }
-        .split-btn { background: #64748b; color: white; }
-        .split-btn:hover { background: #475569; }
-        .split-btn.active { background: #3b82f6; }
-
-        .code-editor-wrapper {
-            display: grid;
-            grid-template-columns: 60% 40%;
-            min-height: 500px;
-            flex: 1;
+        
+        .btn-run {
+            background: #22c55e;
+            color: white;
         }
-
-        .code-editor-wrapper.split-mode {
-            grid-template-columns: 50% 50%;
+        
+        .btn-run:hover {
+            background: #16a34a;
         }
-
-        .code-editor-panel {
-            background: var(--editor-bg);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .code-editor-label {
-            padding: 0.5rem 1rem;
-            background: #f8fafc;
-            color: #64748b;
-            font-size: 0.8rem;
-            font-weight: 500;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .code-editor-container {
-            flex: 1;
-            display: flex;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .line-numbers {
-            background: var(--editor-line-num-bg);
-            color: var(--editor-line-num);
-            padding: 1rem 0.75rem;
-            text-align: right;
-            font-family: 'Fira Code', 'Consolas', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            user-select: none;
-            min-width: 50px;
-            border-right: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
-
-        .code-editor-wrapper-textarea {
-            flex: 1;
-            position: relative;
-        }
-
-        .code-editor {
-            width: 100%;
-            height: 100%;
-            min-height: 500px;
-            padding: 1rem;
-            border: none;
-            background: transparent;
-            color: var(--editor-word);
-            font-family: 'Fira Code', 'Consolas', monospace;
-            font-size: 15px;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
-            tab-size: 4;
-            white-space: pre;
-            overflow: auto;
-        }
-
-        .code-editor::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-
-        .code-editor::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-
-        .code-editor::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 5px;
-        }
-
-        .code-editor::selection {
-            background: var(--editor-selection);
-        }
-
-        .autocomplete-dropdown {
-            position: absolute;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-            min-width: 200px;
-        }
-
-        .autocomplete-dropdown.show {
-            display: block;
-        }
-
-        .autocomplete-item {
-            padding: 0.5rem 1rem;
-            color: #1e293b;
-            cursor: pointer;
-            font-family: 'Fira Code', monospace;
-            font-size: 14px;
-        }
-
-        .autocomplete-item:hover,
-        .autocomplete-item.selected {
-            background: #eff6ff;
-        }
-
-        .autocomplete-item .item-type {
-            color: #3b82f6;
-            font-size: 0.75rem;
-            margin-left: 0.5rem;
-        }
-
-        .resize-handle {
-            width: 6px;
-            background: #e2e8f0;
-            cursor: col-resize;
-            position: relative;
-        }
-
-        .resize-handle:hover,
-        .resize-handle.active {
-            background: #3b82f6;
-        }
-
-        .resize-handle::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 2px;
-            height: 30px;
-            background: #cbd5e1;
-            border-radius: 1px;
-        }
-
-        .code-output-panel {
-            background: #f8fafc;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .code-output-label {
-            padding: 0.5rem 1rem;
+        
+        .btn-reset {
             background: #f1f5f9;
-            color: #64748b;
-            font-size: 0.8rem;
-            font-weight: 500;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-reset:hover {
+            background: #e2e8f0;
+        }
+        
+        .btn-answer {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-answer:hover {
+            background: #d97706;
+        }
+        
+        .btn-fullscreen {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-fullscreen:hover {
+            background: #475569;
+        }
+        
+        .editor-main {
             border-bottom: 1px solid #e2e8f0;
         }
-
-        .code-output {
-            padding: 1rem;
-            flex: 1;
-            overflow-y: auto;
-            color: #1e293b;
+        
+        .CodeMirror {
+            height: 500px !important;
+            font-size: 15px;
+        }
+        
+        .output-area {
+            background: #0f172a;
+            padding: 16px;
+        }
+        
+        .output-area pre {
+            margin: 0;
+            color: #e2e8f0;
             font-family: 'Fira Code', 'Consolas', monospace;
             font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .code-output .placeholder {
-            color: #94a3b8;
-            font-style: italic;
-        }
-
-        .code-output .error {
-            color: #dc2626;
-        }
-
-        .code-output pre {
-            margin: 0;
+            line-height: 1.6;
             white-space: pre-wrap;
         }
-
-        .answer-section {
-            display: none;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .answer-section.show {
-            display: block;
-        }
-
-        .answer-content {
-            padding: 1rem;
-        }
-
-        .answer-content h4 {
-            color: #16a34a;
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .answer-content pre {
-            background: #f8fafc;
-            color: #1e293b;
-            padding: 1rem;
-            border-radius: 6px;
-            font-size: 14px;
-            max-height: 300px;
-            overflow: auto;
-            border: 1px solid #e2e8f0;
-        }
-
-        .split-panel-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #f8fafc;
-            color: #64748b;
-            font-size: 0.8rem;
-            font-weight: 500;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .split-panel-label.reference {
-            color: #16a34a;
+        
+        .status {
+            padding: 8px 16px;
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            margin-bottom: 10px;
+            border-radius: 0 6px 6px 0;
+            color: #92400e;
         }
 
         .difficulty-badge {
@@ -530,22 +234,33 @@
             font-weight: 600;
         }
 
-        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.15); color: #10b981; }
-        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .difficulty-badge.beginner {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        
+        .difficulty-badge.intermediate {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+        
+        .difficulty-badge.advanced {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
 
         @media (max-width: 1200px) {
-            .project-container { grid-template-columns: 1fr; }
-            .project-sidebar { position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-        }
+            .project-container {
+                grid-template-columns: 1fr;
+            }
 
-        @media (max-width: 768px) {
-            .code-editor-wrapper,
-            .code-editor-wrapper.split-mode { grid-template-columns: 1fr; }
-            .resize-handle { display: none; }
-            .code-controls { flex-wrap: wrap; }
+            .project-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
         }
-
     </style>
 </head>
 <body>
@@ -561,10 +276,16 @@
                 <a href="../projects.html" class="nav-link active">实战项目</a>
                 <a href="../achievements.html" class="nav-link">成就殿堂</a>
             </nav>
-            <button class="hamburger-menu" id="hamburger-menu"><i class="fas fa-bars"></i></button>
+            <button class="hamburger-menu" id="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="navbar-auth">
-                <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
-                <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
+                <button id="login-btn" class="auth-btn login-btn">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn">
+                    <i class="fas fa-user-plus"></i> 注册
+                </button>
             </div>
         </div>
     </header>
@@ -572,534 +293,275 @@
     <div class="project-page">
         <div class="project-header">
             <div class="project-header-content">
-                <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
-                <div class="project-title-row">
-                    <h1>项目10：销售趋势预测</h1>
+                <a href="../projects.html" class="project-back-link" style="color:white;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+                    <i class="fas fa-arrow-left"></i> 返回实战项目
+                </a>
+                <div class="project-title-row" style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;">
+                    <h1 style="font-size:1.75rem;font-weight:700;">项目10：销售趋势预测</h1>
                     <span class="difficulty-badge advanced">高级</span>
                 </div>
-                <div class="project-meta-info">
-                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：50分钟</span></div>
-                    <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：24个月数据</span></div></div>
+                <div style="display:flex;gap:1.5rem;margin-top:0.75rem;font-size:0.9rem;">
+                    <span><i class="fas fa-clock"></i> 预计时长：60分钟</span>
+                    <span><i class="fas fa-code"></i> 技术栈：Python + Pandas</span>
+                    <span><i class="fas fa-database"></i> 数据量：历史销售数据</span>
+                </div>
+            </div>
         </div>
 
         <div class="project-container">
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> 预测技巧</h3>
-                    <div class="tip-item"><strong>rolling(3)</strong> - 3期移动平均</div>
-                    <div class="tip-item"><strong>rolling(6)</strong> - 6期移动平均</div>
-                    <div class="tip-item"><strong>tail(3).mean()</strong> - 最近3期均值</div>
-                    <div class="tip-item"><strong>MAPE</strong> - 平均绝对百分比误差</div>
-                    <div class="tip-item"><strong>窗口选择</strong> - 根据数据波动性</div>
+                    <h3><i class="fas fa-lightbulb"></i> 预测分析技巧</h3>
+                    <div class="tip-item">
+                        <strong>移动平均</strong> - moving average
+                    </div>
+                    <div class="tip-item">
+                        <strong>趋势预测</strong> - trend forecast
+                    </div>
+                    <div class="tip-item">
+                        <strong>rolling()</strong> - 滚动计算
+                    </div>
+                    <div class="tip-item">
+                        <strong>mean()</strong> - 平均值
+                    </div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解移动平均法原理</div>
-                    <div class="tip-item">掌握时间序列分解</div>
-                    <div class="tip-item">学会趋势预测方法</div>
-                    <div class="tip-item">培养预测评估能力</div>
+                    <div class="tip-item">理解预测分析原理</div>
+                    <div class="tip-item">学会移动平均预测</div>
+                    <div class="tip-item">掌握趋势分析方法</div>
                 </div>
-                <div class="tips-card">
-                    <h3><i class="fas fa-chart-line"></i> 进阶方法</h3>
-                    <div class="tip-item"><strong>指数平滑</strong> - 给近期更高权重</div>
-                    <div class="tip-item"><strong>Holt-Winters</strong> - 带季节性预测</div>
-                    <div class="tip-item"><strong>ARIMA</strong> - 自回归综合移动平均</div>
-                    <div class="tip-item"><strong>Prophet</strong> - Facebook开源工具</div></div></div>
+            </div>
 
             <div class="project-main">
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
-                    <div class="section-content">
-                        <p>销售预测是企业制定生产计划、采购策略、营销预算的重要依据。时间序列预测通过分析历史数据的变化规律，预测未来的销售趋势。</p>
-                        <p style="margin-top: 0.5rem;">本项目使用<strong>移动平均法</strong>进行销售预测，这是一种经典的时间序列预测方法。</p>
+                    <div class="description-toggle" onclick="toggleDescription()">
+                        <span><i class="fas fa-book"></i> 题目描述 & 学习内容</span>
+                        <i class="fas fa-chevron-down"></i>
                     </div>
-                </div>
-
-                <div class="project-section">
-                    <div class="section-header"><i class="fas fa-database"></i><h2>电商店铺24个月销售数据</h2></div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="sales-data-table">
-                            <thead>
-                                <tr><th>月份</th><th>销售额(万元)</th><th>月份</th><th>销售额(万元)</th></tr>
-                            </thead>
-                            <tbody id="data-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <div class="section-header"><i class="fas fa-book"></i><h2>学习内容</h2></div>
-                    
-                    <div class="concept-box">
-                        <div class="concept-title"><i class="fas fa-graduation-cap"></i> 移动平均法核心公式</div>
-                        <div class="formula-box">
-                            <div class="formula">SMA(n) = (X₁ + X₂ + ... + Xₙ) / n</div>
-                            <div class="formula-desc">简单移动平均：最近n期数据的算术平均值</div>
-                        </div>
-                        <div class="formula-box" style="margin-top: 1rem;">
-                            <div class="formula">WMA = w₁×X₁ + w₂×X₂ + ... + wₙ×Xₙ</div>
-                            <div class="formula-desc">加权移动平均：近期数据权重更大，权重之和为1</div>
-                        </div>
-                    </div>
-
-                    <div class="concept-box">
-                        <div class="concept-title"><i class="fas fa-chart-line"></i> 时间序列三大组件</div>
-                        <div class="component-grid">
-                            <div class="component-item trend">
-                                <i class="fas fa-arrow-trend-up"></i>
-                                <h4>趋势(Trend)</h4>
-                                <p>长期上升或下降走势</p>
+                    <div class="description-content" id="description-content">
+                        <div class="description-inner">
+                            <div class="section-content">
+                                <p>某企业需要基于历史销售数据，使用移动平均法预测未来销售趋势。</p>
                             </div>
-                            <div class="component-item seasonal">
-                                <i class="fas fa-calendar-alt"></i>
-                                <h4>季节性(Seasonal)</h4>
-                                <p>固定周期内的波动</p>
+
+                            <div class="task-description" style="margin-top:1rem;">
+                                <h3>请完成以下预测任务：</h3>
+                                <ul style="list-style:none;padding:0;">
+                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                    计算移动平均值
+                                </li>
+                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                    预测下月销售额
+                                </li>
+                                </ul>
                             </div>
-                            <div class="component-item residual">
-                                <i class="fas fa-random"></i>
-                                <h4>残差(Residual)</h4>
-                                <p>随机波动或异常值</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tip-box">
-                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
-                        <div class="tip-content">移动平均的窗口选择很重要：窗口太小噪声多，窗口太大会错过转折点。通常3-6个月适合短期预测，12个月适合捕捉年度趋势。</div>
-                    </div>
-
-                    <div class="error-box">
-                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
-                        <div class="error-content">用简单移动平均预测存在趋势的数据，会系统性低估！有趋势的数据应该用加权移动平均或趋势调整。</div>
-                    </div>
-
-                    <div class="learning-step">
-                        <h4>代码示例1：计算3个月、6个月移动平均</h4>
-                        <div class="code-example">
-<pre>import pandas as pd
-
-# 计算移动平均
-df['MA3'] = df['销售额'].rolling(window=3).mean().round(2)
-df['MA6'] = df['销售额'].rolling(window=6).mean().round(2)
-
-# 显示结果
-print(df[['月份', '销售额', 'MA3', 'MA6']])</pre>
-                        </div>
-                    </div>
-
-                    <div class="learning-step">
-                        <h4>代码示例2：绘制原始数据+移动平均线对比图</h4>
-                        <div class="code-example">
-<pre>import matplotlib.pyplot as plt
-
-plt.figure(figsize=(12, 6))
-plt.plot(df['月份'], df['销售额'], 'b-o', label='实际销售额', linewidth=2)
-plt.plot(df['月份'], df['MA3'], 'g--', label='3月移动平均', linewidth=2)
-plt.plot(df['月份'], df['MA6'], 'r--', label='6月移动平均', linewidth=2)
-plt.xlabel('月份')
-plt.ylabel('销售额(万元)')
-plt.title('销售趋势预测对比')
-plt.legend()
-plt.grid(True, alpha=0.3)
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()</pre>
-                        </div>
-                    </div>
-
-                    <div class="learning-step">
-                        <h4>代码示例3：用最后3个月平均值预测下月，计算MAPE误差</h4>
-                        <div class="code-example">
-<pre># 用最后3个月平均预测下月
-last_3_months = df['销售额'].tail(3).mean()
-forecast_next = last_3_months
-
-# 假设第25个月真实值（用于验证）
-actual_next = 280
-mape = abs(actual_next - forecast_next) / actual_next * 100
-
-print(f"预测值: {forecast_next:.2f} 万元")
-print(f"实际值: {actual_next} 万元")
-print(f"MAPE误差: {mape:.2f}%")</pre>
                         </div>
                     </div>
                 </div>
 
-                <div class="project-section">
-                    <div class="section-header"><i class="fas fa-tasks"></i><h2>练习任务</h2></div>
-                    <div class="task-description">
-                        <h3>请补全代码，完成以下操作：</h3>
-                        <ul class="task-list">
-                            <li>计算3个月和6个月移动平均</li>
-                            <li>用最后3个月平均值预测下月销售额</li>
-                            <li>绘制原始数据+移动平均线对比图（ASCII版）</li>
-                            <li>计算预测MAPE误差</li>
-                            <li>调整窗口大小，观察预测效果变化</li>
-                        </ul>
+                <div class="status" id="status">
+                    <i class="fas fa-spinner fa-spin"></i> 环境加载中，请稍候...
+                </div>
+
+                <div class="editor-container">
+                    <div class="editor-toolbar">
+                        <button class="btn-run" onclick="runCode()">
+                            <i class="fas fa-play"></i> 运行代码
+                        </button>
+                        <button class="btn-reset" onclick="resetCode()">
+                            <i class="fas fa-undo"></i> 重置
+                        </button>
+                        <button class="btn-answer" onclick="toggleAnswer()">
+                            <i class="fas fa-lightbulb"></i> 参考答案
+                        </button>
+                        <button class="btn-fullscreen" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i> 全屏
+                        </button>
+                    </div>
+
+                    <div class="editor-main">
+                        <div id="code-editor"></div>
+                    </div>
+
+                    <div class="output-area">
+                        <pre id="output">// 运行结果将显示在这里</pre>
                     </div>
                 </div>
 
-                <div class="project-section">
-                    <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
-                    <div class="code-playground" id="code-playground">
-                    <div class="code-playground-header">
-                        <div class="code-playground-title">
-                            <i class="fab fa-python"></i>
-                            Python 代码编辑器
-                        </div>
-                        <div class="code-controls">
-                            <button class="run-btn" onclick="runProjectCode()">
-                                <i class="fas fa-play"></i> 运行代码
-                            </button>
-                            <button class="reset-btn" onclick="resetCode()">
-                                <i class="fas fa-undo"></i> 重置
-                            </button>
-                            <button class="answer-btn" onclick="toggleAnswer()">
-                                <i class="fas fa-lightbulb"></i> 参考答案
-                            </button>
-                            <button class="split-btn" id="split-btn" onclick="toggleSplitView()">
-                                <i class="fas fa-columns"></i> 分屏
-                            </button>
-                            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()">
-                                <i class="fas fa-expand"></i> 全屏
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-editor-wrapper" id="editor-wrapper">
-                        <div class="code-editor-panel" id="editor-panel">
-                            <div class="code-editor-label">
-                                <i class="fas fa-edit"></i> 编辑器
-                            </div>
-                            <div class="code-editor-container">
-                                <div class="line-numbers" id="line-numbers">1</div>
-                                <div class="code-editor-wrapper-textarea">
-                                    <textarea class="code-editor" id="code-editor" spellcheck="false" placeholder="# 在这里编写代码..."></textarea>
-                                    <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="resize-handle" id="resize-handle"></div>
-                        <div class="code-output-panel" id="output-panel">
-                            <div class="code-output-label">
-                                <i class="fas fa-terminal"></i> 运行结果
-                            </div>
-                            <div class="code-output" id="code-output">
-                                <div class="placeholder">点击"运行代码"按钮执行代码</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="answer-section" id="answer-section"><div class="answer-content"><h4><i class="fas fa-check-circle"></i> 参考答案代码：</h4><pre>import pandas as pd
+                <div id="answer-section" style="display:none; margin-top:20px; padding:16px; background:#f0fdf4; border-radius:8px; border:1px solid #86efac;">
+                    <h3 style="margin:0 0 10px 0; color:#166534;"><i class="fas fa-check-circle"></i> 参考答案代码</h3>
+                    <pre style="background:#e0f2fe; padding:12px; border-radius:6px; margin:0;">import pandas as pd
 
-months = ["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06",
-          "2022-07","2022-08","2022-09","2022-10","2022-11","2022-12",
-          "2023-01","2023-02","2023-03","2023-04","2023-05","2023-03",
-          "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12"]
-sales = [120,125,130,128,135,142,140,145,150,155,180,220,
-         130,135,140,145,152,158,155,162,168,172,210,260]
+data = [
+    {"月份": "2023-07", "销售额": 180000},
+    {"月份": "2023-08", "销售额": 195000},
+    {"月份": "2023-09", "销售额": 185000},
+    {"月份": "2023-10", "销售额": 210000},
+    {"月份": "2023-11", "销售额": 225000},
+    {"月份": "2023-12", "销售额": 240000},
+    {"月份": "2024-01", "销售额": 215000},
+    {"月份": "2024-02", "销售额": 230000},
+    {"月份": "2024-03", "销售额": 245000},
+]
 
-df = pd.DataFrame({"月份": months, "销售额": sales})
+df = pd.DataFrame(data)
+df['月份'] = pd.to_datetime(df['月份'])
 
-print("=" * 70)
-print("【第1步】查看销售数据")
+# 计算3个月移动平均
+df['MA_3'] = df['销售额'].rolling(window=3).mean()
+
+# 计算预测值（使用最近3个月的平均值）
+last_3_avg = df['销售额'].tail(3).mean()
+
+print("【销售趋势分析】")
 print(df.to_string(index=False))
 
-print("
-" + "=" * 70)
-print("【第2步】移动平均计算")
-df['MA3'] = df['销售额'].rolling(window=3).mean().round(2)
-df['MA6'] = df['销售额'].rolling(window=6).mean().round(2)
-print(df[['月份', '销售额', 'MA3', 'MA6']].to_string(index=False))
+print(f"\n【预测结果】")
+print(f"最近3个月平均销售额: {last_3_avg:,.0f}元")
+print(f"预测下月销售额: {last_3_avg:,.0f}元")
 
-print("
-" + "=" * 70)
-print("【第3步】ASCII趋势对比图")
-print("
-销售额趋势：")
-max_sales = df['销售额'].max()
-print("月份        销售额    3月MA    6月MA")
-print("-" * 50)
-for idx, row in df.iterrows():
-    actual = "█" * int(row['销售额'] / max_sales * 20)
-    ma3 = "▓" * int(row['MA3'] / max_sales * 20) if pd.notna(row['MA3']) else ""
-    ma6 = "░" * int(row['MA6'] / max_sales * 20) if pd.notna(row['MA6']) else ""
-    print(f"{row['月份']}  {actual:20} {row['销售额']:&gt;5}万")
-
-print("
-图例：█=实际  ▓=3月MA  ░=6月MA")
-
-print("
-" + "=" * 70)
-print("【第4步】预测下月销售额")
-last_3 = df['销售额'].tail(3).mean()
-last_6 = df['销售额'].tail(6).mean()
-last_12 = df['销售额'].tail(12).mean()
-
-print(f"
-不同窗口预测下月销售额：")
-print(f"  3个月平均: {last_3:.2f} 万元")
-print(f"  6个月平均: {last_6:.2f} 万元")
-print(f"  12个月平均: {last_12:.2f} 万元")
-
-print("
-" + "=" * 70)
-print("【第5步】MAPE误差分析")
-actual_next = 275
-print(f"
-预测值(3月MA): {last_3:.2f} 万元")
-print(f"实际值: {actual_next} 万元")
-mape = abs(actual_next - last_3) / actual_next * 100
-print(f"MAPE误差: {mape:.2f}%")
-
-print("
-" + "=" * 70)
-print("【第6步】不同窗口效果对比")
-for window in [3, 6, 12]:
-    forecast = df['销售额'].tail(window).mean()
-    mape_w = abs(actual_next - forecast) / actual_next * 100
-    print(f"  窗口={window:2d}月  预测={forecast:&gt;6.2f}万  MAPE={mape_w:.2f}%")
-
-print("
-结论：选择MAPE最小的窗口作为最优预测窗口")</pre></div></div>
-                        </div>
-                    </div>
+# 计算增长趋势
+growth_rate = (df['销售额'].iloc[-1] - df['销售额'].iloc[0]) / len(df) / df['销售额'].iloc[0] * 100
+print(f"月均增长率: {growth_rate:.2f}%")</pre>
                 </div>
+
             </div>
         </div>
     </div>
 
     <script src="../script.js"></script>
     <script>
+        let editor;
+        let pyodide;
+        let isRunning = false;
+
         const defaultCode = `import pandas as pd
 
-# 某电商店铺24个月销售额数据（2022-2023年）
-months = ["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06",
-          "2022-07","2022-08","2022-09","2022-10","2022-11","2022-12",
-          "2023-01","2023-02","2023-03","2023-04","2023-05","2023-06",
-          "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12"]
-sales = [120,125,130,128,135,142,140,145,150,155,180,220,
-         130,135,140,145,152,158,155,162,168,172,210,260]
+# 历史销售数据
+data = [
+    {"月份": "2023-07", "销售额": 180000},
+    {"月份": "2023-08", "销售额": 195000},
+    {"月份": "2023-09", "销售额": 185000},
+    {"月份": "2023-10", "销售额": 210000},
+    {"月份": "2023-11", "销售额": 225000},
+    {"月份": "2023-12", "销售额": 240000},
+    {"月份": "2024-01", "销售额": 215000},
+    {"月份": "2024-02", "销售额": 230000},
+    {"月份": "2024-03", "销售额": 245000},
+]
 
-df = pd.DataFrame({"月份": months, "销售额": sales})
-
-print("=" * 70)
-print("【第1步】查看销售数据")
+df = pd.DataFrame(data)
+df['月份'] = pd.to_datetime(df['月份'])
+print("【历史销售数据】")
 print(df.to_string(index=False))
 
-# TODO: 请在下方编写预测分析代码
+# TODO: 完成销售预测
 # 1. 计算3个月移动平均
-# 2. 计算6个月移动平均
-# 3. 绘制趋势对比图（ASCII）
-# 4. 预测下月销售额
-# 5. 计算MAPE误差
+# 2. 预测下月销售额
 
-print("\n" + "=" * 70)
-print("【第2步】移动平均计算")
-# 你的代码...
-
-print("\n" + "=" * 70)
-print("【第3步】预测下月销售额")
-# 你的代码...
-
-print("\n" + "=" * 70)
-print("【第4步】计算MAPE误差")
-# 你的代码...`;
-
-        const autocompleteData = [
-            { label: 'pd.DataFrame', type: 'class', desc: '创建DataFrame对象' },
-            { label: 'pd.read_csv', type: 'function', desc: '读取CSV文件' },
-            { label: 'pd.read_excel', type: 'function', desc: '读取Excel文件' },
-            { label: 'pd.to_datetime', type: 'function', desc: '转换日期格式' },
-            { label: 'pd.isnull', type: 'function', desc: '检测缺失值' },
-            { label: 'pd.notnull', type: 'function', desc: '检测非缺失值' },
-            { label: 'pd.merge', type: 'function', desc: '合并数据' },
-            { label: 'pd.concat', type: 'function', desc: '拼接数据' },
-            { label: 'pd.groupby', type: 'function', desc: '分组聚合' },
-            { label: 'df.head', type: 'method', desc: '查看前N行' },
-            { label: 'df.tail', type: 'method', desc: '查看后N行' },
-            { label: 'df.info', type: 'method', desc: '查看数据信息' },
-            { label: 'df.describe', type: 'method', desc: '查看统计描述' },
-            { label: 'df.shape', type: 'property', desc: '数据维度' },
-            { label: 'df.columns', type: 'property', desc: '列名列表' },
-            { label: 'df.dtypes', type: 'property', desc: '数据类型' },
-            { label: 'df.fillna', type: 'method', desc: '填充缺失值' },
-            { label: 'df.dropna', type: 'method', desc: '删除缺失值' },
-            { label: 'df.isnull', type: 'method', desc: '检测缺失值' },
-            { label: 'df.sum', type: 'method', desc: '求和' },
-            { label: 'df.mean', type: 'method', desc: '求均值' },
-            { label: 'df.max', type: 'method', desc: '求最大值' },
-            { label: 'df.min', type: 'method', desc: '求最小值' },
-            { label: 'df.sort_values', type: 'method', desc: '排序' },
-            { label: 'df.to_string', type: 'method', desc: '转换为字符串' },
-            { label: 'df.rename', type: 'method', desc: '重命名列' },
-            { label: 'df.drop', type: 'method', desc: '删除行/列' },
-            { label: 'df.copy', type: 'method', desc: '复制数据' },
-            { label: 'plt.figure', type: 'function', desc: '创建图表' },
-            { label: 'plt.plot', type: 'function', desc: '绘制折线图' },
-            { label: 'plt.bar', type: 'function', desc: '绘制柱状图' },
-            { label: 'plt.scatter', type: 'function', desc: '绘制散点图' },
-            { label: 'plt.show', type: 'function', desc: '显示图表' },
-            { label: 'plt.title', type: 'function', desc: '设置标题' },
-            { label: 'plt.xlabel', type: 'function', desc: '设置X轴标签' },
-            { label: 'plt.ylabel', type: 'function', desc: '设置Y轴标签' },
-            { label: 'plt.legend', type: 'function', desc: '显示图例' },
-            { label: 'plt.grid', type: 'function', desc: '显示网格' },
-            { label: 'print', type: 'function', desc: '打印输出' },
-            { label: 'len', type: 'function', desc: '获取长度' },
-            { label: 'str', type: 'function', desc: '转换为字符串' },
-            { label: 'int', type: 'function', desc: '转换为整数' },
-            { label: 'float', type: 'function', desc: '转换为浮点数' },
-            { label: 'list', type: 'function', desc: '创建列表' },
-            { label: 'dict', type: 'function', desc: '创建字典' },
-        ];
-
-        let editor, lineNumbers;
-        let splitViewActive = false;
-        let autocompleteVisible = false;
-        let selectedAutocompleteIndex = -1;
-        let currentAutocompleteItems = [];
+print("\\n【预测结果】")
+# 在这里编写代码...
+`;
 
         function initEditor() {
-            editor = document.getElementById('code-editor');
-            lineNumbers = document.getElementById('line-numbers');
-            
-            editor.value = defaultCode;
-            updateLineNumbers();
-            
-            editor.addEventListener('input', updateLineNumbers);
-            editor.addEventListener('scroll', syncScroll);
-            editor.addEventListener('keydown', handleKeyDown);
-            editor.addEventListener('input', handleAutocomplete);
-            editor.addEventListener('blur', () => {
-                setTimeout(() => hideAutocomplete(), 200);
+            editor = CodeMirror(document.getElementById('code-editor'), {
+                mode: 'python',
+                theme: 'monokai',
+                lineNumbers: true,
+                tabSize: 4,
+                indentUnit: 4,
+                indentWithTabs: false,
+                value: defaultCode
             });
-            
-            const descriptionContent = document.getElementById('description-content');
-            if (descriptionContent) {
-                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
+        }
+
+        async function initPyodide() {
+            try {
+                pyodide = await loadPyodide();
+                document.getElementById('status').innerHTML =
+                    '<i class="fas fa-check-circle"></i> 环境加载完成！可以开始编写代码了。';
+                document.getElementById('status').style.background = '#f0fdf4';
+                document.getElementById('status').style.borderLeftColor = '#22c55e';
+                document.getElementById('status').style.color = '#166534';
+            } catch (err) {
+                document.getElementById('status').innerHTML =
+                    '<i class="fas fa-exclamation-triangle"></i> 环境加载失败: ' + err;
+                document.getElementById('status').style.background = '#fef2f2';
+                document.getElementById('status').style.borderLeftColor = '#ef4444';
+                document.getElementById('status').style.color = '#991b1b';
             }
         }
 
-        function updateLineNumbers() {
-            const lines = editor.value.split('\n').length;
-            let html = '';
-            for (let i = 1; i <= lines; i++) {
-                html += i + '\n';
+        async function runCode() {
+            if (!pyodide) {
+                document.getElementById('output').textContent = '环境还在加载中，请稍候...';
+                return;
             }
-            lineNumbers.textContent = html;
-        }
 
-        function syncScroll() {
-            lineNumbers.scrollTop = editor.scrollTop;
-        }
-
-        function handleKeyDown(e) {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = editor.selectionStart;
-                const end = editor.selectionEnd;
-                editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
-                editor.selectionStart = editor.selectionEnd = start + 4;
-                updateLineNumbers();
+            if (isRunning) {
+                return;
             }
-            
-            if (autocompleteVisible) {
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    navigateAutocomplete(1);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    navigateAutocomplete(-1);
-                } else if (e.key === 'Enter' || e.key === 'Tab') {
-                    e.preventDefault();
-                    if (selectedAutocompleteIndex >= 0) {
-                        selectAutocompleteItem(currentAutocompleteItems[selectedAutocompleteIndex]);
-                    }
-                } else if (e.key === 'Escape') {
-                    hideAutocomplete();
+
+            isRunning = true;
+            const code = editor.getValue();
+            const outputElement = document.getElementById('output');
+
+            outputElement.textContent = '⏳ 正在运行...';
+
+            try {
+                let output = '';
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+`);
+
+                await pyodide.runPythonAsync(code);
+
+                output = pyodide.runPython(`
+result = sys.stdout.getvalue()
+sys.stdout = sys.__stdout__
+result
+`);
+
+                if (output.trim() === '') {
+                    output = '✅ 代码运行成功！没有输出内容。';
                 }
+
+                outputElement.textContent = output;
+            } catch (err) {
+                outputElement.textContent = '❌ 运行错误:\n' + err;
+            } finally {
+                isRunning = false;
             }
         }
 
-        function handleAutocomplete(e) {
-            const cursorPos = editor.selectionStart;
-            const textBeforeCursor = editor.value.substring(0, cursorPos);
-            const lastWord = textBeforeCursor.match(/[\w.]+$/);
-            
-            if (lastWord && lastWord[0].length >= 1) {
-                const prefix = lastWord[0].toLowerCase();
-                const matches = autocompleteData.filter(item => 
-                    item.label.toLowerCase().startsWith(prefix)
-                );
-                
-                if (matches.length > 0) {
-                    currentAutocompleteItems = matches;
-                    showAutocomplete(matches, cursorPos - lastWord[0].length);
-                    return;
-                }
-            }
-            hideAutocomplete();
+        function resetCode() {
+            editor.setValue(defaultCode);
+            document.getElementById('output').textContent = '// 运行结果将显示在这里';
         }
 
-        function showAutocomplete(items, position) {
-            const dropdown = document.getElementById('autocomplete-dropdown');
-            const editorRect = editor.getBoundingClientRect();
-            const lineHeight = 24;
-            const lines = editor.value.substring(0, position).split('\n');
-            const top = lines.length * lineHeight + 20;
-            const left = 10;
-            
-            dropdown.style.top = Math.min(top, 400) + 'px';
-            dropdown.style.left = left + 'px';
-            
-            dropdown.innerHTML = items.map((item, index) => 
-                `<div class="autocomplete-item ${index === 0 ? 'selected' : ''}" data-index="${index}">
-                    ${item.label}<span class="item-type">${item.type}</span>
-                </div>`
-            ).join('');
-            
-            dropdown.classList.add('show');
-            autocompleteVisible = true;
-            selectedAutocompleteIndex = 0;
-            
-            dropdown.querySelectorAll('.autocomplete-item').forEach(el => {
-                el.addEventListener('click', () => {
-                    const idx = parseInt(el.dataset.index);
-                    selectAutocompleteItem(items[idx]);
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            if (answerSection.style.display === 'none') {
+                answerSection.style.display = 'block';
+            } else {
+                answerSection.style.display = 'none';
+            }
+        }
+
+        function toggleFullscreen() {
+            const container = document.querySelector('.editor-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.log('全屏失败:', err);
                 });
-            });
-        }
-
-        function navigateAutocomplete(direction) {
-            const items = document.querySelectorAll('.autocomplete-item');
-            items[selectedAutocompleteIndex]?.classList.remove('selected');
-            
-            selectedAutocompleteIndex += direction;
-            if (selectedAutocompleteIndex < 0) selectedAutocompleteIndex = items.length - 1;
-            if (selectedAutocompleteIndex >= items.length) selectedAutocompleteIndex = 0;
-            
-            items[selectedAutocompleteIndex]?.classList.add('selected');
-        }
-
-        function selectAutocompleteItem(item) {
-            const cursorPos = editor.selectionStart;
-            const textBeforeCursor = editor.value.substring(0, cursorPos);
-            const lastWord = textBeforeCursor.match(/[\w.]+$/);
-            
-            if (lastWord) {
-                const start = cursorPos - lastWord[0].length;
-                editor.value = editor.value.substring(0, start) + item.label + editor.value.substring(cursorPos);
-                editor.selectionStart = editor.selectionEnd = start + item.label.length;
+            } else {
+                document.exitFullscreen();
             }
-            
-            hideAutocomplete();
-            updateLineNumbers();
-        }
-
-        function hideAutocomplete() {
-            document.getElementById('autocomplete-dropdown').classList.remove('show');
-            autocompleteVisible = false;
-            selectedAutocompleteIndex = -1;
         }
 
         function toggleDescription() {
@@ -1109,151 +571,14 @@ print("【第4步】计算MAPE误差")
             toggle.classList.toggle('collapsed');
         }
 
-        function toggleAnswer() {
-            const answerSection = document.getElementById('answer-section');
-            answerSection.classList.toggle('show');
-        }
-
-        function resetCode() {
-            editor.value = defaultCode;
-            updateLineNumbers();
-            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
-        }
-
-        function toggleFullscreen() {
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('fullscreen-btn');
-            
-            if (!document.fullscreenElement) {
-                playground.requestFullscreen().then(() => {
-                    playground.classList.add('fullscreen');
-                    btn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
-                });
-            } else {
-                document.exitFullscreen().then(() => {
-                    playground.classList.remove('fullscreen');
-                    btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
-                });
-            }
-        }
-
-        function toggleSplitView() {
-            const wrapper = document.getElementById('editor-wrapper');
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('split-btn');
-            const panel = document.getElementById('editor-panel');
-            
-            splitViewActive = !splitViewActive;
-            
-            if (splitViewActive) {
-                wrapper.classList.add('split-mode');
-                playground.classList.add('split-view');
-                btn.classList.add('active');
-                
-                const splitPanel = document.createElement('div');
-                splitPanel.className = 'code-editor-panel';
-                splitPanel.style.borderLeft = '1px solid #333';
-                splitPanel.innerHTML = `
-                    <div class="split-panel-label reference">
-                        <i class="fas fa-book"></i> 参考答案
-                    </div>
-                    <div class="code-editor-container">
-                        <div class="line-numbers" id="ref-line-numbers">${document.getElementById('answer-section').querySelector('pre').textContent.split('\n').map((_, i) => i + 1).join('\n')}</div>
-                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${document.getElementById('answer-section').querySelector('pre').textContent}</textarea>
-                    </div>
-                `;
-                wrapper.insertBefore(splitPanel, document.getElementById('output-panel'));
-                
-                document.getElementById('reference-editor').addEventListener('scroll', (e) => {
-                    document.getElementById('ref-line-numbers').scrollTop = e.target.scrollTop;
-                });
-            } else {
-                wrapper.classList.remove('split-mode');
-                playground.classList.remove('split-view');
-                btn.classList.remove('active');
-                
-                const refPanel = panel.nextElementSibling;
-                if (refPanel && refPanel.classList.contains('code-editor-panel')) {
-                    refPanel.remove();
-                }
-            }
-        }
-
-        function initResize() {
-            const handle = document.getElementById('resize-handle');
-            const wrapper = document.getElementById('editor-wrapper');
-            if (!handle || !wrapper) return;
-            
-            let isResizing = false;
-            let startX, startWidth;
-
-            handle.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                startX = e.clientX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                startWidth = editorPanel.offsetWidth;
-                handle.classList.add('active');
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isResizing) return;
-                const diff = e.clientX - startX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                const outputPanel = document.getElementById('output-panel');
-                const totalWidth = wrapper.offsetWidth;
-                
-                let newWidth = startWidth + diff;
-                newWidth = Math.max(totalWidth * 0.3, Math.min(totalWidth * 0.7, newWidth));
-                
-                editorPanel.style.width = newWidth + 'px';
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    handle.classList.remove('active');
-                }
-            });
-        }
-
-        function runProjectCode() {
-            const output = document.getElementById('code-output');
-            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
-
-            if (typeof Sk !== 'undefined') {
-                Sk.configure({
-                    output: (text) => {
-                        const existing = output.querySelector('pre');
-                        if (existing) existing.textContent += text;
-                        else output.innerHTML = '<pre style="margin:0;">' + text + '</pre>';
-                    },
-                    read: (fn) => {
-                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][fn] === undefined) throw 'File not found: ' + fn;
-                        return Sk.builtinFiles['files'][fn];
-                    }
-                });
-
-                Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, editor.value, true))
-                    .then(() => output.classList.add('success'))
-                    .catch((err) => output.innerHTML = '<pre class="error" style="margin:0;">❌ 运行错误: ' + err + '</pre>');
-            } else {
-                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => { renderDataTable();
+        document.addEventListener('DOMContentLoaded', () => {
             initEditor();
-            initResize();
-            
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
-            script.onload = () => {
-                const stdlib = document.createElement('script');
-                stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
-                document.head.appendChild(stdlib);
-            };
-            document.head.appendChild(script);
+            initPyodide();
+
+            const descriptionContent = document.getElementById('description-content');
+            if (descriptionContent) {
+                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
+            }
         });
     </script>
 </body>
