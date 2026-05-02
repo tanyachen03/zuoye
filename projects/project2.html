@@ -621,7 +621,14 @@ print(df.to_string(index=False))`;
 
         async function initPyodide() {
             try {
+                document.getElementById('status').innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> 正在加载环境和 pandas 包...';
+                
                 pyodide = await loadPyodide();
+                
+                // 加载 pandas 包
+                await pyodide.loadPackage('pandas');
+                
                 document.getElementById('status').innerHTML =
                     '<i class="fas fa-check-circle"></i> 环境加载完成！可以开始编写代码了。';
                 document.getElementById('status').style.background = '#f0fdf4';
