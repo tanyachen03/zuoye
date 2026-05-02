@@ -551,15 +551,18 @@
 <body>
     <header class="navbar">
         <div class="navbar-container">
-            <div class="navbar-logo" onclick="location.href='../index.html'"><i class="fas fa-chart-bar"></i><span>数析学院</span></div>
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
             <nav class="navbar-menu">
                 <a href="../index.html" class="nav-link">首页</a>
                 <a href="#courses" class="nav-link">课程中心</a>
                 <a href="../projects.html" class="nav-link active">实战项目</a>
                 <a href="../achievements.html" class="nav-link">成就殿堂</a>
             </nav>
+            <button class="hamburger-menu" id="hamburger-menu"><i class="fas fa-bars"></i></button>
             <div class="navbar-auth">
-                <div id="user-profile" class="user-profile hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar"><span id="user-name">用户名</span></div>
                 <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
                 <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
             </div>
@@ -578,12 +581,32 @@
                     <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：50分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + 规则词典</span></div>
                     <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：50条评论</span></div>
-                    <div class="project-meta-item"><i class="fas fa-chart-pie"></i><span>好评率：约62%</span></div>
-                </div>
-            </div>
+                    <div class="project-meta-item"><i class="fas fa-chart-pie"></i><span>好评率：约62%</span></div></div>
         </div>
 
         <div class="project-container">
+            <div class="project-sidebar">
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
+                    <div class="tip-item"><strong>词典匹配</strong> - 遍历文本查找情感词</div>
+                    <div class="tip-item"><strong>否定反转</strong> - "不"+"好"=负面</div>
+                    <div class="tip-item"><strong>程度加权</strong> - "非常"加分翻倍</div>
+                    <div class="tip-item"><strong>分数阈值</strong> - >0正面，<0负面，=0中性</div>
+                    <div class="tip-item"><strong>高频词统计</strong> - 找出问题焦点</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
+                    <div class="tip-item">理解情感分析原理</div>
+                    <div class="tip-item">掌握规则词典方法</div>
+                    <div class="tip-item">学会否定词处理</div>
+                    <div class="tip-item">培养NLP入门能力</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-rocket"></i> 进阶方向</h3>
+                    <div class="tip-item"><strong>BERT模型</strong> - 更高准确率</div>
+                    <div class="tip-item"><strong>细粒度分析</strong> - 属性级情感</div>
+                    <div class="tip-item"><strong>多语言支持</strong> - 跨语言迁移</div></div></div>
+
             <div class="project-main">
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
@@ -698,104 +721,54 @@ for review in reviews:
 
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
-                    <div class="code-playground">
-                        <div class="code-playground-header">
-                        <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
+                    <div class="code-playground" id="code-playground">
+                    <div class="code-playground-header">
+                        <div class="code-playground-title">
+                            <i class="fab fa-python"></i>
+                            Python 代码编辑器
+                        </div>
                         <div class="code-controls">
-                            <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
-                                <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
-                                <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            <button class="run-btn" onclick="runProjectCode()">
+                                <i class="fas fa-play"></i> 运行代码
+                            </button>
+                            <button class="reset-btn" onclick="resetCode()">
+                                <i class="fas fa-undo"></i> 重置
+                            </button>
+                            <button class="answer-btn" onclick="toggleAnswer()">
+                                <i class="fas fa-lightbulb"></i> 参考答案
+                            </button>
                             <button class="split-btn" id="split-btn" onclick="toggleSplitView()">
                                 <i class="fas fa-columns"></i> 分屏
                             </button>
-                            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i> 全屏</button>
+                            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i> 全屏
+                            </button>
                         </div>
                     </div>
-                        <div class="code-editor-wrapper">
-                            <div class="code-editor-panel">
-                                <div class="code-editor-label">编辑器</div>
-                                <textarea class="code-editor" id="code-editor" spellcheck="false"># 50条电商商品评论
-reviews = [
-    "手机很好用，运行流畅，拍照清晰",
-    "屏幕太小了，电池也不耐用",
-    "电脑配置不错，性价比高",
-    "音质一般，降噪效果不好",
-    "屏幕大，看剧很舒服，推荐购买",
-    "功能强大，外观时尚",
-    "充电太慢了，很失望",
-    "手感不错，打字很顺畅",
-    "物流很快，第二天就到了",
-    "包装很严实，没有破损",
-    "颜色和图片一致，很满意",
-    "客服态度很好，解决问题及时",
-    "价格有点贵，性价比一般",
-    "用了几天就出问题了",
-    "相机像素一般，夜拍效果差",
-    "非常好用，强烈推荐！",
-    "不推荐购买，浪费钱",
-    "比想象中好，值得购买",
-    "一般般，没什么特别的",
-    "退换货流程太麻烦",
-    "音质清晰，戴着很舒服",
-    "续航能力很强，一天够用",
-    "屏幕显示效果一般",
-    "非常好，特别满意",
-    "不值得这个价格",
-    "做工精细，质量很好",
-    "操作简单，上手很快",
-    "电池不耐用，半天就没电",
-    "性价比很高，推荐",
-    "不适合打游戏，卡顿严重",
-    "外观漂亮，手感舒适",
-    "物流太慢了，等了一周",
-    "东西不错，就是贵了点",
-    "音质一般，没有宣传的那么好",
-    "客服态度恶劣，很不满意",
-    "东西收到了，很喜欢",
-    "一分钱一分货，还可以",
-    "不太满意，功能太少",
-    "特别好用，回购多次了",
-    "质量太差，用了两天就坏了",
-    "物流速度很快，点赞",
-    "性价比超高，买了不亏",
-    "不推荐，浪费金钱",
-    "非常好用，值得拥有",
-    "一般般，没什么亮点",
-    "用了三个月，感觉不错",
-    "退货太麻烦了，算了",
-    "质量很好，无可挑剔",
-    "不太值，感觉有点亏",
-    "完美购物体验，下次还来",
-]
-
-# TODO: 请在下方编写情感分析代码
-# 1. 定义情感词典
-# 2. 实现情感分数计算函数
-# 3. 分析所有评论
-# 4. 统计情感分布
-# 5. 找出负面评论的高频词
-
-print("=" * 70)
-print("【第1步】情感分析")
-# 你的代码...
-
-print("\n" + "=" * 70)
-print("【第2步】情感分布统计")
-# 你的代码...
-
-print("\n" + "=" * 70)
-print("【第3步】负面评论高频词分析")
-# 你的代码...</textarea>
+                    <div class="code-editor-wrapper" id="editor-wrapper">
+                        <div class="code-editor-panel" id="editor-panel">
+                            <div class="code-editor-label">
+                                <i class="fas fa-edit"></i> 编辑器
                             </div>
-                            <div class="code-output-panel">
-                                <div class="code-output-label">运行结果</div>
-                                <div class="code-output" id="code-output"><div class="placeholder">点击"运行代码"按钮执行代码</div></div>
+                            <div class="code-editor-container">
+                                <div class="line-numbers" id="line-numbers">1</div>
+                                <div class="code-editor-wrapper-textarea">
+                                    <textarea class="code-editor" id="code-editor" spellcheck="false" placeholder="# 在这里编写代码..."></textarea>
+                                    <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="answer-section" id="answer-section">
-                            <div class="answer-content">
-                                <h4>参考答案代码：</h4>
-                                <pre># 50条电商商品评论
+                        <div class="resize-handle" id="resize-handle"></div>
+                        <div class="code-output-panel" id="output-panel">
+                            <div class="code-output-label">
+                                <i class="fas fa-terminal"></i> 运行结果
+                            </div>
+                            <div class="code-output" id="code-output">
+                                <div class="placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-section" id="answer-section"><div class="answer-content"><h4><i class="fas fa-check-circle"></i> 参考答案代码：</h4><pre># 50条电商商品评论
 reviews = [
     "手机很好用，运行流畅，拍照清晰",
     "屏幕太小了，电池也不耐用",
@@ -864,7 +837,7 @@ def calculate_sentiment(text):
     
     for i, word in enumerate(words):
         if word in positive_words:
-            if i > 0 and any(neg in text[max(0, text.find(word)-2):text.find(word)] for neg in negations):
+            if i &gt; 0 and any(neg in text[max(0, text.find(word)-2):text.find(word)] for neg in negations):
                 score -= 1
             elif any(word in text and intens in text[max(0, text.find(word)-3):text.find(word)+1] 
                      for intens in intensifiers):
@@ -873,12 +846,12 @@ def calculate_sentiment(text):
                 score += 1
         
         if word in negative_words:
-            if i > 0 and any(neg in text[max(0, text.find(word)-2):text.find(word)] for neg in negations):
+            if i &gt; 0 and any(neg in text[max(0, text.find(word)-2):text.find(word)] for neg in negations):
                 score += 1
             else:
                 score -= 1
     
-    return "正面" if score > 0 else "负面" if score < 0 else "中性"
+    return "正面" if score &gt; 0 else "负面" if score &lt; 0 else "中性"
 
 # 第3步：分析所有评论
 print("=" * 70)
@@ -891,22 +864,26 @@ for i, review in enumerate(reviews, 1):
     print(f"{i:2d}. {symbol} [{sentiment:4s}] {review}")
 
 # 第4步：情感分布统计
-print("\n" + "=" * 70)
+print("
+" + "=" * 70)
 print("【第2步】情感分布统计")
 positive_count = results.count("正面")
 negative_count = results.count("负面")
 neutral_count = results.count("中性")
 total = len(results)
 
-print(f"\n📊 情感分布：")
+print(f"
+📊 情感分布：")
 print(f"   正面评论: {positive_count} 条 ({positive_count/total*100:.1f}%)")
 print(f"   负面评论: {negative_count} 条 ({negative_count/total*100:.1f}%)")
 print(f"   中性评论: {neutral_count} 条 ({neutral_count/total*100:.1f}%)")
-print(f"\n   总计: {total} 条")
+print(f"
+   总计: {total} 条")
 print(f"   好评率: {positive_count/(positive_count+negative_count)*100:.1f}%")
 
 # 第5步：负面评论高频词分析
-print("\n" + "=" * 70)
+print("
+" + "=" * 70)
 print("【第3步】负面评论高频词分析")
 from collections import Counter
 negative_reviews = [reviews[i] for i in range(len(reviews)) if results[i] == "负面"]
@@ -917,39 +894,15 @@ for text in negative_reviews:
             all_words.append(word)
 
 word_freq = Counter(all_words).most_common(10)
-print(f"\n负面评论共 {len(negative_reviews)} 条，高频词：")
+print(f"
+负面评论共 {len(negative_reviews)} 条，高频词：")
 print("-" * 30)
 for word, count in word_freq:
     bar = "█" * count
-    print(f"  {word:<4s} {bar} {count}次")
-print("-" * 30)</pre>
-                            </div>
+    print(f"  {word:&lt;4s} {bar} {count}次")
+print("-" * 30)</pre></div></div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="project-sidebar">
-                <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
-                    <div class="tip-item"><strong>词典匹配</strong> - 遍历文本查找情感词</div>
-                    <div class="tip-item"><strong>否定反转</strong> - "不"+"好"=负面</div>
-                    <div class="tip-item"><strong>程度加权</strong> - "非常"加分翻倍</div>
-                    <div class="tip-item"><strong>分数阈值</strong> - >0正面，<0负面，=0中性</div>
-                    <div class="tip-item"><strong>高频词统计</strong> - 找出问题焦点</div>
-                </div>
-                <div class="tips-card">
-                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解情感分析原理</div>
-                    <div class="tip-item">掌握规则词典方法</div>
-                    <div class="tip-item">学会否定词处理</div>
-                    <div class="tip-item">培养NLP入门能力</div>
-                </div>
-                <div class="tips-card">
-                    <h3><i class="fas fa-rocket"></i> 进阶方向</h3>
-                    <div class="tip-item"><strong>BERT模型</strong> - 更高准确率</div>
-                    <div class="tip-item"><strong>细粒度分析</strong> - 属性级情感</div>
-                    <div class="tip-item"><strong>多语言支持</strong> - 跨语言迁移</div>
                 </div>
             </div>
         </div>
@@ -957,100 +910,7 @@ print("-" * 30)</pre>
 
     <script src="../script.js"></script>
     <script>
-        const rawData = [
-            "手机很好用，运行流畅，拍照清晰",
-            "屏幕太小了，电池也不耐用",
-            "电脑配置不错，性价比高",
-            "音质一般，降噪效果不好",
-            "屏幕大，看剧很舒服，推荐购买",
-            "功能强大，外观时尚",
-            "充电太慢了，很失望",
-            "手感不错，打字很顺畅",
-            "物流很快，第二天就到了",
-            "包装很严实，没有破损",
-            "颜色和图片一致，很满意",
-            "客服态度很好，解决问题及时",
-            "价格有点贵，性价比一般",
-            "用了几天就出问题了",
-            "相机像素一般，夜拍效果差",
-            "非常好用，强烈推荐！",
-            "不推荐购买，浪费钱",
-            "比想象中好，值得购买",
-            "一般般，没什么特别的",
-            "退换货流程太麻烦",
-            "音质清晰，戴着很舒服",
-            "续航能力很强，一天够用",
-            "屏幕显示效果一般",
-            "非常好，特别满意",
-            "不值得这个价格",
-            "做工精细，质量很好",
-            "操作简单，上手很快",
-            "电池不耐用，半天就没电",
-            "性价比很高，推荐",
-            "不适合打游戏，卡顿严重",
-            "外观漂亮，手感舒适",
-            "物流太慢了，等了一周",
-            "东西不错，就是贵了点",
-            "音质一般，没有宣传的那么好",
-            "客服态度恶劣，很不满意",
-            "东西收到了，很喜欢",
-            "一分钱一分货，还可以",
-            "不太满意，功能太少",
-            "特别好用，回购多次了",
-            "质量太差，用了两天就坏了",
-            "物流速度很快，点赞",
-            "性价比超高，买了不亏",
-            "不推荐，浪费金钱",
-            "非常好用，值得拥有",
-            "一般般，没什么亮点",
-            "用了三个月，感觉不错",
-            "退货太麻烦了，算了",
-            "质量很好，无可挑剔",
-            "不太值，感觉有点亏",
-            "完美购物体验，下次还来",
-        ];
-
-        const positiveWords = ["好", "棒", "完美", "喜欢", "推荐", "高", "快", "清晰", "满意", "强", "不错", "舒服", "值得", "超值", "赞"];
-        const negativeWords = ["差", "烂", "失望", "退货", "慢", "破损", "贵", "一般", "麻烦", "不好", "问题", "卡顿"];
-        const negationWords = ["不", "没", "无", "非", "别"];
-        const intensifierWords = ["非常", "特别", "十分", "超", "太"];
-
-        function calculateSentiment(text) {
-            let score = 0;
-            for (const word of positiveWords) {
-                if (text.includes(word)) score += 1;
-            }
-            for (const word of negativeWords) {
-                if (text.includes(word)) score -= 1;
-            }
-            return score > 0 ? "正面" : score < 0 ? "负面" : "中性";
-        }
-
-        function renderDataTable() {
-            const tbody = document.getElementById('data-tbody');
-            tbody.innerHTML = rawData.map((text, idx) => {
-                const sentiment = calculateSentiment(text);
-                const cls = sentiment === "正面" ? "positive" : sentiment === "负面" ? "negative" : "neutral";
-                return `<tr><td>R${String(idx + 1).padStart(3, '0')}</td><td>${text}</td><td class="${cls}">${sentiment}</td></tr>`;
-            }).join('');
-
-            document.getElementById('positive-words').innerHTML = positiveWords.map(w => `<span class="word-tag positive">${w}</span>`).join('');
-            document.getElementById('negative-words').innerHTML = negativeWords.map(w => `<span class="word-tag negative">${w}</span>`).join('');
-            document.getElementById('negation-words').innerHTML = negationWords.map(w => `<span class="word-tag negation">${w}</span>`).join('');
-            document.getElementById('intensifier-words').innerHTML = intensifierWords.map(w => `<span class="word-tag intensifier">${w}</span>`).join('');
-        }
-
-        let answerVisible = false;
-        function toggleAnswer() {
-            const answerSection = document.getElementById('answer-section');
-            answerVisible = !answerVisible;
-            if (answerVisible) answerSection.classList.add('show');
-            else answerSection.classList.remove('show');
-        }
-
-        function resetCode() {
-            const editor = document.getElementById('code-editor');
-            editor.value = `# 50条电商商品评论
+        const defaultCode = `# 50条电商商品评论
 reviews = [
     "手机很好用，运行流畅，拍照清晰",
     "屏幕太小了，电池也不耐用",
@@ -1115,47 +975,13 @@ print("=" * 70)
 print("【第1步】情感分析")
 # 你的代码...
 
-print("\\n" + "=" * 70)
+print("\n" + "=" * 70)
 print("【第2步】情感分布统计")
 # 你的代码...
 
-print("\\n" + "=" * 70)
+print("\n" + "=" * 70)
 print("【第3步】负面评论高频词分析")
 # 你的代码...`;
-            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
-        }
-
-        function runProjectCode() {
-            const output = document.getElementById('code-output');
-            const code = document.getElementById('code-editor').value;
-            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
-
-            if (typeof Sk !== 'undefined') {
-                Sk.configure({
-                    output: function(text) {
-                        const existing = output.querySelector('.output-text');
-                        if (existing) existing.textContent += text;
-                        else output.innerHTML = '<pre class="output-text">' + text + '</pre>';
-                    },
-                    read: function(filename) {
-                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) throw 'File not found: ' + filename;
-                        return Sk.builtinFiles['files'][filename];
-                    }
-                });
-                Sk.misceval.asyncToPromise(function() { return Sk.importMainWithBody('<stdin>', false, code, true); })
-                    .then(function(mod) { output.classList.remove('error'); output.classList.add('success'); },
-                    function(err) { output.innerHTML = '<pre class="output-text error">❌ 运行错误: ' + err.toString() + '</pre>'; });
-            } else {
-                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
-            }
-        }
-
-        
-        let editor, lineNumbers;
-        let splitViewActive = false;
-        let autocompleteVisible = false;
-        let selectedAutocompleteIndex = -1;
-        let currentAutocompleteItems = [];
 
         const autocompleteData = [
             { label: 'pd.DataFrame', type: 'class', desc: '创建DataFrame对象' },
@@ -1173,14 +999,19 @@ print("【第3步】负面评论高频词分析")
             { label: 'df.describe', type: 'method', desc: '查看统计描述' },
             { label: 'df.shape', type: 'property', desc: '数据维度' },
             { label: 'df.columns', type: 'property', desc: '列名列表' },
+            { label: 'df.dtypes', type: 'property', desc: '数据类型' },
             { label: 'df.fillna', type: 'method', desc: '填充缺失值' },
             { label: 'df.dropna', type: 'method', desc: '删除缺失值' },
+            { label: 'df.isnull', type: 'method', desc: '检测缺失值' },
             { label: 'df.sum', type: 'method', desc: '求和' },
             { label: 'df.mean', type: 'method', desc: '求均值' },
+            { label: 'df.max', type: 'method', desc: '求最大值' },
+            { label: 'df.min', type: 'method', desc: '求最小值' },
             { label: 'df.sort_values', type: 'method', desc: '排序' },
             { label: 'df.to_string', type: 'method', desc: '转换为字符串' },
             { label: 'df.rename', type: 'method', desc: '重命名列' },
             { label: 'df.drop', type: 'method', desc: '删除行/列' },
+            { label: 'df.copy', type: 'method', desc: '复制数据' },
             { label: 'plt.figure', type: 'function', desc: '创建图表' },
             { label: 'plt.plot', type: 'function', desc: '绘制折线图' },
             { label: 'plt.bar', type: 'function', desc: '绘制柱状图' },
@@ -1189,14 +1020,28 @@ print("【第3步】负面评论高频词分析")
             { label: 'plt.title', type: 'function', desc: '设置标题' },
             { label: 'plt.xlabel', type: 'function', desc: '设置X轴标签' },
             { label: 'plt.ylabel', type: 'function', desc: '设置Y轴标签' },
+            { label: 'plt.legend', type: 'function', desc: '显示图例' },
+            { label: 'plt.grid', type: 'function', desc: '显示网格' },
             { label: 'print', type: 'function', desc: '打印输出' },
             { label: 'len', type: 'function', desc: '获取长度' },
+            { label: 'str', type: 'function', desc: '转换为字符串' },
+            { label: 'int', type: 'function', desc: '转换为整数' },
+            { label: 'float', type: 'function', desc: '转换为浮点数' },
+            { label: 'list', type: 'function', desc: '创建列表' },
+            { label: 'dict', type: 'function', desc: '创建字典' },
         ];
+
+        let editor, lineNumbers;
+        let splitViewActive = false;
+        let autocompleteVisible = false;
+        let selectedAutocompleteIndex = -1;
+        let currentAutocompleteItems = [];
 
         function initEditor() {
             editor = document.getElementById('code-editor');
             lineNumbers = document.getElementById('line-numbers');
             
+            editor.value = defaultCode;
             updateLineNumbers();
             
             editor.addEventListener('input', updateLineNumbers);
@@ -1206,10 +1051,14 @@ print("【第3步】负面评论高频词分析")
             editor.addEventListener('blur', () => {
                 setTimeout(() => hideAutocomplete(), 200);
             });
+            
+            const descriptionContent = document.getElementById('description-content');
+            if (descriptionContent) {
+                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
+            }
         }
 
         function updateLineNumbers() {
-            if (!editor || !lineNumbers) return;
             const lines = editor.value.split('\n').length;
             let html = '';
             for (let i = 1; i <= lines; i++) {
@@ -1219,7 +1068,7 @@ print("【第3步】负面评论高频词分析")
         }
 
         function syncScroll() {
-            if (lineNumbers) lineNumbers.scrollTop = editor.scrollTop;
+            lineNumbers.scrollTop = editor.scrollTop;
         }
 
         function handleKeyDown(e) {
@@ -1263,16 +1112,23 @@ print("【第3步】负面评论高频词分析")
                 
                 if (matches.length > 0) {
                     currentAutocompleteItems = matches;
-                    showAutocomplete(matches);
+                    showAutocomplete(matches, cursorPos - lastWord[0].length);
                     return;
                 }
             }
             hideAutocomplete();
         }
 
-        function showAutocomplete(items) {
+        function showAutocomplete(items, position) {
             const dropdown = document.getElementById('autocomplete-dropdown');
-            if (!dropdown) return;
+            const editorRect = editor.getBoundingClientRect();
+            const lineHeight = 24;
+            const lines = editor.value.substring(0, position).split('\n');
+            const top = lines.length * lineHeight + 20;
+            const left = 10;
+            
+            dropdown.style.top = Math.min(top, 400) + 'px';
+            dropdown.style.left = left + 'px';
             
             dropdown.innerHTML = items.map((item, index) => 
                 `<div class="autocomplete-item ${index === 0 ? 'selected' : ''}" data-index="${index}">
@@ -1319,10 +1175,27 @@ print("【第3步】负面评论高频词分析")
         }
 
         function hideAutocomplete() {
-            const dropdown = document.getElementById('autocomplete-dropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            document.getElementById('autocomplete-dropdown').classList.remove('show');
             autocompleteVisible = false;
             selectedAutocompleteIndex = -1;
+        }
+
+        function toggleDescription() {
+            const content = document.getElementById('description-content');
+            const toggle = document.querySelector('.description-toggle');
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
+
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.classList.toggle('show');
+        }
+
+        function resetCode() {
+            editor.value = defaultCode;
+            updateLineNumbers();
+            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }
 
         function toggleFullscreen() {
@@ -1355,9 +1228,6 @@ print("【第3步】负面评论高频词分析")
                 playground.classList.add('split-view');
                 btn.classList.add('active');
                 
-                const answerPre = document.getElementById('answer-section')?.querySelector('pre');
-                const answerCode = answerPre ? answerPre.textContent : '# 参考答案代码';
-                
                 const splitPanel = document.createElement('div');
                 splitPanel.className = 'code-editor-panel';
                 splitPanel.style.borderLeft = '1px solid #333';
@@ -1366,11 +1236,15 @@ print("【第3步】负面评论高频词分析")
                         <i class="fas fa-book"></i> 参考答案
                     </div>
                     <div class="code-editor-container">
-                        <div class="line-numbers" id="ref-line-numbers">${answerCode.split('\n').map((_, i) => i + 1).join('\n')}</div>
-                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${answerCode}</textarea>
+                        <div class="line-numbers" id="ref-line-numbers">${document.getElementById('answer-section').querySelector('pre').textContent.split('\n').map((_, i) => i + 1).join('\n')}</div>
+                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${document.getElementById('answer-section').querySelector('pre').textContent}</textarea>
                     </div>
                 `;
                 wrapper.insertBefore(splitPanel, document.getElementById('output-panel'));
+                
+                document.getElementById('reference-editor').addEventListener('scroll', (e) => {
+                    document.getElementById('ref-line-numbers').scrollTop = e.target.scrollTop;
+                });
             } else {
                 wrapper.classList.remove('split-mode');
                 playground.classList.remove('split-view');
@@ -1404,11 +1278,12 @@ print("【第3步】负面评论高频词分析")
                 if (!isResizing) return;
                 const diff = e.clientX - startX;
                 const editorPanel = wrapper.querySelector('.code-editor-panel');
+                const outputPanel = document.getElementById('output-panel');
                 const totalWidth = wrapper.offsetWidth;
                 
                 let newWidth = startWidth + diff;
                 newWidth = Math.max(totalWidth * 0.3, Math.min(totalWidth * 0.7, newWidth));
-                editorPanel.style.flex = 'none';
+                
                 editorPanel.style.width = newWidth + 'px';
             });
 
@@ -1420,122 +1295,44 @@ print("【第3步】负面评论高频词分析")
             });
         }
 
+        function runProjectCode() {
+            const output = document.getElementById('code-output');
+            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            renderDataTable();
+            if (typeof Sk !== 'undefined') {
+                Sk.configure({
+                    output: (text) => {
+                        const existing = output.querySelector('pre');
+                        if (existing) existing.textContent += text;
+                        else output.innerHTML = '<pre style="margin:0;">' + text + '</pre>';
+                    },
+                    read: (fn) => {
+                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][fn] === undefined) throw 'File not found: ' + fn;
+                        return Sk.builtinFiles['files'][fn];
+                    }
+                });
+
+                Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, editor.value, true))
+                    .then(() => output.classList.add('success'))
+                    .catch((err) => output.innerHTML = '<pre class="error" style="margin:0;">❌ 运行错误: ' + err + '</pre>');
+            } else {
+                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { renderDataTable();
             initEditor();
             initResize();
             
-            const descriptionContent = document.getElementById('description-content');
-            if (descriptionContent) {
-                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
-            }
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
-            script.onload = function() {
+            script.onload = () => {
                 const stdlib = document.createElement('script');
                 stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
                 document.head.appendChild(stdlib);
             };
             document.head.appendChild(script);
         });
-
-        function toggleFullscreen() {
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('fullscreen-btn');
-            
-            if (!document.fullscreenElement) {
-                playground.requestFullscreen().then(() => {
-                    playground.classList.add('fullscreen');
-                    btn.classList.add('active');
-                    btn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
-                }).catch(err => {
-                    console.log('Fullscreen error:', err);
-                });
-            } else {
-                document.exitFullscreen().then(() => {
-                    playground.classList.remove('fullscreen');
-                    btn.classList.remove('active');
-                    btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
-                });
-            }
-        }
-
-        document.addEventListener('fullscreenchange', function() {
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('fullscreen-btn');
-            
-            if (!document.fullscreenElement) {
-                playground.classList.remove('fullscreen');
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.fullscreenElement) {
-                const playground = document.getElementById('code-playground');
-                playground.classList.remove('fullscreen');
-            }
-        });
-
-        function toggleDescription() {
-            const content = document.getElementById('description-content');
-            const toggle = document.querySelector('.description-toggle');
-            
-            content.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
-        }
-
-        function initResize() {
-            const handle = document.getElementById('resize-handle');
-            const wrapper = document.getElementById('editor-wrapper');
-            if (!handle || !wrapper) return;
-            
-            let isResizing = false;
-            let startX, startWidth;
-
-            handle.addEventListener('mousedown', function(e) {
-                isResizing = true;
-                startX = e.clientX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                startWidth = editorPanel.offsetWidth;
-                wrapper.classList.add('resizing');
-                handle.classList.add('active');
-                document.body.style.cursor = 'col-resize';
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!isResizing) return;
-                
-                const diff = e.clientX - startX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                const outputPanel = wrapper.querySelector('.code-output-panel');
-                const totalWidth = wrapper.offsetWidth;
-                
-                let newEditorWidth = startWidth + diff;
-                const minWidth = totalWidth * 0.3;
-                const maxWidth = totalWidth * 0.7;
-                
-                if (newEditorWidth < minWidth) newEditorWidth = minWidth;
-                if (newEditorWidth > maxWidth) newEditorWidth = maxWidth;
-                
-                editorPanel.style.flex = 'none';
-                editorPanel.style.width = newEditorWidth + 'px';
-                outputPanel.style.flex = '1';
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (isResizing) {
-                    isResizing = false;
-                    wrapper.classList.remove('resizing');
-                    handle.classList.remove('active');
-                    document.body.style.cursor = '';
-                }
-            });
-        }
-    
     </script>
 </body>
 </html>

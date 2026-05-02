@@ -551,15 +551,18 @@
 <body>
     <header class="navbar">
         <div class="navbar-container">
-            <div class="navbar-logo" onclick="location.href='../index.html'"><i class="fas fa-chart-bar"></i><span>数析学院</span></div>
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
             <nav class="navbar-menu">
                 <a href="../index.html" class="nav-link">首页</a>
                 <a href="#courses" class="nav-link">课程中心</a>
                 <a href="../projects.html" class="nav-link active">实战项目</a>
                 <a href="../achievements.html" class="nav-link">成就殿堂</a>
             </nav>
+            <button class="hamburger-menu" id="hamburger-menu"><i class="fas fa-bars"></i></button>
             <div class="navbar-auth">
-                <div id="user-profile" class="user-profile hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar"><span id="user-name">用户名</span></div>
                 <button id="login-btn" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> 登录</button>
                 <button id="register-btn" class="auth-btn register-btn"><i class="fas fa-user-plus"></i> 注册</button>
             </div>
@@ -577,12 +580,26 @@
                 <div class="project-meta-info">
                     <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：45分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：100用户/500订单</span></div>
-                </div>
-            </div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：100用户/500订单</span></div></div>
         </div>
 
         <div class="project-container">
+            <div class="project-sidebar">
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
+                    <div class="tip-item"><strong>groupby().count()</strong> - 统计分组数量</div>
+                    <div class="tip-item"><strong>value_counts()</strong> - 统计值分布</div>
+                    <div class="tip-item"><strong>nunique()</strong> - 统计唯一值数量</div>
+                    <div class="tip-item"><strong>agg()</strong> - 多列聚合计算</div>
+                    <div class="tip-item"><strong>sort_values()</strong> - 排序</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
+                    <div class="tip-item">理解复购率概念与计算</div>
+                    <div class="tip-item">掌握用户分层分析方法</div>
+                    <div class="tip-item">学会识别高价值用户</div>
+                    <div class="tip-item">培养精细化运营思维</div></div></div>
+
             <div class="project-main">
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
@@ -664,7 +681,8 @@ plt.title('用户购买次数分布')
 plt.show()
 
 # ASCII版本（用于在线运行）
-print("\n购买次数分布：")
+print("
+购买次数分布：")
 for count, users in purchase_dist.items():
     bar = "█" * int(users / 2)
     print(f"{count}次: {bar} ({users}人)")</pre>
@@ -714,23 +732,159 @@ print(f"90天复购率: {calc_repeat_rate(df, 90):.1f}%")</pre>
 
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
-                    <div class="code-playground">
-                        <div class="code-playground-header">
-                        <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
+                    <div class="code-playground" id="code-playground">
+                    <div class="code-playground-header">
+                        <div class="code-playground-title">
+                            <i class="fab fa-python"></i>
+                            Python 代码编辑器
+                        </div>
                         <div class="code-controls">
-                            <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
-                                <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
-                                <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            <button class="run-btn" onclick="runProjectCode()">
+                                <i class="fas fa-play"></i> 运行代码
+                            </button>
+                            <button class="reset-btn" onclick="resetCode()">
+                                <i class="fas fa-undo"></i> 重置
+                            </button>
+                            <button class="answer-btn" onclick="toggleAnswer()">
+                                <i class="fas fa-lightbulb"></i> 参考答案
+                            </button>
                             <button class="split-btn" id="split-btn" onclick="toggleSplitView()">
                                 <i class="fas fa-columns"></i> 分屏
                             </button>
-                            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i> 全屏</button>
+                            <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i> 全屏
+                            </button>
                         </div>
                     </div>
-                        <div class="code-editor-wrapper">
-                            <div class="code-editor-panel">
-                                <div class="code-editor-label">编辑器</div>
-                                <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
+                    <div class="code-editor-wrapper" id="editor-wrapper">
+                        <div class="code-editor-panel" id="editor-panel">
+                            <div class="code-editor-label">
+                                <i class="fas fa-edit"></i> 编辑器
+                            </div>
+                            <div class="code-editor-container">
+                                <div class="line-numbers" id="line-numbers">1</div>
+                                <div class="code-editor-wrapper-textarea">
+                                    <textarea class="code-editor" id="code-editor" spellcheck="false" placeholder="# 在这里编写代码..."></textarea>
+                                    <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resize-handle" id="resize-handle"></div>
+                        <div class="code-output-panel" id="output-panel">
+                            <div class="code-output-label">
+                                <i class="fas fa-terminal"></i> 运行结果
+                            </div>
+                            <div class="code-output" id="code-output">
+                                <div class="placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-section" id="answer-section"><div class="answer-content"><h4><i class="fas fa-check-circle"></i> 参考答案代码：</h4><pre>import pandas as pd
+import random
+
+# 模拟生成100个用户、500条订单数据
+random.seed(42)
+categories = ['电子产品', '服装', '家居', '食品', '美妆']
+
+# 生成用户购买数据
+data = []
+order_id = 1
+for user_id in range(1, 101):
+    num_purchases = random.choices(
+        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
+        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
+    )[0]
+    
+    for _ in range(num_purchases):
+        month = random.randint(1, 6)
+        day = random.randint(1, 28)
+        data.append({
+            "order_id": f"ORD{order_id:04d}",
+            "user_id": f"U{user_id:03d}",
+            "date": f"2024-{month:02d}-{day:02d}",
+            "category": random.choice(categories),
+            "amount": random.randint(50, 3000)
+        })
+        order_id += 1
+
+df = pd.DataFrame(data)
+
+print("=" * 70)
+print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
+
+# 第1步：计算每个用户的购买次数
+print("
+" + "=" * 70)
+print("【第1步】计算每个用户的购买次数")
+user_purchase = df.groupby('user_id').agg({
+    'order_id': 'count',
+    'amount': 'sum'
+}).reset_index()
+user_purchase.columns = ['user_id', 'purchase_count', 'total_amount']
+print(f"
+购买次数分布：")
+print(user_purchase['purchase_count'].value_counts().sort_index().head(10))
+
+# 第2步：计算购买≥3次的用户占比
+print("
+" + "=" * 70)
+print("【第2步】计算超级用户占比")
+total_users = len(user_purchase)
+super_users = user_purchase[user_purchase['purchase_count'] &gt;= 3]
+super_user_count = len(super_users)
+super_user_ratio = super_user_count / total_users * 100
+
+print(f"
+总用户数: {total_users}")
+print(f"超级用户数（购买≥3次）: {super_user_count}")
+print(f"超级用户占比: {super_user_ratio:.1f}%")
+
+# 第3步：筛选出超级用户
+print("
+" + "=" * 70)
+print("【第3步】超级用户名单（按购买次数排序）")
+super_users_sorted = super_users.sort_values('purchase_count', ascending=False)
+print("
+TOP 20 超级用户：")
+print(super_users_sorted.head(20).to_string(index=False))
+
+# 第4步：超级用户价值分析
+print("
+" + "=" * 70)
+print("【第4步】超级用户价值分析")
+total_revenue = df['amount'].sum()
+super_revenue = super_users['total_amount'].sum()
+super_revenue_ratio = super_revenue / total_revenue * 100
+
+print(f"
+总销售额: {total_revenue:,} 元")
+print(f"超级用户贡献销售额: {super_revenue:,} 元")
+print(f"超级用户贡献占比: {super_revenue_ratio:.1f}%")
+print(f"
+结论: {super_user_count}位超级用户（{super_user_ratio:.1f}%）贡献了{super_revenue_ratio:.1f}%的销售额！")
+
+# 可视化：购买次数分布
+print("
+" + "=" * 70)
+print("【可视化】购买次数分布图")
+print("
+用户购买次数分布：")
+purchase_dist = user_purchase['purchase_count'].value_counts().sort_index()
+max_count = purchase_dist.max()
+for count, users in purchase_dist.items():
+    bar_len = int(users / max_count * 30)
+    bar = "█" * bar_len
+    print(f"{count:2d}次: {bar} ({users}人)")</pre></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        const defaultCode = `import pandas as pd
 import random
 
 # 模拟生成100个用户、500条订单数据
@@ -776,272 +930,7 @@ print("【用户购买次数统计】")
 
 print("\n" + "=" * 70)
 print("【超级用户分析（购买≥3次）】")
-# 你的代码...</textarea>
-                            </div>
-                            <div class="code-output-panel">
-                                <div class="code-output-label">运行结果</div>
-                                <div class="code-output" id="code-output"><div class="placeholder">点击"运行代码"按钮执行代码</div></div>
-                            </div>
-                        </div>
-                        <div class="answer-section" id="answer-section">
-                            <div class="answer-content">
-                                <h4>参考答案代码：</h4>
-                                <pre>import pandas as pd
-import random
-
-# 模拟生成100个用户、500条订单数据
-random.seed(42)
-categories = ['电子产品', '服装', '家居', '食品', '美妆']
-
-# 生成用户购买数据
-data = []
-order_id = 1
-for user_id in range(1, 101):
-    num_purchases = random.choices(
-        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
-        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
-    )[0]
-    
-    for _ in range(num_purchases):
-        month = random.randint(1, 6)
-        day = random.randint(1, 28)
-        data.append({
-            "order_id": f"ORD{order_id:04d}",
-            "user_id": f"U{user_id:03d}",
-            "date": f"2024-{month:02d}-{day:02d}",
-            "category": random.choice(categories),
-            "amount": random.randint(50, 3000)
-        })
-        order_id += 1
-
-df = pd.DataFrame(data)
-
-print("=" * 70)
-print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
-
-# 第1步：计算每个用户的购买次数
-print("\n" + "=" * 70)
-print("【第1步】计算每个用户的购买次数")
-user_purchase = df.groupby('user_id').agg({
-    'order_id': 'count',
-    'amount': 'sum'
-}).reset_index()
-user_purchase.columns = ['user_id', 'purchase_count', 'total_amount']
-print(f"\n购买次数分布：")
-print(user_purchase['purchase_count'].value_counts().sort_index().head(10))
-
-# 第2步：计算购买≥3次的用户占比
-print("\n" + "=" * 70)
-print("【第2步】计算超级用户占比")
-total_users = len(user_purchase)
-super_users = user_purchase[user_purchase['purchase_count'] >= 3]
-super_user_count = len(super_users)
-super_user_ratio = super_user_count / total_users * 100
-
-print(f"\n总用户数: {total_users}")
-print(f"超级用户数（购买≥3次）: {super_user_count}")
-print(f"超级用户占比: {super_user_ratio:.1f}%")
-
-# 第3步：筛选出超级用户
-print("\n" + "=" * 70)
-print("【第3步】超级用户名单（按购买次数排序）")
-super_users_sorted = super_users.sort_values('purchase_count', ascending=False)
-print("\nTOP 20 超级用户：")
-print(super_users_sorted.head(20).to_string(index=False))
-
-# 第4步：超级用户价值分析
-print("\n" + "=" * 70)
-print("【第4步】超级用户价值分析")
-total_revenue = df['amount'].sum()
-super_revenue = super_users['total_amount'].sum()
-super_revenue_ratio = super_revenue / total_revenue * 100
-
-print(f"\n总销售额: {total_revenue:,} 元")
-print(f"超级用户贡献销售额: {super_revenue:,} 元")
-print(f"超级用户贡献占比: {super_revenue_ratio:.1f}%")
-print(f"\n结论: {super_user_count}位超级用户（{super_user_ratio:.1f}%）贡献了{super_revenue_ratio:.1f}%的销售额！")
-
-# 可视化：购买次数分布
-print("\n" + "=" * 70)
-print("【可视化】购买次数分布图")
-print("\n用户购买次数分布：")
-purchase_dist = user_purchase['purchase_count'].value_counts().sort_index()
-max_count = purchase_dist.max()
-for count, users in purchase_dist.items():
-    bar_len = int(users / max_count * 30)
-    bar = "█" * bar_len
-    print(f"{count:2d}次: {bar} ({users}人)")</pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-sidebar">
-                <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
-                    <div class="tip-item"><strong>groupby().count()</strong> - 统计分组数量</div>
-                    <div class="tip-item"><strong>value_counts()</strong> - 统计值分布</div>
-                    <div class="tip-item"><strong>nunique()</strong> - 统计唯一值数量</div>
-                    <div class="tip-item"><strong>agg()</strong> - 多列聚合计算</div>
-                    <div class="tip-item"><strong>sort_values()</strong> - 排序</div>
-                </div>
-                <div class="tips-card">
-                    <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解复购率概念与计算</div>
-                    <div class="tip-item">掌握用户分层分析方法</div>
-                    <div class="tip-item">学会识别高价值用户</div>
-                    <div class="tip-item">培养精细化运营思维</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="../script.js"></script>
-    <script>
-        // 生成模拟数据用于表格展示
-        const rawData = [];
-        let orderId = 1;
-        const categories = ['电子产品', '服装', '家居', '食品', '美妆'];
-        
-        // 使用固定种子生成可重复的数据
-        const seedrandom = function(seed) {
-            const x = Math.sin(seed++) * 10000;
-            return x - Math.floor(x);
-        };
-        
-        for (let userId = 1; userId <= 100; userId++) {
-            const weights = [30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5];
-            const choices = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15];
-            const rand = seedrandom(userId);
-            let cumWeight = 0;
-            let numPurchases = 1;
-            for (let i = 0; i < weights.length; i++) {
-                cumWeight += weights[i] / 100;
-                if (rand < cumWeight) {
-                    numPurchases = choices[i];
-                    break;
-                }
-            }
-            
-            for (let p = 0; p < numPurchases; p++) {
-                const month = Math.floor(seedrandom(userId * 100 + p * 10) * 6) + 1;
-                const day = Math.floor(seedrandom(userId * 100 + p * 10 + 1) * 28) + 1;
-                rawData.push({
-                    order_id: `ORD${String(orderId).padStart(4, '0')}`,
-                    user_id: `U${String(userId).padStart(3, '0')}`,
-                    date: `2024-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-                    category: categories[Math.floor(seedrandom(userId * 100 + p * 10 + 2) * 5)],
-                    amount: Math.floor(seedrandom(userId * 100 + p * 10 + 3) * 2950) + 50
-                });
-                orderId++;
-            }
-        }
-
-        function renderDataTable() {
-            const tbody = document.getElementById('data-tbody');
-            tbody.innerHTML = rawData.slice(0, 20).map(row => `
-                <tr>
-                    <td>${row.order_id}</td>
-                    <td>${row.user_id}</td>
-                    <td>${row.date}</td>
-                    <td>${row.category}</td>
-                    <td>¥${row.amount}</td>
-                </tr>
-            `).join('');
-        }
-
-        let answerVisible = false;
-        function toggleAnswer() {
-            const answerSection = document.getElementById('answer-section');
-            answerVisible = !answerVisible;
-            if (answerVisible) answerSection.classList.add('show');
-            else answerSection.classList.remove('show');
-        }
-
-        function resetCode() {
-            const editor = document.getElementById('code-editor');
-            editor.value = `import pandas as pd
-import random
-
-# 模拟生成100个用户、500条订单数据
-random.seed(42)
-categories = ['电子产品', '服装', '家居', '食品', '美妆']
-
-# 生成用户购买数据（模拟真实分布：部分用户多次购买）
-data = []
-order_id = 1
-for user_id in range(1, 101):
-    # 随机决定每个用户的购买次数（1-15次，符合长尾分布）
-    num_purchases = random.choices(
-        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
-        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
-    )[0]
-    
-    for _ in range(num_purchases):
-        month = random.randint(1, 6)
-        day = random.randint(1, 28)
-        data.append({
-            "order_id": f"ORD{order_id:04d}",
-            "user_id": f"U{user_id:03d}",
-            "date": f"2024-{month:02d}-{day:02d}",
-            "category": random.choice(categories),
-            "amount": random.randint(50, 3000)
-        })
-        order_id += 1
-
-df = pd.DataFrame(data)
-print("=" * 70)
-print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
-print("\\n前10条订单记录：")
-print(df.head(10).to_string(index=False))
-
-# TODO: 请在下方编写代码，完成以下任务：
-# 1. 计算每个用户的购买次数
-# 2. 计算购买≥3次的用户占比
-# 3. 筛选出"超级用户"（购买≥3次的用户）
-
-print("\\n" + "=" * 70)
-print("【用户购买次数统计】")
-# 你的代码...
-
-print("\\n" + "=" * 70)
-print("【超级用户分析（购买≥3次）】")
 # 你的代码...`;
-            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
-        }
-
-        function runProjectCode() {
-            const output = document.getElementById('code-output');
-            const code = document.getElementById('code-editor').value;
-            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
-
-            if (typeof Sk !== 'undefined') {
-                Sk.configure({
-                    output: function(text) {
-                        const existing = output.querySelector('.output-text');
-                        if (existing) existing.textContent += text;
-                        else output.innerHTML = '<pre class="output-text">' + text + '</pre>';
-                    },
-                    read: function(filename) {
-                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) throw 'File not found: ' + filename;
-                        return Sk.builtinFiles['files'][filename];
-                    }
-                });
-                Sk.misceval.asyncToPromise(function() { return Sk.importMainWithBody('<stdin>', false, code, true); })
-                    .then(function(mod) { output.classList.remove('error'); output.classList.add('success'); },
-                    function(err) { output.innerHTML = '<pre class="output-text error">❌ 运行错误: ' + err.toString() + '</pre>'; });
-            } else {
-                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
-            }
-        }
-
-        
-        let editor, lineNumbers;
-        let splitViewActive = false;
-        let autocompleteVisible = false;
-        let selectedAutocompleteIndex = -1;
-        let currentAutocompleteItems = [];
 
         const autocompleteData = [
             { label: 'pd.DataFrame', type: 'class', desc: '创建DataFrame对象' },
@@ -1059,14 +948,19 @@ print("【超级用户分析（购买≥3次）】")
             { label: 'df.describe', type: 'method', desc: '查看统计描述' },
             { label: 'df.shape', type: 'property', desc: '数据维度' },
             { label: 'df.columns', type: 'property', desc: '列名列表' },
+            { label: 'df.dtypes', type: 'property', desc: '数据类型' },
             { label: 'df.fillna', type: 'method', desc: '填充缺失值' },
             { label: 'df.dropna', type: 'method', desc: '删除缺失值' },
+            { label: 'df.isnull', type: 'method', desc: '检测缺失值' },
             { label: 'df.sum', type: 'method', desc: '求和' },
             { label: 'df.mean', type: 'method', desc: '求均值' },
+            { label: 'df.max', type: 'method', desc: '求最大值' },
+            { label: 'df.min', type: 'method', desc: '求最小值' },
             { label: 'df.sort_values', type: 'method', desc: '排序' },
             { label: 'df.to_string', type: 'method', desc: '转换为字符串' },
             { label: 'df.rename', type: 'method', desc: '重命名列' },
             { label: 'df.drop', type: 'method', desc: '删除行/列' },
+            { label: 'df.copy', type: 'method', desc: '复制数据' },
             { label: 'plt.figure', type: 'function', desc: '创建图表' },
             { label: 'plt.plot', type: 'function', desc: '绘制折线图' },
             { label: 'plt.bar', type: 'function', desc: '绘制柱状图' },
@@ -1075,14 +969,28 @@ print("【超级用户分析（购买≥3次）】")
             { label: 'plt.title', type: 'function', desc: '设置标题' },
             { label: 'plt.xlabel', type: 'function', desc: '设置X轴标签' },
             { label: 'plt.ylabel', type: 'function', desc: '设置Y轴标签' },
+            { label: 'plt.legend', type: 'function', desc: '显示图例' },
+            { label: 'plt.grid', type: 'function', desc: '显示网格' },
             { label: 'print', type: 'function', desc: '打印输出' },
             { label: 'len', type: 'function', desc: '获取长度' },
+            { label: 'str', type: 'function', desc: '转换为字符串' },
+            { label: 'int', type: 'function', desc: '转换为整数' },
+            { label: 'float', type: 'function', desc: '转换为浮点数' },
+            { label: 'list', type: 'function', desc: '创建列表' },
+            { label: 'dict', type: 'function', desc: '创建字典' },
         ];
+
+        let editor, lineNumbers;
+        let splitViewActive = false;
+        let autocompleteVisible = false;
+        let selectedAutocompleteIndex = -1;
+        let currentAutocompleteItems = [];
 
         function initEditor() {
             editor = document.getElementById('code-editor');
             lineNumbers = document.getElementById('line-numbers');
             
+            editor.value = defaultCode;
             updateLineNumbers();
             
             editor.addEventListener('input', updateLineNumbers);
@@ -1092,10 +1000,14 @@ print("【超级用户分析（购买≥3次）】")
             editor.addEventListener('blur', () => {
                 setTimeout(() => hideAutocomplete(), 200);
             });
+            
+            const descriptionContent = document.getElementById('description-content');
+            if (descriptionContent) {
+                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
+            }
         }
 
         function updateLineNumbers() {
-            if (!editor || !lineNumbers) return;
             const lines = editor.value.split('\n').length;
             let html = '';
             for (let i = 1; i <= lines; i++) {
@@ -1105,7 +1017,7 @@ print("【超级用户分析（购买≥3次）】")
         }
 
         function syncScroll() {
-            if (lineNumbers) lineNumbers.scrollTop = editor.scrollTop;
+            lineNumbers.scrollTop = editor.scrollTop;
         }
 
         function handleKeyDown(e) {
@@ -1149,16 +1061,23 @@ print("【超级用户分析（购买≥3次）】")
                 
                 if (matches.length > 0) {
                     currentAutocompleteItems = matches;
-                    showAutocomplete(matches);
+                    showAutocomplete(matches, cursorPos - lastWord[0].length);
                     return;
                 }
             }
             hideAutocomplete();
         }
 
-        function showAutocomplete(items) {
+        function showAutocomplete(items, position) {
             const dropdown = document.getElementById('autocomplete-dropdown');
-            if (!dropdown) return;
+            const editorRect = editor.getBoundingClientRect();
+            const lineHeight = 24;
+            const lines = editor.value.substring(0, position).split('\n');
+            const top = lines.length * lineHeight + 20;
+            const left = 10;
+            
+            dropdown.style.top = Math.min(top, 400) + 'px';
+            dropdown.style.left = left + 'px';
             
             dropdown.innerHTML = items.map((item, index) => 
                 `<div class="autocomplete-item ${index === 0 ? 'selected' : ''}" data-index="${index}">
@@ -1205,10 +1124,27 @@ print("【超级用户分析（购买≥3次）】")
         }
 
         function hideAutocomplete() {
-            const dropdown = document.getElementById('autocomplete-dropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            document.getElementById('autocomplete-dropdown').classList.remove('show');
             autocompleteVisible = false;
             selectedAutocompleteIndex = -1;
+        }
+
+        function toggleDescription() {
+            const content = document.getElementById('description-content');
+            const toggle = document.querySelector('.description-toggle');
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
+
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answer-section');
+            answerSection.classList.toggle('show');
+        }
+
+        function resetCode() {
+            editor.value = defaultCode;
+            updateLineNumbers();
+            document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }
 
         function toggleFullscreen() {
@@ -1241,9 +1177,6 @@ print("【超级用户分析（购买≥3次）】")
                 playground.classList.add('split-view');
                 btn.classList.add('active');
                 
-                const answerPre = document.getElementById('answer-section')?.querySelector('pre');
-                const answerCode = answerPre ? answerPre.textContent : '# 参考答案代码';
-                
                 const splitPanel = document.createElement('div');
                 splitPanel.className = 'code-editor-panel';
                 splitPanel.style.borderLeft = '1px solid #333';
@@ -1252,11 +1185,15 @@ print("【超级用户分析（购买≥3次）】")
                         <i class="fas fa-book"></i> 参考答案
                     </div>
                     <div class="code-editor-container">
-                        <div class="line-numbers" id="ref-line-numbers">${answerCode.split('\n').map((_, i) => i + 1).join('\n')}</div>
-                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${answerCode}</textarea>
+                        <div class="line-numbers" id="ref-line-numbers">${document.getElementById('answer-section').querySelector('pre').textContent.split('\n').map((_, i) => i + 1).join('\n')}</div>
+                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${document.getElementById('answer-section').querySelector('pre').textContent}</textarea>
                     </div>
                 `;
                 wrapper.insertBefore(splitPanel, document.getElementById('output-panel'));
+                
+                document.getElementById('reference-editor').addEventListener('scroll', (e) => {
+                    document.getElementById('ref-line-numbers').scrollTop = e.target.scrollTop;
+                });
             } else {
                 wrapper.classList.remove('split-mode');
                 playground.classList.remove('split-view');
@@ -1290,11 +1227,12 @@ print("【超级用户分析（购买≥3次）】")
                 if (!isResizing) return;
                 const diff = e.clientX - startX;
                 const editorPanel = wrapper.querySelector('.code-editor-panel');
+                const outputPanel = document.getElementById('output-panel');
                 const totalWidth = wrapper.offsetWidth;
                 
                 let newWidth = startWidth + diff;
                 newWidth = Math.max(totalWidth * 0.3, Math.min(totalWidth * 0.7, newWidth));
-                editorPanel.style.flex = 'none';
+                
                 editorPanel.style.width = newWidth + 'px';
             });
 
@@ -1306,122 +1244,44 @@ print("【超级用户分析（购买≥3次）】")
             });
         }
 
+        function runProjectCode() {
+            const output = document.getElementById('code-output');
+            output.innerHTML = '<div class="placeholder">⌛ 正在运行...</div>';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            renderDataTable();
+            if (typeof Sk !== 'undefined') {
+                Sk.configure({
+                    output: (text) => {
+                        const existing = output.querySelector('pre');
+                        if (existing) existing.textContent += text;
+                        else output.innerHTML = '<pre style="margin:0;">' + text + '</pre>';
+                    },
+                    read: (fn) => {
+                        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][fn] === undefined) throw 'File not found: ' + fn;
+                        return Sk.builtinFiles['files'][fn];
+                    }
+                });
+
+                Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, editor.value, true))
+                    .then(() => output.classList.add('success'))
+                    .catch((err) => output.innerHTML = '<pre class="error" style="margin:0;">❌ 运行错误: ' + err + '</pre>');
+            } else {
+                output.innerHTML = '<div class="placeholder">代码编辑器加载中...</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { renderDataTable();
             initEditor();
             initResize();
             
-            const descriptionContent = document.getElementById('description-content');
-            if (descriptionContent) {
-                descriptionContent.style.maxHeight = descriptionContent.scrollHeight + 'px';
-            }
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
-            script.onload = function() {
+            script.onload = () => {
                 const stdlib = document.createElement('script');
                 stdlib.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
                 document.head.appendChild(stdlib);
             };
             document.head.appendChild(script);
         });
-
-        function toggleFullscreen() {
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('fullscreen-btn');
-            
-            if (!document.fullscreenElement) {
-                playground.requestFullscreen().then(() => {
-                    playground.classList.add('fullscreen');
-                    btn.classList.add('active');
-                    btn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
-                }).catch(err => {
-                    console.log('Fullscreen error:', err);
-                });
-            } else {
-                document.exitFullscreen().then(() => {
-                    playground.classList.remove('fullscreen');
-                    btn.classList.remove('active');
-                    btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
-                });
-            }
-        }
-
-        document.addEventListener('fullscreenchange', function() {
-            const playground = document.getElementById('code-playground');
-            const btn = document.getElementById('fullscreen-btn');
-            
-            if (!document.fullscreenElement) {
-                playground.classList.remove('fullscreen');
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.fullscreenElement) {
-                const playground = document.getElementById('code-playground');
-                playground.classList.remove('fullscreen');
-            }
-        });
-
-        function toggleDescription() {
-            const content = document.getElementById('description-content');
-            const toggle = document.querySelector('.description-toggle');
-            
-            content.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
-        }
-
-        function initResize() {
-            const handle = document.getElementById('resize-handle');
-            const wrapper = document.getElementById('editor-wrapper');
-            if (!handle || !wrapper) return;
-            
-            let isResizing = false;
-            let startX, startWidth;
-
-            handle.addEventListener('mousedown', function(e) {
-                isResizing = true;
-                startX = e.clientX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                startWidth = editorPanel.offsetWidth;
-                wrapper.classList.add('resizing');
-                handle.classList.add('active');
-                document.body.style.cursor = 'col-resize';
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!isResizing) return;
-                
-                const diff = e.clientX - startX;
-                const editorPanel = wrapper.querySelector('.code-editor-panel');
-                const outputPanel = wrapper.querySelector('.code-output-panel');
-                const totalWidth = wrapper.offsetWidth;
-                
-                let newEditorWidth = startWidth + diff;
-                const minWidth = totalWidth * 0.3;
-                const maxWidth = totalWidth * 0.7;
-                
-                if (newEditorWidth < minWidth) newEditorWidth = minWidth;
-                if (newEditorWidth > maxWidth) newEditorWidth = maxWidth;
-                
-                editorPanel.style.flex = 'none';
-                editorPanel.style.width = newEditorWidth + 'px';
-                outputPanel.style.flex = '1';
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (isResizing) {
-                    isResizing = false;
-                    wrapper.classList.remove('resizing');
-                    handle.classList.remove('active');
-                    document.body.style.cursor = '';
-                }
-            });
-        }
-    
     </script>
 </body>
 </html>
