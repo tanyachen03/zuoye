@@ -925,6 +925,9 @@ print(f"90天复购率: {calc_repeat_rate(df, 90):.1f}%")</pre>
                             <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
                                 <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
                                 <button class="answer-btn" onclick="toggleAnswer()"><i class="fas fa-lightbulb"></i> 参考答案</button>
+                            <button class="split-btn" id="split-btn" onclick="toggleSplitView()">
+                                <i class="fas fa-columns"></i> 分屏
+                            </button>
                             <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i> 全屏</button>
                         </div>
                     </div>
@@ -1237,8 +1240,280 @@ print("【超级用户分析（购买≥3次）】")
             }
         }
 
+        
+        let editor, lineNumbers;
+        let splitViewActive = false;
+        let autocompleteVisible = false;
+        let selectedAutocompleteIndex = -1;
+        let currentAutocompleteItems = [];
+
+        const autocompleteData = [
+            { label: 'pd.DataFrame', type: 'class', desc: '创建DataFrame对象' },
+            { label: 'pd.read_csv', type: 'function', desc: '读取CSV文件' },
+            { label: 'pd.read_excel', type: 'function', desc: '读取Excel文件' },
+            { label: 'pd.to_datetime', type: 'function', desc: '转换日期格式' },
+            { label: 'pd.isnull', type: 'function', desc: '检测缺失值' },
+            { label: 'pd.notnull', type: 'function', desc: '检测非缺失值' },
+            { label: 'pd.merge', type: 'function', desc: '合并数据' },
+            { label: 'pd.concat', type: 'function', desc: '拼接数据' },
+            { label: 'pd.groupby', type: 'function', desc: '分组聚合' },
+            { label: 'df.head', type: 'method', desc: '查看前N行' },
+            { label: 'df.tail', type: 'method', desc: '查看后N行' },
+            { label: 'df.info', type: 'method', desc: '查看数据信息' },
+            { label: 'df.describe', type: 'method', desc: '查看统计描述' },
+            { label: 'df.shape', type: 'property', desc: '数据维度' },
+            { label: 'df.columns', type: 'property', desc: '列名列表' },
+            { label: 'df.fillna', type: 'method', desc: '填充缺失值' },
+            { label: 'df.dropna', type: 'method', desc: '删除缺失值' },
+            { label: 'df.sum', type: 'method', desc: '求和' },
+            { label: 'df.mean', type: 'method', desc: '求均值' },
+            { label: 'df.sort_values', type: 'method', desc: '排序' },
+            { label: 'df.to_string', type: 'method', desc: '转换为字符串' },
+            { label: 'df.rename', type: 'method', desc: '重命名列' },
+            { label: 'df.drop', type: 'method', desc: '删除行/列' },
+            { label: 'plt.figure', type: 'function', desc: '创建图表' },
+            { label: 'plt.plot', type: 'function', desc: '绘制折线图' },
+            { label: 'plt.bar', type: 'function', desc: '绘制柱状图' },
+            { label: 'plt.scatter', type: 'function', desc: '绘制散点图' },
+            { label: 'plt.show', type: 'function', desc: '显示图表' },
+            { label: 'plt.title', type: 'function', desc: '设置标题' },
+            { label: 'plt.xlabel', type: 'function', desc: '设置X轴标签' },
+            { label: 'plt.ylabel', type: 'function', desc: '设置Y轴标签' },
+            { label: 'print', type: 'function', desc: '打印输出' },
+            { label: 'len', type: 'function', desc: '获取长度' },
+        ];
+
+        function initEditor() {
+            editor = document.getElementById('code-editor');
+            lineNumbers = document.getElementById('line-numbers');
+            
+            updateLineNumbers();
+            
+            editor.addEventListener('input', updateLineNumbers);
+            editor.addEventListener('scroll', syncScroll);
+            editor.addEventListener('keydown', handleKeyDown);
+            editor.addEventListener('input', handleAutocomplete);
+            editor.addEventListener('blur', () => {
+                setTimeout(() => hideAutocomplete(), 200);
+            });
+        }
+
+        function updateLineNumbers() {
+            if (!editor || !lineNumbers) return;
+            const lines = editor.value.split('\n').length;
+            let html = '';
+            for (let i = 1; i <= lines; i++) {
+                html += i + '\n';
+            }
+            lineNumbers.textContent = html;
+        }
+
+        function syncScroll() {
+            if (lineNumbers) lineNumbers.scrollTop = editor.scrollTop;
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
+                editor.selectionStart = editor.selectionEnd = start + 4;
+                updateLineNumbers();
+            }
+            
+            if (autocompleteVisible) {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    navigateAutocomplete(1);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    navigateAutocomplete(-1);
+                } else if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    if (selectedAutocompleteIndex >= 0) {
+                        selectAutocompleteItem(currentAutocompleteItems[selectedAutocompleteIndex]);
+                    }
+                } else if (e.key === 'Escape') {
+                    hideAutocomplete();
+                }
+            }
+        }
+
+        function handleAutocomplete(e) {
+            const cursorPos = editor.selectionStart;
+            const textBeforeCursor = editor.value.substring(0, cursorPos);
+            const lastWord = textBeforeCursor.match(/[\w.]+$/);
+            
+            if (lastWord && lastWord[0].length >= 1) {
+                const prefix = lastWord[0].toLowerCase();
+                const matches = autocompleteData.filter(item => 
+                    item.label.toLowerCase().startsWith(prefix)
+                );
+                
+                if (matches.length > 0) {
+                    currentAutocompleteItems = matches;
+                    showAutocomplete(matches);
+                    return;
+                }
+            }
+            hideAutocomplete();
+        }
+
+        function showAutocomplete(items) {
+            const dropdown = document.getElementById('autocomplete-dropdown');
+            if (!dropdown) return;
+            
+            dropdown.innerHTML = items.map((item, index) => 
+                `<div class="autocomplete-item ${index === 0 ? 'selected' : ''}" data-index="${index}">
+                    ${item.label}<span class="item-type">${item.type}</span>
+                </div>`
+            ).join('');
+            
+            dropdown.classList.add('show');
+            autocompleteVisible = true;
+            selectedAutocompleteIndex = 0;
+            
+            dropdown.querySelectorAll('.autocomplete-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const idx = parseInt(el.dataset.index);
+                    selectAutocompleteItem(items[idx]);
+                });
+            });
+        }
+
+        function navigateAutocomplete(direction) {
+            const items = document.querySelectorAll('.autocomplete-item');
+            items[selectedAutocompleteIndex]?.classList.remove('selected');
+            
+            selectedAutocompleteIndex += direction;
+            if (selectedAutocompleteIndex < 0) selectedAutocompleteIndex = items.length - 1;
+            if (selectedAutocompleteIndex >= items.length) selectedAutocompleteIndex = 0;
+            
+            items[selectedAutocompleteIndex]?.classList.add('selected');
+        }
+
+        function selectAutocompleteItem(item) {
+            const cursorPos = editor.selectionStart;
+            const textBeforeCursor = editor.value.substring(0, cursorPos);
+            const lastWord = textBeforeCursor.match(/[\w.]+$/);
+            
+            if (lastWord) {
+                const start = cursorPos - lastWord[0].length;
+                editor.value = editor.value.substring(0, start) + item.label + editor.value.substring(cursorPos);
+                editor.selectionStart = editor.selectionEnd = start + item.label.length;
+            }
+            
+            hideAutocomplete();
+            updateLineNumbers();
+        }
+
+        function hideAutocomplete() {
+            const dropdown = document.getElementById('autocomplete-dropdown');
+            if (dropdown) dropdown.classList.remove('show');
+            autocompleteVisible = false;
+            selectedAutocompleteIndex = -1;
+        }
+
+        function toggleFullscreen() {
+            const playground = document.getElementById('code-playground');
+            const btn = document.getElementById('fullscreen-btn');
+            
+            if (!document.fullscreenElement) {
+                playground.requestFullscreen().then(() => {
+                    playground.classList.add('fullscreen');
+                    btn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    playground.classList.remove('fullscreen');
+                    btn.innerHTML = '<i class="fas fa-expand"></i> 全屏';
+                });
+            }
+        }
+
+        function toggleSplitView() {
+            const wrapper = document.getElementById('editor-wrapper');
+            const playground = document.getElementById('code-playground');
+            const btn = document.getElementById('split-btn');
+            const panel = document.getElementById('editor-panel');
+            
+            splitViewActive = !splitViewActive;
+            
+            if (splitViewActive) {
+                wrapper.classList.add('split-mode');
+                playground.classList.add('split-view');
+                btn.classList.add('active');
+                
+                const answerPre = document.getElementById('answer-section')?.querySelector('pre');
+                const answerCode = answerPre ? answerPre.textContent : '# 参考答案代码';
+                
+                const splitPanel = document.createElement('div');
+                splitPanel.className = 'code-editor-panel';
+                splitPanel.style.borderLeft = '1px solid #333';
+                splitPanel.innerHTML = `
+                    <div class="split-panel-label reference">
+                        <i class="fas fa-book"></i> 参考答案
+                    </div>
+                    <div class="code-editor-container">
+                        <div class="line-numbers" id="ref-line-numbers">${answerCode.split('\n').map((_, i) => i + 1).join('\n')}</div>
+                        <textarea class="code-editor" id="reference-editor" readonly style="color:#858585;cursor:default;">${answerCode}</textarea>
+                    </div>
+                `;
+                wrapper.insertBefore(splitPanel, document.getElementById('output-panel'));
+            } else {
+                wrapper.classList.remove('split-mode');
+                playground.classList.remove('split-view');
+                btn.classList.remove('active');
+                
+                const refPanel = panel.nextElementSibling;
+                if (refPanel && refPanel.classList.contains('code-editor-panel')) {
+                    refPanel.remove();
+                }
+            }
+        }
+
+        function initResize() {
+            const handle = document.getElementById('resize-handle');
+            const wrapper = document.getElementById('editor-wrapper');
+            if (!handle || !wrapper) return;
+            
+            let isResizing = false;
+            let startX, startWidth;
+
+            handle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                const editorPanel = wrapper.querySelector('.code-editor-panel');
+                startWidth = editorPanel.offsetWidth;
+                handle.classList.add('active');
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const diff = e.clientX - startX;
+                const editorPanel = wrapper.querySelector('.code-editor-panel');
+                const totalWidth = wrapper.offsetWidth;
+                
+                let newWidth = startWidth + diff;
+                newWidth = Math.max(totalWidth * 0.3, Math.min(totalWidth * 0.7, newWidth));
+                editorPanel.style.flex = 'none';
+                editorPanel.style.width = newWidth + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    handle.classList.remove('active');
+                }
+            });
+        }
+
+
         document.addEventListener('DOMContentLoaded', function() {
             renderDataTable();
+            initEditor();
             initResize();
             
             const descriptionContent = document.getElementById('description-content');
