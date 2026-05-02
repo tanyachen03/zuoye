@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目8：用户留存率分析 - 数析学院</title>
+    <title>项目1：销售数据清洗 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
     
@@ -82,6 +82,27 @@
             padding: 1.5rem;
         }
 
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header i {
+            font-size: 1.25rem;
+            color: #3b82f6;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
         .section-content {
             color: #475569;
             line-height: 1.6;
@@ -93,6 +114,72 @@
             border-radius: 6px;
             padding: 1rem;
             border-left: 3px solid #3b82f6;
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            padding: 0.875rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tip-box .tip-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.375rem;
+        }
+
+        .tip-box .tip-content {
+            color: #78350f;
+        }
+
+        .error-box {
+            background: #fef2f2;
+            border-left: 3px solid #ef4444;
+            padding: 0.875rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .error-box .error-title {
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 0.375rem;
+        }
+
+        .error-box .error-content {
+            color: #7f1d1d;
+        }
+
+        .code-example {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 0.875rem;
+            margin: 0.75rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: #1e293b;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        .learning-step {
+            background: #f0f9ff;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .learning-step h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
         }
 
         .description-toggle {
@@ -186,6 +273,15 @@
             background: #d97706;
         }
         
+        .btn-copy {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #2563eb;
+        }
+        
         .btn-fullscreen {
             background: #64748b;
             color: white;
@@ -238,16 +334,6 @@
             background-color: rgba(16, 185, 129, 0.15);
             color: #10b981;
         }
-        
-        .difficulty-badge.intermediate {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: #f59e0b;
-        }
-        
-        .difficulty-badge.advanced {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-        }
 
         @media (max-width: 1200px) {
             .project-container {
@@ -297,13 +383,13 @@
                     <i class="fas fa-arrow-left"></i> 返回实战项目
                 </a>
                 <div class="project-title-row" style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;">
-                    <h1 style="font-size:1.75rem;font-weight:700;">项目8：用户留存率分析</h1>
-                    <span class="difficulty-badge intermediate">中级</span>
+                    <h1 style="font-size:1.75rem;font-weight:700;">项目1：销售数据清洗</h1>
+                    <span class="difficulty-badge beginner">初级</span>
                 </div>
                 <div style="display:flex;gap:1.5rem;margin-top:0.75rem;font-size:0.9rem;">
-                    <span><i class="fas fa-clock"></i> 预计时长：45分钟</span>
+                    <span><i class="fas fa-clock"></i> 预计时长：30分钟</span>
                     <span><i class="fas fa-code"></i> 技术栈：Python + Pandas</span>
-                    <span><i class="fas fa-database"></i> 数据量：用户登录日志</span>
+                    <span><i class="fas fa-database"></i> 数据量：10条记录</span>
                 </div>
             </div>
         </div>
@@ -311,25 +397,25 @@
         <div class="project-container">
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> 留存分析技巧</h3>
+                    <h3><i class="fas fa-lightbulb"></i> 清洗技巧</h3>
                     <div class="tip-item">
-                        <strong>留存率</strong> - retention rate
+                        <strong>isnull().sum()</strong> - 查看缺失值
                     </div>
                     <div class="tip-item">
-                        <strong>cohort</strong> - 用户群组
+                        <strong>fillna()</strong> - 填充缺失值
                     </div>
                     <div class="tip-item">
-                        <strong>pivot_table</strong> - 透视表
+                        <strong>df[条件]</strong> - 筛选行
                     </div>
                     <div class="tip-item">
-                        <strong>nunique()</strong> - 唯一计数
+                        <strong>pd.to_datetime()</strong> - 转换日期
                     </div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解留存率概念</div>
-                    <div class="tip-item">学会群组分析方法</div>
-                    <div class="tip-item">掌握留存率计算</div>
+                    <div class="tip-item">掌握识别缺失值的方法</div>
+                    <div class="tip-item">学会处理异常值</div>
+                    <div class="tip-item">掌握日期格式标准化</div>
                 </div>
             </div>
 
@@ -342,20 +428,47 @@
                     <div class="description-content" id="description-content">
                         <div class="description-inner">
                             <div class="section-content">
-                                <p>某APP需要分析用户留存情况，了解用户在不同时间段的留存率变化，评估产品粘性。</p>
+                                <p>某电商平台的销售数据存在多种数据质量问题，需要进行清洗处理。</p>
+                            </div>
+
+                            <div class="section-header" style="margin-top:1rem;">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h2>学习内容</h2>
+                            </div>
+
+                            <div class="tip-box">
+                                <div class="tip-title">
+                                    <i class="fas fa-lightbulb"></i> 小贴士
+                                </div>
+                                <div class="tip-content">数据清洗占数据分析80%的时间，干净的DataFrame可以调用.info()检查。</div>
+                            </div>
+
+                            <div class="error-box">
+                                <div class="error-title">
+                                    <i class="fas fa-exclamation-triangle"></i> 常见错误
+                                </div>
+                                <div class="error-content">直接删除含缺失值的行会丢失大量信息！应先分析缺失原因。</div>
+                            </div>
+
+                            <div class="learning-step">
+                                <h4>代码示例：查看缺失值分布</h4>
+                                <div class="code-example">
+                                    <pre>import pandas as pd
+print(df.isnull().sum())</pre>
+                                </div>
                             </div>
 
                             <div class="task-description" style="margin-top:1rem;">
-                                <h3>请完成以下分析任务：</h3>
+                                <h3>请完成：</h3>
                                 <ul style="list-style:none;padding:0;">
-                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
-                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
-                                    计算各日留存用户数
-                                </li>
-                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
-                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
-                                    计算留存率
-                                </li>
+                                    <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                        <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                        删除数量<0的异常行
+                                    </li>
+                                    <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                        <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                        将日期列统一为YYYY-MM-DD格式
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -377,6 +490,9 @@
                         <button class="btn-answer" onclick="toggleAnswer()">
                             <i class="fas fa-lightbulb"></i> 参考答案
                         </button>
+                        <button class="btn-copy" onclick="copyAnswer()">
+                            <i class="fas fa-clipboard"></i> 复制
+                        </button>
                         <button class="btn-fullscreen" onclick="toggleFullscreen()">
                             <i class="fas fa-expand"></i> 全屏
                         </button>
@@ -396,38 +512,31 @@
                     <pre style="background:#e0f2fe; padding:12px; border-radius:6px; margin:0;">import pandas as pd
 
 data = [
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-02"},
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-03"},
-    {"用户ID": "U002", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U002", "注册日期": "2024-01-01", "登录日期": "2024-01-02"},
-    {"用户ID": "U003", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U004", "注册日期": "2024-01-02", "登录日期": "2024-01-02"},
-    {"用户ID": "U004", "注册日期": "2024-01-02", "登录日期": "2024-01-03"},
-    {"用户ID": "U005", "注册日期": "2024-01-02", "登录日期": "2024-01-02"},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
-df['注册日期'] = pd.to_datetime(df['注册日期'])
-df['登录日期'] = pd.to_datetime(df['登录日期'])
+print("【原始数据】")
+print(df.to_string(index=False))
 
-# 计算留存天数
-df['留存天数'] = (df['登录日期'] - df['注册日期']).dt.days
+# 第1步：删除数量<0的异常行
+df = df[df['数量'] >= 0]
+print("\\n【删除异常行后】")
+print(df.to_string(index=False))
 
-# 计算各注册日期的新用户数
-new_users = df.groupby('注册日期')['用户ID'].nunique().reset_index()
-new_users.columns = ['注册日期', '新用户数']
-
-# 计算留存用户数
-retention = df.groupby(['注册日期', '留存天数'])['用户ID'].nunique().reset_index()
-retention.columns = ['注册日期', '留存天数', '留存用户数']
-
-# 合并计算留存率
-retention = retention.merge(new_users, on='注册日期')
-retention['留存率'] = retention['留存用户数'] / retention['新用户数'] * 100
-
-print("【留存率分析结果】")
-print(retention.to_string(index=False))</pre>
+# 第2步：统一日期格式
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
+print("\\n【统一日期格式后】")
+print(df.to_string(index=False))</pre>
                 </div>
 
             </div>
@@ -442,32 +551,59 @@ print(retention.to_string(index=False))</pre>
 
         const defaultCode = `import pandas as pd
 
-# 用户登录数据
+# 原始销售数据
 data = [
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-02"},
-    {"用户ID": "U001", "注册日期": "2024-01-01", "登录日期": "2024-01-03"},
-    {"用户ID": "U002", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U002", "注册日期": "2024-01-01", "登录日期": "2024-01-02"},
-    {"用户ID": "U003", "注册日期": "2024-01-01", "登录日期": "2024-01-01"},
-    {"用户ID": "U004", "注册日期": "2024-01-02", "登录日期": "2024-01-02"},
-    {"用户ID": "U004", "注册日期": "2024-01-02", "登录日期": "2024-01-03"},
-    {"用户ID": "U005", "注册日期": "2024-01-02", "登录日期": "2024-01-02"},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
-df['注册日期'] = pd.to_datetime(df['注册日期'])
-df['登录日期'] = pd.to_datetime(df['登录日期'])
-print("【用户登录数据】")
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 完成留存分析
-# 1. 计算每个用户的留存天数
-# 2. 计算各日留存率
+# TODO: 完成以下任务
+# 1. 删除数量<0的异常行
+# 2. 将日期列统一为YYYY-MM-DD格式
 
-print("\\n【留存分析结果】")
-# 在这里编写代码...
-`;
+print("\\n【处理后的数据】")
+print(df.to_string(index=False))`;
+
+        const answerCode = `import pandas as pd
+
+data = [
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
+]
+
+df = pd.DataFrame(data)
+print("【原始数据】")
+print(df.to_string(index=False))
+
+# 第1步：删除数量<0的异常行
+df = df[df['数量'] >= 0]
+print("\\n【删除异常行后】")
+print(df.to_string(index=False))
+
+# 第2步：统一日期格式
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
+print("\\n【统一日期格式后】")
+print(df.to_string(index=False))`;
 
         function initEditor() {
             editor = CodeMirror(document.getElementById('code-editor'), {
@@ -536,7 +672,7 @@ result
 
                 outputElement.textContent = output;
             } catch (err) {
-                outputElement.textContent = '❌ 运行错误:\n' + err;
+                outputElement.textContent = '❌ 运行错误:\\n' + err;
             } finally {
                 isRunning = false;
             }
@@ -554,6 +690,16 @@ result
             } else {
                 answerSection.style.display = 'none';
             }
+        }
+        
+        function copyAnswer() {
+            editor.setValue(answerCode);
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+            }, 1500);
         }
 
         function toggleFullscreen() {

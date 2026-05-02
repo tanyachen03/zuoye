@@ -216,7 +216,6 @@
             padding-top: 1rem;
         }
         
-        /* 新的编辑器样式 */
         .editor-container {
             background: white;
             border-radius: 12px;
@@ -272,6 +271,15 @@
         
         .btn-answer:hover {
             background: #d97706;
+        }
+        
+        .btn-copy {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #2563eb;
         }
         
         .btn-fullscreen {
@@ -455,7 +463,7 @@ print(df.isnull().sum())</pre>
                                 <ul style="list-style:none;padding:0;">
                                     <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
                                         <span style="position:absolute;left:0;color:#3fb950;">✓</span>
-                                        删除数量&lt;0的异常行
+                                        删除数量<0的异常行
                                     </li>
                                     <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
                                         <span style="position:absolute;left:0;color:#3fb950;">✓</span>
@@ -481,6 +489,9 @@ print(df.isnull().sum())</pre>
                         </button>
                         <button class="btn-answer" onclick="toggleAnswer()">
                             <i class="fas fa-lightbulb"></i> 参考答案
+                        </button>
+                        <button class="btn-copy" onclick="copyAnswer()">
+                            <i class="fas fa-clipboard"></i> 复制
                         </button>
                         <button class="btn-fullscreen" onclick="toggleFullscreen()">
                             <i class="fas fa-expand"></i> 全屏
@@ -510,7 +521,7 @@ data = [
     {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
     {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
     {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
-    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
@@ -519,12 +530,12 @@ print(df.to_string(index=False))
 
 # 第1步：删除数量<0的异常行
 df = df[df['数量'] >= 0]
-print("\n【删除异常行后】")
+print("\\n【删除异常行后】")
 print(df.to_string(index=False))
 
 # 第2步：统一日期格式
 df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
-print("\n【统一日期格式后】")
+print("\\n【统一日期格式后】")
 print(df.to_string(index=False))</pre>
                 </div>
 
@@ -551,7 +562,7 @@ data = [
     {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
     {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
     {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
-    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
@@ -565,7 +576,35 @@ print(df.to_string(index=False))
 print("\\n【处理后的数据】")
 print(df.to_string(index=False))`;
 
-        // 初始化 CodeMirror
+        const answerCode = `import pandas as pd
+
+data = [
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
+]
+
+df = pd.DataFrame(data)
+print("【原始数据】")
+print(df.to_string(index=False))
+
+# 第1步：删除数量<0的异常行
+df = df[df['数量'] >= 0]
+print("\\n【删除异常行后】")
+print(df.to_string(index=False))
+
+# 第2步：统一日期格式
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
+print("\\n【统一日期格式后】")
+print(df.to_string(index=False))`;
+
         function initEditor() {
             editor = CodeMirror(document.getElementById('code-editor'), {
                 mode: 'python',
@@ -578,7 +617,6 @@ print(df.to_string(index=False))`;
             });
         }
 
-        // 初始化 Pyodide
         async function initPyodide() {
             try {
                 pyodide = await loadPyodide();
@@ -596,7 +634,6 @@ print(df.to_string(index=False))`;
             }
         }
 
-        // 运行代码
         async function runCode() {
             if (!pyodide) {
                 document.getElementById('output').textContent = '环境还在加载中，请稍候...';
@@ -614,7 +651,6 @@ print(df.to_string(index=False))`;
             outputElement.textContent = '⏳ 正在运行...';
 
             try {
-                // 捕获 print 输出
                 let output = '';
                 pyodide.runPython(`
 import sys
@@ -622,10 +658,8 @@ from io import StringIO
 sys.stdout = StringIO()
 `);
 
-                // 运行用户代码
                 await pyodide.runPythonAsync(code);
 
-                // 获取输出
                 output = pyodide.runPython(`
 result = sys.stdout.getvalue()
 sys.stdout = sys.__stdout__
@@ -638,19 +672,17 @@ result
 
                 outputElement.textContent = output;
             } catch (err) {
-                outputElement.textContent = '❌ 运行错误:\n' + err;
+                outputElement.textContent = '❌ 运行错误:\\n' + err;
             } finally {
                 isRunning = false;
             }
         }
 
-        // 重置代码
         function resetCode() {
             editor.setValue(defaultCode);
             document.getElementById('output').textContent = '// 运行结果将显示在这里';
         }
 
-        // 显示/隐藏参考答案
         function toggleAnswer() {
             const answerSection = document.getElementById('answer-section');
             if (answerSection.style.display === 'none') {
@@ -659,8 +691,17 @@ result
                 answerSection.style.display = 'none';
             }
         }
+        
+        function copyAnswer() {
+            editor.setValue(answerCode);
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+            }, 1500);
+        }
 
-        // 全屏
         function toggleFullscreen() {
             const container = document.querySelector('.editor-container');
             if (!document.fullscreenElement) {
@@ -672,7 +713,6 @@ result
             }
         }
 
-        // 描述切换
         function toggleDescription() {
             const content = document.getElementById('description-content');
             const toggle = document.querySelector('.description-toggle');
@@ -680,7 +720,6 @@ result
             toggle.classList.toggle('collapsed');
         }
 
-        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
             initEditor();
             initPyodide();

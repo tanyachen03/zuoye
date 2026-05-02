@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目6：A/B测试效果分析 - 数析学院</title>
+    <title>项目1：销售数据清洗 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
     
@@ -82,6 +82,27 @@
             padding: 1.5rem;
         }
 
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header i {
+            font-size: 1.25rem;
+            color: #3b82f6;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
         .section-content {
             color: #475569;
             line-height: 1.6;
@@ -93,6 +114,72 @@
             border-radius: 6px;
             padding: 1rem;
             border-left: 3px solid #3b82f6;
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            padding: 0.875rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tip-box .tip-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.375rem;
+        }
+
+        .tip-box .tip-content {
+            color: #78350f;
+        }
+
+        .error-box {
+            background: #fef2f2;
+            border-left: 3px solid #ef4444;
+            padding: 0.875rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .error-box .error-title {
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 0.375rem;
+        }
+
+        .error-box .error-content {
+            color: #7f1d1d;
+        }
+
+        .code-example {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 0.875rem;
+            margin: 0.75rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: #1e293b;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        .learning-step {
+            background: #f0f9ff;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .learning-step h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
         }
 
         .description-toggle {
@@ -186,6 +273,15 @@
             background: #d97706;
         }
         
+        .btn-copy {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #2563eb;
+        }
+        
         .btn-fullscreen {
             background: #64748b;
             color: white;
@@ -238,16 +334,6 @@
             background-color: rgba(16, 185, 129, 0.15);
             color: #10b981;
         }
-        
-        .difficulty-badge.intermediate {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: #f59e0b;
-        }
-        
-        .difficulty-badge.advanced {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-        }
 
         @media (max-width: 1200px) {
             .project-container {
@@ -297,13 +383,13 @@
                     <i class="fas fa-arrow-left"></i> 返回实战项目
                 </a>
                 <div class="project-title-row" style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;">
-                    <h1 style="font-size:1.75rem;font-weight:700;">项目6：A/B测试效果分析</h1>
-                    <span class="difficulty-badge intermediate">中级</span>
+                    <h1 style="font-size:1.75rem;font-weight:700;">项目1：销售数据清洗</h1>
+                    <span class="difficulty-badge beginner">初级</span>
                 </div>
                 <div style="display:flex;gap:1.5rem;margin-top:0.75rem;font-size:0.9rem;">
-                    <span><i class="fas fa-clock"></i> 预计时长：40分钟</span>
+                    <span><i class="fas fa-clock"></i> 预计时长：30分钟</span>
                     <span><i class="fas fa-code"></i> 技术栈：Python + Pandas</span>
-                    <span><i class="fas fa-database"></i> 数据量：A/B测试数据</span>
+                    <span><i class="fas fa-database"></i> 数据量：10条记录</span>
                 </div>
             </div>
         </div>
@@ -311,25 +397,25 @@
         <div class="project-container">
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> A/B测试技巧</h3>
+                    <h3><i class="fas fa-lightbulb"></i> 清洗技巧</h3>
                     <div class="tip-item">
-                        <strong>转化率</strong> - conversion rate
+                        <strong>isnull().sum()</strong> - 查看缺失值
                     </div>
                     <div class="tip-item">
-                        <strong>显著性检验</strong> - significance test
+                        <strong>fillna()</strong> - 填充缺失值
                     </div>
                     <div class="tip-item">
-                        <strong>置信区间</strong> - confidence interval
+                        <strong>df[条件]</strong> - 筛选行
                     </div>
                     <div class="tip-item">
-                        <strong>p-value</strong> - 显著性水平
+                        <strong>pd.to_datetime()</strong> - 转换日期
                     </div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解A/B测试原理</div>
-                    <div class="tip-item">学会转化率分析</div>
-                    <div class="tip-item">掌握统计显著性判断</div>
+                    <div class="tip-item">掌握识别缺失值的方法</div>
+                    <div class="tip-item">学会处理异常值</div>
+                    <div class="tip-item">掌握日期格式标准化</div>
                 </div>
             </div>
 
@@ -342,20 +428,47 @@
                     <div class="description-content" id="description-content">
                         <div class="description-inner">
                             <div class="section-content">
-                                <p>某电商平台进行了按钮颜色的A/B测试，需要分析哪种颜色的转化率更高，并判断差异是否显著。</p>
+                                <p>某电商平台的销售数据存在多种数据质量问题，需要进行清洗处理。</p>
+                            </div>
+
+                            <div class="section-header" style="margin-top:1rem;">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h2>学习内容</h2>
+                            </div>
+
+                            <div class="tip-box">
+                                <div class="tip-title">
+                                    <i class="fas fa-lightbulb"></i> 小贴士
+                                </div>
+                                <div class="tip-content">数据清洗占数据分析80%的时间，干净的DataFrame可以调用.info()检查。</div>
+                            </div>
+
+                            <div class="error-box">
+                                <div class="error-title">
+                                    <i class="fas fa-exclamation-triangle"></i> 常见错误
+                                </div>
+                                <div class="error-content">直接删除含缺失值的行会丢失大量信息！应先分析缺失原因。</div>
+                            </div>
+
+                            <div class="learning-step">
+                                <h4>代码示例：查看缺失值分布</h4>
+                                <div class="code-example">
+                                    <pre>import pandas as pd
+print(df.isnull().sum())</pre>
+                                </div>
                             </div>
 
                             <div class="task-description" style="margin-top:1rem;">
-                                <h3>请完成以下分析任务：</h3>
+                                <h3>请完成：</h3>
                                 <ul style="list-style:none;padding:0;">
-                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
-                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
-                                    计算各组的转化率
-                                </li>
-                                <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
-                                    <span style="position:absolute;left:0;color:#3fb950;">✓</span>
-                                    分析转化率差异
-                                </li>
+                                    <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                        <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                        删除数量<0的异常行
+                                    </li>
+                                    <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;">
+                                        <span style="position:absolute;left:0;color:#3fb950;">✓</span>
+                                        将日期列统一为YYYY-MM-DD格式
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -377,6 +490,9 @@
                         <button class="btn-answer" onclick="toggleAnswer()">
                             <i class="fas fa-lightbulb"></i> 参考答案
                         </button>
+                        <button class="btn-copy" onclick="copyAnswer()">
+                            <i class="fas fa-clipboard"></i> 复制
+                        </button>
                         <button class="btn-fullscreen" onclick="toggleFullscreen()">
                             <i class="fas fa-expand"></i> 全屏
                         </button>
@@ -396,42 +512,31 @@
                     <pre style="background:#e0f2fe; padding:12px; border-radius:6px; margin:0;">import pandas as pd
 
 data = [
-    {"用户ID": "U001", "组别": "A", "是否转化": 1},
-    {"用户ID": "U002", "组别": "A", "是否转化": 0},
-    {"用户ID": "U003", "组别": "A", "是否转化": 1},
-    {"用户ID": "U004", "组别": "A", "是否转化": 0},
-    {"用户ID": "U005", "组别": "A", "是否转化": 0},
-    {"用户ID": "U006", "组别": "B", "是否转化": 1},
-    {"用户ID": "U007", "组别": "B", "是否转化": 1},
-    {"用户ID": "U008", "组别": "B", "是否转化": 1},
-    {"用户ID": "U009", "组别": "B", "是否转化": 0},
-    {"用户ID": "U010", "组别": "B", "是否转化": 1},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
+print("【原始数据】")
+print(df.to_string(index=False))
 
-# 计算各组统计指标
-results = df.groupby('组别').agg({
-    '用户ID': 'count',
-    '是否转化': 'sum'
-}).rename(columns={'用户ID': '样本量', '是否转化': '转化数'})
+# 第1步：删除数量<0的异常行
+df = df[df['数量'] >= 0]
+print("\\n【删除异常行后】")
+print(df.to_string(index=False))
 
-results['转化率'] = results['转化数'] / results['样本量'] * 100
-
-print("【A/B测试结果】")
-print(results)
-
-# 计算转化率差异
-conv_a = results.loc['A', '转化率']
-conv_b = results.loc['B', '转化率']
-diff = conv_b - conv_a
-
-print(f"\n【结论】")
-print(f"A组转化率: {conv_a:.1f}%")
-print(f"B组转化率: {conv_b:.1f}%")
-print(f"B组比A组高: {diff:.1f}个百分点")
-if conv_b &gt; conv_a:
-    print("建议: B组表现更好，建议采用B方案")</pre>
+# 第2步：统一日期格式
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
+print("\\n【统一日期格式后】")
+print(df.to_string(index=False))</pre>
                 </div>
 
             </div>
@@ -446,31 +551,59 @@ if conv_b &gt; conv_a:
 
         const defaultCode = `import pandas as pd
 
-# A/B测试数据
+# 原始销售数据
 data = [
-    {"用户ID": "U001", "组别": "A", "是否转化": 1},
-    {"用户ID": "U002", "组别": "A", "是否转化": 0},
-    {"用户ID": "U003", "组别": "A", "是否转化": 1},
-    {"用户ID": "U004", "组别": "A", "是否转化": 0},
-    {"用户ID": "U005", "组别": "A", "是否转化": 0},
-    {"用户ID": "U006", "组别": "B", "是否转化": 1},
-    {"用户ID": "U007", "组别": "B", "是否转化": 1},
-    {"用户ID": "U008", "组别": "B", "是否转化": 1},
-    {"用户ID": "U009", "组别": "B", "是否转化": 0},
-    {"用户ID": "U010", "组别": "B", "是否转化": 1},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
 ]
 
 df = pd.DataFrame(data)
-print("【A/B测试数据】")
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 完成A/B测试分析
-# 1. 计算各组的转化率
-# 2. 比较两组差异
+# TODO: 完成以下任务
+# 1. 删除数量<0的异常行
+# 2. 将日期列统一为YYYY-MM-DD格式
 
-print("\\n【分析结果】")
-# 在这里编写代码...
-`;
+print("\\n【处理后的数据】")
+print(df.to_string(index=False))`;
+
+        const answerCode = `import pandas as pd
+
+data = [
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"},
+]
+
+df = pd.DataFrame(data)
+print("【原始数据】")
+print(df.to_string(index=False))
+
+# 第1步：删除数量<0的异常行
+df = df[df['数量'] >= 0]
+print("\\n【删除异常行后】")
+print(df.to_string(index=False))
+
+# 第2步：统一日期格式
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
+print("\\n【统一日期格式后】")
+print(df.to_string(index=False))`;
 
         function initEditor() {
             editor = CodeMirror(document.getElementById('code-editor'), {
@@ -539,7 +672,7 @@ result
 
                 outputElement.textContent = output;
             } catch (err) {
-                outputElement.textContent = '❌ 运行错误:\n' + err;
+                outputElement.textContent = '❌ 运行错误:\\n' + err;
             } finally {
                 isRunning = false;
             }
@@ -557,6 +690,16 @@ result
             } else {
                 answerSection.style.display = 'none';
             }
+        }
+        
+        function copyAnswer() {
+            editor.setValue(answerCode);
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+            }, 1500);
         }
 
         function toggleFullscreen() {
