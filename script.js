@@ -11,6 +11,8 @@ function setupEventListeners() {
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const logoutBtn = document.getElementById('logout-btn');
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const navbarMenu = document.querySelector('.navbar-menu');
 
     if (loginBtn) {
         loginBtn.addEventListener('click', () => openModal('login-modal'));
@@ -30,6 +32,12 @@ function setupEventListeners() {
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
+    }
+
+    if (hamburgerMenu && navbarMenu) {
+        hamburgerMenu.addEventListener('click', () => {
+            navbarMenu.classList.toggle('active');
+        });
     }
 }
 

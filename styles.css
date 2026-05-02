@@ -1086,6 +1086,28 @@ body {
     }
 }
 
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.navbar-menu.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: var(--shadow-lg);
+}
+
 @media (max-width: 768px) {
     .navbar-container {
         padding: 0 1rem;
@@ -1093,6 +1115,10 @@ body {
 
     .navbar-menu {
         display: none;
+    }
+
+    .hamburger-menu {
+        display: block;
     }
 
     .hero-content h1 {
