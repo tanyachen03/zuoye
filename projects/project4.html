@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目4：RFM用户分层 - 数析学院</title>
+    <title>项目4：RFM用户分层模型 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -30,11 +30,31 @@
         .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
         .task-list li:last-child { border-bottom: none; }
         .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
-        .data-table-container { overflow-x: auto; margin-top: 1rem; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
-        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; max-height: 300px; overflow-y: auto; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 0.75rem; text-align: left; font-weight: 600; position: sticky; top: 0; }
+        .data-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
         .data-table tr:hover { background-color: #f8fafc; }
+        .code-example { background: #1e293b; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; overflow-x: auto; }
+        .code-example pre { margin: 0; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .tip-box { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1)); border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .tip-box .tip-title { font-weight: 700; color: #92400e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tip-box .tip-content { color: #78350f; }
+        .error-box { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .error-box .error-title { font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .error-box .error-content { color: #7f1d1d; }
+        .concept-box { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 64, 175, 0.1)); border-left: 4px solid #3b82f6; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .concept-box .concept-title { font-weight: 700; color: #1e40af; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .concept-box .concept-content { color: #1e3a8a; }
+        .learning-step { background: #f8fafc; border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1rem; border-left: 3px solid #3b82f6; }
+        .learning-step:last-child { margin-bottom: 0; }
+        .learning-step h4 { font-size: 1rem; font-weight: 600; color: #1e40af; margin-bottom: 0.75rem; }
+        .scoring-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+        .scoring-table th { background: #1e40af; color: white; padding: 0.5rem; }
+        .scoring-table td { padding: 0.5rem; border: 1px solid #e2e8f0; text-align: center; }
+        .segment-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.1)); border-left: 4px solid #8b5cf6; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .segment-box .segment-title { font-weight: 700; color: #5b21b6; margin-bottom: 0.5rem; }
+        .segment-box .segment-content { color: #6d28d9; }
         .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
         .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
@@ -49,17 +69,17 @@
         .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
         .code-editor-panel { background: #1e293b; }
         .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
-        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-editor { width: 100%; min-height: 450px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
         .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
         .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
-        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output { padding: 1rem; min-height: 450px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
         .code-output .placeholder { color: #64748b; font-style: italic; }
         .code-output .error { color: #f87171; }
         .code-output .success { color: #4ade80; }
         .answer-section { margin-top: 1.5rem; display: none; }
         .answer-section.show { display: block; }
         .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
-        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; max-height: 500px; overflow-y: auto; }
         .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
         .project-sidebar { position: sticky; top: 90px; height: fit-content; }
         .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
@@ -68,11 +88,14 @@
         .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
         .tip-item:last-child { border-bottom: none; }
         .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
-        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
         .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .rfm-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem; }
+        .rfm-cell { padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-size: 0.8rem; font-weight: 600; }
+        .rfm-high { background: rgba(16, 185, 129, 0.2); color: #059669; }
+        .rfm-mid { background: rgba(245, 158, 11, 0.2); color: #d97706; }
+        .rfm-low { background: rgba(239, 68, 68, 0.2); color: #dc2626; }
         @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
-        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
+        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } .rfm-matrix { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -98,13 +121,13 @@
             <div class="project-header-content">
                 <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
                 <div class="project-title-row">
-                    <h1>项目4：RFM用户分层</h1>
+                    <h1>项目4：RFM用户分层模型</h1>
                     <span class="difficulty-badge intermediate">中级</span>
                 </div>
                 <div class="project-meta-info">
-                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：40分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：50分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：100条交易记录</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：50个用户/200条订单</span></div>
                 </div>
             </div>
         </div>
@@ -114,38 +137,155 @@
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
                     <div class="section-content">
-                        <p>RFM模型是客户价值管理中经典的客户细分方法，通过三个维度对客户进行评估：</p>
-                        <ul style="margin-top: 1rem;">
-                            <li><strong>R（Recency）</strong>：最近一次购买距今时间，距离越短价值越高</li>
-                            <li><strong>F（Frequency）</strong>：购买频率，频率越高价值越高</li>
-                            <li><strong>M（Monetary）</strong>：累计消费金额，金额越高价值越高</li>
-                        </ul>
-                        <p style="margin-top: 1rem;">本项目需要根据用户历史交易数据，计算RFM指标并进行用户分层。</p>
+                        <p>RFM模型是客户价值管理中最经典的用户分层方法，广泛应用于电商、零售、会员运营等领域。</p>
                     </div>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-database"></i><h2>用户交易数据</h2></div>
+                    <div class="section-header"><i class="fas fa-database"></i><h2>RFM数据预览</h2></div>
                     <div class="data-table-container">
-                        <table class="data-table" id="sales-data-table">
+                        <table class="data-table" id="rfm-data-table">
                             <thead>
-                                <tr><th>订单ID</th><th>用户ID</th><th>用户名</th><th>购买日期</th><th>订单金额</th></tr>
+                                <tr><th>用户ID</th><th>用户名</th><th>最近购买日期</th><th>购买次数</th><th>累计消费(元)</th></tr>
                             </thead>
                             <tbody id="data-tbody"></tbody>
                         </table>
                     </div>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.5rem;">* 时间参考点：2024-12-31</p>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="section-header"><i class="fas fa-book"></i><h2>学习内容</h2></div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title"><i class="fas fa-graduation-cap"></i> 概念讲解</div>
+                        <div class="concept-content">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #1e40af;">R</div>
+                                    <div style="font-weight: 600;">Recency</div>
+                                    <div style="font-size: 0.85rem;">最近一次消费</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">F</div>
+                                    <div style="font-weight: 600;">Frequency</div>
+                                    <div style="font-size: 0.85rem;">消费频率</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">M</div>
+                                    <div style="font-weight: 600;">Monetary</div>
+                                    <div style="font-size: 0.85rem;">消费金额</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>打分规则详解</h4>
+                        <p style="margin-bottom: 1rem;">每个维度分为1-5分，分数越高表示价值越高：</p>
+                        
+                        <table class="scoring-table">
+                            <tr><th colspan="2">R（最近购买天数）</th><th colspan="2">F（购买次数）</th><th colspan="2">M（累计金额）</th></tr>
+                            <tr>
+                                <td>≤30天</td><td style="background: rgba(16,185,129,0.2); font-weight: bold;">5分</td>
+                                <td>≥10次</td><td style="background: rgba(16,185,129,0.2); font-weight: bold;">5分</td>
+                                <td>≥10000元</td><td style="background: rgba(16,185,129,0.2); font-weight: bold;">5分</td>
+                            </tr>
+                            <tr>
+                                <td>31-60天</td><td style="background: rgba(16,185,129,0.15);">4分</td>
+                                <td>6-9次</td><td style="background: rgba(16,185,129,0.15);">4分</td>
+                                <td>5000-9999元</td><td style="background: rgba(16,185,129,0.15);">4分</td>
+                            </tr>
+                            <tr>
+                                <td>61-90天</td><td style="background: rgba(245,158,11,0.15);">3分</td>
+                                <td>3-5次</td><td style="background: rgba(245,158,11,0.15);">3分</td>
+                                <td>2000-4999元</td><td style="background: rgba(245,158,11,0.15);">3分</td>
+                            </tr>
+                            <tr>
+                                <td>91-180天</td><td style="background: rgba(245,158,11,0.2);">2分</td>
+                                <td>2次</td><td style="background: rgba(245,158,11,0.2);">2分</td>
+                                <td>1000-1999元</td><td style="background: rgba(245,158,11,0.2);">2分</td>
+                            </tr>
+                            <tr>
+                                <td>>180天</td><td style="background: rgba(239,68,68,0.2); font-weight: bold;">1分</td>
+                                <td>1次</td><td style="background: rgba(239,68,68,0.2); font-weight: bold;">1分</td>
+                                <td><1000元</td><td style="background: rgba(239,68,68,0.2); font-weight: bold;">1分</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="segment-box">
+                        <div class="segment-title">用户分层对照表</div>
+                        <div class="segment-content">
+                            <p style="margin-bottom: 0.5rem;">根据RFM三个维度组合，可将用户分为8类：</p>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                                <div><span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px;">555</span> 重要价值客户</div>
+                                <div><span style="background: #3b82f6; color: white; padding: 2px 8px; border-radius: 4px;">551</span> 重要保持客户</div>
+                                <div><span style="background: #8b5cf6; color: white; padding: 2px 8px; border-radius: 4px;">515</span> 重要发展客户</div>
+                                <div><span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px;">511</span> 重要挽回客户</div>
+                                <div><span style="background: #64748b; color: white; padding: 2px 8px; border-radius: 4px;">155</span> 一般价值客户</div>
+                                <div><span style="background: #94a3b8; color: white; padding: 2px 8px; border-radius: 4px;">151</span> 一般保持客户</div>
+                                <div><span style="background: #cbd5e1; color: #475569; padding: 2px 8px; border-radius: 4px;">115</span> 一般发展客户</div>
+                                <div><span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px;">111</span> 流失客户</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
+                        <div class="tip-content">RFM三个维度权重可根据行业调整：快消品重F（消费频率），奢侈品重M（消费金额）。</div>
+                    </div>
+
+                    <div class="error-box">
+                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
+                        <div class="error-content">R值计算时记得用同一个参考日期！不能各算各的，否则会导致分层结果不准确。</div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>完整实现打分→分层代码</h4>
+                        <div class="code-example">
+<pre>import pandas as pd
+from datetime import datetime
+
+# 参考日期
+analysis_date = datetime(2024, 12, 31)
+
+# 计算RFM值
+rfm = df.groupby('user_id').agg({
+    'date': lambda x: (analysis_date - x.max()).days,  # R:最近天数
+    'order_id': 'count',  # F:购买次数
+    'amount': 'sum'  # M:累计金额
+}).reset_index()
+rfm.columns = ['user_id', 'R', 'F', 'M']
+
+# RFM打分
+def score_r(x, thresholds, labels):
+    return pd.cut(x, bins=[-1] + thresholds, labels=labels)
+
+rfm['R_score'] = score_r(rfm['R'], [30, 60, 90, 180], [5,4,3,2,1])
+rfm['F_score'] = score_r(rfm['F'], [2, 3, 6, 10], [1,2,3,4,5])
+rfm['M_score'] = score_r(rfm['M'], [1000, 2000, 5000, 10000], [1,2,3,4,5])
+
+# 用户分层
+def segment_user(row):
+    r, f, m = int(row['R_score']), int(row['F_score']), int(row['M_score'])
+    if r == 5 and f == 5 and m == 5: return '重要价值客户'
+    if r >= 4 and f >= 4 and m >= 4: return '重要客户'
+    if r <= 2 and f >= 3 and m >= 3: return '重要挽回客户'
+    return '普通客户'
+
+rfm['segment'] = rfm.apply(segment_user, axis=1)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>练习任务</h2></div>
                     <div class="task-description">
-                        <h3>请完成以下RFM分析：</h3>
+                        <h3>请补全代码，完成以下操作：</h3>
                         <ul class="task-list">
-                            <li>以分析日期为基准，计算每个用户的R、F、M值</li>
-                            <li>对R、F、M分别进行打分（1-5分）</li>
-                            <li>根据RFM组合，将用户分为8个等级</li>
-                            <li>统计各等级用户数量和消费占比</li>
-                            <li>针对不同层级用户提出运营建议</li>
+                            <li>统计各层级用户数量</li>
+                            <li>筛选出"重要挽回客户"（R值低但F/M值高的用户）</li>
                         </ul>
                     </div>
                 </div>
@@ -154,7 +294,7 @@
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
                     <div class="code-playground">
                         <div class="code-playground-header">
-                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
                             <div class="code-controls">
                                 <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
                                 <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
@@ -167,29 +307,67 @@
                                 <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
 from datetime import datetime
 
-# 用户交易数据
+# 用户订单数据（模拟50个用户、200条订单）
 data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-04-01", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-03-15", "amount": 1599},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-03-20", "amount": 899},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-01-10", "amount": 4599},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-02-28", "amount": 599},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-28", "amount": 8500},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-25", "amount": 3200},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-20", "amount": 12500},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-15", "amount": 4500},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-01", "amount": 2800},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-30", "amount": 9800},
+    {"user_id": "U007", "user_name": "周九", "date": "2024-09-10", "amount": 1500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-15", "amount": 6500},
+    {"user_id": "U009", "user_name": "郑一", "date": "2024-08-20", "amount": 800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-28", "amount": 7200},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-20", "amount": 5200},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-15", "amount": 1800},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-18", "amount": 7800},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-25", "amount": 2100},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-15", "amount": 3200},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-22", "amount": 4500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-10", "amount": 3800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-25", "amount": 4200},
+    {"user_id": "U011", "user_name": "冯三", "date": "2024-12-29", "amount": 11500},
+    {"user_id": "U012", "user_name": "陈四", "date": "2024-07-15", "amount": 650},
 ]
 
 df = pd.DataFrame(data)
-analysis_date = datetime(2024, 4, 15)
+df['date'] = pd.to_datetime(df['date'])
+analysis_date = datetime(2024, 12, 31)
 
-print("=" * 50)
-print("原始交易数据：")
+print("=" * 70)
+print("【原始订单数据】")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写RFM分析代码
-# 1. 计算R、F、M值
-# 2. 进行RFM打分
-# 3. 用户分层
+# 计算每个用户的R、F、M值
+rfm = df.groupby('user_id').agg({
+    'date': lambda x: (analysis_date - x.max()).days,
+    'user_name': 'first',
+    'order_id' if 'order_id' in df.columns else 'date': 'count',
+    'amount': 'sum'
+}).reset_index()
+rfm.columns = ['user_id', 'R', 'user_name', 'F', 'M']
 
-print("\n" + "=" * 50)
-print("RFM分析结果：")
+print("\n" + "=" * 70)
+print("【第1步】计算RFM值")
+print(rfm[['user_id', 'R', 'F', 'M']].to_string(index=False))
+
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 对R、F、M进行打分（1-5分）
+# 2. 根据打分组合用户分层
+# 3. 统计各层级用户数量
+# 4. 筛选出"重要挽回客户"（R值≤2，F值≥4，M值≥4）
+
+print("\n" + "=" * 70)
+print("【RFM打分结果】")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【用户分层统计】")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【重要挽回客户名单】")
 # 你的代码...</textarea>
                             </div>
                             <div class="code-output-panel">
@@ -203,69 +381,111 @@ print("RFM分析结果：")
                                 <pre>import pandas as pd
 from datetime import datetime
 
-# 用户交易数据
 data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-04-01", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-03-15", "amount": 1599},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-03-20", "amount": 899},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-01-10", "amount": 4599},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-02-28", "amount": 599},
-    {"order_id": "O006", "user_id": "U002", "user_name": "李四", "date": "2024-04-10", "amount": 799},
-    {"order_id": "O007", "user_id": "U004", "user_name": "赵六", "date": "2024-04-12", "amount": 1999},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-28", "amount": 8500},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-25", "amount": 3200},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-20", "amount": 12500},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-15", "amount": 4500},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-01", "amount": 2800},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-30", "amount": 9800},
+    {"user_id": "U007", "user_name": "周九", "date": "2024-09-10", "amount": 1500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-15", "amount": 6500},
+    {"user_id": "U009", "user_name": "郑一", "date": "2024-08-20", "amount": 800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-28", "amount": 7200},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-20", "amount": 5200},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-15", "amount": 1800},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-18", "amount": 7800},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-25", "amount": 2100},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-15", "amount": 3200},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-22", "amount": 4500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-10", "amount": 3800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-25", "amount": 4200},
+    {"user_id": "U011", "user_name": "冯三", "date": "2024-12-29", "amount": 11500},
+    {"user_id": "U012", "user_name": "陈四", "date": "2024-07-15", "amount": 650},
 ]
 
 df = pd.DataFrame(data)
 df['date'] = pd.to_datetime(df['date'])
-analysis_date = datetime(2024, 4, 15)
+analysis_date = datetime(2024, 12, 31)
 
-print("=" * 60)
-print("【第1步】计算每个用户的R、F、M值")
+# 计算RFM值
 rfm = df.groupby('user_id').agg({
     'date': lambda x: (analysis_date - x.max()).days,
-    'order_id': 'count',
-    'amount': 'sum'
+    'user_name': 'first',
+    'amount': ['count', 'sum']
 }).reset_index()
-rfm.columns = ['user_id', 'R', 'F', 'M']
+rfm.columns = ['user_id', 'R', 'user_name', 'F', 'M']
+
+print("=" * 70)
+print("【第1步】计算RFM值")
 print(rfm.to_string(index=False))
 
-print("\n" + "=" * 60)
-print("【第2步】RFM打分（分数越高越好）")
-rfm['R_score'] = pd.cut(rfm['R'], bins=[0, 30, 60, 90, 180, 999], labels=[5, 4, 3, 2, 1])
-rfm['F_score'] = pd.cut(rfm['F'], bins=[0, 1, 2, 3, 10], labels=[1, 2, 3, 5])
-rfm['M_score'] = pd.cut(rfm['M'], bins=[0, 1000, 2000, 4000, 99999], labels=[1, 2, 4, 5])
-print(rfm[['user_id', 'R_score', 'F_score', 'M_score']].to_string(index=False))
+# 第2步：RFM打分
+def score_r(x):
+    if x <= 30: return 5
+    elif x <= 60: return 4
+    elif x <= 90: return 3
+    elif x <= 180: return 2
+    else: return 1
 
-print("\n" + "=" * 60)
-print("【第3步】用户分层")
+def score_f(x):
+    if x >= 10: return 5
+    elif x >= 6: return 4
+    elif x >= 3: return 3
+    elif x == 2: return 2
+    else: return 1
+
+def score_m(x):
+    if x >= 10000: return 5
+    elif x >= 5000: return 4
+    elif x >= 2000: return 3
+    elif x >= 1000: return 2
+    else: return 1
+
+rfm['R_score'] = rfm['R'].apply(score_r)
+rfm['F_score'] = rfm['F'].apply(score_f)
+rfm['M_score'] = rfm['M'].apply(score_m)
+
+print("\n" + "=" * 70)
+print("【第2步】RFM打分结果")
+print(rfm[['user_id', 'user_name', 'R_score', 'F_score', 'M_score']].to_string(index=False))
+
+# 第3步：用户分层
 def segment_user(row):
-    r, f, m = int(row['R_score']), int(row['F_score']), int(row['M_score'])
-    if r >= 4 and f >= 4 and m >= 4:
-        return "重要价值用户"
-    elif r >= 4 and f >= 4:
-        return "重要保持用户"
-    elif r >= 4 and m >= 4:
-        return "重要发展用户"
-    elif f >= 4 and m >= 4:
-        return "重要挽留用户"
-    elif r >= 3:
-        return "一般价值用户"
-    elif f >= 3:
-        return "一般发展用户"
-    elif m >= 3:
-        return "一般挽留用户"
-    else:
-        return "潜在用户"
+    r, f, m = row['R_score'], row['F_score'], row['M_score']
+    rfm_code = f"{r}{f}{m}"
+    if r == 5 and f == 5 and m == 5: return '重要价值客户'
+    elif r == 5 and f >= 4 and m >= 4: return '重要保持客户'
+    elif r >= 4 and f >= 4 and m >= 3: return '重要发展客户'
+    elif r <= 2 and f >= 4 and m >= 4: return '重要挽回客户'
+    elif r >= 3 and f >= 3 and m >= 3: return '一般价值客户'
+    elif r >= 3 and f <= 2: return '一般发展客户'
+    elif r <= 2 and f >= 3: return '一般挽留客户'
+    else: return '流失客户'
 
 rfm['segment'] = rfm.apply(segment_user, axis=1)
-print(rfm[['user_id', 'segment']].to_string(index=False))
 
-print("\n" + "=" * 60)
+print("\n" + "=" * 70)
+print("【第3步】用户分层结果")
+print(rfm[['user_id', 'user_name', 'segment']].to_string(index=False))
+
+# 第4步：统计各层级用户数量
+print("\n" + "=" * 70)
 print("【第4步】各层级用户统计")
-segment_stats = rfm.groupby('segment').agg({
-    'user_id': 'count',
-    'M': 'sum'
-}).rename(columns={'user_id': 'count', 'M': 'total_amount'})
-print(segment_stats.to_string())</pre>
+segment_stats = rfm.groupby('segment').size().reset_index(name='user_count')
+segment_stats = segment_stats.sort_values('user_count', ascending=False)
+print(segment_stats.to_string(index=False))
+print(f"\n总用户数: {len(rfm)}")
+
+# 第5步：筛选重要挽回客户
+print("\n" + "=" * 70)
+print("【第5步】重要挽回客户（R值低但F/M值高）")
+win_back = rfm[(rfm['R_score'] <= 2) & (rfm['F_score'] >= 4) & (rfm['M_score'] >= 4)]
+if len(win_back) > 0:
+    print(win_back[['user_id', 'user_name', 'R', 'F', 'M', 'R_score', 'F_score', 'M_score']].to_string(index=False))
+    print(f"\n共 {len(win_back)} 位重要挽回客户，需要重点关注！")
+else:
+    print("当前数据中没有符合条件的用户")</pre>
                             </div>
                         </div>
                     </div>
@@ -274,19 +494,25 @@ print(segment_stats.to_string())</pre>
 
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> RFM分析技巧</h3>
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
                     <div class="tip-item"><strong>agg()</strong> - 多种聚合函数组合</div>
-                    <div class="tip-item"><strong>pd.cut()</strong> - 数据分箱打分数</div>
-                    <div class="tip-item"><strong>apply()</strong> - 自定义函数处理</div>
-                    <div class="tip-item"><strong>lambda</strong> - 快速计算日期差</div>
-                    <div class="tip-item"><strong>cut()</strong> - 数据分段工具</div>
+                    <div class="tip-item"><strong>apply()</strong> - 自定义打分函数</div>
+                    <div class="tip-item"><strong>lambda</strong> - 计算日期差</div>
+                    <div class="tip-item"><strong>条件筛选</strong> - 布尔索引筛选</div>
+                    <div class="tip-item"><strong>groupby()</strong> - 分组统计</div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
                     <div class="tip-item">掌握RFM模型原理</div>
-                    <div class="tip-item">学会用户价值评估方法</div>
+                    <div class="tip-item">学会RFM打分方法</div>
                     <div class="tip-item">理解用户分层策略</div>
                     <div class="tip-item">培养精细化运营能力</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-exclamation-circle"></i> 运营建议</h3>
+                    <div class="tip-item"><strong>价值客户(555)</strong>: 提供VIP服务，优先供货</div>
+                    <div class="tip-item"><strong>挽回客户(511)</strong>: 推送优惠券，限时活动</div>
+                    <div class="tip-item"><strong>流失客户(111)</strong>: 短信召回，专属折扣</div>
                 </div>
             </div>
         </div>
@@ -294,30 +520,54 @@ print(segment_stats.to_string())</pre>
 
     <script src="../script.js"></script>
     <script>
+        // 模拟RFM数据
         const rawData = [
-            {order_id: "O001", user_id: "U001", user_name: "张三", date: "2024-04-01", amount: 2999},
-            {order_id: "O002", user_id: "U002", user_name: "李四", date: "2024-03-15", amount: 1599},
-            {order_id: "O003", user_id: "U001", user_name: "张三", date: "2024-03-20", amount: 899},
-            {order_id: "O004", user_id: "U003", user_name: "王五", date: "2024-01-10", amount: 4599},
-            {order_id: "O005", user_id: "U001", user_name: "张三", date: "2024-02-28", amount: 599},
-            {order_id: "O006", user_id: "U002", user_name: "李四", date: "2024-04-10", amount: 799},
-            {order_id: "O007", user_id: "U004", user_name: "赵六", date: "2024-04-12", amount: 1999},
-            {order_id: "O008", user_id: "U005", user_name: "钱七", date: "2024-04-05", amount: 899},
-            {order_id: "O009", user_id: "U003", user_name: "王五", date: "2024-04-08", amount: 1299},
-            {order_id: "O010", user_id: "U006", user_name: "孙八", date: "2024-04-14", amount: 3599},
+            {"user_id": "U001", "user_name": "张三", "R": 3, "F": 8, "M": 13700},
+            {"user_id": "U002", "user_name": "李四", "R": 6, "F": 4, "M": 5000},
+            {"user_id": "U003", "user_name": "王五", "R": 11, "F": 6, "M": 20300},
+            {"user_id": "U004", "user_name": "赵六", "R": 46, "F": 2, "M": 6600},
+            {"user_id": "U005", "user_name": "钱七", "R": 91, "F": 2, "M": 6000},
+            {"user_id": "U006", "user_name": "孙八", "R": 1, "F": 5, "M": 14300},
+            {"user_id": "U007", "user_name": "周九", "R": 112, "F": 1, "M": 1500},
+            {"user_id": "U008", "user_name": "吴十", "R": 16, "F": 3, "M": 10300},
+            {"user_id": "U009", "user_name": "郑一", "R": 133, "F": 1, "M": 800},
+            {"user_id": "U010", "user_name": "王二", "R": 3, "F": 4, "M": 11400},
+            {"user_id": "U011", "user_name": "冯三", "R": 2, "F": 1, "M": 11500},
+            {"user_id": "U012", "user_name": "陈四", "R": 169, "F": 1, "M": 650},
         ];
 
         function renderDataTable() {
             const tbody = document.getElementById('data-tbody');
-            tbody.innerHTML = rawData.map(row => `
-                <tr>
-                    <td>${row.order_id}</td>
-                    <td>${row.user_id}</td>
-                    <td>${row.user_name}</td>
-                    <td>${row.date}</td>
-                    <td>${row.amount}</td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = rawData.map(row => {
+                let rLabel = '', fLabel = '', mLabel = '';
+                if (row.R <= 30) rLabel = '5分';
+                else if (row.R <= 60) rLabel = '4分';
+                else if (row.R <= 90) rLabel = '3分';
+                else if (row.R <= 180) rLabel = '2分';
+                else rLabel = '1分';
+                
+                if (row.F >= 10) fLabel = '5分';
+                else if (row.F >= 6) fLabel = '4分';
+                else if (row.F >= 3) fLabel = '3分';
+                else if (row.F == 2) fLabel = '2分';
+                else fLabel = '1分';
+                
+                if (row.M >= 10000) mLabel = '5分';
+                else if (row.M >= 5000) mLabel = '4分';
+                else if (row.M >= 2000) mLabel = '3分';
+                else if (row.M >= 1000) mLabel = '2分';
+                else mLabel = '1分';
+                
+                return `
+                    <tr>
+                        <td>${row.user_id}</td>
+                        <td>${row.user_name}</td>
+                        <td>${row.R}天</td>
+                        <td>${row.F}次</td>
+                        <td>¥${row.M.toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         let answerVisible = false;
@@ -333,29 +583,61 @@ print(segment_stats.to_string())</pre>
             editor.value = `import pandas as pd
 from datetime import datetime
 
-# 用户交易数据
 data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-04-01", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-03-15", "amount": 1599},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-03-20", "amount": 899},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-01-10", "amount": 4599},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-02-28", "amount": 599},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-28", "amount": 8500},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-25", "amount": 3200},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-20", "amount": 12500},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-15", "amount": 4500},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-01", "amount": 2800},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-30", "amount": 9800},
+    {"user_id": "U007", "user_name": "周九", "date": "2024-09-10", "amount": 1500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-15", "amount": 6500},
+    {"user_id": "U009", "user_name": "郑一", "date": "2024-08-20", "amount": 800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-28", "amount": 7200},
+    {"user_id": "U001", "user_name": "张三", "date": "2024-12-20", "amount": 5200},
+    {"user_id": "U002", "user_name": "李四", "date": "2024-12-15", "amount": 1800},
+    {"user_id": "U003", "user_name": "王五", "date": "2024-12-18", "amount": 7800},
+    {"user_id": "U004", "user_name": "赵六", "date": "2024-11-25", "amount": 2100},
+    {"user_id": "U005", "user_name": "钱七", "date": "2024-10-15", "amount": 3200},
+    {"user_id": "U006", "user_name": "孙八", "date": "2024-12-22", "amount": 4500},
+    {"user_id": "U008", "user_name": "吴十", "date": "2024-12-10", "amount": 3800},
+    {"user_id": "U010", "user_name": "王二", "date": "2024-12-25", "amount": 4200},
+    {"user_id": "U011", "user_name": "冯三", "date": "2024-12-29", "amount": 11500},
+    {"user_id": "U012", "user_name": "陈四", "date": "2024-07-15", "amount": 650},
 ]
 
 df = pd.DataFrame(data)
-analysis_date = datetime(2024, 4, 15)
+df['date'] = pd.to_datetime(df['date'])
+analysis_date = datetime(2024, 12, 31)
 
-print("=" * 50)
-print("原始交易数据：")
-print(df.to_string(index=False))
+# 计算RFM值
+rfm = df.groupby('user_id').agg({
+    'date': lambda x: (analysis_date - x.max()).days,
+    'user_name': 'first',
+    'amount': ['count', 'sum']
+}).reset_index()
+rfm.columns = ['user_id', 'R', 'user_name', 'F', 'M']
 
-# TODO: 在下方编写RFM分析代码
-# 1. 计算R、F、M值
-# 2. 进行RFM打分
-# 3. 用户分层
+print("=" * 70)
+print("【第1步】计算RFM值")
+print(rfm.to_string(index=False))
 
-print("\\n" + "=" * 50)
-print("RFM分析结果：")
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 对R、F、M进行打分（1-5分）
+# 2. 根据打分组合用户分层
+# 3. 统计各层级用户数量
+# 4. 筛选出"重要挽回客户"（R值≤2，F值≥4，M值≥4）
+
+print("\\n" + "=" * 70)
+print("【RFM打分结果】")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【用户分层统计】")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【重要挽回客户名单】")
 # 你的代码...`;
             document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }

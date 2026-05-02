@@ -30,11 +30,28 @@
         .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
         .task-list li:last-child { border-bottom: none; }
         .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
-        .data-table-container { overflow-x: auto; margin-top: 1rem; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
-        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; max-height: 350px; overflow-y: auto; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 0.75rem; text-align: left; font-weight: 600; position: sticky; top: 0; }
+        .data-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
         .data-table tr:hover { background-color: #f8fafc; }
+        .code-example { background: #1e293b; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; overflow-x: auto; }
+        .code-example pre { margin: 0; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .tip-box { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1)); border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .tip-box .tip-title { font-weight: 700; color: #92400e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tip-box .tip-content { color: #78350f; }
+        .error-box { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .error-box .error-title { font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .error-box .error-content { color: #7f1d1d; }
+        .concept-box { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 64, 175, 0.1)); border-left: 4px solid #3b82f6; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .concept-box .concept-title { font-weight: 700; color: #1e40af; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .concept-box .concept-content { color: #1e3a8a; }
+        .scenario-box { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border-left: 4px solid #10b981; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .scenario-box .scenario-title { font-weight: 700; color: #065f46; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .scenario-box .scenario-content { color: #047857; }
+        .learning-step { background: #f8fafc; border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1rem; border-left: 3px solid #3b82f6; }
+        .learning-step:last-child { margin-bottom: 0; }
+        .learning-step h4 { font-size: 1rem; font-weight: 600; color: #1e40af; margin-bottom: 0.75rem; }
         .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
         .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
@@ -49,17 +66,17 @@
         .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
         .code-editor-panel { background: #1e293b; }
         .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
-        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-editor { width: 100%; min-height: 400px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
         .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
         .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
-        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output { padding: 1rem; min-height: 400px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
         .code-output .placeholder { color: #64748b; font-style: italic; }
         .code-output .error { color: #f87171; }
         .code-output .success { color: #4ade80; }
         .answer-section { margin-top: 1.5rem; display: none; }
         .answer-section.show { display: block; }
         .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
-        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; max-height: 500px; overflow-y: auto; }
         .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
         .project-sidebar { position: sticky; top: 90px; height: fit-content; }
         .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
@@ -68,9 +85,7 @@
         .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
         .tip-item:last-child { border-bottom: none; }
         .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
-        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
         .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
         @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
         @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
     </style>
@@ -102,9 +117,9 @@
                     <span class="difficulty-badge intermediate">中级</span>
                 </div>
                 <div class="project-meta-info">
-                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：35分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：45分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：200条订单</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：100用户/500订单</span></div>
                 </div>
             </div>
         </div>
@@ -114,38 +129,127 @@
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
                     <div class="section-content">
-                        <p>复购率是电商平台的核心指标之一，高复购率意味着用户粘性强、客户价值高。本项目需要分析用户的购买行为，计算复购率，并找出高价值复购用户群体。</p>
-                        <ul style="margin-top: 1rem;">
-                            <li>统计用户的购买次数分布</li>
-                            <li>计算整体复购率</li>
-                            <li>识别复购用户和流失用户</li>
-                            <li>分析复购用户的特征</li>
-                        </ul>
+                        <p>复购率是衡量用户粘性和产品价值的核心指标。本项目基于某电商平台6个月的订单数据，分析用户复购行为，识别高价值用户群体。</p>
                     </div>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-database"></i><h2>用户购买记录</h2></div>
+                    <div class="section-header"><i class="fas fa-database"></i><h2>订单数据预览</h2></div>
                     <div class="data-table-container">
                         <table class="data-table" id="sales-data-table">
                             <thead>
-                                <tr><th>订单ID</th><th>用户ID</th><th>用户名</th><th>购买日期</th><th>商品类别</th><th>订单金额</th></tr>
+                                <tr><th>订单ID</th><th>用户ID</th><th>购买日期</th><th>商品类别</th><th>订单金额</th></tr>
                             </thead>
                             <tbody id="data-tbody"></tbody>
                         </table>
                     </div>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.5rem;">* 数据集包含100个用户、500条订单记录，时间跨度6个月</p>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="section-header"><i class="fas fa-book"></i><h2>学习内容</h2></div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title"><i class="fas fa-graduation-cap"></i> 概念讲解</div>
+                        <div class="concept-content"><strong>复购率 = 重复购买用户数 / 总购买用户数</strong>，是衡量用户粘性的核心指标。复购率越高，说明用户对产品/服务的满意度越高，用户生命周期价值越大。</div>
+                    </div>
+
+                    <div class="scenario-box">
+                        <div class="scenario-title"><i class="fas fa-store"></i> 应用场景</div>
+                        <div class="scenario-content">
+                            <strong>电商：</strong>分析用户重复购买行为，优化会员体系<br>
+                            <strong>订阅服务：</strong>跟踪续费率，预测收入<br>
+                            <strong>餐饮连锁：</strong>分析会员复购，精准营销
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
+                        <div class="tip-content">区分"复购率"和"回购率"：复购是对同一商品的重复购买，回购是再次购买该品牌任意商品。</div>
+                    </div>
+
+                    <div class="error-box">
+                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
+                        <div class="error-content">只统计总体复购率而忽略按时间窗口分层（30天/90天/180天）！不同时间窗口的复购率反映不同的用户行为特征。</div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例1：计算每个用户的购买次数</h4>
+                        <p>使用 <code>groupby('user_id')['order_id'].count()</code> 计算每个用户的购买次数：</p>
+                        <div class="code-example">
+<pre>import pandas as pd
+
+# 计算每个用户的购买次数
+user_purchase_count = df.groupby('user_id')['order_id'].count()
+print(user_purchase_count.head(10))
+
+# 查看购买次数分布
+print(user_purchase_count.value_counts().sort_index())</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例2：绘制购买次数分布直方图</h4>
+                        <p>使用 Matplotlib 绘制购买次数分布直方图：</p>
+                        <div class="code-example">
+<pre>import matplotlib.pyplot as plt
+
+# 统计购买次数分布
+purchase_dist = user_purchase_count.value_counts().sort_index()
+
+# 绘制柱状图
+plt.figure(figsize=(10, 6))
+plt.bar(purchase_dist.index, purchase_dist.values, color='#3b82f6', alpha=0.7)
+plt.xlabel('购买次数')
+plt.ylabel('用户数')
+plt.title('用户购买次数分布')
+plt.show()
+
+# ASCII版本（用于在线运行）
+print("\n购买次数分布：")
+for count, users in purchase_dist.items():
+    bar = "█" * int(users / 2)
+    print(f"{count}次: {bar} ({users}人)")</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例3：计算30天、90天复购率</h4>
+                        <p>按时间窗口计算复购率：</p>
+                        <div class="code-example">
+<pre>from datetime import datetime, timedelta
+
+# 转换日期列
+df['date'] = pd.to_datetime(df['date'])
+
+# 计算每个用户的首次购买日期
+first_purchase = df.groupby('user_id')['date'].min().reset_index()
+first_purchase.columns = ['user_id', 'first_date']
+
+# 合并首次购买日期
+df = df.merge(first_purchase, on='user_id')
+
+# 计算30天复购率
+def calc_repeat_rate(df, days):
+    cutoff_date = df['first_date'] + timedelta(days=days)
+    repeat_users = df[df['date'] <= cutoff_date].groupby('user_id').size()
+    repeat_users = repeat_users[repeat_users >= 2]
+    total_users = df['user_id'].nunique()
+    return len(repeat_users) / total_users * 100
+
+print(f"30天复购率: {calc_repeat_rate(df, 30):.1f}%")
+print(f"90天复购率: {calc_repeat_rate(df, 90):.1f}%")</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>练习任务</h2></div>
                     <div class="task-description">
-                        <h3>请完成以下分析：</h3>
+                        <h3>请补全代码，完成以下操作：</h3>
                         <ul class="task-list">
-                            <li>统计每个用户的购买次数</li>
-                            <li>计算用户的购买次数分布（1次/2次/3次+）</li>
-                            <li>计算整体复购率（购买2次及以上的用户占比）</li>
-                            <li>找出购买次数最多的Top10用户</li>
-                            <li>分析复购用户的总消费金额</li>
+                            <li>计算购买≥3次的用户占比</li>
+                            <li>筛选出这些"超级用户"并展示</li>
                         </ul>
                     </div>
                 </div>
@@ -154,7 +258,7 @@
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
                     <div class="code-playground">
                         <div class="code-playground-header">
-                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
                             <div class="code-controls">
                                 <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
                                 <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
@@ -165,33 +269,51 @@
                             <div class="code-editor-panel">
                                 <div class="code-editor-label">编辑器</div>
                                 <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
+import random
 
-# 用户购买记录
-data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
-]
+# 模拟生成100个用户、500条订单数据
+random.seed(42)
+categories = ['电子产品', '服装', '家居', '食品', '美妆']
+
+# 生成用户购买数据（模拟真实分布：部分用户多次购买）
+data = []
+order_id = 1
+for user_id in range(1, 101):
+    # 随机决定每个用户的购买次数（1-15次，符合长尾分布）
+    num_purchases = random.choices(
+        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
+        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
+    )[0]
+    
+    for _ in range(num_purchases):
+        month = random.randint(1, 6)
+        day = random.randint(1, 28)
+        data.append({
+            "order_id": f"ORD{order_id:04d}",
+            "user_id": f"U{user_id:03d}",
+            "date": f"2024-{month:02d}-{day:02d}",
+            "category": random.choice(categories),
+            "amount": random.randint(50, 3000)
+        })
+        order_id += 1
 
 df = pd.DataFrame(data)
-print("=" * 50)
-print("原始购买记录：")
-print(df.to_string(index=False))
+print("=" * 70)
+print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
+print("\n前10条订单记录：")
+print(df.head(10).to_string(index=False))
 
-# TODO: 在下方编写分析代码
-# 1. 统计每个用户的购买次数
-# 2. 计算购买次数分布
-# 3. 计算复购率
-# 4. 找出Top用户
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 计算每个用户的购买次数
+# 2. 计算购买≥3次的用户占比
+# 3. 筛选出"超级用户"（购买≥3次的用户）
 
-print("\n" + "=" * 50)
-print("用户购买次数统计：")
+print("\n" + "=" * 70)
+print("【用户购买次数统计】")
 # 你的代码...
 
-print("\n" + "=" * 50)
-print("复购率分析：")
+print("\n" + "=" * 70)
+print("【超级用户分析（购买≥3次）】")
 # 你的代码...</textarea>
                             </div>
                             <div class="code-output-panel">
@@ -203,53 +325,90 @@ print("复购率分析：")
                             <div class="answer-content">
                                 <h4>参考答案代码：</h4>
                                 <pre>import pandas as pd
+import random
 
-# 用户购买记录
-data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
-    {"order_id": "O006", "user_id": "U002", "user_name": "李四", "date": "2024-03-15", "category": "服装", "amount": 299},
-    {"order_id": "O007", "user_id": "U004", "user_name": "赵六", "date": "2024-03-20", "category": "电子产品", "amount": 1999},
-]
+# 模拟生成100个用户、500条订单数据
+random.seed(42)
+categories = ['电子产品', '服装', '家居', '食品', '美妆']
+
+# 生成用户购买数据
+data = []
+order_id = 1
+for user_id in range(1, 101):
+    num_purchases = random.choices(
+        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
+        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
+    )[0]
+    
+    for _ in range(num_purchases):
+        month = random.randint(1, 6)
+        day = random.randint(1, 28)
+        data.append({
+            "order_id": f"ORD{order_id:04d}",
+            "user_id": f"U{user_id:03d}",
+            "date": f"2024-{month:02d}-{day:02d}",
+            "category": random.choice(categories),
+            "amount": random.randint(50, 3000)
+        })
+        order_id += 1
 
 df = pd.DataFrame(data)
 
-print("=" * 60)
-print("【第1步】统计每个用户的购买次数")
-user_counts = df.groupby('user_id').size().reset_index(name='purchase_count')
-user_counts = user_counts.merge(df[['user_id', 'user_name']].drop_duplicates(), on='user_id')
-print(user_counts.to_string(index=False))
+print("=" * 70)
+print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
 
-print("\n" + "=" * 60)
-print("【第2步】购买次数分布")
-purchase_dist = user_counts['purchase_count'].value_counts().sort_index()
-for count, num in purchase_dist.items():
-    print(f"购买 {count} 次的用户: {num} 人")
-print(f"\n总用户数: {len(user_counts)}")
+# 第1步：计算每个用户的购买次数
+print("\n" + "=" * 70)
+print("【第1步】计算每个用户的购买次数")
+user_purchase = df.groupby('user_id').agg({
+    'order_id': 'count',
+    'amount': 'sum'
+}).reset_index()
+user_purchase.columns = ['user_id', 'purchase_count', 'total_amount']
+print(f"\n购买次数分布：")
+print(user_purchase['purchase_count'].value_counts().sort_index().head(10))
 
-print("\n" + "=" * 60)
-print("【第3步】计算复购率")
-repeat_users = len(user_counts[user_counts['purchase_count'] >= 2])
-total_users = len(user_counts)
-repeat_rate = repeat_users / total_users * 100
-print(f"复购用户数（购买2次及以上）: {repeat_users}")
-print(f"整体复购率: {repeat_rate:.1f}%")
+# 第2步：计算购买≥3次的用户占比
+print("\n" + "=" * 70)
+print("【第2步】计算超级用户占比")
+total_users = len(user_purchase)
+super_users = user_purchase[user_purchase['purchase_count'] >= 3]
+super_user_count = len(super_users)
+super_user_ratio = super_user_count / total_users * 100
 
-print("\n" + "=" * 60)
-print("【第4步】Top购买次数用户")
-top_users = user_counts.nlargest(5, 'purchase_count')
-print(top_users.to_string(index=False))
+print(f"\n总用户数: {total_users}")
+print(f"超级用户数（购买≥3次）: {super_user_count}")
+print(f"超级用户占比: {super_user_ratio:.1f}%")
 
-print("\n" + "=" * 60)
-print("【第5步】复购用户消费分析")
-repeat_user_ids = user_counts[user_counts['purchase_count'] >= 2]['user_id']
-repeat_df = df[df['user_id'].isin(repeat_user_ids)]
-repeat_spending = repeat_df.groupby('user_id')['amount'].sum()
-print(f"复购用户总消费: {repeat_spending.sum():.0f} 元")
-print(f"复购用户平均消费: {repeat_spending.mean():.2f} 元")</pre>
+# 第3步：筛选出超级用户
+print("\n" + "=" * 70)
+print("【第3步】超级用户名单（按购买次数排序）")
+super_users_sorted = super_users.sort_values('purchase_count', ascending=False)
+print("\nTOP 20 超级用户：")
+print(super_users_sorted.head(20).to_string(index=False))
+
+# 第4步：超级用户价值分析
+print("\n" + "=" * 70)
+print("【第4步】超级用户价值分析")
+total_revenue = df['amount'].sum()
+super_revenue = super_users['total_amount'].sum()
+super_revenue_ratio = super_revenue / total_revenue * 100
+
+print(f"\n总销售额: {total_revenue:,} 元")
+print(f"超级用户贡献销售额: {super_revenue:,} 元")
+print(f"超级用户贡献占比: {super_revenue_ratio:.1f}%")
+print(f"\n结论: {super_user_count}位超级用户（{super_user_ratio:.1f}%）贡献了{super_revenue_ratio:.1f}%的销售额！")
+
+# 可视化：购买次数分布
+print("\n" + "=" * 70)
+print("【可视化】购买次数分布图")
+print("\n用户购买次数分布：")
+purchase_dist = user_purchase['purchase_count'].value_counts().sort_index()
+max_count = purchase_dist.max()
+for count, users in purchase_dist.items():
+    bar_len = int(users / max_count * 30)
+    bar = "█" * bar_len
+    print(f"{count:2d}次: {bar} ({users}人)")</pre>
                             </div>
                         </div>
                     </div>
@@ -259,17 +418,17 @@ print(f"复购用户平均消费: {repeat_spending.mean():.2f} 元")</pre>
             <div class="project-sidebar">
                 <div class="tips-card">
                     <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
-                    <div class="tip-item"><strong>value_counts()</strong> - 统计各值的出现次数</div>
-                    <div class="tip-item"><strong>size()</strong> - 统计分组后的记录数</div>
-                    <div class="tip-item"><strong>nlargest(n, col)</strong> - 返回最大的n行</div>
-                    <div class="tip-item"><strong>isin()</strong> - 判断是否在列表中</div>
-                    <div class="tip-item"><strong>merge()</strong> - 数据表合并</div>
+                    <div class="tip-item"><strong>groupby().count()</strong> - 统计分组数量</div>
+                    <div class="tip-item"><strong>value_counts()</strong> - 统计值分布</div>
+                    <div class="tip-item"><strong>nunique()</strong> - 统计唯一值数量</div>
+                    <div class="tip-item"><strong>agg()</strong> - 多列聚合计算</div>
+                    <div class="tip-item"><strong>sort_values()</strong> - 排序</div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">掌握分组统计方法</div>
-                    <div class="tip-item">理解复购率计算逻辑</div>
-                    <div class="tip-item">学会用户分层分析</div>
+                    <div class="tip-item">理解复购率概念与计算</div>
+                    <div class="tip-item">掌握用户分层分析方法</div>
+                    <div class="tip-item">学会识别高价值用户</div>
                     <div class="tip-item">培养精细化运营思维</div>
                 </div>
             </div>
@@ -278,29 +437,54 @@ print(f"复购用户平均消费: {repeat_spending.mean():.2f} 元")</pre>
 
     <script src="../script.js"></script>
     <script>
-        const rawData = [
-            {order_id: "O001", user_id: "U001", user_name: "张三", date: "2024-01-15", category: "电子产品", amount: 2999},
-            {order_id: "O002", user_id: "U002", user_name: "李四", date: "2024-01-16", category: "服装", amount: 399},
-            {order_id: "O003", user_id: "U001", user_name: "张三", date: "2024-02-20", category: "服装", amount: 599},
-            {order_id: "O004", user_id: "U003", user_name: "王五", date: "2024-02-25", category: "家居", amount: 1299},
-            {order_id: "O005", user_id: "U001", user_name: "张三", date: "2024-03-10", category: "电子产品", amount: 4599},
-            {order_id: "O006", user_id: "U002", user_name: "李四", date: "2024-03-15", category: "服装", amount: 299},
-            {order_id: "O007", user_id: "U004", user_name: "赵六", date: "2024-03-20", category: "电子产品", amount: 1999},
-            {order_id: "O008", user_id: "U005", user_name: "钱七", date: "2024-03-22", category: "家居", amount: 899},
-            {order_id: "O009", user_id: "U003", user_name: "王五", date: "2024-04-05", category: "电子产品", amount: 2599},
-            {order_id: "O010", user_id: "U001", user_name: "张三", date: "2024-04-10", category: "服装", amount: 799},
-        ];
+        // 生成模拟数据用于表格展示
+        const rawData = [];
+        let orderId = 1;
+        const categories = ['电子产品', '服装', '家居', '食品', '美妆'];
+        
+        // 使用固定种子生成可重复的数据
+        const seedrandom = function(seed) {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        };
+        
+        for (let userId = 1; userId <= 100; userId++) {
+            const weights = [30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5];
+            const choices = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15];
+            const rand = seedrandom(userId);
+            let cumWeight = 0;
+            let numPurchases = 1;
+            for (let i = 0; i < weights.length; i++) {
+                cumWeight += weights[i] / 100;
+                if (rand < cumWeight) {
+                    numPurchases = choices[i];
+                    break;
+                }
+            }
+            
+            for (let p = 0; p < numPurchases; p++) {
+                const month = Math.floor(seedrandom(userId * 100 + p * 10) * 6) + 1;
+                const day = Math.floor(seedrandom(userId * 100 + p * 10 + 1) * 28) + 1;
+                rawData.push({
+                    order_id: `ORD${String(orderId).padStart(4, '0')}`,
+                    user_id: `U${String(userId).padStart(3, '0')}`,
+                    date: `2024-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                    category: categories[Math.floor(seedrandom(userId * 100 + p * 10 + 2) * 5)],
+                    amount: Math.floor(seedrandom(userId * 100 + p * 10 + 3) * 2950) + 50
+                });
+                orderId++;
+            }
+        }
 
         function renderDataTable() {
             const tbody = document.getElementById('data-tbody');
-            tbody.innerHTML = rawData.map(row => `
+            tbody.innerHTML = rawData.slice(0, 20).map(row => `
                 <tr>
                     <td>${row.order_id}</td>
                     <td>${row.user_id}</td>
-                    <td>${row.user_name}</td>
                     <td>${row.date}</td>
                     <td>${row.category}</td>
-                    <td>${row.amount}</td>
+                    <td>¥${row.amount}</td>
                 </tr>
             `).join('');
         }
@@ -316,33 +500,51 @@ print(f"复购用户平均消费: {repeat_spending.mean():.2f} 元")</pre>
         function resetCode() {
             const editor = document.getElementById('code-editor');
             editor.value = `import pandas as pd
+import random
 
-# 用户购买记录
-data = [
-    {"order_id": "O001", "user_id": "U001", "user_name": "张三", "date": "2024-01-15", "category": "电子产品", "amount": 2999},
-    {"order_id": "O002", "user_id": "U002", "user_name": "李四", "date": "2024-01-16", "category": "服装", "amount": 399},
-    {"order_id": "O003", "user_id": "U001", "user_name": "张三", "date": "2024-02-20", "category": "服装", "amount": 599},
-    {"order_id": "O004", "user_id": "U003", "user_name": "王五", "date": "2024-02-25", "category": "家居", "amount": 1299},
-    {"order_id": "O005", "user_id": "U001", "user_name": "张三", "date": "2024-03-10", "category": "电子产品", "amount": 4599},
-]
+# 模拟生成100个用户、500条订单数据
+random.seed(42)
+categories = ['电子产品', '服装', '家居', '食品', '美妆']
+
+# 生成用户购买数据（模拟真实分布：部分用户多次购买）
+data = []
+order_id = 1
+for user_id in range(1, 101):
+    # 随机决定每个用户的购买次数（1-15次，符合长尾分布）
+    num_purchases = random.choices(
+        [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
+        weights=[30, 25, 15, 10, 8, 5, 3, 2, 1, 0.5, 0.5]
+    )[0]
+    
+    for _ in range(num_purchases):
+        month = random.randint(1, 6)
+        day = random.randint(1, 28)
+        data.append({
+            "order_id": f"ORD{order_id:04d}",
+            "user_id": f"U{user_id:03d}",
+            "date": f"2024-{month:02d}-{day:02d}",
+            "category": random.choice(categories),
+            "amount": random.randint(50, 3000)
+        })
+        order_id += 1
 
 df = pd.DataFrame(data)
-print("=" * 50)
-print("原始购买记录：")
-print(df.to_string(index=False))
+print("=" * 70)
+print(f"【数据概览】总订单数: {len(df)}，总用户数: {df['user_id'].nunique()}")
+print("\\n前10条订单记录：")
+print(df.head(10).to_string(index=False))
 
-# TODO: 在下方编写分析代码
-# 1. 统计每个用户的购买次数
-# 2. 计算购买次数分布
-# 3. 计算复购率
-# 4. 找出Top用户
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 计算每个用户的购买次数
+# 2. 计算购买≥3次的用户占比
+# 3. 筛选出"超级用户"（购买≥3次的用户）
 
-print("\\n" + "=" * 50)
-print("用户购买次数统计：")
+print("\\n" + "=" * 70)
+print("【用户购买次数统计】")
 # 你的代码...
 
-print("\\n" + "=" * 50)
-print("复购率分析：")
+print("\\n" + "=" * 70)
+print("【超级用户分析（购买≥3次）】")
 # 你的代码...`;
             document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }

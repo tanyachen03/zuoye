@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目10：销售趋势预测 - 数析学院</title>
+    <title>项目10：销售趋势预测-移动平均法 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
     <style>
         .project-page { padding-top: 70px; min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
-        .project-header { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); color: white; padding: 3rem 2rem; position: relative; overflow: hidden; }
+        .project-header { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #06b6d4 100%); color: white; padding: 3rem 2rem; position: relative; overflow: hidden; }
         .project-header::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; }
         .project-header-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
         .project-back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.9); text-decoration: none; margin-bottom: 1.5rem; transition: all 0.2s ease; }
@@ -21,21 +21,45 @@
         .project-main { display: flex; flex-direction: column; gap: 2rem; }
         .project-section { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
-        .section-header i { font-size: 1.5rem; color: #1e40af; }
+        .section-header i { font-size: 1.5rem; color: #7c3aed; }
         .section-header h2 { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
         .section-content { color: #475569; line-height: 1.8; }
-        .task-description { background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.05)); border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid #1e40af; }
+        .task-description { background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(167, 139, 250, 0.05)); border-radius: 0.75rem; padding: 1.5rem; border-left: 4px solid #7c3aed; }
         .task-description h3 { font-size: 1.125rem; font-weight: 600; color: #1e293b; margin-bottom: 1rem; }
         .task-list { list-style: none; }
         .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
         .task-list li:last-child { border-bottom: none; }
         .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
-        .data-table-container { overflow-x: auto; margin-top: 1rem; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
-        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; max-height: 350px; overflow-y: auto; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; padding: 0.75rem; text-align: left; font-weight: 600; position: sticky; top: 0; }
+        .data-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
         .data-table tr:hover { background-color: #f8fafc; }
-        .data-table .highlight { background-color: rgba(16, 185, 129, 0.1); font-weight: 600; color: #10b981; }
+        .code-example { background: #1e293b; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; overflow-x: auto; }
+        .code-example pre { margin: 0; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .tip-box { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1)); border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .tip-box .tip-title { font-weight: 700; color: #92400e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tip-box .tip-content { color: #78350f; }
+        .error-box { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .error-box .error-title { font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .error-box .error-content { color: #7f1d1d; }
+        .concept-box { background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(167, 139, 250, 0.1)); border-left: 4px solid #7c3aed; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .concept-box .concept-title { font-weight: 700; color: #6d28d9; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .concept-box .concept-content { color: #5b21b6; }
+        .formula-box { background: #1e293b; border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; text-align: center; }
+        .formula-box .formula { color: #fbbf24; font-size: 1.25rem; font-weight: bold; font-family: 'Times New Roman', serif; margin: 0.5rem 0; }
+        .formula-box .formula-desc { color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem; }
+        .component-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+        .component-item { background: #f8fafc; border-radius: 0.5rem; padding: 1rem; text-align: center; }
+        .component-item i { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .component-item.trend i { color: #10b981; }
+        .component-item.seasonal i { color: #3b82f6; }
+        .component-item.residual i { color: #ef4444; }
+        .component-item h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .component-item p { font-size: 0.85rem; color: #64748b; margin: 0; }
+        .learning-step { background: #f8fafc; border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1rem; border-left: 3px solid #7c3aed; }
+        .learning-step:last-child { margin-bottom: 0; }
+        .learning-step h4 { font-size: 1rem; font-weight: 600; color: #6d28d9; margin-bottom: 0.75rem; }
         .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
         .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
@@ -50,17 +74,17 @@
         .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
         .code-editor-panel { background: #1e293b; }
         .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
-        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-editor { width: 100%; min-height: 450px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
         .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
         .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
-        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output { padding: 1rem; min-height: 450px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
         .code-output .placeholder { color: #64748b; font-style: italic; }
         .code-output .error { color: #f87171; }
         .code-output .success { color: #4ade80; }
         .answer-section { margin-top: 1.5rem; display: none; }
         .answer-section.show { display: block; }
         .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
-        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; max-height: 500px; overflow-y: auto; }
         .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
         .project-sidebar { position: sticky; top: 90px; height: fit-content; }
         .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
@@ -69,10 +93,8 @@
         .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
         .tip-item:last-child { border-bottom: none; }
         .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
-        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
         .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
+        @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } .component-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
     </style>
 </head>
@@ -103,9 +125,9 @@
                     <span class="difficulty-badge advanced">高级</span>
                 </div>
                 <div class="project-meta-info">
-                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：45分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：50分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：12个月数据</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：24个月数据</span></div>
                 </div>
             </div>
         </div>
@@ -115,22 +137,17 @@
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
                     <div class="section-content">
-                        <p>销售预测是企业制定生产计划、采购策略、营销预算的重要依据。准确的预测可以帮助企业避免库存积压或缺货，提高运营效率。</p>
-                        <ul style="margin-top: 1rem;">
-                            <li><strong>简单移动平均法(SMA)</strong>：用最近n期数据的平均值作为预测值</li>
-                            <li><strong>加权移动平均法(WMA)</strong>：给近期数据更高权重</li>
-                            <li><strong>趋势分析法</strong>：分析数据变化趋势进行预测</li>
-                        </ul>
-                        <p style="margin-top: 1rem;">本项目使用简单移动平均法预测下月销售额。</p>
+                        <p>销售预测是企业制定生产计划、采购策略、营销预算的重要依据。时间序列预测通过分析历史数据的变化规律，预测未来的销售趋势。</p>
+                        <p style="margin-top: 0.5rem;">本项目使用<strong>移动平均法</strong>进行销售预测，这是一种经典的时间序列预测方法。</p>
                     </div>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-database"></i><h2>历史销售数据</h2></div>
+                    <div class="section-header"><i class="fas fa-database"></i><h2>电商店铺24个月销售数据</h2></div>
                     <div class="data-table-container">
                         <table class="data-table" id="sales-data-table">
                             <thead>
-                                <tr><th>月份</th><th>销售额(万元)</th><th>环比增长率</th></tr>
+                                <tr><th>月份</th><th>销售额(万元)</th><th>月份</th><th>销售额(万元)</th></tr>
                             </thead>
                             <tbody id="data-tbody"></tbody>
                         </table>
@@ -138,15 +155,113 @@
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-tasks"></i><h2>预测任务</h2></div>
+                    <div class="section-header"><i class="fas fa-book"></i><h2>学习内容</h2></div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title"><i class="fas fa-graduation-cap"></i> 移动平均法核心公式</div>
+                        <div class="formula-box">
+                            <div class="formula">SMA(n) = (X₁ + X₂ + ... + Xₙ) / n</div>
+                            <div class="formula-desc">简单移动平均：最近n期数据的算术平均值</div>
+                        </div>
+                        <div class="formula-box" style="margin-top: 1rem;">
+                            <div class="formula">WMA = w₁×X₁ + w₂×X₂ + ... + wₙ×Xₙ</div>
+                            <div class="formula-desc">加权移动平均：近期数据权重更大，权重之和为1</div>
+                        </div>
+                    </div>
+
+                    <div class="concept-box">
+                        <div class="concept-title"><i class="fas fa-chart-line"></i> 时间序列三大组件</div>
+                        <div class="component-grid">
+                            <div class="component-item trend">
+                                <i class="fas fa-arrow-trend-up"></i>
+                                <h4>趋势(Trend)</h4>
+                                <p>长期上升或下降走势</p>
+                            </div>
+                            <div class="component-item seasonal">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h4>季节性(Seasonal)</h4>
+                                <p>固定周期内的波动</p>
+                            </div>
+                            <div class="component-item residual">
+                                <i class="fas fa-random"></i>
+                                <h4>残差(Residual)</h4>
+                                <p>随机波动或异常值</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
+                        <div class="tip-content">移动平均的窗口选择很重要：窗口太小噪声多，窗口太大会错过转折点。通常3-6个月适合短期预测，12个月适合捕捉年度趋势。</div>
+                    </div>
+
+                    <div class="error-box">
+                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
+                        <div class="error-content">用简单移动平均预测存在趋势的数据，会系统性低估！有趋势的数据应该用加权移动平均或趋势调整。</div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例1：计算3个月、6个月移动平均</h4>
+                        <div class="code-example">
+<pre>import pandas as pd
+
+# 计算移动平均
+df['MA3'] = df['销售额'].rolling(window=3).mean().round(2)
+df['MA6'] = df['销售额'].rolling(window=6).mean().round(2)
+
+# 显示结果
+print(df[['月份', '销售额', 'MA3', 'MA6']])</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例2：绘制原始数据+移动平均线对比图</h4>
+                        <div class="code-example">
+<pre>import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 6))
+plt.plot(df['月份'], df['销售额'], 'b-o', label='实际销售额', linewidth=2)
+plt.plot(df['月份'], df['MA3'], 'g--', label='3月移动平均', linewidth=2)
+plt.plot(df['月份'], df['MA6'], 'r--', label='6月移动平均', linewidth=2)
+plt.xlabel('月份')
+plt.ylabel('销售额(万元)')
+plt.title('销售趋势预测对比')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例3：用最后3个月平均值预测下月，计算MAPE误差</h4>
+                        <div class="code-example">
+<pre># 用最后3个月平均预测下月
+last_3_months = df['销售额'].tail(3).mean()
+forecast_next = last_3_months
+
+# 假设第25个月真实值（用于验证）
+actual_next = 280
+mape = abs(actual_next - forecast_next) / actual_next * 100
+
+print(f"预测值: {forecast_next:.2f} 万元")
+print(f"实际值: {actual_next} 万元")
+print(f"MAPE误差: {mape:.2f}%")</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>练习任务</h2></div>
                     <div class="task-description">
-                        <h3>请完成以下预测分析：</h3>
+                        <h3>请补全代码，完成以下操作：</h3>
                         <ul class="task-list">
-                            <li>计算销售额的环比增长率</li>
-                            <li>使用3个月简单移动平均预测下月销售额</li>
-                            <li>使用6个月简单移动平均预测下月销售额</li>
-                            <li>对比两种预测结果，分析趋势</li>
-                            <li>绘制销售趋势图（ASCII版）</li>
+                            <li>计算3个月和6个月移动平均</li>
+                            <li>用最后3个月平均值预测下月销售额</li>
+                            <li>绘制原始数据+移动平均线对比图（ASCII版）</li>
+                            <li>计算预测MAPE误差</li>
+                            <li>调整窗口大小，观察预测效果变化</li>
                         </ul>
                     </div>
                 </div>
@@ -155,7 +270,7 @@
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
                     <div class="code-playground">
                         <div class="code-playground-header">
-                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
                             <div class="code-controls">
                                 <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
                                 <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
@@ -167,26 +282,37 @@
                                 <div class="code-editor-label">编辑器</div>
                                 <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
 
-# 历史月度销售数据
-data = {
-    "月份": ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06"],
-    "销售额": [120, 135, 142, 158, 165, 180]
-}
+# 某电商店铺24个月销售额数据（2022-2023年）
+months = ["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06",
+          "2022-07","2022-08","2022-09","2022-10","2022-11","2022-12",
+          "2023-01","2023-02","2023-03","2023-04","2023-05","2023-06",
+          "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12"]
+sales = [120,125,130,128,135,142,140,145,150,155,180,220,
+         130,135,140,145,152,158,155,162,168,172,210,260]
 
-df = pd.DataFrame(data)
+df = pd.DataFrame({"月份": months, "销售额": sales})
 
-print("=" * 60)
-print("历史销售数据：")
+print("=" * 70)
+print("【第1步】查看销售数据")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写预测分析代码
-# 1. 计算环比增长率
-# 2. 3个月移动平均预测
-# 3. 6个月移动平均预测
-# 4. 绘制趋势图
+# TODO: 请在下方编写预测分析代码
+# 1. 计算3个月移动平均
+# 2. 计算6个月移动平均
+# 3. 绘制趋势对比图（ASCII）
+# 4. 预测下月销售额
+# 5. 计算MAPE误差
 
-print("\n" + "=" * 60)
-print("销售预测分析：")
+print("\n" + "=" * 70)
+print("【第2步】移动平均计算")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【第3步】预测下月销售额")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【第4步】计算MAPE误差")
 # 你的代码...</textarea>
                             </div>
                             <div class="code-output-panel">
@@ -199,62 +325,66 @@ print("销售预测分析：")
                                 <h4>参考答案代码：</h4>
                                 <pre>import pandas as pd
 
-# 历史月度销售数据
-data = {
-    "月份": ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"],
-    "销售额": [120, 135, 142, 158, 165, 180, 175, 190, 205, 198, 220, 235]
-}
+months = ["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06",
+          "2022-07","2022-08","2022-09","2022-10","2022-11","2022-12",
+          "2023-01","2023-02","2023-03","2023-04","2023-05","2023-03",
+          "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12"]
+sales = [120,125,130,128,135,142,140,145,150,155,180,220,
+         130,135,140,145,152,158,155,162,168,172,210,260]
 
-df = pd.DataFrame(data)
+df = pd.DataFrame({"月份": months, "销售额": sales})
 
-print("=" * 60)
-print("【第1步】历史销售数据")
+print("=" * 70)
+print("【第1步】查看销售数据")
 print(df.to_string(index=False))
 
-print("\n" + "=" * 60)
-print("【第2步】计算环比增长率")
-df['环比增长率'] = df['销售额'].pct_change() * 100
-df['环比增长率'] = df['环比增长率'].round(2).fillna(0)
-print(df[['月份', '销售额', '环比增长率']].to_string(index=False))
-print(f"\n平均增长率: {df['环比增长率'].mean():.2f}%")
-
-print("\n" + "=" * 60)
-print("【第3步】3个月移动平均预测")
+print("\n" + "=" * 70)
+print("【第2步】移动平均计算")
 df['MA3'] = df['销售额'].rolling(window=3).mean().round(2)
-df['MA3预测'] = df['MA3'].shift(1)
-print(df[['月份', '销售额', 'MA3', 'MA3预测']].to_string(index=False))
-
-ma3_forecast = df['MA3'].iloc[-1]
-print(f"\n3个月MA预测下月销售额: {ma3_forecast:.2f} 万元")
-
-print("\n" + "=" * 60)
-print("【第4步】6个月移动平均预测")
 df['MA6'] = df['销售额'].rolling(window=6).mean().round(2)
-print(df[['月份', '销售额', 'MA6']].to_string(index=False))
+print(df[['月份', '销售额', 'MA3', 'MA6']].to_string(index=False))
 
-ma6_forecast = df['MA6'].iloc[-1]
-print(f"\n6个月MA预测下月销售额: {ma6_forecast:.2f} 万元")
-
-print("\n" + "=" * 60)
-print("【第5步】预测结果对比")
-print(f"\n3个月MA预测: {ma3_forecast:.2f} 万元")
-print(f"6个月MA预测: {ma6_forecast:.2f} 万元")
-print(f"\n综合预测 (两者平均): {(ma3_forecast + ma6_forecast)/2:.2f} 万元")
-
-print("\n" + "=" * 60)
-print("【第6步】销售趋势可视化（ASCII版）")
-print("\n销售趋势图：")
+print("\n" + "=" * 70)
+print("【第3步】ASCII趋势对比图")
+print("\n销售额趋势：")
 max_sales = df['销售额'].max()
+print("月份        销售额    3月MA    6月MA")
+print("-" * 50)
 for idx, row in df.iterrows():
-    bar_length = int(row['销售额'] / max_sales * 40)
-    bar = "█" * bar_length
-    print(f"{row['月份']} | {bar} {row['销售额']}万")
+    actual = "█" * int(row['销售额'] / max_sales * 20)
+    ma3 = "▓" * int(row['MA3'] / max_sales * 20) if pd.notna(row['MA3']) else ""
+    ma6 = "░" * int(row['MA6'] / max_sales * 20) if pd.notna(row['MA6']) else ""
+    print(f"{row['月份']}  {actual:20} {row['销售额']:>5}万")
 
-print("\n预测趋势：")
-forecast_value = (ma3_forecast + ma6_forecast) / 2
-bar_length = int(forecast_value / max_sales * 40)
-bar = "░" * bar_length
-print(f"2025-01 | {bar} {forecast_value:.2f}万 (预测)")</pre>
+print("\n图例：█=实际  ▓=3月MA  ░=6月MA")
+
+print("\n" + "=" * 70)
+print("【第4步】预测下月销售额")
+last_3 = df['销售额'].tail(3).mean()
+last_6 = df['销售额'].tail(6).mean()
+last_12 = df['销售额'].tail(12).mean()
+
+print(f"\n不同窗口预测下月销售额：")
+print(f"  3个月平均: {last_3:.2f} 万元")
+print(f"  6个月平均: {last_6:.2f} 万元")
+print(f"  12个月平均: {last_12:.2f} 万元")
+
+print("\n" + "=" * 70)
+print("【第5步】MAPE误差分析")
+actual_next = 275
+print(f"\n预测值(3月MA): {last_3:.2f} 万元")
+print(f"实际值: {actual_next} 万元")
+mape = abs(actual_next - last_3) / actual_next * 100
+print(f"MAPE误差: {mape:.2f}%")
+
+print("\n" + "=" * 70)
+print("【第6步】不同窗口效果对比")
+for window in [3, 6, 12]:
+    forecast = df['销售额'].tail(window).mean()
+    mape_w = abs(actual_next - forecast) / actual_next * 100
+    print(f"  窗口={window:2d}月  预测={forecast:>6.2f}万  MAPE={mape_w:.2f}%")
+
+print("\n结论：选择MAPE最小的窗口作为最优预测窗口")</pre>
                             </div>
                         </div>
                     </div>
@@ -263,19 +393,26 @@ print(f"2025-01 | {bar} {forecast_value:.2f}万 (预测)")</pre>
 
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> 预测分析技巧</h3>
-                    <div class="tip-item"><strong>rolling()</strong> - 计算移动平均</div>
-                    <div class="tip-item"><strong>pct_change()</strong> - 计算环比变化率</div>
-                    <div class="tip-item"><strong>MA3</strong> - 近3期平均值</div>
-                    <div class="tip-item"><strong>MA6</strong> - 近6期平均值</div>
-                    <div class="tip-item"><strong>窗口选择</strong> - 数据稳定用长窗口，变化快用短窗口</div>
+                    <h3><i class="fas fa-lightbulb"></i> 预测技巧</h3>
+                    <div class="tip-item"><strong>rolling(3)</strong> - 3期移动平均</div>
+                    <div class="tip-item"><strong>rolling(6)</strong> - 6期移动平均</div>
+                    <div class="tip-item"><strong>tail(3).mean()</strong> - 最近3期均值</div>
+                    <div class="tip-item"><strong>MAPE</strong> - 平均绝对百分比误差</div>
+                    <div class="tip-item"><strong>窗口选择</strong> - 根据数据波动性</div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
                     <div class="tip-item">理解移动平均法原理</div>
-                    <div class="tip-item">掌握时间序列预测方法</div>
-                    <div class="tip-item">学会趋势分析方法</div>
-                    <div class="tip-item">培养数据预测思维</div>
+                    <div class="tip-item">掌握时间序列分解</div>
+                    <div class="tip-item">学会趋势预测方法</div>
+                    <div class="tip-item">培养预测评估能力</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-chart-line"></i> 进阶方法</h3>
+                    <div class="tip-item"><strong>指数平滑</strong> - 给近期更高权重</div>
+                    <div class="tip-item"><strong>Holt-Winters</strong> - 带季节性预测</div>
+                    <div class="tip-item"><strong>ARIMA</strong> - 自回归综合移动平均</div>
+                    <div class="tip-item"><strong>Prophet</strong> - Facebook开源工具</div>
                 </div>
             </div>
         </div>
@@ -284,29 +421,36 @@ print(f"2025-01 | {bar} {forecast_value:.2f}万 (预测)")</pre>
     <script src="../script.js"></script>
     <script>
         const rawData = [
-            {month: "2024-01", sales: 120, growth: 0},
-            {month: "2024-02", sales: 135, growth: 12.5},
-            {month: "2024-03", sales: 142, growth: 5.19},
-            {month: "2024-04", sales: 158, growth: 11.27},
-            {month: "2024-05", sales: 165, growth: 4.43},
-            {month: "2024-06", sales: 180, growth: 9.09},
-            {month: "2024-07", sales: 175, growth: -2.78},
-            {month: "2024-08", sales: 190, growth: 8.57},
-            {month: "2024-09", sales: 205, growth: 7.89},
-            {month: "2024-10", sales: 198, growth: -3.41},
-            {month: "2024-11", sales: 220, growth: 11.11},
-            {month: "2024-12", sales: 235, growth: 6.82},
+            {month: "2022-01", sales: 120}, {month: "2022-02", sales: 125},
+            {month: "2022-03", sales: 130}, {month: "2022-04", sales: 128},
+            {month: "2022-05", sales: 135}, {month: "2022-06", sales: 142},
+            {month: "2022-07", sales: 140}, {month: "2022-08", sales: 145},
+            {month: "2022-09", sales: 150}, {month: "2022-10", sales: 155},
+            {month: "2022-11", sales: 180}, {month: "2022-12", sales: 220},
+            {month: "2023-01", sales: 130}, {month: "2023-02", sales: 135},
+            {month: "2023-03", sales: 140}, {month: "2023-04", sales: 145},
+            {month: "2023-05", sales: 152}, {month: "2023-06", sales: 158},
+            {month: "2023-07", sales: 155}, {month: "2023-08", sales: 162},
+            {month: "2023-09", sales: 168}, {month: "2023-10", sales: 172},
+            {month: "2023-11", sales: 210}, {month: "2023-12", sales: 260},
         ];
 
         function renderDataTable() {
             const tbody = document.getElementById('data-tbody');
-            tbody.innerHTML = rawData.map(row => `
-                <tr>
-                    <td>${row.month}</td>
-                    <td>${row.sales}</td>
-                    <td>${row.growth > 0 ? '+' : ''}${row.growth}%</td>
-                </tr>
-            `).join('');
+            let html = '';
+            for (let i = 0; i < 12; i++) {
+                const row1 = rawData[i];
+                const row2 = rawData[i + 12];
+                const season1 = row1.month.includes('11') || row1.month.includes('12') || row1.month.includes('01') ? '双旦旺季' : '';
+                const season2 = row2.month.includes('11') || row2.month.includes('12') || row2.month.includes('01') ? '双旦旺季' : '';
+                html += `<tr>
+                    <td>${row1.month}</td>
+                    <td>${row1.sales}</td>
+                    <td>${row2.month}</td>
+                    <td>${row2.sales}</td>
+                </tr>`;
+            }
+            tbody.innerHTML = html;
         }
 
         let answerVisible = false;
@@ -321,26 +465,36 @@ print(f"2025-01 | {bar} {forecast_value:.2f}万 (预测)")</pre>
             const editor = document.getElementById('code-editor');
             editor.value = `import pandas as pd
 
-# 历史月度销售数据
-data = {
-    "月份": ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06"],
-    "销售额": [120, 135, 142, 158, 165, 180]
-}
+months = ["2022-01","2022-02","2022-03","2022-04","2022-05","2022-06",
+          "2022-07","2022-08","2022-09","2022-10","2022-11","2022-12",
+          "2023-01","2023-02","2023-03","2023-04","2023-05","2023-06",
+          "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12"]
+sales = [120,125,130,128,135,142,140,145,150,155,180,220,
+         130,135,140,145,152,158,155,162,168,172,210,260]
 
-df = pd.DataFrame(data)
+df = pd.DataFrame({"月份": months, "销售额": sales})
 
-print("=" * 60)
-print("历史销售数据：")
+print("=" * 70)
+print("【第1步】查看销售数据")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写预测分析代码
-# 1. 计算环比增长率
-# 2. 3个月移动平均预测
-# 3. 6个月移动平均预测
-# 4. 绘制趋势图
+# TODO: 请在下方编写预测分析代码
+# 1. 计算3个月移动平均
+# 2. 计算6个月移动平均
+# 3. 绘制趋势对比图（ASCII）
+# 4. 预测下月销售额
+# 5. 计算MAPE误差
 
-print("\\n" + "=" * 60)
-print("销售预测分析：")
+print("\\n" + "=" * 70)
+print("【第2步】移动平均计算")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【第3步】预测下月销售额")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【第4步】计算MAPE误差")
 # 你的代码...`;
             document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }

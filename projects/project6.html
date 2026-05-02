@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目6：客户生命周期价值预测 - 数析学院</title>
+    <title>项目6：客户生命周期价值(CLV)预测 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -30,11 +30,36 @@
         .task-list li { padding: 0.75rem 0; padding-left: 2rem; position: relative; color: #475569; border-bottom: 1px solid #f1f5f9; }
         .task-list li:last-child { border-bottom: none; }
         .task-list li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold; }
-        .data-table-container { overflow-x: auto; margin-top: 1rem; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 1rem; text-align: left; font-weight: 600; }
-        .data-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
+        .data-table-container { overflow-x: auto; margin-top: 1rem; max-height: 300px; overflow-y: auto; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 0.75rem; text-align: left; font-weight: 600; position: sticky; top: 0; }
+        .data-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #e2e8f0; color: #475569; }
         .data-table tr:hover { background-color: #f8fafc; }
+        .code-example { background: #1e293b; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; overflow-x: auto; }
+        .code-example pre { margin: 0; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.875rem; line-height: 1.6; }
+        .tip-box { background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1)); border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .tip-box .tip-title { font-weight: 700; color: #92400e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tip-box .tip-content { color: #78350f; }
+        .error-box { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); border-left: 4px solid #ef4444; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .error-box .error-title { font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .error-box .error-content { color: #7f1d1d; }
+        .concept-box { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 64, 175, 0.1)); border-left: 4px solid #3b82f6; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .concept-box .concept-title { font-weight: 700; color: #1e40af; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .concept-box .concept-content { color: #1e3a8a; }
+        .formula-box { background: #1e293b; border-radius: 0.75rem; padding: 1.5rem; margin: 1rem 0; text-align: center; }
+        .formula-box .formula { color: #fbbf24; font-size: 1.25rem; font-weight: bold; font-family: 'Times New Roman', serif; margin: 0.5rem 0; }
+        .formula-box .formula-desc { color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem; }
+        .scenario-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; }
+        .scenario-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; }
+        .scenario-card i { font-size: 1.5rem; color: #3b82f6; margin-bottom: 0.5rem; }
+        .scenario-card h4 { font-size: 0.9rem; color: #1e293b; margin: 0.5rem 0; }
+        .scenario-card p { font-size: 0.8rem; color: #64748b; margin: 0; }
+        .learning-step { background: #f8fafc; border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1rem; border-left: 3px solid #3b82f6; }
+        .learning-step:last-child { margin-bottom: 0; }
+        .learning-step h4 { font-size: 1rem; font-weight: 600; color: #1e40af; margin-bottom: 0.75rem; }
+        .model-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.1)); border-left: 4px solid #8b5cf6; padding: 1rem 1.5rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+        .model-box .model-title { font-weight: 700; color: #5b21b6; margin-bottom: 0.5rem; }
+        .model-box .model-content { color: #6d28d9; font-size: 0.9rem; }
         .code-playground { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .code-playground-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: white; }
         .code-playground-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
@@ -49,17 +74,17 @@
         .code-editor-wrapper { display: grid; grid-template-columns: 1fr 1fr; }
         .code-editor-panel { background: #1e293b; }
         .code-editor-label { padding: 0.75rem 1rem; background: #334155; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #475657; }
-        .code-editor { width: 100%; min-height: 350px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
+        .code-editor { width: 100%; min-height: 400px; padding: 1rem; border: none; background: #1e293b; color: #e2e8f0; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; outline: none; }
         .code-output-panel { background: #0f172a; border-left: 1px solid #334155; }
         .code-output-label { padding: 0.75rem 1rem; background: #1e293b; color: #94a3b8; font-size: 0.875rem; font-weight: 500; border-bottom: 1px solid #334155; }
-        .code-output { padding: 1rem; min-height: 350px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
+        .code-output { padding: 1rem; min-height: 400px; overflow-y: auto; color: #94a3b8; font-family: 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.9rem; line-height: 1.6; }
         .code-output .placeholder { color: #64748b; font-style: italic; }
         .code-output .error { color: #f87171; }
         .code-output .success { color: #4ade80; }
         .answer-section { margin-top: 1.5rem; display: none; }
         .answer-section.show { display: block; }
         .answer-content { background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; }
-        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; }
+        .answer-content pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; max-height: 500px; overflow-y: auto; }
         .answer-content h4 { color: #166534; font-size: 1rem; margin-bottom: 0.75rem; }
         .project-sidebar { position: sticky; top: 90px; height: fit-content; }
         .tips-card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; }
@@ -68,11 +93,9 @@
         .tip-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.9rem; }
         .tip-item:last-child { border-bottom: none; }
         .difficulty-badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; }
-        .difficulty-badge.beginner { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .difficulty-badge.intermediate { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
         .difficulty-badge.advanced { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
         @media (max-width: 1024px) { .project-container { grid-template-columns: 1fr; } .code-editor-wrapper { grid-template-columns: 1fr; } .code-output-panel { border-left: none; border-top: 1px solid #334155; } .project-sidebar { position: static; } }
-        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } }
+        @media (max-width: 768px) { .project-title-row { flex-direction: column; align-items: flex-start; } .project-meta-info { flex-direction: column; gap: 1rem; } .scenario-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -98,13 +121,13 @@
             <div class="project-header-content">
                 <a href="../projects.html" class="project-back-link"><i class="fas fa-arrow-left"></i> 返回实战项目</a>
                 <div class="project-title-row">
-                    <h1>项目6：客户生命周期价值预测</h1>
+                    <h1>项目6：客户生命周期价值(CLV)预测</h1>
                     <span class="difficulty-badge advanced">高级</span>
                 </div>
                 <div class="project-meta-info">
-                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：50分钟</span></div>
+                    <div class="project-meta-item"><i class="fas fa-clock"></i><span>预计时长：60分钟</span></div>
                     <div class="project-meta-item"><i class="fas fa-code"></i><span>技术栈：Python + Pandas</span></div>
-                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：150条消费记录</span></div>
+                    <div class="project-meta-item"><i class="fas fa-database"></i><span>数据量：100个用户</span></div>
                 </div>
             </div>
         </div>
@@ -114,23 +137,16 @@
                 <div class="project-section">
                     <div class="section-header"><i class="fas fa-info-circle"></i><h2>项目背景</h2></div>
                     <div class="section-content">
-                        <p>客户生命周期价值（Customer Lifetime Value, CLV）是衡量客户在整个生命周期内为企业带来总收益的关键指标。准确的CLV预测可以帮助企业：</p>
-                        <ul style="margin-top: 1rem;">
-                            <li>识别高价值客户，优化资源分配</li>
-                            <li>制定精准的客户获取成本预算</li>
-                            <li>评估客户关系投资回报</li>
-                            <li>预测未来收入，制定业务计划</li>
-                        </ul>
-                        <p style="margin-top: 1rem;">本项目使用简化的CLV计算公式，基于历史消费数据进行预测。</p>
+                        <p>客户生命周期价值（Customer Lifetime Value, CLV）是衡量客户在整个生命周期内为企业带来总收益的核心指标。</p>
                     </div>
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-database"></i><h2>用户消费历史数据</h2></div>
+                    <div class="section-header"><i class="fas fa-database"></i><h2>用户消费数据</h2></div>
                     <div class="data-table-container">
                         <table class="data-table" id="sales-data-table">
                             <thead>
-                                <tr><th>用户ID</th><th>用户名</th><th>首次购买日期</th><th>最近购买日期</th><th>累计购买次数</th><th>累计消费金额</th></tr>
+                                <tr><th>用户ID</th><th>用户名</th><th>注册日期</th><th>首次购买</th><th>最近购买</th><th>购买次数</th><th>总金额(元)</th></tr>
                             </thead>
                             <tbody id="data-tbody"></tbody>
                         </table>
@@ -138,15 +154,106 @@
                 </div>
 
                 <div class="project-section">
-                    <div class="section-header"><i class="fas fa-tasks"></i><h2>分析任务</h2></div>
+                    <div class="section-header"><i class="fas fa-book"></i><h2>学习内容</h2></div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title"><i class="fas fa-graduation-cap"></i> CLV核心公式</div>
+                        <div class="formula-box">
+                            <div class="formula">CLV = 平均购买金额 × 年购买频率 × 平均客户寿命（年）</div>
+                            <div class="formula-desc">CLV = Average Order Value × Annual Purchase Frequency × Customer Lifespan</div>
+                        </div>
+                    </div>
+
+                    <div class="scenario-grid">
+                        <div class="scenario-card">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h4>获客成本预算</h4>
+                            <p>根据CLV制定合理的获客成本上限，确保投资回报率</p>
+                        </div>
+                        <div class="scenario-card">
+                            <i class="fas fa-crown"></i>
+                            <h4>VIP客户识别</h4>
+                            <p>识别高价值客户，提供差异化服务和精准营销</p>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
+                        <div class="tip-content">CLV大于获客成本<strong>3倍以上</strong>的客户群，才是健康的商业模式！这意味着每投入1元获客成本，能获得3元以上的回报。</div>
+                    </div>
+
+                    <div class="error-box">
+                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
+                        <div class="error-content">简单取所有客户的平均值，忽略了不同渠道/地区客户的巨大差异！应该按细分群体分别计算CLV。</div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例1：按用户分组计算购买总金额和天数</h4>
+                        <div class="code-example">
+<pre>import pandas as pd
+from datetime import datetime
+
+# 模拟用户消费数据
+data = [
+    {"user_id": "U001", "first_date": "2024-01-15", "last_date": "2024-06-15", "total_amount": 8500, "orders": 5},
+    {"user_id": "U002", "first_date": "2024-02-01", "last_date": "2024-06-01", "total_amount": 3200, "orders": 2},
+]
+
+df = pd.DataFrame(data)
+df['first_date'] = pd.to_datetime(df['first_date'])
+df['last_date'] = pd.to_datetime(df['last_date'])
+
+# 计算客户生命周期天数
+df['lifetime_days'] = (df['last_date'] - df['first_date']).dt.days + 1
+
+# 计算平均订单价值
+df['avg_order_value'] = df['total_amount'] / df['orders']
+
+print(df[['user_id', 'total_amount', 'orders', 'lifetime_days', 'avg_order_value']])</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例2：估算年均价值和预测寿命</h4>
+                        <div class="code-example">
+<pre># 计算年均购买频率
+analysis_date = datetime(2024, 6, 30)
+df['observation_days'] = (analysis_date - df['first_date']).dt.days
+df['annual_frequency'] = (df['orders'] / df['observation_days']) * 365
+
+# 假设平均客户寿命为3年（可调整）
+avg_lifespan_years = 3
+
+# 计算CLV
+df['CLV'] = df['avg_order_value'] * df['annual_frequency'] * avg_lifespan_years
+
+print(df[['user_id', 'avg_order_value', 'annual_frequency', 'CLV']].sort_values('CLV', ascending=False))</pre>
+                        </div>
+                    </div>
+
+                    <div class="model-box">
+                        <div class="model-title"><i class="fas fa-brain"></i> 进阶模型：BG/NBD概率模型</div>
+                        <div class="model-content">
+                            <p><strong>BG/NBD模型</strong>（Beta-Geometric/Negative Binomial Distribution）是客户行为预测的经典模型。</p>
+                            <p style="margin-top: 0.5rem;"><strong>核心原理：</strong></p>
+                            <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.85rem;">
+                                <li>假设客户活跃时，每次购买服从泊松分布</li>
+                                <li>客户"失活"（停止购买）服从几何分布</li>
+                                <li>失活率在不同客户间服从Beta分布</li>
+                            </ul>
+                            <p style="margin-top: 0.5rem; font-size: 0.85rem;">可预测每个客户在未来的购买次数和流失概率，实现更精准的CLV预测。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header"><i class="fas fa-tasks"></i><h2>练习任务</h2></div>
                     <div class="task-description">
-                        <h3>请完成以下CLV预测分析：</h3>
+                        <h3>请补全代码，完成以下操作：</h3>
                         <ul class="task-list">
-                            <li>计算每个客户的平均订单价值</li>
-                            <li>计算客户的平均购买频率（购买次数/月）</li>
-                            <li>计算客户的生命周期（月数）</li>
-                            <li>使用公式 CLV = 平均订单价值 × 购买频率 × 生命周期 预测CLV</li>
-                            <li>按CLV值对客户进行分层</li>
+                            <li>计算每位客户的CLV值</li>
+                            <li>按CLV降序排列，找出TOP 20%高价值客户</li>
+                            <li>分析高价值客户的特征</li>
                         </ul>
                     </div>
                 </div>
@@ -155,7 +262,7 @@
                     <div class="section-header"><i class="fas fa-code"></i><h2>代码编辑器</h2></div>
                     <div class="code-playground">
                         <div class="code-playground-header">
-                            <div class="code-playground-title"><i class="fas fa-python"></i> Python 代码</div>
+                            <div class="code-playground-title"><i class="fab fa-python"></i> Python 代码</div>
                             <div class="code-controls">
                                 <button class="run-btn" onclick="runProjectCode()"><i class="fas fa-play"></i> 运行代码</button>
                                 <button class="reset-btn" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
@@ -168,28 +275,46 @@
                                 <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
 from datetime import datetime
 
-# 用户消费历史数据
+# 模拟用户消费数据
 data = [
-    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-04-15", "total_orders": 6, "total_amount": 12500},
-    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-04-10", "total_orders": 3, "total_amount": 3800},
-    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-04-20", "total_orders": 8, "total_amount": 18900},
+    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-06-15", "total_amount": 8500, "orders": 5},
+    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-05-20", "total_amount": 3200, "orders": 2},
+    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-06-20", "total_amount": 15200, "orders": 8},
+    {"user_id": "U004", "user_name": "赵六", "first_date": "2024-03-01", "last_date": "2024-06-10", "total_amount": 1800, "orders": 1},
+    {"user_id": "U005", "user_name": "钱七", "first_date": "2024-02-15", "last_date": "2024-06-18", "total_amount": 6800, "orders": 4},
+    {"user_id": "U006", "user_name": "孙八", "first_date": "2024-01-20", "last_date": "2024-06-15", "total_amount": 9200, "orders": 6},
+    {"user_id": "U007", "user_name": "周九", "first_date": "2024-04-01", "last_date": "2024-06-25", "total_amount": 2500, "orders": 2},
+    {"user_id": "U008", "user_name": "吴十", "first_date": "2024-01-10", "last_date": "2024-06-20", "total_amount": 11500, "orders": 7},
+    {"user_id": "U009", "user_name": "郑一", "first_date": "2024-03-15", "last_date": "2024-06-15", "total_amount": 4200, "orders": 3},
+    {"user_id": "U010", "user_name": "王二", "first_date": "2024-02-01", "last_date": "2024-06-01", "total_amount": 5800, "orders": 3},
 ]
 
-df = pd.DataFrame(df)
-analysis_date = datetime(2024, 4, 30)
+df = pd.DataFrame(data)
+df['first_date'] = pd.to_datetime(df['first_date'])
+df['last_date'] = pd.to_datetime(df['last_date'])
+analysis_date = datetime(2024, 6, 30)
 
-print("=" * 60)
-print("用户消费历史：")
+print("=" * 70)
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写CLV预测代码
-# 1. 计算平均订单价值
-# 2. 计算购买频率
-# 3. 计算客户生命周期
-# 4. 预测CLV并分层
+# TODO: 请在下方编写CLV预测代码
+# 1. 计算客户生命周期天数
+# 2. 计算平均订单价值
+# 3. 计算年均购买频率
+# 4. 估算CLV（假设平均寿命3年）
+# 5. 找出TOP 20%高价值客户
 
-print("\n" + "=" * 60)
-print("CLV预测结果：")
+print("\n" + "=" * 70)
+print("【第1步】计算基础指标")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【第2步】计算CLV")
+# 你的代码...
+
+print("\n" + "=" * 70)
+print("【第3步】TOP 20%高价值客户")
 # 你的代码...</textarea>
                             </div>
                             <div class="code-output-panel">
@@ -203,53 +328,71 @@ print("CLV预测结果：")
                                 <pre>import pandas as pd
 from datetime import datetime
 
-# 用户消费历史数据
 data = [
-    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-04-15", "total_orders": 6, "total_amount": 12500},
-    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-04-10", "total_orders": 3, "total_amount": 3800},
-    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-04-20", "total_orders": 8, "total_amount": 18900},
-    {"user_id": "U004", "user_name": "赵六", "first_date": "2024-03-01", "last_date": "2024-04-25", "total_orders": 2, "total_amount": 1500},
-    {"user_id": "U005", "user_name": "钱七", "first_date": "2024-01-10", "last_date": "2024-04-28", "total_orders": 5, "total_amount": 9800},
+    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-06-15", "total_amount": 8500, "orders": 5},
+    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-05-20", "total_amount": 3200, "orders": 2},
+    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-06-20", "total_amount": 15200, "orders": 8},
+    {"user_id": "U004", "user_name": "赵六", "first_date": "2024-03-01", "last_date": "2024-06-10", "total_amount": 1800, "orders": 1},
+    {"user_id": "U005", "user_name": "钱七", "first_date": "2024-02-15", "last_date": "2024-06-18", "total_amount": 6800, "orders": 4},
+    {"user_id": "U006", "user_name": "孙八", "first_date": "2024-01-20", "last_date": "2024-06-15", "total_amount": 9200, "orders": 6},
+    {"user_id": "U007", "user_name": "周九", "first_date": "2024-04-01", "last_date": "2024-06-25", "total_amount": 2500, "orders": 2},
+    {"user_id": "U008", "user_name": "吴十", "first_date": "2024-01-10", "last_date": "2024-06-20", "total_amount": 11500, "orders": 7},
+    {"user_id": "U009", "user_name": "郑一", "first_date": "2024-03-15", "last_date": "2024-06-15", "total_amount": 4200, "orders": 3},
+    {"user_id": "U010", "user_name": "王二", "first_date": "2024-02-01", "last_date": "2024-06-01", "total_amount": 5800, "orders": 3},
 ]
 
 df = pd.DataFrame(data)
 df['first_date'] = pd.to_datetime(df['first_date'])
 df['last_date'] = pd.to_datetime(df['last_date'])
-analysis_date = datetime(2024, 4, 30)
+analysis_date = datetime(2024, 6, 30)
 
-print("=" * 60)
+# 第1步：计算基础指标
+print("=" * 70)
 print("【第1步】计算基础指标")
-df['avg_order_value'] = df['total_amount'] / df['total_orders']
-df['lifetime_months'] = ((df['last_date'] - df['first_date']).dt.days / 30) + 1
-df['purchase_frequency'] = df['total_orders'] / df['lifetime_months']
-print(df[['user_name', 'avg_order_value', 'lifetime_months', 'purchase_frequency']].to_string(index=False))
+df['lifetime_days'] = (df['last_date'] - df['first_date']).dt.days + 1
+df['observation_days'] = (analysis_date - df['first_date']).dt.days + 1
+df['avg_order_value'] = df['total_amount'] / df['orders']
+df['annual_frequency'] = (df['orders'] / df['observation_days']) * 365
 
-print("\n" + "=" * 60)
-print("【第2步】预测CLV（简化模型）")
-df['predicted_lifetime_months'] = 12
-df['CLV'] = df['avg_order_value'] * df['purchase_frequency'] * df['predicted_lifetime_months']
+print(df[['user_name', 'lifetime_days', 'avg_order_value', 'annual_frequency']].to_string(index=False))
+
+# 第2步：计算CLV
+print("\n" + "=" * 70)
+print("【第2步】计算CLV（假设平均客户寿命3年）")
+avg_lifespan_years = 3
+df['CLV'] = df['avg_order_value'] * df['annual_frequency'] * avg_lifespan_years
 df['CLV'] = df['CLV'].round(2)
-print(df[['user_name', 'avg_order_value', 'purchase_frequency', 'CLV']].to_string(index=False))
 
-print("\n" + "=" * 60)
-print("【第3步】客户CLV分层")
-def classify_clv(clv):
-    if clv >= 10000:
-        return "高价值客户"
-    elif clv >= 5000:
-        return "中等价值客户"
-    else:
-        return "低价值客户"
+print("\nCLV预测结果：")
+clv_result = df[['user_name', 'avg_order_value', 'annual_frequency', 'CLV']].sort_values('CLV', ascending=False)
+print(clv_result.to_string(index=False))
 
-df['clv_tier'] = df['CLV'].apply(classify_clv)
-tier_stats = df.groupby('clv_tier').agg({'user_id': 'count', 'CLV': 'sum'}).rename(columns={'user_id': 'count'})
-print(tier_stats.to_string())
+# 第3步：找出TOP 20%高价值客户
+print("\n" + "=" * 70)
+print("【第3步】TOP 20%高价值客户分析")
+n_customers = len(df)
+top_20_percent = int(n_customers * 0.2) if n_customers * 0.2 > 1 else 1
 
-print("\n" + "=" * 60)
-print("【第4步】高价值客户识别")
-high_value = df.nlargest(3, 'CLV')[['user_name', 'CLV', 'clv_tier']]
-print(high_value.to_string(index=False))
-print(f"\n总CLV预测值: {df['CLV'].sum():.2f} 元")</pre>
+df_sorted = df.sort_values('CLV', ascending=False).reset_index(drop=True)
+top_customers = df_sorted.head(top_20_percent)
+other_customers = df_sorted.iloc[top_20_percent:]
+
+print(f"\n总客户数: {n_customers}")
+print(f"TOP 20% 客户数: {top_20_percent}")
+
+print("\n【TOP 20% 高价值客户】")
+print(top_customers[['user_name', 'orders', 'total_amount', 'CLV']].to_string(index=False))
+
+print("\n【价值分析】")
+top_clv_sum = top_customers['CLV'].sum()
+total_clv_sum = df['CLV'].sum()
+print(f"TOP 20%客户CLV总和: {top_clv_sum:,.2f} 元")
+print(f"全部客户CLV总和: {total_clv_sum:,.2f} 元")
+print(f"TOP 20%客户贡献占比: {top_clv_sum/total_clv_sum*100:.1f}%")
+print(f"平均CLV: {total_clv_sum/n_customers:,.2f} 元")
+
+print("\n【结论】")
+print("TOP 20%高价值客户的CLV总和占比远超其人数占比，具有重要的商业价值！")</pre>
                             </div>
                         </div>
                     </div>
@@ -258,19 +401,25 @@ print(f"\n总CLV预测值: {df['CLV'].sum():.2f} 元")</pre>
 
             <div class="project-sidebar">
                 <div class="tips-card">
-                    <h3><i class="fas fa-lightbulb"></i> CLV分析技巧</h3>
-                    <div class="tip-item"><strong>CLV公式</strong> - 平均订单价值 × 购买频率 × 生命周期</div>
-                    <div class="tip-item"><strong>平均订单价值</strong> - 总消费 / 订单数</div>
-                    <div class="tip-item"><strong>购买频率</strong> - 订单数 / 时间（月）</div>
-                    <div class="tip-item"><strong>生命周期</strong> - 从首次到最近的月数</div>
-                    <div class="tip-item"><strong>分层阈值</strong> - 可根据业务调整</div>
+                    <h3><i class="fas fa-lightbulb"></i> 分析技巧</h3>
+                    <div class="tip-item"><strong>groupby().sum()</strong> - 分组求和</div>
+                    <div class="tip-item"><strong>avg_order_value</strong> - 平均订单价值</div>
+                    <div class="tip-item"><strong>annual_frequency</strong> - 年均购买频率</div>
+                    <div class="tip-item"><strong>nlargest()</strong> - 筛选TOP客户</div>
+                    <div class="tip-item"><strong>describe()</strong> - 快速统计</div>
                 </div>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
-                    <div class="tip-item">理解CLV概念和计算方法</div>
-                    <div class="tip-item">掌握客户价值评估模型</div>
-                    <div class="tip-item">学会客户分层策略</div>
-                    <div class="tip-item">培养数据驱动营销思维</div>
+                    <div class="tip-item">理解CLV核心概念和公式</div>
+                    <div class="tip-item">掌握CLV计算方法</div>
+                    <div class="tip-item">学会识别高价值客户</div>
+                    <div class="tip-item">培养精细化运营思维</div>
+                </div>
+                <div class="tips-card">
+                    <h3><i class="fas fa-chart-line"></i> 商业应用</h3>
+                    <div class="tip-item"><strong>获客预算</strong>: CLV的1/3作为获客成本上限</div>
+                    <div class="tip-item"><strong>客户分层</strong>: 根据CLV划分VIP/普通/流失</div>
+                    <div class="tip-item"><strong>精准营销</strong>: 针对不同CLV群体制定策略</div>
                 </div>
             </div>
         </div>
@@ -279,12 +428,16 @@ print(f"\n总CLV预测值: {df['CLV'].sum():.2f} 元")</pre>
     <script src="../script.js"></script>
     <script>
         const rawData = [
-            {user_id: "U001", user_name: "张三", first_date: "2024-01-15", last_date: "2024-04-15", total_orders: 6, total_amount: 12500},
-            {user_id: "U002", user_name: "李四", first_date: "2024-02-01", last_date: "2024-04-10", total_orders: 3, total_amount: 3800},
-            {user_id: "U003", user_name: "王五", first_date: "2024-01-01", last_date: "2024-04-20", total_orders: 8, total_amount: 18900},
-            {user_id: "U004", user_name: "赵六", first_date: "2024-03-01", last_date: "2024-04-25", total_orders: 2, total_amount: 1500},
-            {user_id: "U005", user_name: "钱七", first_date: "2024-01-10", last_date: "2024-04-28", total_orders: 5, total_amount: 9800},
-            {user_id: "U006", user_name: "孙八", first_date: "2024-02-15", last_date: "2024-04-20", total_orders: 4, total_amount: 7200},
+            {user_id: "U001", user_name: "张三", first_date: "2024-01-15", last_date: "2024-06-15", orders: 5, total_amount: 8500},
+            {user_id: "U002", user_name: "李四", first_date: "2024-02-01", last_date: "2024-05-20", orders: 2, total_amount: 3200},
+            {user_id: "U003", user_name: "王五", first_date: "2024-01-01", last_date: "2024-06-20", orders: 8, total_amount: 15200},
+            {user_id: "U004", user_name: "赵六", first_date: "2024-03-01", last_date: "2024-06-10", orders: 1, total_amount: 1800},
+            {user_id: "U005", user_name: "钱七", first_date: "2024-02-15", last_date: "2024-06-18", orders: 4, total_amount: 6800},
+            {user_id: "U006", user_name: "孙八", first_date: "2024-01-20", last_date: "2024-06-15", orders: 6, total_amount: 9200},
+            {user_id: "U007", user_name: "周九", first_date: "2024-04-01", last_date: "2024-06-25", orders: 2, total_amount: 2500},
+            {user_id: "U008", user_name: "吴十", first_date: "2024-01-10", last_date: "2024-06-20", orders: 7, total_amount: 11500},
+            {user_id: "U009", user_name: "郑一", first_date: "2024-03-15", last_date: "2024-06-15", orders: 3, total_amount: 4200},
+            {user_id: "U010", user_name: "王二", first_date: "2024-02-01", last_date: "2024-06-01", orders: 3, total_amount: 5800},
         ];
 
         function renderDataTable() {
@@ -295,8 +448,8 @@ print(f"\n总CLV预测值: {df['CLV'].sum():.2f} 元")</pre>
                     <td>${row.user_name}</td>
                     <td>${row.first_date}</td>
                     <td>${row.last_date}</td>
-                    <td>${row.total_orders}</td>
-                    <td>${row.total_amount}</td>
+                    <td>${row.orders}</td>
+                    <td>¥${row.total_amount.toLocaleString()}</td>
                 </tr>
             `).join('');
         }
@@ -314,28 +467,45 @@ print(f"\n总CLV预测值: {df['CLV'].sum():.2f} 元")</pre>
             editor.value = `import pandas as pd
 from datetime import datetime
 
-# 用户消费历史数据
 data = [
-    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-04-15", "total_orders": 6, "total_amount": 12500},
-    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-04-10", "total_orders": 3, "total_amount": 3800},
-    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-04-20", "total_orders": 8, "total_amount": 18900},
+    {"user_id": "U001", "user_name": "张三", "first_date": "2024-01-15", "last_date": "2024-06-15", "total_amount": 8500, "orders": 5},
+    {"user_id": "U002", "user_name": "李四", "first_date": "2024-02-01", "last_date": "2024-05-20", "total_amount": 3200, "orders": 2},
+    {"user_id": "U003", "user_name": "王五", "first_date": "2024-01-01", "last_date": "2024-06-20", "total_amount": 15200, "orders": 8},
+    {"user_id": "U004", "user_name": "赵六", "first_date": "2024-03-01", "last_date": "2024-06-10", "total_amount": 1800, "orders": 1},
+    {"user_id": "U005", "user_name": "钱七", "first_date": "2024-02-15", "last_date": "2024-06-18", "total_amount": 6800, "orders": 4},
+    {"user_id": "U006", "user_name": "孙八", "first_date": "2024-01-20", "last_date": "2024-06-15", "total_amount": 9200, "orders": 6},
+    {"user_id": "U007", "user_name": "周九", "first_date": "2024-04-01", "last_date": "2024-06-25", "total_amount": 2500, "orders": 2},
+    {"user_id": "U008", "user_name": "吴十", "first_date": "2024-01-10", "last_date": "2024-06-20", "total_amount": 11500, "orders": 7},
+    {"user_id": "U009", "user_name": "郑一", "first_date": "2024-03-15", "last_date": "2024-06-15", "total_amount": 4200, "orders": 3},
+    {"user_id": "U010", "user_name": "王二", "first_date": "2024-02-01", "last_date": "2024-06-01", "total_amount": 5800, "orders": 3},
 ]
 
-df = pd.DataFrame(df)
-analysis_date = datetime(2024, 4, 30)
+df = pd.DataFrame(data)
+df['first_date'] = pd.to_datetime(df['first_date'])
+df['last_date'] = pd.to_datetime(df['last_date'])
+analysis_date = datetime(2024, 6, 30)
 
-print("=" * 60)
-print("用户消费历史：")
+print("=" * 70)
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写CLV预测代码
-# 1. 计算平均订单价值
-# 2. 计算购买频率
-# 3. 计算客户生命周期
-# 4. 预测CLV并分层
+# TODO: 请在下方编写CLV预测代码
+# 1. 计算客户生命周期天数
+# 2. 计算平均订单价值
+# 3. 计算年均购买频率
+# 4. 估算CLV（假设平均寿命3年）
+# 5. 找出TOP 20%高价值客户
 
-print("\\n" + "=" * 60)
-print("CLV预测结果：")
+print("\\n" + "=" * 70)
+print("【第1步】计算基础指标")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【第2步】计算CLV")
+# 你的代码...
+
+print("\\n" + "=" * 70)
+print("【第3步】TOP 20%高价值客户")
 # 你的代码...`;
             document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }

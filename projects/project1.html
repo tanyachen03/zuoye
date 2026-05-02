@@ -6,8 +6,6 @@
     <title>项目1：销售数据清洗 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/brython@3.10.4/brython.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/brython@3.10.4/brython_stdlib.js"></script>
     <style>
         .project-page {
             padding-top: 70px;
@@ -201,6 +199,64 @@
         .data-table .anomaly {
             background-color: rgba(245, 158, 11, 0.1);
             color: #f59e0b;
+        }
+
+        .code-example {
+            background: #1e293b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: #e2e8f0;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .tip-box .tip-title {
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tip-box .tip-content {
+            color: #78350f;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border-left: 4px solid #ef4444;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .error-box .error-title {
+            font-weight: 700;
+            color: #991b1b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-box .error-content {
+            color: #7f1d1d;
         }
 
         .code-playground {
@@ -412,6 +468,25 @@
             border-bottom: none;
         }
 
+        .learning-step {
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .learning-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .learning-step h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.75rem;
+        }
+
         @media (max-width: 1024px) {
             .project-container {
                 grid-template-columns: 1fr;
@@ -496,7 +571,7 @@
                     </div>
                     <div class="project-meta-item">
                         <i class="fas fa-database"></i>
-                        <span>数据量：100条记录</span>
+                        <span>数据量：10条记录</span>
                     </div>
                 </div>
             </div>
@@ -510,13 +585,7 @@
                         <h2>项目背景</h2>
                     </div>
                     <div class="section-content">
-                        <p>某电商平台的销售数据存在多种数据质量问题，需要进行清洗处理后才能进行后续分析。主要问题包括：</p>
-                        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: #475569;">
-                            <li style="margin-bottom: 0.5rem;"><strong>缺失值：</strong>部分订单的金额、客户信息存在缺失</li>
-                            <li style="margin-bottom: 0.5rem;"><strong>异常值：</strong>订单金额出现负数或极端值</li>
-                            <li style="margin-bottom: 0.5rem;"><strong>格式问题：</strong>日期格式不统一，需要标准化</li>
-                            <li><strong>重复记录：</strong>存在少量重复的订单数据</li>
-                        </ul>
+                        <p>某电商平台的销售数据存在多种数据质量问题，需要进行清洗处理后才能进行后续分析。</p>
                     </div>
                 </div>
 
@@ -530,11 +599,11 @@
                             <thead>
                                 <tr>
                                     <th>订单ID</th>
-                                    <th>客户名称</th>
-                                    <th>产品类别</th>
-                                    <th>订单日期</th>
-                                    <th>订单金额</th>
-                                    <th>订单数量</th>
+                                    <th>日期</th>
+                                    <th>商品名</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>地区</th>
                                 </tr>
                             </thead>
                             <tbody id="data-tbody">
@@ -545,18 +614,63 @@
 
                 <div class="project-section">
                     <div class="section-header">
+                        <i class="fas fa-book"></i>
+                        <h2>学习内容</h2>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> 小贴士</div>
+                        <div class="tip-content">数据清洗占数据分析80%的时间，干净的DataFrame可以调用 .info() 检查每列的非空值和数据类型。</div>
+                    </div>
+
+                    <div class="error-box">
+                        <div class="error-title"><i class="fas fa-exclamation-triangle"></i> 常见错误</div>
+                        <div class="error-content">直接删除含缺失值的行会丢失大量信息！应先分析缺失原因。</div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例1：查看缺失值分布</h4>
+                        <p>使用 <code>.isnull().sum()</code> 查看每列的缺失值数量：</p>
+                        <div class="code-example">
+<pre>import pandas as pd
+
+# 查看缺失值分布
+print(df.isnull().sum())</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例2：填充缺失值</h4>
+                        <p>使用 <code>.fillna()</code> 填充缺失值：</p>
+                        <div class="code-example">
+<pre># 用"未知商品"填充商品名缺失
+df['商品名'] = df['商品名'].fillna('未知商品')
+
+# 用均值填充单价缺失
+df['单价'] = df['单价'].fillna(df['单价'].mean())</pre>
+                        </div>
+                    </div>
+
+                    <div class="learning-step">
+                        <h4>代码示例3：统一日期格式</h4>
+                        <p>使用 <code>pd.to_datetime()</code> 统一日期格式，添加 <code>errors='coerce'</code> 参数处理无法解析的日期：</p>
+                        <div class="code-example">
+<pre># 统一日期格式为 YYYY-MM-DD
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <div class="section-header">
                         <i class="fas fa-tasks"></i>
-                        <h2>清洗任务</h2>
+                        <h2>练习任务</h2>
                     </div>
                     <div class="task-description">
-                        <h3>请完成以下数据清洗操作：</h3>
+                        <h3>请补全代码，完成以下操作：</h3>
                         <ul class="task-list">
-                            <li>处理订单金额的缺失值（用均值填充）</li>
-                            <li>将订单金额的负值转为正值</li>
-                            <li>删除金额超过10000的异常记录</li>
-                            <li>统一日期格式为 YYYY-MM-DD</li>
-                            <li>删除重复的订单记录</li>
-                            <li>输出清洗后的数据统计信息</li>
+                            <li>删除数量&lt;0的异常行</li>
+                            <li>将日期列统一为YYYY-MM-DD格式</li>
                         </ul>
                     </div>
                 </div>
@@ -569,7 +683,7 @@
                     <div class="code-playground">
                         <div class="code-playground-header">
                             <div class="code-playground-title">
-                                <i class="fas fa-python"></i>
+                                <i class="fab fa-python"></i>
                                 Python 代码
                             </div>
                             <div class="code-controls">
@@ -592,31 +706,38 @@
                                 <div class="code-editor-label">编辑器</div>
                                 <textarea class="code-editor" id="code-editor" spellcheck="false">import pandas as pd
 
-# 原始销售数据
+# 原始销售数据（包含3个缺失值、2个异常值、日期格式不统一）
 data = [
-    {"order_id": "ORD001", "customer": "张三", "category": "电子产品", "date": "2024-01-15", "amount": 2999, "quantity": 1},
-    {"order_id": "ORD002", "customer": "李四", "category": "服装", "date": "2024/01/16", "amount": 399, "quantity": 2},
-    {"order_id": "ORD003", "customer": "王五", "category": "电子产品", "date": "2024-01-17", "amount": None, "quantity": 1},
-    {"order_id": "ORD004", "customer": "赵六", "category": "家居", "date": "2024-01-18", "amount": -500, "quantity": 3},
-    {"order_id": "ORD005", "customer": "钱七", "category": "服装", "date": "2024-01-19", "amount": 699, "quantity": 1},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
 ]
 
 df = pd.DataFrame(data)
-print("=" * 50)
-print("原始数据：")
+print("=" * 70)
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写数据清洗代码
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 删除数量<0的异常行
+# 2. 将日期列统一为YYYY-MM-DD格式
 
-print("\n" + "=" * 50)
-print("清洗后的数据：")
+print("\n" + "=" * 70)
+print("【清洗后的数据】")
 print(df.to_string(index=False))
 
-print("\n" + "=" * 50)
-print("数据统计信息：")
-print(f"记录总数: {len(df)}")
-print(f"总销售额: {df['amount'].sum()}")
-print(f"平均订单金额: {df['amount'].mean():.2f}")</textarea>
+print("\n" + "=" * 70)
+print("【数据统计】")
+print(f"有效记录数: {len(df)}")
+print(f"总商品数: {df['数量'].sum()}")
+print(f"总销售额: {(df['数量'] * df['单价']).sum():.2f}")</textarea>
                             </div>
                             <div class="code-output-panel">
                                 <div class="code-output-label">运行结果</div>
@@ -630,49 +751,49 @@ print(f"平均订单金额: {df['amount'].mean():.2f}")</textarea>
                                 <h4>参考答案代码：</h4>
                                 <pre>import pandas as pd
 
-# 原始销售数据（包含各种问题）
+# 原始销售数据（包含3个缺失值、2个异常值、日期格式不统一）
 data = [
-    {"order_id": "ORD001", "customer": "张三", "category": "电子产品", "date": "2024-01-15", "amount": 2999, "quantity": 1},
-    {"order_id": "ORD002", "customer": "李四", "category": "服装", "date": "2024/01/16", "amount": 399, "quantity": 2},
-    {"order_id": "ORD003", "customer": "王五", "category": "电子产品", "date": "2024-01-17", "amount": None, "quantity": 1},
-    {"order_id": "ORD004", "customer": "赵六", "category": "家居", "date": "2024-01-18", "amount": -500, "quantity": 3},
-    {"order_id": "ORD005", "customer": "钱七", "category": "服装", "date": "2024-01-19", "amount": 699, "quantity": 1},
-    {"order_id": "ORD006", "customer": "孙八", "category": "电子产品", "date": "2024-01-20", "amount": 15000, "quantity": 1},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
 ]
 
 df = pd.DataFrame(data)
-
-print("=" * 60)
-print("【第1步】处理缺失值（用均值填充）")
-mean_amount = df['amount'].mean()
-df['amount'] = df['amount'].fillna(mean_amount)
-print(f"  - 金额均值: {mean_amount:.2f}")
+print("=" * 70)
+print("【原始数据】")
 print(df.to_string(index=False))
 
-print("\n【第2步】处理负值（取绝对值）")
-df['amount'] = df['amount'].abs()
+# 第1步：删除数量<0的异常行
+print("\n" + "=" * 70)
+print("【第1步】删除数量<0的异常行")
+before_count = len(df)
+df = df[df['数量'] >= 0]
+after_count = len(df)
+print(f"  - 删除了 {before_count - after_count} 条异常记录")
 print(df.to_string(index=False))
 
-print("\n【第3步】删除异常值（金额>10000）")
-df = df[df['amount'] <= 10000]
-print(f"  - 删除了 1 条异常记录")
+# 第2步：将日期列统一为YYYY-MM-DD格式
+print("\n" + "=" * 70)
+print("【第2步】统一日期格式为YYYY-MM-DD")
+df['日期'] = pd.to_datetime(df['日期'], errors='coerce').dt.strftime('%Y-%m-%d')
 print(df.to_string(index=False))
 
-print("\n【第4步】统一日期格式")
-df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+print("\n" + "=" * 70)
+print("【清洗后的数据】")
 print(df.to_string(index=False))
 
-print("\n【第5步】删除重复记录")
-df = df.drop_duplicates(subset=['order_id'])
-print(df.to_string(index=False))
-
-print("\n" + "=" * 60)
-print("【最终统计】")
-print(f"  - 有效记录数: {len(df)}")
-print(f"  - 总销售额: {df['amount'].sum():.2f}")
-print(f"  - 平均订单金额: {df['amount'].mean():.2f}")
-print(f"  - 最高订单金额: {df['amount'].max():.2f}")
-print(f"  - 最低订单金额: {df['amount'].min():.2f}")</pre>
+print("\n" + "=" * 70)
+print("【数据统计】")
+print(f"有效记录数: {len(df)}")
+print(f"总商品数: {df['数量'].sum()}")
+print(f"总销售额: {(df['数量'] * df['单价']).sum():.2f}")</pre>
                             </div>
                         </div>
                     </div>
@@ -683,16 +804,16 @@ print(f"  - 最低订单金额: {df['amount'].min():.2f}")</pre>
                 <div class="tips-card">
                     <h3><i class="fas fa-lightbulb"></i> 清洗技巧</h3>
                     <div class="tip-item">
-                        <strong>fillna()</strong> - 使用指定值填充缺失值
+                        <strong>isnull().sum()</strong> - 查看缺失值分布
                     </div>
                     <div class="tip-item">
-                        <strong>abs()</strong> - 取数值的绝对值
+                        <strong>fillna()</strong> - 填充缺失值
                     </div>
                     <div class="tip-item">
-                        <strong>drop_duplicates()</strong> - 删除重复记录
+                        <strong>df[条件]</strong> - 筛选符合条件的行
                     </div>
                     <div class="tip-item">
-                        <strong>to_datetime()</strong> - 转换日期格式
+                        <strong>pd.to_datetime()</strong> - 转换日期格式
                     </div>
                     <div class="tip-item">
                         <strong>dt.strftime()</strong> - 格式化日期输出
@@ -702,16 +823,16 @@ print(f"  - 最低订单金额: {df['amount'].min():.2f}")</pre>
                 <div class="tips-card">
                     <h3><i class="fas fa-check-circle"></i> 学习目标</h3>
                     <div class="tip-item">
-                        掌握Pandas数据清洗的基本方法
+                        掌握识别缺失值的方法
                     </div>
                     <div class="tip-item">
-                        学会识别和处理数据质量问题
+                        学会处理异常值
                     </div>
                     <div class="tip-item">
-                        理解数据预处理的重要性
+                        掌握日期格式标准化
                     </div>
                     <div class="tip-item">
-                        培养数据质量意识
+                        理解数据清洗的重要性
                     </div>
                 </div>
             </div>
@@ -719,64 +840,32 @@ print(f"  - 最低订单金额: {df['amount'].min():.2f}")</pre>
     </div>
 
     <script src="../script.js"></script>
-    <script type="text/python" id="brython-code">
-import pandas as pd
-from datetime import datetime
-
-# 销售数据（包含各种问题）
-raw_data = [
-    {"order_id": "ORD001", "customer": "张三", "category": "电子产品", "date": "2024-01-15", "amount": 2999, "quantity": 1},
-    {"order_id": "ORD002", "customer": "李四", "category": "服装", "date": "2024/01/16", "amount": 399, "quantity": 2},
-    {"order_id": "ORD003", "customer": "王五", "category": "电子产品", "date": "2024-01-17", "amount": None, "quantity": 1},
-    {"order_id": "ORD004", "customer": "赵六", "category": "家居", "date": "2024-01-18", "amount": -500, "quantity": 3},
-    {"order_id": "ORD005", "customer": "钱七", "category": "服装", "date": "2024-01-19", "amount": 699, "quantity": 1},
-    {"order_id": "ORD006", "customer": "孙八", "category": "电子产品", "date": "2024-01-20", "amount": 15000, "quantity": 1},
-    {"order_id": "ORD007", "customer": "周九", "category": "家居", "date": "2024/01/21", "amount": 1299, "quantity": 2},
-    {"order_id": "ORD008", "customer": "吴十", "category": None, "date": "2024-01-22", "amount": 899, "quantity": 1},
-    {"order_id": "ORD009", "customer": "郑一", "category": "电子产品", "date": "2024.01.23", "amount": 4599, "quantity": 1},
-    {"order_id": "ORD010", "customer": "王二", "category": "服装", "date": "2024-01-24", "amount": -199, "quantity": 1},
-]
-</script>
 
     <script>
         const rawData = [
-            {order_id: "ORD001", customer: "张三", category: "电子产品", date: "2024-01-15", amount: 2999, quantity: 1},
-            {order_id: "ORD002", customer: "李四", category: "服装", date: "2024/01/16", amount: 399, quantity: 2},
-            {order_id: "ORD003", customer: "王五", category: "电子产品", date: "2024-01-17", amount: null, quantity: 1},
-            {order_id: "ORD004", customer: "赵六", category: "家居", date: "2024-01-18", amount: -500, quantity: 3},
-            {order_id: "ORD005", customer: "钱七", category: "服装", date: "2024-01-19", amount: 699, quantity: 1},
-            {order_id: "ORD006", customer: "孙八", category: "电子产品", date: "2024-01-20", amount: 15000, quantity: 1},
-            {order_id: "ORD007", customer: "周九", category: "家居", date: "2024/01/21", amount: 1299, quantity: 2},
-            {order_id: "ORD008", customer: "吴十", category: null, date: "2024-01-22", amount: 899, quantity: 1},
-            {order_id: "ORD009", customer: "郑一", category: "电子产品", date: "2024.01.23", amount: 4599, quantity: 1},
-            {order_id: "ORD010", customer: "王二", category: "服装", date: "2024-01-24", amount: -199, quantity: 1},
+            {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+            {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+            {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": null, "数量": 3, "单价": 199, "地区": "广州"},
+            {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+            {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": null, "地区": "杭州"},
+            {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+            {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+            {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": null},
+            {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+            {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
         ];
 
         function renderDataTable() {
             const tbody = document.getElementById('data-tbody');
             tbody.innerHTML = rawData.map(row => {
-                let amountClass = '';
-                let amountText = row.amount;
-                
-                if (row.amount === null || row.amount === undefined) {
-                    amountClass = 'missing';
-                    amountText = '缺失';
-                } else if (row.amount < 0) {
-                    amountClass = 'anomaly';
-                    amountText = row.amount + ' (异常)';
-                } else if (row.amount > 10000) {
-                    amountClass = 'anomaly';
-                    amountText = row.amount + ' (异常)';
-                }
-
                 return `
                     <tr>
-                        <td>${row.order_id}</td>
-                        <td>${row.customer || '<span class="missing">缺失</span>'}</td>
-                        <td>${row.category || '<span class="missing">缺失</span>'}</td>
-                        <td>${row.date}</td>
-                        <td class="${amountClass}">${amountText}</td>
-                        <td>${row.quantity}</td>
+                        <td>${row.订单ID}</td>
+                        <td>${row.日期}</td>
+                        <td>${row.商品名 || '<span class="missing">缺失</span>'}</td>
+                        <td class="${row.数量 < 0 ? 'anomaly' : ''}">${row.数量 < 0 ? row.数量 + ' (异常)' : row.数量}</td>
+                        <td>${row.单价 !== null ? row.单价 : '<span class="missing">缺失</span>'}</td>
+                        <td>${row.地区 || '<span class="missing">缺失</span>'}</td>
                     </tr>
                 `;
             }).join('');
@@ -798,31 +887,38 @@ raw_data = [
             const editor = document.getElementById('code-editor');
             editor.value = `import pandas as pd
 
-# 原始销售数据
+# 原始销售数据（包含3个缺失值、2个异常值、日期格式不统一）
 data = [
-    {"order_id": "ORD001", "customer": "张三", "category": "电子产品", "date": "2024-01-15", "amount": 2999, "quantity": 1},
-    {"order_id": "ORD002", "customer": "李四", "category": "服装", "date": "2024/01/16", "amount": 399, "quantity": 2},
-    {"order_id": "ORD003", "customer": "王五", "category": "电子产品", "date": "2024-01-17", "amount": None, "quantity": 1},
-    {"order_id": "ORD004", "customer": "赵六", "category": "家居", "date": "2024-01-18", "amount": -500, "quantity": 3},
-    {"order_id": "ORD005", "customer": "钱七", "category": "服装", "date": "2024-01-19", "amount": 699, "quantity": 1},
+    {"订单ID": "ORD001", "日期": "2024-01-15", "商品名": "无线耳机", "数量": 2, "单价": 299, "地区": "北京"},
+    {"订单ID": "ORD002", "日期": "01/16/2024", "商品名": "机械键盘", "数量": 1, "单价": 499, "地区": "上海"},
+    {"订单ID": "ORD003", "日期": "2024-01-17", "商品名": None, "数量": 3, "单价": 199, "地区": "广州"},
+    {"订单ID": "ORD004", "日期": "01/18/2024", "商品名": "智能手表", "数量": -1, "单价": 1299, "地区": "深圳"},
+    {"订单ID": "ORD005", "日期": "2024-01-19", "商品名": "蓝牙音箱", "数量": 1, "单价": None, "地区": "杭州"},
+    {"订单ID": "ORD006", "日期": "01/20/2024", "商品名": "笔记本电脑", "数量": 1, "单价": 5999, "地区": "北京"},
+    {"订单ID": "ORD007", "日期": "2024-01-21", "商品名": "平板电脑", "数量": -2, "单价": 2999, "地区": "上海"},
+    {"订单ID": "ORD008", "日期": "01/22/2024", "商品名": "移动电源", "数量": 5, "单价": 99, "地区": None},
+    {"订单ID": "ORD009", "日期": "2024-01-23", "商品名": "数据线", "数量": 10, "单价": 19, "地区": "成都"},
+    {"订单ID": "ORD010", "日期": "01/24/2024", "商品名": "充电器", "数量": 2, "单价": 59, "地区": "武汉"}
 ]
 
 df = pd.DataFrame(data)
-print("=" * 50)
-print("原始数据：")
+print("=" * 70)
+print("【原始数据】")
 print(df.to_string(index=False))
 
-# TODO: 在下方编写数据清洗代码
+# TODO: 请在下方编写代码，完成以下任务：
+# 1. 删除数量<0的异常行
+# 2. 将日期列统一为YYYY-MM-DD格式
 
-print("\\n" + "=" * 50)
-print("清洗后的数据：")
+print("\\n" + "=" * 70)
+print("【清洗后的数据】")
 print(df.to_string(index=False))
 
-print("\\n" + "=" * 50)
-print("数据统计信息：")
-print(f"记录总数: {len(df)}")
-print(f"总销售额: {df['amount'].sum()}")
-print(f"平均订单金额: {df['amount'].mean():.2f}")`;
+print("\\n" + "=" * 70)
+print("【数据统计】")
+print(f"有效记录数: {len(df)}")
+print(f"总商品数: {df['数量'].sum()}")
+print(f"总销售额: {(df['数量'] * df['单价']).sum():.2f}")`;
             document.getElementById('code-output').innerHTML = '<div class="placeholder">点击"运行代码"按钮执行代码</div>';
         }
 
