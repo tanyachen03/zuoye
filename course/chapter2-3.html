@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.3 Pandas数据结构：Series和DataFrame - Python数据分析基础</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: #ef4444;
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-study-header i {
+            font-size: 1.5rem;
+            color: #2563eb;
+        }
+        .case-study-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .case-study-content {
+            color: #64748b;
+            line-height: 1.8;
+        }
+        .case-study-content h4 {
+            color: #1e293b;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+        }
+        .case-study-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #10b981;
+        }
+        .progress-indicator i {
+            color: #10b981;
+        }
+        .sidebar-subsection {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-subsection .sidebar-item {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        .sidebar-subsection .sidebar-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .dataframe-preview {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .dataframe-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .dataframe-preview th, .dataframe-preview td {
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        .dataframe-preview th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        .dataframe-preview tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item active"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <div class="sidebar-subsection">
+                    <a href="chapter2-1.html" class="sidebar-item">2.1 Jupyter Notebook入门</a>
+                    <a href="chapter2-2.html" class="sidebar-item">2.2 NumPy数值计算</a>
+                    <a href="chapter2-3.html" class="sidebar-item active">2.3 Pandas数据结构</a>
+                    <a href="chapter2-4.html" class="sidebar-item">2.4 数据清洗实战</a>
+                    <a href="chapter2-5.html" class="sidebar-item">2.5 数据合并与分组</a>
+                    <a href="chapter2-6.html" class="sidebar-item">2.6 综合案例</a>
+                </div>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：第二章第3节</span>
+            </div>
+            
+            <span class="course-badge">2.3</span>
+            <h1 class="course-title">Pandas数据结构：Series和DataFrame</h1>
+            <p class="course-subtitle">掌握Pandas的核心数据结构，学会使用Series和DataFrame进行灵活的数据操作</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解Series和DataFrame的概念和特点</li>
+                    <li>掌握创建Series和DataFrame的多种方法</li>
+                    <li>学会DataFrame的索引、选择和过滤操作</li>
+                    <li>掌握数据的基本操作：增删改查</li>
+                    <li>了解常用数据类型的处理方法</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、Pandas简介</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 为什么选择Pandas</h3>
+                <div class="section-content">
+                    <p>Pandas是Python数据分析的核心库，提供了两种主要的数据结构：Series（一维）和DataFrame（二维）。它是处理表格数据的最佳选择。</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-table"></i><span><strong>表格数据处理</strong> - 类似Excel的数据操作体验</span></div>
+                    <div class="feature-item"><i class="fas fa-exchange-alt"></i><span><strong>灵活的IO</strong> - 支持CSV、Excel、SQL等多种格式</span></div>
+                    <div class="feature-item"><i class="fas fa-broom"></i><span><strong>数据清洗</strong> - 强大的缺失值和异常值处理</span></div>
+                    <div class="feature-item"><i class="fas fa-object-group"></i><span><strong>数据聚合</strong> - 类SQL的分组聚合操作</span></div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 查看Pandas版本</span>
+<span class="keyword">print</span>(pd.__version__)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、Series一维数据结构</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-bars"></i> 创建Series</h3>
+                <div class="section-content">
+                    <p>Series是带标签的一维数组，可以存储任意数据类型。它由值（values）和索引（index）两部分组成。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 从列表创建Series</span>
+s1 = pd.Series([10, 20, 30, 40, 50])
+<span class="keyword">print</span>(<span class="string">"默认索引:"</span>)
+<span class="keyword">print</span>(s1)
+
+<span class="comment"># 指定索引</span>
+s2 = pd.Series([10, 20, 30], index=[<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>])
+<span class="keyword">print</span>(<span class="string">"\n自定义索引:"</span>)
+<span class="keyword">print</span>(s2)
+
+<span class="comment"># 从字典创建Series</span>
+data = {<span class="string">'北京'</span>: 2154, <span class="string">'上海'</span>: 2487, <span class="string">'广州'</span>: 1530}
+s3 = pd.Series(data)
+<span class="keyword">print</span>(<span class="string">"\n从字典创建:"</span>)
+<span class="keyword">print</span>(s3)
+
+<span class="comment"># 指定名称</span>
+s4 = pd.Series([100, 200, 300], name=<span class="string">'销售额'</span>)
+<span class="keyword">print</span>(<span class="string">"\n带名称的Series:"</span>)
+<span class="keyword">print</span>(s4)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-search"></i> Series索引操作</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+s = pd.Series([100, 200, 300, 400, 500], 
+              index=[<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span>])
+
+<span class="comment"># 通过标签索引</span>
+<span class="keyword">print</span>(<span class="string">"标签索引 'b':"</span>, s[<span class="string">'b'</span>])
+<span class="keyword">print</span>(<span class="string">"多个标签:"</span>, s[[<span class="string">'a'</span>, <span class="string">'c'</span>]])
+
+<span class="comment"># 通过位置索引</span>
+<span class="keyword">print</span>(<span class="string">"位置索引 [0]:"</span>, s.iloc[0])
+<span class="keyword">print</span>(<span class="string">"切片 [1:3]:"</span>, s.iloc[1:3])
+
+<span class="comment"># 布尔索引</span>
+<span class="keyword">print</span>(<span class="string">"大于250:"</span>, s[s > 250])
+
+<span class="comment"># Series属性</span>
+<span class="keyword">print</span>(<span class="string">"\n值:"</span>, s.values)
+<span class="keyword">print</span>(<span class="string">"索引:"</span>, s.index.tolist())
+<span class="keyword">print</span>(<span class="string">"数据类型:"</span>, s.dtype)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>使用 <code>.loc[]</code> 进行标签索引，使用 <code>.iloc[]</code> 进行位置索引，可以避免混淆，代码更清晰。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、DataFrame二维数据结构</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-table"></i> 创建DataFrame</h3>
+                <div class="section-content">
+                    <p>DataFrame是二维表格数据结构，有行索引和列索引，可以看作是由多个Series组成的字典。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 从字典创建</span>
+data = {
+    <span class="string">'姓名'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="string">'王五'</span>, <span class="string">'赵六'</span>],
+    <span class="string">'年龄'</span>: [25, 30, 28, 35],
+    <span class="string">'城市'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, <span class="string">'深圳'</span>],
+    <span class="string">'薪资'</span>: [15000, 20000, 18000, 25000]
+}
+df = pd.DataFrame(data)
+<span class="keyword">print</span>(df)
+
+<span class="comment"># 指定列顺序</span>
+df = pd.DataFrame(data, columns=[<span class="string">'姓名'</span>, <span class="string">'城市'</span>, <span class="string">'年龄'</span>, <span class="string">'薪资'</span>])
+
+<span class="comment"># 指定行索引</span>
+df = pd.DataFrame(data, index=[<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>])
+
+<span class="comment"># 从列表的列表创建</span>
+data2 = [
+    [<span class="string">'张三'</span>, 25, <span class="string">'北京'</span>],
+    [<span class="string">'李四'</span>, 30, <span class="string">'上海'</span>],
+    [<span class="string">'王五'</span>, 28, <span class="string">'广州'</span>]
+]
+df2 = pd.DataFrame(data2, columns=[<span class="string">'姓名'</span>, <span class="string">'年龄'</span>, <span class="string">'城市'</span>])</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-eye"></i> 查看数据</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 创建示例数据</span>
+df = pd.DataFrame({
+    <span class="string">'product'</span>: [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>],
+    <span class="string">'sales'</span>: [100, 150, 200, 130, 180],
+    <span class="string">'profit'</span>: [20, 35, 50, 25, 40]
+})
+
+<span class="comment"># 查看前几行</span>
+<span class="keyword">print</span>(df.head(3))
+
+<span class="comment"># 查看后几行</span>
+<span class="keyword">print</span>(df.tail(2))
+
+<span class="comment"># 查看数据信息</span>
+<span class="keyword">print</span>(df.info())
+
+<span class="comment"># 查看统计摘要</span>
+<span class="keyword">print</span>(df.describe())
+
+<span class="comment"># 查看列名和数据类型</span>
+<span class="keyword">print</span>(<span class="string">"列名:"</span>, df.columns.tolist())
+<span class="keyword">print</span>(<span class="string">"数据类型:\n"</span>, df.dtypes)
+<span class="keyword">print</span>(<span class="string">"形状:"</span>, df.shape)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-filter"></i> 数据选择与过滤</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>, <span class="string">'David'</span>],
+    <span class="string">'age'</span>: [25, 30, 35, 28],
+    <span class="string">'city'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, <span class="string">'深圳'</span>],
+    <span class="string">'salary'</span>: [15000, 20000, 25000, 18000]
+})
+
+<span class="comment"># 选择单列</span>
+<span class="keyword">print</span>(<span class="string">"选择单列:"</span>)
+<span class="keyword">print</span>(df[<span class="string">'name'</span>])  <span class="comment"># 返回Series</span>
+
+<span class="comment"># 选择多列</span>
+<span class="keyword">print</span>(<span class="string">"\n选择多列:"</span>)
+<span class="keyword">print</span>(df[[<span class="string">'name'</span>, <span class="string">'salary'</span>]])  <span class="comment"># 返回DataFrame</span>
+
+<span class="comment"># 使用loc标签索引</span>
+<span class="keyword">print</span>(<span class="string">"\nloc选择行:"</span>)
+<span class="keyword">print</span>(df.loc[0])  <span class="comment"># 第一行</span>
+<span class="keyword">print</span>(df.loc[0:2, [<span class="string">'name'</span>, <span class="string">'age'</span>]])  <span class="comment"># 指定行列</span>
+
+<span class="comment"># 使用iloc位置索引</span>
+<span class="keyword">print</span>(<span class="string">"\niloc选择:"</span>)
+<span class="keyword">print</span>(df.iloc[0])  <span class="comment"># 第一行</span>
+<span class="keyword">print</span>(df.iloc[0:2, 0:2])  <span class="comment"># 前两行前两列</span>
+
+<span class="comment"># 条件过滤</span>
+<span class="keyword">print</span>(<span class="string">"\n条件过滤:"</span>)
+<span class="keyword">print</span>(df[df[<span class="string">'age'</span>] > 28])
+<span class="keyword">print</span>(df[(df[<span class="string">'age'</span>] > 25) & (df[<span class="string">'salary'</span>] > 18000)])
+
+<span class="comment"># 使用isin方法</span>
+<span class="keyword">print</span>(<span class="string">"\nisin筛选:"</span>)
+<span class="keyword">print</span>(df[df[<span class="string">'city'</span>].isin([<span class="string">'北京'</span>, <span class="string">'上海'</span>])])</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>使用 <code>df[0]</code> 选择行会报错，因为这是选择列的语法。正确做法是使用 <code>df.iloc[0]</code> 或 <code>df.loc[0]</code>。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、数据增删改操作</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-plus-circle"></i> 添加数据</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>],
+    <span class="string">'age'</span>: [25, 30]
+})
+
+<span class="comment"># 添加新列</span>
+df[<span class="string">'city'</span>] = [<span class="string">'北京'</span>, <span class="string">'上海'</span>]
+df[<span class="string">'salary'</span>] = [15000, 20000]
+
+<span class="comment"># 基于现有列创建新列</span>
+df[<span class="string">'annual_salary'</span>] = df[<span class="string">'salary'</span>] * 12
+
+<span class="comment"># 使用assign方法（链式操作）</span>
+df = df.assign(
+    bonus = df[<span class="string">'salary'</span>] * 0.1,
+    level = [<span class="string">'Junior'</span>, <span class="string">'Senior'</span>]
+)
+
+<span class="comment"># 添加新行</span>
+new_row = {<span class="string">'name'</span>: <span class="string">'Charlie'</span>, <span class="string">'age'</span>: 28, <span class="string">'city'</span>: <span class="string">'广州'</span>}
+df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=<span class="keyword">True</span>)
+
+<span class="keyword">print</span>(df)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-edit"></i> 修改数据</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>],
+    <span class="string">'age'</span>: [25, 30, 35],
+    <span class="string">'salary'</span>: [15000, 20000, 25000]
+})
+
+<span class="comment"># 修改单个值</span>
+df.loc[0, <span class="string">'age'</span>] = 26
+
+<span class="comment"># 修改整列</span>
+df[<span class="string">'salary'</span>] = df[<span class="string">'salary'</span>] * 1.1  <span class="comment"># 涨薪10%</span>
+
+<span class="comment"># 条件修改</span>
+df.loc[df[<span class="string">'age'</span>] > 30, <span class="string">'salary'</span>] = df[<span class="string">'salary'</span>] * 1.2
+
+<span class="comment"># 使用replace方法</span>
+df[<span class="string">'name'</span>] = df[<span class="string">'name'</span>].replace({<span class="string">'Alice'</span>: <span class="string">'爱丽丝'</span>})
+
+<span class="keyword">print</span>(df)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-trash-alt"></i> 删除数据</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>, <span class="string">'David'</span>],
+    <span class="string">'age'</span>: [25, 30, 35, 28],
+    <span class="string">'city'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, <span class="string">'深圳'</span>]
+})
+
+<span class="comment"># 删除列</span>
+df_dropped = df.drop(columns=[<span class="string">'city'</span>])
+<span class="keyword">print</span>(<span class="string">"删除列后:"</span>)
+<span class="keyword">print</span>(df_dropped)
+
+<span class="comment"># 删除行</span>
+df_dropped = df.drop(index=[0, 2])  <span class="comment"># 删除第0行和第2行</span>
+<span class="keyword">print</span>(<span class="string">"\n删除行后:"</span>)
+<span class="keyword">print</span>(df_dropped)
+
+<span class="comment"># 原地删除</span>
+df.drop(columns=[<span class="string">'age'</span>], inplace=<span class="keyword">True</span>)
+
+<span class="comment"># 删除缺失值</span>
+df_with_na = pd.DataFrame({
+    <span class="string">'A'</span>: [1, <span class="keyword">None</span>, 3],
+    <span class="string">'B'</span>: [4, 5, <span class="keyword">None</span>]
+})
+<span class="keyword">print</span>(<span class="string">"\n删除缺失值:"</span>)
+<span class="keyword">print</span>(df_with_na.dropna())
+
+<span class="comment"># 删除重复值</span>
+df_dup = pd.DataFrame({
+    <span class="string">'A'</span>: [1, 1, 2, 2],
+    <span class="string">'B'</span>: [<span class="string">'a'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'b'</span>]
+})
+<span class="keyword">print</span>(<span class="string">"\n删除重复值:"</span>)
+<span class="keyword">print</span>(df_dup.drop_duplicates())</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、数据类型处理</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-database"></i> 常见数据类型</h3>
+                <div class="section-content">
+                    <p>Pandas支持多种数据类型，了解和正确处理数据类型对于数据分析至关重要：</p>
+                </div>
+
+                <div class="dataframe-preview">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pandas类型</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>int64</td>
+                                <td>整数类型</td>
+                                <td>年龄、数量</td>
+                            </tr>
+                            <tr>
+                                <td>float64</td>
+                                <td>浮点数类型</td>
+                                <td>价格、比率</td>
+                            </tr>
+                            <tr>
+                                <td>object</td>
+                                <td>字符串/混合类型</td>
+                                <td>姓名、地址</td>
+                            </tr>
+                            <tr>
+                                <td>bool</td>
+                                <td>布尔类型</td>
+                                <td>是否会员</td>
+                            </tr>
+                            <tr>
+                                <td>datetime64</td>
+                                <td>日期时间类型</td>
+                                <td>订单日期</td>
+                            </tr>
+                            <tr>
+                                <td>category</td>
+                                <td>分类类型</td>
+                                <td>性别、等级</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'date'</span>: [<span class="string">'2024-01-01'</span>, <span class="string">'2024-01-02'</span>],
+    <span class="string">'price'</span>: [<span class="string">'100.5'</span>, <span class="string">'200.8'</span>],
+    <span class="string">'category'</span>: [<span class="string">'A'</span>, <span class="string">'B'</span>]
+})
+
+<span class="comment"># 查看数据类型</span>
+<span class="keyword">print</span>(df.dtypes)
+
+<span class="comment"># 转换数据类型</span>
+df[<span class="string">'date'</span>] = pd.to_datetime(df[<span class="string">'date'</span>])
+df[<span class="string">'price'</span>] = df[<span class="string">'price'</span>].astype(<span class="string">'float'</span>)
+df[<span class="string">'category'</span>] = df[<span class="string">'category'</span>].astype(<span class="string">'category'</span>)
+
+<span class="keyword">print</span>(<span class="string">"\n转换后:"</span>)
+<span class="keyword">print</span>(df.dtypes)
+
+<span class="comment"># 使用astype批量转换</span>
+df = df.astype({
+    <span class="string">'price'</span>: <span class="string">'float64'</span>,
+    <span class="string">'category'</span>: <span class="string">'category'</span>
+})</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>对于有限取值的字符串列（如性别、省份、等级），转换为 <code>category</code> 类型可以节省内存并提高计算效率。</p>
+                </div>
+            </section>
+
+            <div class="case-study">
+                <div class="case-study-header">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>真实商业案例：电商订单数据处理</h3>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>背景：</strong>某电商平台需要处理每日订单数据，进行数据清洗和基础分析。</p>
+                    
+                    <h4>原始数据问题</h4>
+                    <ul>
+                        <li>订单金额存储为字符串格式</li>
+                        <li>日期格式不统一</li>
+                        <li>部分字段存在空值</li>
+                    </ul>
+                    
+                    <h4>处理代码</h4>
+                    <div class="code-block">
+                        <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 模拟原始订单数据</span>
+orders = pd.DataFrame({
+    <span class="string">'order_id'</span>: [<span class="string">'ORD001'</span>, <span class="string">'ORD002'</span>, <span class="string">'ORD003'</span>, <span class="string">'ORD004'</span>],
+    <span class="string">'customer'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="keyword">None</span>, <span class="string">'王五'</span>],
+    <span class="string">'amount'</span>: [<span class="string">'¥1,299.00'</span>, <span class="string">'¥599.50'</span>, <span class="string">'¥2,580.00'</span>, <span class="string">'¥899.00'</span>],
+    <span class="string">'order_date'</span>: [<span class="string">'2024/01/15'</span>, <span class="string">'2024-01-16'</span>, <span class="string">'2024.01.17'</span>, <span class="string">'2024/01/18'</span>],
+    <span class="string">'status'</span>: [<span class="string">'已完成'</span>, <span class="string">'配送中'</span>, <span class="string">'已完成'</span>, <span class="string">'待付款'</span>]
+})
+
+<span class="comment"># 1. 清理金额字段</span>
+orders[<span class="string">'amount_clean'</span>] = (
+    orders[<span class="string">'amount'</span>]
+    .str.replace(<span class="string">'¥'</span>, <span class="string">''</span>)
+    .str.replace(<span class="string">','</span>, <span class="string">''</span>)
+    .astype(<span class="string">'float'</span>)
+)
+
+<span class="comment"># 2. 统一日期格式</span>
+orders[<span class="string">'order_date'</span>] = pd.to_datetime(orders[<span class="string">'order_date'</span>])
+
+<span class="comment"># 3. 处理缺失值</span>
+orders[<span class="string">'customer'</span>] = orders[<span class="string">'customer'</span>].fillna(<span class="string">'未知用户'</span>)
+
+<span class="comment"># 4. 添加派生字段</span>
+orders[<span class="string">'month'</span>] = orders[<span class="string">'order_date'</span>].dt.month
+orders[<span class="string">'weekday'</span>] = orders[<span class="string">'order_date'</span>].dt.day_name()
+
+<span class="comment"># 5. 基础统计</span>
+<span class="keyword">print</span>(<span class="string">"订单金额统计:"</span>)
+<span class="keyword">print</span>(orders[<span class="string">'amount_clean'</span>].describe())
+
+<span class="keyword">print</span>(<span class="string">"\n处理后的数据:"</span>)
+<span class="keyword">print</span>(orders)</code>
+                    </div>
+                    
+                    <h4>处理结果</h4>
+                    <p>通过Pandas的数据处理功能，成功将杂乱的原始数据转换为可用于分析的干净数据，为后续分析奠定了基础。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-3-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">以下哪种方式可以正确选择DataFrame的第一行数据？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">df[0]</div>
+                    <div class="quiz-option" data-correct="false">df[1]</div>
+                    <div class="quiz-option" data-correct="true">df.iloc[0]</div>
+                    <div class="quiz-option" data-correct="false">df.loc[1]</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong><code>df[0]</code> 会尝试选择名为"0"的列而不是行。<code>df.iloc[0]</code> 使用位置索引选择第一行（索引从0开始）。<code>df.loc[1]</code> 是选择行标签为1的行，不是第一行。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-3-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">Series和DataFrame的主要区别是什么？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">Series可以存储多种数据类型，DataFrame只能存储一种</div>
+                    <div class="quiz-option" data-correct="true">Series是一维数据结构，DataFrame是二维表格数据结构</div>
+                    <div class="quiz-option" data-correct="false">DataFrame是Series的子类</div>
+                    <div class="quiz-option" data-correct="false">它们没有区别，只是名称不同</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>Series是一维带标签的数组，只能有一列数据；DataFrame是二维表格结构，可以有多行多列，可以看作是由多个Series组成的字典。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter2-2.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：NumPy数值计算</span>
+                </a>
+                <a href="chapter2-4.html" class="chapter-nav-btn">
+                    <span>下一节：数据清洗实战</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = 'chapter2-3';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[currentPage] = { completed: true, timestamp: Date.now() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            
+            initQuiz();
+        });
+
+        function initQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

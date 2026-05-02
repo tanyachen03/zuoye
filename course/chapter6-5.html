@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.5 本章综合案例 - 数据可视化与叙事</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .section-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .case-header {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(16, 185, 129, 0.1));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .case-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .case-header h3 i {
+            color: var(--primary-color);
+        }
+        .case-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .case-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+        .case-meta-item i {
+            color: var(--primary-color);
+        }
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            counter-increment: step-counter;
+            padding: 1rem 1rem 1rem 3.5rem;
+            position: relative;
+            background-color: var(--bg-light);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        .step-list li:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        .insight-box {
+            background-color: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid var(--success-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .insight-box h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--success-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .insight-box p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .summary-card {
+            background-color: var(--bg-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .summary-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        .summary-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .summary-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .summary-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第六章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter6-1.html" class="sidebar-item"><i class="fas fa-palette"></i> 6.1 商务图表设计原则</a>
+                <a href="chapter6-2.html" class="sidebar-item"><i class="fas fa-chart-bar"></i> 6.2 Matplotlib基础绘图</a>
+                <a href="chapter6-3.html" class="sidebar-item"><i class="fas fa-chart-line"></i> 6.3 Seaborn高级可视化</a>
+                <a href="chapter6-4.html" class="sidebar-item"><i class="fas fa-mouse-pointer"></i> 6.4 Plotly交互式可视化</a>
+                <a href="chapter6-5.html" class="sidebar-item active"><i class="fas fa-project-diagram"></i> 6.5 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div class="progress-indicator">
+                    <i class="fas fa-book-open"></i>
+                    <span id="progress-text">正在学习 6.5</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第六章 · 第5节</span>
+            <h1 class="course-title">本章综合案例</h1>
+            <p class="course-subtitle">综合运用所学知识，完成一个完整的数据可视化项目</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>综合运用Matplotlib、Seaborn、Plotly创建专业图表</li>
+                    <li>掌握数据可视化项目的完整流程</li>
+                    <li>学会从数据中发现洞察并讲好数据故事</li>
+                    <li>完成一个可交付的销售数据分析报告</li>
+                    <li>理解不同场景下可视化工具的选择策略</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、案例背景与需求分析</h2>
+                
+                <div class="case-header">
+                    <h3><i class="fas fa-building"></i> 案例背景</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">某电商平台需要制作一份2024年上半年销售数据分析报告，用于向管理层汇报业务状况。报告需要包含销售趋势、区域分析、产品结构、用户画像等多个维度的可视化分析。</p>
+                    <div class="case-meta">
+                        <div class="case-meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>时间范围：2024年1月-6月</span>
+                        </div>
+                        <div class="case-meta-item">
+                            <i class="fas fa-database"></i>
+                            <span>数据量：约10万条交易记录</span>
+                        </div>
+                        <div class="case-meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>受众：公司管理层</span>
+                        </div>
+                        <div class="case-meta-item">
+                            <i class="fas fa-file-export"></i>
+                            <span>输出：PDF报告 + HTML仪表板</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tasks"></i> 分析步骤</h3>
+                <ol class="step-list">
+                    <li><strong>数据准备：</strong>加载和清洗销售数据，处理缺失值和异常值</li>
+                    <li><strong>探索性分析：</strong>使用Seaborn快速了解数据分布和相关性</li>
+                    <li><strong>趋势分析：</strong>使用Matplotlib绑制销售趋势折线图</li>
+                    <li><strong>结构分析：</strong>使用饼图和柱状图分析产品和区域结构</li>
+                    <li><strong>交互仪表板：</strong>使用Plotly创建可交互的分析仪表板</li>
+                    <li><strong>报告输出：</strong>整合所有图表，输出分析报告</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、数据准备与探索</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># 综合案例：电商销售数据可视化分析</span>
+<span class="comment"># 第一步：数据准备与探索</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+<span class="keyword">import</span> plotly.express <span class="keyword">as</span> px
+<span class="keyword">import</span> plotly.graph_objects <span class="keyword">as</span> go
+<span class="keyword">from</span> plotly.subplots <span class="keyword">import</span> make_subplots
+
+<span class="comment"># 设置中文字体和样式</span>
+plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>, <span class="string">'Arial Unicode MS'</span>]
+plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>
+sns.set_theme(style=<span class="string">'whitegrid'</span>)
+
+<span class="comment"># 生成模拟数据</span>
+np.random.seed(42)
+
+<span class="comment"># 月度销售数据</span>
+months = pd.date_range(<span class="string">'2024-01'</span>, <span class="string">'2024-06'</span>, freq=<span class="string">'M'</span>).strftime(<span class="string">'%Y-%m'</span>).tolist()
+sales_data = pd.DataFrame({
+    <span class="string">'月份'</span>: months * 2,
+    <span class="string">'年份'</span>: [<span class="string">'2023'</span>]*6 + [<span class="string">'2024'</span>]*6,
+    <span class="string">'销售额'</span>: [100, 115, 128, 135, 148, 162, 120, 145, 162, 178, 195, 210],
+    <span class="string">'订单数'</span>: [1200, 1380, 1540, 1620, 1780, 1940, 1440, 1740, 1940, 2136, 2340, 2520],
+    <span class="string">'客单价'</span>: [83.3, 83.3, 83.1, 83.3, 83.1, 83.5, 83.3, 83.3, 83.5, 83.3, 83.3, 83.3]
+})
+
+<span class="comment"># 区域销售数据</span>
+regions = [<span class="string">'华东'</span>, <span class="string">'华南'</span>, <span class="string">'华北'</span>, <span class="string">'西部'</span>]
+region_data = pd.DataFrame({
+    <span class="string">'区域'</span>: regions,
+    <span class="string">'线上销售'</span>: [180, 145, 120, 95],
+    <span class="string">'线下销售'</span>: [120, 95, 85, 75],
+    <span class="string">'增长率'</span>: [18.5, 15.2, 12.8, 8.5]
+})
+
+<span class="comment"># 产品销售数据</span>
+products = [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>, <span class="string">'美妆'</span>]
+product_data = pd.DataFrame({
+    <span class="string">'产品'</span>: products,
+    <span class="string">'销售额'</span>: [156, 128, 95, 82, 68],
+    <span class="string">'毛利率'</span>: [25, 35, 18, 22, 42]
+})
+
+<span class="comment"># 用户数据</span>
+user_data = pd.DataFrame({
+    <span class="string">'用户等级'</span>: [<span class="string">'普通用户'</span>, <span class="string">'VIP用户'</span>, <span class="string">'SVIP用户'</span>],
+    <span class="string">'用户数'</span>: [45000, 28000, 7000],
+    <span class="string">'贡献销售额'</span>: [35, 42, 23]
+})
+
+print(<span class="string">"数据准备完成！"</span>)
+print(<span class="string">f"销售数据：{len(sales_data)} 条记录"</span>)
+print(<span class="string">f"区域数据：{len(region_data)} 个区域"</span>)
+print(<span class="string">f"产品数据：{len(product_data)} 个品类"</span>)</code>
+                </div>
+
+                <div class="insight-box">
+                    <h4><i class="fas fa-lightbulb"></i> 数据探索要点</h4>
+                    <p>在开始可视化之前，先使用describe()、info()等方法了解数据基本情况，检查缺失值和异常值。这一步决定了后续分析的准确性。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、销售趋势分析（Matplotlib）</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># 第二步：销售趋势分析 - 使用Matplotlib</span>
+
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+months_2023 = sales_data[sales_data[<span class="string">'年份'</span>]==<span class="string">'2023'</span>][<span class="string">'月份'</span>].str.slice(5).tolist()
+months_2024 = sales_data[sales_data[<span class="string">'年份'</span>]==<span class="string">'2024'</span>][<span class="string">'月份'</span>].str.slice(5).tolist()
+sales_2023 = sales_data[sales_data[<span class="string">'年份'</span>]==<span class="string">'2023'</span>][<span class="string">'销售额'</span>].tolist()
+sales_2024 = sales_data[sales_data[<span class="string">'年份'</span>]==<span class="string">'2024'</span>][<span class="string">'销售额'</span>].tolist()
+
+<span class="comment"># 创建专业商务图表</span>
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+<span class="comment"># 左图：销售趋势对比</span>
+ax1 = axes[0]
+ax1.plot(months_2023, sales_2023, marker=<span class="string">'o'</span>, color=<span class="string">'#94a3b8'</span>, 
+         linewidth=2, markersize=6, label=<span class="string">'2023年'</span>)
+ax1.plot(months_2024, sales_2024, marker=<span class="string">'o'</span>, color=<span class="string">'#2563eb'</span>, 
+         linewidth=3, markersize=8, label=<span class="string">'2024年'</span>)
+
+<span class="comment"># 添加数据标签</span>
+ax1.annotate(<span class="string">f'{sales_2024[-1]}万'</span>, xy=(5, sales_2024[-1]),
+             xytext=(10, 0), textcoords=<span class="string">'offset points'</span>,
+             fontsize=12, fontweight=<span class="string">'bold'</span>, color=<span class="string">'#2563eb'</span>)
+
+<span class="comment"># 计算并标注增长率</span>
+growth = (sales_2024[-1] - sales_2023[-1]) / sales_2023[-1] * 100
+ax1.text(0.02, 0.98, <span class="string">f'同比增长: {growth:.1f}%'</span>,
+         transform=ax1.transAxes, fontsize=11, verticalalignment=<span class="string">'top'</span>,
+         bbox=dict(boxstyle=<span class="string">'round'</span>, facecolor=<span class="string">'#f0fdf4'</span>, edgecolor=<span class="string">'#10b981'</span>))
+
+ax1.set_title(<span class="string">'月度销售趋势对比'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>, pad=15)
+ax1.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=11)
+ax1.legend(loc=<span class="string">'upper left'</span>, frameon=<span class="keyword">False</span>)
+ax1.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax1.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+ax1.yaxis.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=0.3)
+
+<span class="comment"># 右图：月度增长率</span>
+ax2 = axes[1]
+growth_rates = [(s2-s1)/s1*100 <span class="keyword">for</span> s1, s2 <span class="keyword">in</span> zip(sales_2023, sales_2024)]
+colors = [<span class="string">'#10b981'</span> <span class="keyword">if</span> g > 15 <span class="keyword">else</span> <span class="string">'#f59e0b'</span> <span class="keyword">for</span> g <span class="keyword">in</span> growth_rates]
+
+bars = ax2.bar(months_2024, growth_rates, color=colors, width=0.6)
+ax2.axhline(y=np.mean(growth_rates), color=<span class="string">'#ef4444'</span>, linestyle=<span class="string">'--'</span>, 
+            linewidth=2, label=<span class="string">f'平均增长率 {np.mean(growth_rates):.1f}%'</span>)
+
+ax2.set_title(<span class="string">'月度同比增长率'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>, pad=15)
+ax2.set_ylabel(<span class="string">'增长率（%）'</span>, fontsize=11)
+ax2.legend(frameon=<span class="keyword">False</span>)
+ax2.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax2.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+plt.suptitle(<span class="string">'销售趋势分析报告'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, y=1.02)
+plt.tight_layout()
+plt.savefig(<span class="string">'sales_trend_analysis.png'</span>, dpi=150, bbox_inches=<span class="string">'tight'</span>)
+plt.show()
+
+print(<span class="string">"\n趋势分析洞察："</span>)
+print(<span class="string">f"1. 2024年上半年销售额持续增长，6月达到{sales_2024[-1]}万元"</span>)
+print(<span class="string">f"2. 同比增长率平均{np.mean(growth_rates):.1f}%，增长态势良好"</span>)
+print(<span class="string">f"3. 2月增长率最高，达{max(growth_rates):.1f}%"</span>)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>趋势分析图表要突出关键信息：增长率、转折点、异常值。使用颜色区分历史数据和当前数据，添加关键数据标注。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、区域与产品分析（Seaborn）</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># 第三步：区域与产品分析 - 使用Seaborn</span>
+
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 创建综合分析图表</span>
+fig = plt.figure(figsize=(16, 10))
+
+<span class="comment"># 1. 区域销售对比（分组柱状图）</span>
+ax1 = fig.add_subplot(2, 2, 1)
+region_long = region_data.melt(id_vars=[<span class="string">'区域'</span>, <span class="string">'增长率'</span>], 
+                                var_name=<span class="string">'渠道'</span>, value_name=<span class="string">'销售额'</span>)
+region_long[<span class="string">'渠道'</span>] = region_long[<span class="string">'渠道'</span>].str.replace(<span class="string">'销售'</span>, <span class="string">''</span>)
+
+sns.barplot(data=region_long, x=<span class="string">'区域'</span>, y=<span class="string">'销售额'</span>, hue=<span class="string">'渠道'</span>,
+            palette={<span class="string">'线上'</span>: <span class="string">'#2563eb'</span>, <span class="string">'线下'</span>: <span class="string">'#10b981'</span>}, ax=ax1)
+ax1.set_title(<span class="string">'各区域渠道销售对比'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+ax1.legend(title=<span class="string">''</span>, frameon=<span class="keyword">False</span>)
+
+<span class="comment"># 2. 区域增长率（柱状图+数值标注）</span>
+ax2 = fig.add_subplot(2, 2, 2)
+colors = [<span class="string">'#10b981'</span> <span class="keyword">if</span> g > 15 <span class="keyword">else</span> <span class="string">'#f59e0b'</span> <span class="keyword">for</span> g <span class="keyword">in</span> region_data[<span class="string">'增长率'</span>]]
+bars = ax2.bar(region_data[<span class="string">'区域'</span>], region_data[<span class="string">'增长率'</span>], color=colors)
+
+<span class="keyword">for</span> bar, val <span class="keyword">in</span> zip(bars, region_data[<span class="string">'增长率'</span>]):
+    ax2.annotate(<span class="string">f'{val}%'</span>, xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                 xytext=(0, 5), textcoords=<span class="string">'offset points'</span>,
+                 ha=<span class="string">'center'</span>, fontsize=11, fontweight=<span class="string">'bold'</span>)
+
+ax2.set_title(<span class="string">'各区域同比增长率'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+ax2.set_ylabel(<span class="string">'增长率（%）'</span>)
+ax2.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax2.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+<span class="comment"># 3. 产品销售结构（环形图）</span>
+ax3 = fig.add_subplot(2, 2, 3)
+colors = [<span class="string">'#2563eb'</span>, <span class="string">'#3b82f6'</span>, <span class="string">'#60a5fa'</span>, <span class="string">'#93c5fd'</span>, <span class="string">'#bfdbfe'</span>]
+wedges, texts, autotexts = ax3.pie(product_data[<span class="string">'销售额'</span>], 
+                                    labels=product_data[<span class="string">'产品'</span>],
+                                    colors=colors, autopct=<span class="string">'%1.1f%%'</span>,
+                                    wedgeprops=dict(width=0.5), startangle=90)
+ax3.set_title(<span class="string">'产品销售结构'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+
+<span class="comment"># 4. 产品销售额与毛利率（气泡图）</span>
+ax4 = fig.add_subplot(2, 2, 4)
+scatter = ax4.scatter(product_data[<span class="string">'销售额'</span>], product_data[<span class="string">'毛利率'</span>],
+                       s=product_data[<span class="string">'销售额'</span>]*2, c=product_data[<span class="string">'毛利率'</span>],
+                       cmap=<span class="string">'RdYlGn'</span>, alpha=0.6, edgecolors=<span class="string">'white'</span>, linewidths=2)
+
+<span class="keyword">for</span> i, product <span class="keyword">in</span> enumerate(product_data[<span class="string">'产品'</span>]):
+    ax4.annotate(product, (product_data[<span class="string">'销售额'</span>].iloc[i], product_data[<span class="string">'毛利率'</span>].iloc[i]),
+                 textcoords=<span class="string">'offset points'</span>, xytext=(0, 10), ha=<span class="string">'center'</span>)
+
+ax4.set_xlabel(<span class="string">'销售额（万元）'</span>)
+ax4.set_ylabel(<span class="string">'毛利率（%）'</span>)
+ax4.set_title(<span class="string">'产品销售额与毛利率分析'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+ax4.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax4.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+plt.suptitle(<span class="string">'区域与产品综合分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, y=1.02)
+plt.tight_layout()
+plt.savefig(<span class="string">'region_product_analysis.png'</span>, dpi=150, bbox_inches=<span class="string">'tight'</span>)
+plt.show()
+
+print(<span class="string">"\n区域与产品分析洞察："</span>)
+print(<span class="string">"1. 华东地区销售额最高，线上线下均领先"</span>)
+print(<span class="string">"2. 美妆品类毛利率最高(42%)，但销售额较低"</span>)
+print(<span class="string">"3. 电子产品是销售主力，占比约30%"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、交互式仪表板（Plotly）</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># 第四步：创建交互式仪表板 - 使用Plotly</span>
+
+<span class="keyword">import</span> plotly.graph_objects <span class="keyword">as</span> go
+<span class="keyword">from</span> plotly.subplots <span class="keyword">import</span> make_subplots
+
+<span class="comment"># 创建综合仪表板</span>
+fig = make_subplots(
+    rows=2, cols=3,
+    subplot_titles=(
+        <span class="string">'销售趋势对比'</span>, <span class="string">'区域销售分析'</span>, <span class="string">'产品结构占比'</span>,
+        <span class="string">'用户等级分布'</span>, <span class="string">'渠道销售对比'</span>, <span class="string">'关键指标'</span>
+    ),
+    specs=[
+        [{<span class="string">'type'</span>: <span class="string">'scatter'</span>}, {<span class="string">'type'</span>: <span class="string">'bar'</span>}, {<span class="string">'type'</span>: <span class="string">'pie'</span>}],
+        [{<span class="string">'type'</span>: <span class="string">'pie'</span>}, {<span class="string">'type'</span>: <span class="string">'bar'</span>}, {<span class="string">'type'</span>: <span class="string">'indicator'</span>}]
+    ]
+)
+
+<span class="comment"># 1. 销售趋势对比</span>
+fig.add_trace(go.Scatter(
+    x=months_2023, y=sales_2023, name=<span class="string">'2023年'</span>,
+    mode=<span class="string">'lines+markers'</span>, line=dict(color=<span class="string">'#94a3b8'</span>, width=2, dash=<span class="string">'dot'</span>)
+), row=1, col=1)
+fig.add_trace(go.Scatter(
+    x=months_2024, y=sales_2024, name=<span class="string">'2024年'</span>,
+    mode=<span class="string">'lines+markers'</span>, line=dict(color=<span class="string">'#2563eb'</span>, width=3)
+), row=1, col=1)
+
+<span class="comment"># 2. 区域销售分析</span>
+fig.add_trace(go.Bar(
+    name=<span class="string">'线上'</span>, x=region_data[<span class="string">'区域'</span>], y=region_data[<span class="string">'线上销售'</span>],
+    marker_color=<span class="string">'#2563eb'</span>
+), row=1, col=2)
+fig.add_trace(go.Bar(
+    name=<span class="string">'线下'</span>, x=region_data[<span class="string">'区域'</span>], y=region_data[<span class="string">'线下销售'</span>],
+    marker_color=<span class="string">'#10b981'</span>
+), row=1, col=2)
+
+<span class="comment"># 3. 产品结构占比</span>
+fig.add_trace(go.Pie(
+    labels=product_data[<span class="string">'产品'</span>], values=product_data[<span class="string">'销售额'</span>],
+    marker_colors=[<span class="string">'#2563eb'</span>, <span class="string">'#3b82f6'</span>, <span class="string">'#60a5fa'</span>, <span class="string">'#93c5fd'</span>, <span class="string">'#bfdbfe'</span>],
+    hole=0.4
+), row=1, col=3)
+
+<span class="comment"># 4. 用户等级分布</span>
+fig.add_trace(go.Pie(
+    labels=user_data[<span class="string">'用户等级'</span>], values=user_data[<span class="string">'贡献销售额'</span>],
+    marker_colors=[<span class="string">'#94a3b8'</span>, <span class="string">'#3b82f6'</span>, <span class="string">'#f59e0b'</span>],
+    hole=0.4
+), row=2, col=1)
+
+<span class="comment"># 5. 渠道销售对比</span>
+channel_total = [region_data[<span class="string">'线上销售'</span>].sum(), region_data[<span class="string">'线下销售'</span>].sum()]
+fig.add_trace(go.Bar(
+    x=[<span class="string">'线上渠道'</span>, <span class="string">'线下渠道'</span>], y=channel_total,
+    marker_color=[<span class="string">'#2563eb'</span>, <span class="string">'#10b981'</span>],
+    text=channel_total, textposition=<span class="string">'outside'</span>
+), row=2, col=2)
+
+<span class="comment"># 6. 关键指标</span>
+total_sales = sum(sales_2024)
+fig.add_trace(go.Indicator(
+    mode=<span class="string">'number+delta'</span>,
+    value=total_sales,
+    title={<span class="string">'text'</span>: <span class="string">'上半年总销售额（万元）'</span>},
+    delta={<span class="string">'reference'</span>: sum(sales_2023), <span class="string">'relative'</span>: <span class="keyword">True</span>}
+), row=2, col=3)
+
+<span class="comment"># 更新布局</span>
+fig.update_layout(
+    title_text=<span class="string">'2024年上半年销售数据综合仪表板'</span>,
+    title_font_size=20,
+    title_x=0.5,
+    showlegend=<span class="keyword">True</span>,
+    legend=dict(orientation=<span class="string">'h'</span>, yanchor=<span class="string">'bottom'</span>, y=1.02),
+    template=<span class="string">'plotly_white'</span>,
+    height=700,
+    barmode=<span class="string">'group'</span>
+)
+
+<span class="comment"># 显示仪表板</span>
+fig.show()
+
+<span class="comment"># 导出HTML</span>
+fig.write_html(<span class="string">'sales_dashboard.html'</span>)
+print(<span class="string">"\n交互式仪表板已生成并保存为 sales_dashboard.html"</span>)
+print(<span class="string">"可在浏览器中打开查看完整交互功能"</span>)</code>
+                </div>
+
+                <div class="insight-box">
+                    <h4><i class="fas fa-chart-line"></i> 仪表板设计要点</h4>
+                    <p>交互式仪表板要遵循"概览优先，细节可探"原则。主视图展示关键指标，用户可通过交互深入探索。合理使用颜色区分数据维度，保持整体风格一致。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、分析报告与洞察</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-file-alt"></i> 核心发现</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-arrow-up"></i><span>销售额同比增长29.6%，增长态势良好</span></div>
+                    <div class="feature-item"><i class="fas fa-map-marker-alt"></i><span>华东地区贡献最大，占总销售额35%</span></div>
+                    <div class="feature-item"><i class="fas fa-shopping-cart"></i><span>电子产品是主力品类，占比30%</span></div>
+                    <div class="feature-item"><i class="fas fa-users"></i><span>VIP用户贡献42%销售额，用户价值突出</span></div>
+                    <div class="feature-item"><i class="fas fa-laptop"></i><span>线上渠道占比62%，数字化转型成效显著</span></div>
+                    <div class="feature-item"><i class="fas fa-exclamation-triangle"></i><span>西部地区增长放缓，需重点关注</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 业务建议</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 生成分析报告摘要</span>
+report_summary = <span class="string">"""
+========================================
+2024年上半年销售数据分析报告摘要
+========================================
+
+一、整体表现
+- 上半年总销售额：1010万元，同比增长29.6%
+- 订单总量：12,100单，同比增长32.5%
+- 客单价稳定在83元左右
+
+二、区域分析
+- 华东地区表现最佳，销售额占比35%
+- 西部地区增长最慢(8.5%)，建议加大投入
+- 线上渠道整体表现优于线下
+
+三、产品分析
+- 电子产品销售额最高，但毛利率偏低(25%)
+- 美妆品类毛利率最高(42%)，建议重点推广
+- 食品类增长稳定，是稳定的现金流来源
+
+四、用户分析
+- VIP用户仅占35%，却贡献42%销售额
+- SVIP用户贡献23%销售额，价值最高
+- 建议加强会员运营，提升用户等级
+
+五、行动建议
+1. 加大西部地区市场推广投入
+2. 重点发展美妆品类，提升整体毛利
+3. 优化会员权益，促进用户升级
+4. 持续投入线上渠道建设
+5. 关注高毛利产品的营销推广
+"""</span>
+
+print(report_summary)
+
+<span class="comment"># 保存报告</span>
+<span class="keyword">with</span> open(<span class="string">'sales_analysis_report.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+    f.write(report_summary)
+
+print(<span class="string">"\n报告已保存为 sales_analysis_report.txt"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">七、本章知识总结</h2>
+                
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <i class="fas fa-palette"></i>
+                        <h4>设计原则</h4>
+                        <p>简洁、对齐、对比、一致性、信息层次五大原则</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>Matplotlib</h4>
+                        <p>基础绑图库，适合静态图表和出版级输出</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Seaborn</h4>
+                        <p>统计可视化利器，快速创建美观的统计图表</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <h4>Plotly</h4>
+                        <p>交互式可视化，适合网页展示和仪表板</p>
+                    </div>
+                </div>
+
+                <div class="chapter-test-container" data-chapter-test="chapter6">
+                    <div class="chapter-test-title">
+                        <i class="fas fa-pencil-alt"></i>
+                        第六章综合测评
+                    </div>
+
+                    <div class="test-questions">
+                        <div class="test-question" data-correct="B">
+                            <div class="question-number">第1题</div>
+                            <div class="question-text">以下哪个不是商务图表设计的五大原则之一？</div>
+                            <div class="question-options">
+                                <label class="question-option">
+                                    <input type="radio" name="q1" value="A">
+                                    简洁原则
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q1" value="B">
+                                    动画原则
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q1" value="C">
+                                    对比原则
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q1" value="D">
+                                    一致性原则
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="test-question" data-correct="C">
+                            <div class="question-number">第2题</div>
+                            <div class="question-text">在Matplotlib中，创建子图的推荐方式是？</div>
+                            <div class="question-options">
+                                <label class="question-option">
+                                    <input type="radio" name="q2" value="A">
+                                    plt.subplot()
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q2" value="B">
+                                    plt.add_subplot()
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q2" value="C">
+                                    plt.subplots()
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q2" value="D">
+                                    plt.figure()
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="test-question" data-correct="A">
+                            <div class="question-number">第3题</div>
+                            <div class="question-text">Seaborn中用于展示数据相关性的最佳图表是？</div>
+                            <div class="question-options">
+                                <label class="question-option">
+                                    <input type="radio" name="q3" value="A">
+                                    热力图 (heatmap)
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q3" value="B">
+                                    柱状图 (barplot)
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q3" value="C">
+                                    折线图 (lineplot)
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q3" value="D">
+                                    饼图 (pieplot)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="test-question" data-correct="D">
+                            <div class="question-number">第4题</div>
+                            <div class="question-text">Plotly的主要优势是？</div>
+                            <div class="question-options">
+                                <label class="question-option">
+                                    <input type="radio" name="q4" value="A">
+                                    绑图速度最快
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q4" value="B">
+                                    适合学术论文
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q4" value="C">
+                                    代码最简洁
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q4" value="D">
+                                    支持交互和HTML导出
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="test-question" data-correct="B">
+                            <div class="question-number">第5题</div>
+                            <div class="question-text">展示各部分占整体比例的最佳图表是？</div>
+                            <div class="question-options">
+                                <label class="question-option">
+                                    <input type="radio" name="q5" value="A">
+                                    柱状图
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q5" value="B">
+                                    饼图或环形图
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q5" value="C">
+                                    折线图
+                                </label>
+                                <label class="question-option">
+                                    <input type="radio" name="q5" value="D">
+                                    散点图
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="submit-test-btn" onclick="submitChapterTest('chapter6')">提交测评</button>
+
+                    <div class="test-result hidden"></div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        综合练习
+                    </div>
+                    <div class="challenge-description">
+                        <h4>练习任务</h4>
+                        <p>综合运用Matplotlib、Seaborn和Plotly，创建一个完整的销售数据分析可视化项目。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 综合练习：销售数据可视化分析
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
+import numpy as np
+
+# 设置样式
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+sns.set_theme(style='whitegrid')
+
+# 准备数据
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [120, 145, 162, 178, 195, 210]
+target = [130, 140, 150, 160, 170, 180]
+regions = ['华东', '华南', '华北', '西部']
+region_sales = [180, 145, 120, 95]
+
+# 任务1：使用Matplotlib创建销售趋势图
+fig1, ax1 = plt.subplots(figsize=(10, 5))
+ax1.plot(months, sales, marker='o', color='#2563eb', linewidth=3, label='实际销售')
+ax1.plot(months, target, marker='s', color='#ef4444', linewidth=2, linestyle='--', label='销售目标')
+ax1.fill_between(months, sales, alpha=0.2, color='#2563eb')
+ax1.set_title('销售趋势与目标对比', fontsize=14, fontweight='bold')
+ax1.set_ylabel('销售额（万元）')
+ax1.legend(frameon=False)
+ax1.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.show()
+
+# 任务2：使用Seaborn创建区域销售柱状图
+fig2, ax2 = plt.subplots(figsize=(8, 5))
+df_region = pd.DataFrame({'区域': regions, '销售额': region_sales})
+sns.barplot(data=df_region, x='区域', y='销售额', palette='Blues', ax=ax2)
+ax2.set_title('各区域销售额对比', fontsize=14, fontweight='bold')
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.show()
+
+# 任务3：使用Plotly创建交互式仪表板
+fig3 = make_subplots(rows=1, cols=2, subplot_titles=('销售趋势', '区域对比'))
+fig3.add_trace(go.Scatter(x=months, y=sales, mode='lines+markers', name='销售额',
+                           line=dict(color='#2563eb', width=3)), row=1, col=1)
+fig3.add_trace(go.Bar(x=regions, y=region_sales, name='区域销售',
+                       marker_color='#2563eb'), row=1, col=2)
+fig3.update_layout(title_text='销售数据仪表板', title_font_size=16,
+                   template='plotly_white', height=400)
+fig3.show()
+
+print('可视化分析完成！')"># 综合练习：销售数据可视化分析
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
+import numpy as np
+
+# 设置样式
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+sns.set_theme(style='whitegrid')
+
+# 准备数据
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [120, 145, 162, 178, 195, 210]
+target = [130, 140, 150, 160, 170, 180]
+regions = ['华东', '华南', '华北', '西部']
+region_sales = [180, 145, 120, 95]
+
+# 任务1：使用Matplotlib创建销售趋势图
+fig1, ax1 = plt.subplots(figsize=(10, 5))
+ax1.plot(months, sales, marker='o', color='#2563eb', linewidth=3, label='实际销售')
+ax1.plot(months, target, marker='s', color='#ef4444', linewidth=2, linestyle='--', label='销售目标')
+ax1.fill_between(months, sales, alpha=0.2, color='#2563eb')
+ax1.set_title('销售趋势与目标对比', fontsize=14, fontweight='bold')
+ax1.set_ylabel('销售额（万元）')
+ax1.legend(frameon=False)
+ax1.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.show()
+
+# 任务2：使用Seaborn创建区域销售柱状图
+fig2, ax2 = plt.subplots(figsize=(8, 5))
+df_region = pd.DataFrame({'区域': regions, '销售额': region_sales})
+sns.barplot(data=df_region, x='区域', y='销售额', palette='Blues', ax=ax2)
+ax2.set_title('各区域销售额对比', fontsize=14, fontweight='bold')
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.show()
+
+# 任务3：使用Plotly创建交互式仪表板
+fig3 = make_subplots(rows=1, cols=2, subplot_titles=('销售趋势', '区域对比'))
+fig3.add_trace(go.Scatter(x=months, y=sales, mode='lines+markers', name='销售额',
+                           line=dict(color='#2563eb', width=3)), row=1, col=1)
+fig3.add_trace(go.Bar(x=regions, y=region_sales, name='区域销售',
+                       marker_color='#2563eb'), row=1, col=2)
+fig3.update_layout(title_text='销售数据仪表板', title_font_size=16,
+                   template='plotly_white', height=400)
+fig3.show()
+
+print('可视化分析完成！')</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-nav">
+                <a href="chapter6-4.html" class="nav-btn"><i class="fas fa-arrow-left"></i> 上一节：Plotly交互式可视化</a>
+                <a href="../index.html#courses" class="nav-btn">返回课程中心 <i class="fas fa-home"></i></a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            saveLearningProgress('chapter6-5', '6.5 本章综合案例');
+            markChapterCompleted();
+        });
+
+        function saveLearningProgress(section, title) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress.currentSection = section;
+            progress.currentTitle = title;
+            progress.lastVisit = new Date().toISOString();
+            progress[section] = {
+                completed: true,
+                visited: true,
+                visitTime: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        function markChapterCompleted() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress.chapter6 = {
+                completed: true,
+                completedAt: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.navbar-menu');
+            menu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

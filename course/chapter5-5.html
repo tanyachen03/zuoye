@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.5 本章综合案例 - 第五章：销售与运营分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        .progress-indicator i {
+            color: var(--success-color);
+        }
+        .case-header {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #2563eb;
+        }
+        .case-header h3 {
+            font-size: 1.5rem;
+            color: #2563eb;
+            margin-bottom: 0.75rem;
+        }
+        .case-header p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .analysis-step {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        .analysis-step .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 0.75rem;
+        }
+        .analysis-step h4 {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .result-highlight {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .result-highlight h5 {
+            color: #22c55e;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .summary-card {
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .summary-card .icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        .summary-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .summary-card .label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第五章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter5-1.html" class="sidebar-item"><i class="fas fa-boxes-stacked"></i> 5.1 商品ABC分析</a>
+                <a href="chapter5-2.html" class="sidebar-item"><i class="fas fa-coins"></i> 5.2 毛利与利润分析</a>
+                <a href="chapter5-3.html" class="sidebar-item"><i class="fas fa-link"></i> 5.3 关联规则与购物篮分析</a>
+                <a href="chapter5-4.html" class="sidebar-item"><i class="fas fa-warehouse"></i> 5.4 库存与供应链分析</a>
+                <a href="chapter5-5.html" class="sidebar-item active"><i class="fas fa-briefcase"></i> 5.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-header" style="margin-top: 1.5rem;">全部章节</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：<span id="progress-text">未开始</span></span>
+            </div>
+            
+            <span class="course-badge">5.5</span>
+            <h1 class="course-title">本章综合案例</h1>
+            <p class="course-subtitle">综合运用ABC分析、利润分析、关联规则和库存分析方法解决实际业务问题</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>综合运用本章所学的分析方法</li>
+                    <li>学会从多维度分析销售与运营问题</li>
+                    <li>掌握完整的数据分析项目流程</li>
+                    <li>能够输出有价值的业务洞察和建议</li>
+                    <li>理解各分析方法之间的关联关系</li>
+                </ul>
+            </div>
+
+            <div class="case-header">
+                <h3><i class="fas fa-store"></i> 案例：某连锁超市销售运营综合分析</h3>
+                <p><strong>背景：</strong>某连锁超市拥有50家门店，年销售额约5亿元。近期发现销售额增长放缓，利润率下降，库存周转效率降低。管理层希望通过数据分析找出问题并提出优化方案。</p>
+                <p style="margin-top: 0.75rem;"><strong>数据范围：</strong>最近12个月的销售数据、库存数据、成本数据</p>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、数据准备与概览</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># ========================================
+# 综合案例分析 - 数据准备
+# ========================================</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>]
+plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>
+
+<span class="comment"># 1. 销售数据</span>
+sales_data = pd.DataFrame({
+    <span class="string">'月份'</span>: [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>,
+               <span class="string">'7月'</span>, <span class="string">'8月'</span>, <span class="string">'9月'</span>, <span class="string">'10月'</span>, <span class="string">'11月'</span>, <span class="string">'12月'</span>],
+    <span class="string">'营业收入'</span>: [4200, 3800, 4500, 4100, 4300, 4000, 3900, 4100, 4400, 4600, 4800, 5200],
+    <span class="string">'营业成本'</span>: [2800, 2600, 3000, 2800, 2900, 2700, 2700, 2800, 2900, 3100, 3200, 3500],
+    <span class="string">'期间费用'</span>: [700, 650, 720, 680, 700, 680, 660, 690, 710, 730, 750, 800]
+})
+
+<span class="comment"># 2. 产品数据</span>
+product_data = pd.DataFrame({
+    <span class="string">'产品ID'</span>: [<span class="string">'P001'</span>, <span class="string">'P002'</span>, <span class="string">'P003'</span>, <span class="string">'P004'</span>, <span class="string">'P005'</span>, <span class="string">'P006'</span>, <span class="string">'P007'</span>, <span class="string">'P008'</span>],
+    <span class="string">'产品名称'</span>: [<span class="string">'生鲜食品'</span>, <span class="string">'饮料'</span>, <span class="string">'零食'</span>, <span class="string">'日用品'</span>, <span class="string">'乳制品'</span>, <span class="string">'调味品'</span>, <span class="string">'酒类'</span>, <span class="string">'冷冻食品'</span>],
+    <span class="string">'年销售额'</span>: [15000, 12000, 8000, 6000, 5000, 2500, 1200, 800],
+    <span class="string">'平均库存'</span>: [1500, 1000, 1200, 2000, 800, 600, 400, 300],
+    <span class="string">'毛利率'</span>: [0.18, 0.25, 0.35, 0.22, 0.20, 0.28, 0.40, 0.15]
+})
+
+<span class="comment"># 3. 数据概览</span>
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="string">print</span>(<span class="string">"数据概览"</span>)
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="string">print</span>(<span class="string">f"年度总销售额: {sales_data['营业收入'].sum()} 万元"</span>)
+<span class="string">print</span>(<span class="string">f"年度总成本: {sales_data['营业成本'].sum()} 万元"</span>)
+<span class="string">print</span>(<span class="string">f"产品数量: {len(product_data)} 个品类"</span>)
+<span class="string">print</span>(<span class="string">f"门店数量: 50 家"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、分析步骤一：利润分析</h2>
+                
+                <div class="analysis-step">
+                    <h4><span class="step-number">1</span>利润率趋势分析</h4>
+                    <div class="code-block">
+                        <code><span class="comment"># 利润分析</span>
+sales_data[<span class="string">'毛利'</span>] = sales_data[<span class="string">'营业收入'</span>] - sales_data[<span class="string">'营业成本'</span>]
+sales_data[<span class="string">'净利润'</span>] = sales_data[<span class="string">'毛利'</span>] - sales_data[<span class="string">'期间费用'</span>]
+sales_data[<span class="string">'毛利率'</span>] = sales_data[<span class="string">'毛利'</span>] / sales_data[<span class="string">'营业收入'</span>]
+sales_data[<span class="string">'净利率'</span>] = sales_data[<span class="string">'净利润'</span>] / sales_data[<span class="string">'营业收入'</span>]
+
+<span class="string">print</span>(<span class="string">"月度利润率分析"</span>)
+<span class="string">print</span>(sales_data[[<span class="string">'月份'</span>, <span class="string">'营业收入'</span>, <span class="string">'毛利率'</span>, <span class="string">'净利率'</span>]].round(3))
+
+<span class="comment"># 年度汇总</span>
+annual_revenue = sales_data[<span class="string">'营业收入'</span>].sum()
+annual_gross = sales_data[<span class="string">'毛利'</span>].sum()
+annual_net = sales_data[<span class="string">'净利润'</span>].sum()
+
+<span class="string">print</span>(<span class="string">f"\n年度毛利率: {annual_gross/annual_revenue*100:.1f}%"</span>)
+<span class="string">print</span>(<span class="string">f"年度净利率: {annual_net/annual_revenue*100:.1f}%"</span>)</code>
+                    </div>
+                    
+                    <div class="result-highlight">
+                        <h5><i class="fas fa-lightbulb"></i> 分析发现</h5>
+                        <p>毛利率稳定在33%左右，净利率约16%。费用率约17%，处于行业正常水平。利润率整体健康，但增长空间有限。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、分析步骤二：ABC分类分析</h2>
+                
+                <div class="analysis-step">
+                    <h4><span class="step-number">2</span>产品ABC分类</h4>
+                    <div class="code-block">
+                        <code><span class="comment"># ABC分类分析</span>
+product_data = product_data.sort_values(<span class="string">'年销售额'</span>, ascending=<span class="keyword">False</span>).reset_index(drop=<span class="keyword">True</span>)
+total_sales = product_data[<span class="string">'年销售额'</span>].sum()
+
+product_data[<span class="string">'销售额占比'</span>] = product_data[<span class="string">'年销售额'</span>] / total_sales
+product_data[<span class="string">'累计占比'</span>] = product_data[<span class="string">'销售额占比'</span>].cumsum()
+
+<span class="keyword">def</span> <span class="function">classify</span>(x):
+    <span class="keyword">if</span> x <= 0.8:
+        <span class="keyword">return</span> <span class="string">'A'</span>
+    <span class="keyword">elif</span> x <= 0.95:
+        <span class="keyword">return</span> <span class="string">'B'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'C'</span>
+
+product_data[<span class="string">'ABC类别'</span>] = product_data[<span class="string">'累计占比'</span>].apply(classify)
+
+<span class="string">print</span>(<span class="string">"产品ABC分类结果"</span>)
+<span class="string">print</span>(product_data[[<span class="string">'产品名称'</span>, <span class="string">'年销售额'</span>, <span class="string">'销售额占比'</span>, <span class="string">'ABC类别'</span>]])
+
+<span class="comment"># 分类统计</span>
+abc_summary = product_data.groupby(<span class="string">'ABC类别'</span>).agg({
+    <span class="string">'产品ID'</span>: <span class="string">'count'</span>,
+    <span class="string">'年销售额'</span>: <span class="string">'sum'</span>
+})
+abc_summary[<span class="string">'品种占比'</span>] = abc_summary[<span class="string">'产品ID'</span>] / len(product_data) * 100
+abc_summary[<span class="string">'销售占比'</span>] = abc_summary[<span class="string">'年销售额'</span>] / total_sales * 100
+<span class="string">print</span>(<span class="string">"\nABC分类统计"</span>)
+<span class="string">print</span>(abc_summary.round(1))</code>
+                    </div>
+                    
+                    <div class="result-highlight">
+                        <h5><i class="fas fa-lightbulb"></i> 分析发现</h5>
+                        <p>A类产品（生鲜食品、饮料、零食）占品种37.5%，贡献销售额77.5%。应重点管理A类产品的库存和促销。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、分析步骤三：库存周转分析</h2>
+                
+                <div class="analysis-step">
+                    <h4><span class="step-number">3</span>库存周转效率分析</h4>
+                    <div class="code-block">
+                        <code><span class="comment"># 库存周转分析</span>
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> norm
+
+<span class="comment"># 计算各产品库存周转率</span>
+product_data[<span class="string">'库存周转率'</span>] = product_data[<span class="string">'年销售额'</span>] / product_data[<span class="string">'平均库存'</span>]
+product_data[<span class="string">'周转天数'</span>] = 365 / product_data[<span class="string">'库存周转率'</span>]
+
+<span class="string">print</span>(<span class="string">"产品库存周转分析"</span>)
+<span class="string">print</span>(product_data[[<span class="string">'产品名称'</span>, <span class="string">'库存周转率'</span>, <span class="string">'周转天数'</span>]].round(1))
+
+<span class="comment"># 安全库存计算示例（以生鲜食品为例）</span>
+avg_daily_demand = 15000 / 365  <span class="comment"># 日均需求</span>
+demand_std = 20                  <span class="comment"># 需求标准差</span>
+lead_time = 2                    <span class="comment"># 提前期</span>
+service_level = 0.95
+
+z_value = norm.ppf(service_level)
+safety_stock = z_value * demand_std * np.sqrt(lead_time)
+reorder_point = avg_daily_demand * lead_time + safety_stock
+
+<span class="string">print</span>(<span class="string">f"\n生鲜食品安全库存: {safety_stock:.0f} 万元"</span>)
+<span class="string">print</span>(<span class="string">f"补货点: {reorder_point:.0f} 万元"</span>)</code>
+                    </div>
+                    
+                    <div class="result-highlight">
+                        <h5><i class="fas fa-lightbulb"></i> 分析发现</h5>
+                        <p>生鲜食品周转最快（10次/年），日用品周转最慢（3次/年）。建议优化日用品库存，减少资金占用。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、分析步骤四：关联规则分析</h2>
+                
+                <div class="analysis-step">
+                    <h4><span class="step-number">4</span>购物篮关联分析</h4>
+                    <div class="code-block">
+                        <code><span class="comment"># 关联规则分析（模拟数据）</span>
+<span class="keyword">from</span> itertools <span class="keyword">import</span> combinations
+
+<span class="comment"># 模拟交易数据</span>
+transactions = [
+    [<span class="string">'生鲜食品'</span>, <span class="string">'乳制品'</span>],
+    [<span class="string">'生鲜食品'</span>, <span class="string">'饮料'</span>],
+    [<span class="string">'饮料'</span>, <span class="string">'零食'</span>],
+    [<span class="string">'生鲜食品'</span>, <span class="string">'乳制品'</span>, <span class="string">'饮料'</span>],
+    [<span class="string">'日用品'</span>, <span class="string">'调味品'</span>],
+    [<span class="string">'生鲜食品'</span>, <span class="string">'冷冻食品'</span>],
+    [<span class="string">'饮料'</span>, <span class="string">'零食'</span>, <span class="string">'酒类'</span>],
+    [<span class="string">'生鲜食品'</span>, <span class="string">'乳制品'</span>],
+    [<span class="string">'零食'</span>, <span class="string">'饮料'</span>],
+    [<span class="string">'生鲜食品'</span>, <span class="string">'饮料'</span>, <span class="string">'零食'</span>]
+]
+
+<span class="comment"># 计算关联规则</span>
+<span class="keyword">def</span> <span class="function">find_associations</span>(transactions, min_support=0.2, min_confidence=0.5):
+    n = len(transactions)
+    rules = []
+    
+    items = <span class="keyword">set</span>()
+    <span class="keyword">for</span> t <span class="keyword">in</span> transactions:
+        items.update(t)
+    
+    <span class="keyword">for</span> item1 <span class="keyword">in</span> items:
+        <span class="keyword">for</span> item2 <span class="keyword">in</span> items:
+            <span class="keyword">if</span> item1 != item2:
+                both = sum(1 <span class="keyword">for</span> t <span class="keyword">in</span> transactions <span class="keyword">if</span> item1 <span class="keyword">in</span> t <span class="keyword">and</span> item2 <span class="keyword">in</span> t)
+                first = sum(1 <span class="keyword">for</span> t <span class="keyword">in</span> transactions <span class="keyword">if</span> item1 <span class="keyword">in</span> t)
+                second = sum(1 <span class="keyword">for</span> t <span class="keyword">in</span> transactions <span class="keyword">if</span> item2 <span class="keyword">in</span> t)
+                
+                support = both / n
+                confidence = both / first <span class="keyword">if</span> first > 0 <span class="keyword">else</span> 0
+                lift = confidence / (second / n) <span class="keyword">if</span> second > 0 <span class="keyword">else</span> 0
+                
+                <span class="keyword">if</span> support >= min_support <span class="keyword">and</span> confidence >= min_confidence <span class="keyword">and</span> lift > 1:
+                    rules.append({
+                        <span class="string">'规则'</span>: <span class="string">f"{item1} → {item2}"</span>,
+                        <span class="string">'支持度'</span>: round(support, 2),
+                        <span class="string">'置信度'</span>: round(confidence, 2),
+                        <span class="string">'提升度'</span>: round(lift, 2)
+                    })
+    
+    <span class="keyword">return</span> pd.DataFrame(rules).sort_values(<span class="string">'提升度'</span>, ascending=<span class="keyword">False</span>)
+
+rules_df = find_associations(transactions)
+<span class="string">print</span>(<span class="string">"发现的关联规则"</span>)
+<span class="string">print</span>(rules_df)</code>
+                    </div>
+                    
+                    <div class="result-highlight">
+                        <h5><i class="fas fa-lightbulb"></i> 分析发现</h5>
+                        <p>发现强关联：生鲜食品→乳制品、饮料→零食。建议将这些商品陈列在相邻位置，并设计组合促销活动。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、综合分析报告</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-file-alt"></i> 分析结论汇总</h3>
+                
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="icon"><i class="fas fa-coins"></i></div>
+                        <div class="value">16%</div>
+                        <div class="label">净利率</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon"><i class="fas fa-star"></i></div>
+                        <div class="value">3个</div>
+                        <div class="label">A类产品</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon"><i class="fas fa-sync-alt"></i></div>
+                        <div class="value">10次</div>
+                        <div class="label">最高周转率</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="icon"><i class="fas fa-link"></i></div>
+                        <div class="value">4条</div>
+                        <div class="label">强关联规则</div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tasks"></i> 优化建议</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-boxes-stacked"></i><span>ABC管理：重点管理生鲜、饮料、零食三大A类产品</span></div>
+                    <div class="feature-item"><i class="fas fa-warehouse"></i><span>库存优化：降低日用品库存，提高周转效率</span></div>
+                    <div class="feature-item"><i class="fas fa-tags"></i><span>关联促销：设计"生鲜+乳制品"组合套餐</span></div>
+                    <div class="feature-item"><i class="fas fa-store-alt"></i><span>商品陈列：将关联商品放置在相邻货架</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>利润提升：扩大高毛利产品（酒类、零食）销售占比</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>预期效果：</strong>通过综合优化，预计可实现：库存周转率提升20%，毛利率提升1-2个百分点，客单价提升10%。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">七、完整代码整合</h2>
+                
+                <div class="code-block">
+                    <code><span class="comment"># ========================================
+# 销售运营综合分析 - 完整代码
+# ========================================</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> norm
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>]
+plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>
+
+<span class="keyword">class</span> <span class="function">SalesAnalyzer</span>:
+    <span class="string">"""销售运营综合分析类"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, sales_data, product_data):
+        self.sales_data = sales_data
+        self.product_data = product_data
+    
+    <span class="keyword">def</span> <span class="function">profit_analysis</span>(self):
+        <span class="string">"""利润分析"""</span>
+        df = self.sales_data.copy()
+        df[<span class="string">'毛利'</span>] = df[<span class="string">'营业收入'</span>] - df[<span class="string">'营业成本'</span>]
+        df[<span class="string">'净利润'</span>] = df[<span class="string">'毛利'</span>] - df[<span class="string">'期间费用'</span>]
+        df[<span class="string">'毛利率'</span>] = df[<span class="string">'毛利'</span>] / df[<span class="string">'营业收入'</span>]
+        df[<span class="string">'净利率'</span>] = df[<span class="string">'净利润'</span>] / df[<span class="string">'营业收入'</span>]
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">abc_analysis</span>(self):
+        <span class="string">"""ABC分类分析"""</span>
+        df = self.product_data.sort_values(<span class="string">'年销售额'</span>, ascending=<span class="keyword">False</span>).copy()
+        total = df[<span class="string">'年销售额'</span>].sum()
+        df[<span class="string">'销售额占比'</span>] = df[<span class="string">'年销售额'</span>] / total
+        df[<span class="string">'累计占比'</span>] = df[<span class="string">'销售额占比'</span>].cumsum()
+        df[<span class="string">'ABC类别'</span>] = df[<span class="string">'累计占比'</span>].apply(
+            <span class="keyword">lambda</span> x: <span class="string">'A'</span> <span class="keyword">if</span> x <= 0.8 <span class="keyword">else</span> (<span class="string">'B'</span> <span class="keyword">if</span> x <= 0.95 <span class="keyword">else</span> <span class="string">'C'</span>)
+        )
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">inventory_analysis</span>(self):
+        <span class="string">"""库存周转分析"""</span>
+        df = self.product_data.copy()
+        df[<span class="string">'周转率'</span>] = df[<span class="string">'年销售额'</span>] / df[<span class="string">'平均库存'</span>]
+        df[<span class="string">'周转天数'</span>] = 365 / df[<span class="string">'周转率'</span>]
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">generate_report</span>(self):
+        <span class="string">"""生成综合报告"""</span>
+        profit = self.profit_analysis()
+        abc = self.abc_analysis()
+        inventory = self.inventory_analysis()
+        
+        report = {
+            <span class="string">'年度营收'</span>: profit[<span class="string">'营业收入'</span>].sum(),
+            <span class="string">'年度毛利率'</span>: profit[<span class="string">'毛利'</span>].sum() / profit[<span class="string">'营业收入'</span>].sum(),
+            <span class="string">'年度净利率'</span>: profit[<span class="string">'净利润'</span>].sum() / profit[<span class="string">'营业收入'</span>].sum(),
+            <span class="string">'A类产品数'</span>: len(abc[abc[<span class="string">'ABC类别'</span>] == <span class="string">'A'</span>]),
+            <span class="string">'平均周转率'</span>: inventory[<span class="string">'周转率'</span>].mean()
+        }
+        <span class="keyword">return</span> report
+
+<span class="comment"># 使用示例</span>
+analyzer = SalesAnalyzer(sales_data, product_data)
+report = analyzer.generate_report()
+
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="string">print</span>(<span class="string">"综合分析报告"</span>)
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="keyword">for</span> key, value <span class="keyword">in</span> report.items():
+    <span class="keyword">if</span> <span class="string">'率'</span> <span class="keyword">in</span> key:
+        <span class="string">print</span>(<span class="string">f"{key}: {value*100:.1f}%"</span>)
+    <span class="keyword">else</span>:
+        <span class="string">print</span>(<span class="string">f"{key}: {value}"</span>)</code>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter5">
+                <div class="chapter-test-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    第五章综合测评
+                </div>
+                
+                <div class="test-questions">
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">ABC分类法中，A类商品的特点是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="A">
+                                品种多、销售额占比高
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="B">
+                                品种少、销售额占比高
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="C">
+                                品种多、销售额占比低
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q1" value="D">
+                                品种少、销售额占比低
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">关联规则分析中，提升度>1表示？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="A">
+                                负相关
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="B">
+                                无关联
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="C">
+                                正相关
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q2" value="D">
+                                完全独立
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">库存周转天数越短，说明？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="A">
+                                库存管理效率越高
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="B">
+                                库存积压越严重
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="C">
+                                资金占用越多
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q3" value="D">
+                                销售越差
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">以下哪个不是销售与运营分析的核心内容？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="A">
+                                商品ABC分析
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="B">
+                                毛利与利润分析
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="C">
+                                关联规则分析
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q4" value="D">
+                                用户画像分析
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">毛利率的计算公式是？</div>
+                        <div class="question-options">
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="A">
+                                净利润/营业收入
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="B">
+                                (营业收入-营业成本)/营业收入
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="C">
+                                营业成本/营业收入
+                            </label>
+                            <label class="question-option">
+                                <input type="radio" name="q5" value="D">
+                                毛利/营业成本
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter5')">提交测评</button>
+                
+                <div class="test-result hidden"></div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter5-4.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：库存与供应链分析</span>
+                </a>
+                <a href="../chapter6.html" class="chapter-nav-btn">
+                    <span>下一章：数据可视化叙事</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        function saveProgress() {
+            const pageId = 'chapter5-5';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[pageId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const pageId = 'chapter5-5';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progress[pageId] && progress[pageId].completed) {
+                progressText.textContent = '已完成';
+                progressText.style.color = '#10b981';
+            } else {
+                progressText.textContent = '学习中...';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressDisplay();
+            
+            setTimeout(() => {
+                saveProgress();
+            }, 30000);
+
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const isCorrect = this.dataset.correct === 'true';
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this && !isCorrect) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                    saveProgress();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.4 数据指标体系搭建 - 数据分析思维与业务理解</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box { background-color: rgba(239, 68, 68, 0.05); border-left: 4px solid #ef4444; border-radius: 0 0.5rem 0.5rem 0; padding: 1rem 1.5rem; margin-bottom: 1.5rem; }
+        .error-box p { color: #64748b; font-size: 0.875rem; }
+        .error-box strong { color: #ef4444; }
+        .case-study { background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05)); border-radius: 1rem; padding: 2rem; margin: 2rem 0; border: 1px solid rgba(37, 99, 235, 0.1); }
+        .case-study-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .case-study-header i { font-size: 1.5rem; color: #2563eb; }
+        .case-study-header h3 { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .case-study-content { color: #64748b; line-height: 1.8; }
+        .case-study-content h4 { color: #1e293b; font-weight: 600; margin: 1rem 0 0.5rem; }
+        .case-study-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .navigation-buttons { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e2e8f0; }
+        .nav-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; }
+        .nav-btn.prev { background-color: #f1f5f9; color: #64748b; }
+        .nav-btn.prev:hover { background-color: #e2e8f0; color: #1e293b; }
+        .nav-btn.next { background-color: #2563eb; color: white; }
+        .nav-btn.next:hover { background-color: #1d4ed8; transform: translateY(-1px); }
+        .progress-indicator { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1)); border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: #10b981; font-weight: 600; }
+        .hamburger-menu { display: none; background: none; border: none; font-size: 1.5rem; color: #1e40af; cursor: pointer; padding: 0.5rem; }
+        @media (max-width: 768px) { .hamburger-menu { display: block; } .navbar-menu { display: none; } .navbar-menu.active { display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background-color: white; padding: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); } }
+        .hierarchy-diagram { background-color: #f8fafc; border-radius: 1rem; padding: 2rem; margin: 1.5rem 0; }
+        .hierarchy-level { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .hierarchy-node { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-align: center; }
+        .hierarchy-node.l1 { background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; min-width: 150px; }
+        .hierarchy-node.l2 { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; border: 2px solid #2563eb; min-width: 120px; }
+        .hierarchy-node.l3 { background-color: rgba(16, 185, 129, 0.1); color: #10b981; border: 2px solid #10b981; min-width: 100px; font-size: 0.875rem; }
+        .hierarchy-connector { text-align: center; color: #94a3b8; font-size: 1.25rem; margin: 0.5rem 0; }
+        .metric-hierarchy { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; overflow: hidden; margin: 1.5rem 0; }
+        .metric-hierarchy-header { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 1rem 1.5rem; font-weight: 700; }
+        .metric-hierarchy-body { padding: 1.5rem; }
+        .metric-level { margin-bottom: 1rem; padding-left: 0; }
+        .metric-level-item { display: flex; align-items: flex-start; gap: 1rem; padding: 0.75rem; background-color: #f8fafc; border-radius: 0.5rem; margin-bottom: 0.5rem; }
+        .metric-level-item.north-star { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid #2563eb; }
+        .metric-level-item.key { background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05)); border-left: 4px solid #10b981; }
+        .metric-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .metric-badge.ns { background-color: #2563eb; color: white; }
+        .metric-badge.kpi { background-color: #10b981; color: white; }
+        .metric-badge.process { background-color: #f59e0b; color: white; }
+        .metric-info h5 { font-size: 1rem; font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
+        .metric-info p { font-size: 0.875rem; color: #64748b; }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第一章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1-1.html" class="sidebar-item"><i class="fas fa-route"></i> 1.1 数据驱动决策流程</a>
+                <a href="chapter1-2.html" class="sidebar-item"><i class="fas fa-puzzle-piece"></i> 1.2 业务指标拆解</a>
+                <a href="chapter1-3.html" class="sidebar-item"><i class="fas fa-ship"></i> 1.3 AARRR海盗模型</a>
+                <a href="chapter1-4.html" class="sidebar-item active"><i class="fas fa-sitemap"></i> 1.4 数据指标体系搭建</a>
+                <a href="chapter1-5.html" class="sidebar-item"><i class="fas fa-file-alt"></i> 1.5 数据分析报告撰写</a>
+                <a href="chapter1-6.html" class="sidebar-item"><i class="fas fa-tasks"></i> 1.6 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem;">
+                <a href="../chapter1.html" class="sidebar-item" style="display: block; text-align: center; background: rgba(37, 99, 235, 0.1);">
+                    <i class="fas fa-arrow-left"></i> 返回章节概览
+                </a>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：未开始</span>
+            </div>
+
+            <span class="course-badge">第一章 · 第4节</span>
+            <h1 class="course-title">数据指标体系搭建</h1>
+            <p class="course-subtitle">学习如何构建完整的数据指标体系，让数据真正驱动业务决策</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解数据指标体系的层级结构</li>
+                    <li>掌握北极星指标的选取原则</li>
+                    <li>学会设计OSM模型（目标-策略-度量）</li>
+                    <li>了解指标分级管理的方法</li>
+                    <li>能够独立搭建业务指标体系</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、什么是数据指标体系</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-question-circle"></i> 定义与价值</h3>
+                <div class="section-content">
+                    <p><strong>数据指标体系</strong>是一套系统化的指标集合，它将业务目标层层分解，形成从战略到执行的完整指标链。一个好的指标体系能够：</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>对齐目标：</strong>让全员理解公司战略方向</li>
+                        <li><strong>发现问题：</strong>快速定位业务异常</li>
+                        <li><strong>指导决策：</strong>提供数据支撑</li>
+                        <li><strong>评估效果：</strong>量化业务成果</li>
+                    </ul>
+                </div>
+
+                <div class="hierarchy-diagram">
+                    <div class="diagram-title" style="text-align: center; font-weight: 600; color: #1e293b; margin-bottom: 1.5rem;">指标体系层级结构</div>
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-node l1"><i class="fas fa-star"></i> 北极星指标</div>
+                    </div>
+                    <div class="hierarchy-connector"><i class="fas fa-chevron-down"></i></div>
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-node l2">一级指标（KPI）</div>
+                        <div class="hierarchy-node l2">一级指标（KPI）</div>
+                        <div class="hierarchy-node l2">一级指标（KPI）</div>
+                    </div>
+                    <div class="hierarchy-connector"><i class="fas fa-chevron-down"></i></div>
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-node l3">二级指标</div>
+                        <div class="hierarchy-node l3">二级指标</div>
+                        <div class="hierarchy-node l3">二级指标</div>
+                        <div class="hierarchy-node l3">二级指标</div>
+                        <div class="hierarchy-node l3">二级指标</div>
+                        <div class="hierarchy-node l3">二级指标</div>
+                    </div>
+                    <div class="hierarchy-connector"><i class="fas fa-chevron-down"></i></div>
+                    <div class="hierarchy-level">
+                        <div style="text-align: center; padding: 0.75rem 1.5rem; background-color: #f1f5f9; border-radius: 0.5rem; color: #64748b;">
+                            <i class="fas fa-cog"></i> 过程指标 / 执行指标
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <div class="case-study-header">
+                        <i class="fas fa-video"></i>
+                        <h3>真实案例：短视频平台的指标体系</h3>
+                    </div>
+                    <div class="case-study-content">
+                        <p>某短视频平台的指标体系设计：</p>
+                        <ul>
+                            <li><strong>北极星指标：</strong>日均使用时长（反映用户粘性和平台价值）</li>
+                            <li><strong>一级指标：</strong>DAU、用户留存率、人均观看视频数、创作者活跃数</li>
+                            <li><strong>二级指标：</strong>各渠道新增用户、各功能使用率、视频完播率、互动率</li>
+                            <li><strong>过程指标：</strong>Push打开率、视频加载速度、推荐点击率</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、北极星指标</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-star"></i> 什么是北极星指标</h3>
+                <div class="section-content">
+                    <p><strong>北极星指标（North Star Metric）</strong>是产品最核心的单一指标，它代表了产品为用户创造的核心价值。北极星指标像北极星一样，为整个团队指明方向。</p>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb" style="color: #10b981;"></i> 北极星指标的特征：</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>反映用户获得的核心价值</li>
+                        <li>与长期商业成功直接相关</li>
+                        <li>易于理解和沟通</li>
+                        <li>可量化、可追踪</li>
+                        <li>团队可控，可通过努力改善</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-building"></i> 各行业北极星指标示例</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-video"></i><span>短视频：日均使用时长</span></div>
+                    <div class="feature-item"><i class="fas fa-shopping-cart"></i><span>电商平台：GMV（成交总额）</span></div>
+                    <div class="feature-item"><i class="fas fa-music"></i><span>音乐App：日均听歌时长</span></div>
+                    <div class="feature-item"><i class="fas fa-comments"></i><span>社交App：日均消息发送量</span></div>
+                    <div class="feature-item"><i class="fas fa-graduation-cap"></i><span>在线教育：完课率</span></div>
+                    <div class="feature-item"><i class="fas fa-tools"></i><span>SaaS产品：月活跃付费用户数</span></div>
+                </div>
+
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> 常见错误：</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>选择虚荣指标：</strong>如累计注册用户数，只增不减，无法反映真实价值</li>
+                        <li><strong>过于关注短期：</strong>如日收入，可能损害长期用户体验</li>
+                        <li><strong>指标过多：</strong>北极星指标应该是唯一的，多个"北极星"等于没有方向</li>
+                        <li><strong>脱离业务：</strong>指标与核心价值创造脱节</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、OSM模型：指标体系设计方法</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-project-diagram"></i> OSM模型介绍</h3>
+                <div class="section-content">
+                    <p><strong>OSM模型</strong>是一种结构化的指标设计方法，包含三个要素：</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>O - Objective（目标）：</strong>业务要达成的核心目标</li>
+                        <li><strong>S - Strategy（策略）：</strong>达成目标的策略路径</li>
+                        <li><strong>M - Measure（度量）：</strong>衡量策略执行效果的指标</li>
+                    </ul>
+                </div>
+
+                <div class="metric-hierarchy">
+                    <div class="metric-hierarchy-header">
+                        <i class="fas fa-sitemap"></i> OSM模型示例：电商平台
+                    </div>
+                    <div class="metric-hierarchy-body">
+                        <div class="metric-level">
+                            <div class="metric-level-item north-star">
+                                <span class="metric-badge ns">目标 O</span>
+                                <div class="metric-info">
+                                    <h5>提升平台GMV</h5>
+                                    <p>核心业务目标：本季度GMV达到10亿</p>
+                                </div>
+                            </div>
+                            <div style="margin-left: 2rem;">
+                                <div class="metric-level-item key">
+                                    <span class="metric-badge kpi">策略 S1</span>
+                                    <div class="metric-info">
+                                        <h5>提升用户购买转化</h5>
+                                        <p>通过优化购物流程提升转化率</p>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 2rem;">
+                                    <div class="metric-level-item">
+                                        <span class="metric-badge process">度量 M1</span>
+                                        <div class="metric-info">
+                                            <h5>转化率、客单价、复购率</h5>
+                                            <p>衡量购买转化的核心指标</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="metric-level-item key">
+                                    <span class="metric-badge kpi">策略 S2</span>
+                                    <div class="metric-info">
+                                        <h5>扩大用户规模</h5>
+                                        <p>通过多渠道获客扩大用户基数</p>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 2rem;">
+                                    <div class="metric-level-item">
+                                        <span class="metric-badge process">度量 M2</span>
+                                        <div class="metric-info">
+                                            <h5>新增用户数、获客成本、渠道ROI</h5>
+                                            <p>衡量用户增长效果</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># OSM模型指标追踪示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 定义OSM指标结构</span>
+osm_metrics = {
+    <span class="string">'目标'</span>: <span class="string">'提升平台GMV至10亿'</span>,
+    <span class="string">'策略'</span>: [
+        {
+            <span class="string">'name'</span>: <span class="string">'提升转化率'</span>,
+            <span class="string">'metrics'</span>: [<span class="string">'转化率'</span>, <span class="string">'客单价'</span>, <span class="string">'复购率'</span>],
+            <span class="string">'target'</span>: [<span class="string">'5%'</span>, <span class="string">'200元'</span>, <span class="string">'30%'</span>],
+            <span class="string">'current'</span>: [<span class="string">'3.5%'</span>, <span class="string">'180元'</span>, <span class="string">'25%'</span>]
+        },
+        {
+            <span class="string">'name'</span>: <span class="string">'扩大用户规模'</span>,
+            <span class="string">'metrics'</span>: [<span class="string">'MAU'</span>, <span class="string">'新增用户'</span>, <span class="string">'CAC'</span>],
+            <span class="string">'target'</span>: [<span class="string">'500万'</span>, <span class="string">'50万/月'</span>, <span class="string">'30元'</span>],
+            <span class="string">'current'</span>: [<span class="string">'380万'</span>, <span class="string">'35万/月'</span>, <span class="string">'45元'</span>]
+        }
+    ]
+}
+
+<span class="comment"># 计算目标达成情况</span>
+<span class="keyword">for</span> strategy <span class="keyword">in</span> osm_metrics[<span class="string">'策略'</span>]:
+    <span class="string">print</span>(<span class="string">f"\n=== {strategy['name']} ==="</span>)
+    <span class="keyword">for</span> i, metric <span class="keyword">in</span> <span class="keyword">enumerate</span>(strategy[<span class="string">'metrics'</span>]):
+        <span class="string">print</span>(<span class="string">f"{metric}: 目标{strategy['target'][i]}, 当前{strategy['current'][i]}"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、指标分级管理</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-layer-group"></i> 三级指标体系</h3>
+                <div class="section-content">
+                    <p>根据指标的重要性和管理层级，通常将指标分为三级：</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">三级指标管理框架</div>
+                    <div class="diagram" style="width: 100%;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                            <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1)); border-radius: 1rem; padding: 1.5rem; border: 2px solid #2563eb;">
+                                <h4 style="color: #2563eb; margin-bottom: 1rem;"><i class="fas fa-crown"></i> 一级指标</h4>
+                                <ul style="font-size: 0.875rem; color: #64748b; margin-left: 1rem;">
+                                    <li>公司级/战略级指标</li>
+                                    <li>反映整体业务健康度</li>
+                                    <li>高管关注，日报/周报</li>
+                                    <li>如：GMV、DAU、营收</li>
+                                </ul>
+                            </div>
+                            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1)); border-radius: 1rem; padding: 1.5rem; border: 2px solid #10b981;">
+                                <h4 style="color: #10b981; margin-bottom: 1rem;"><i class="fas fa-tasks"></i> 二级指标</h4>
+                                <ul style="font-size: 0.875rem; color: #64748b; margin-left: 1rem;">
+                                    <li>部门级/业务线指标</li>
+                                    <li>一级指标的拆解</li>
+                                    <li>中层关注，周报/月报</li>
+                                    <li>如：各渠道转化率、留存率</li>
+                                </ul>
+                            </div>
+                            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)); border-radius: 1rem; padding: 1.5rem; border: 2px solid #f59e0b;">
+                                <h4 style="color: #f59e0b; margin-bottom: 1rem;"><i class="fas fa-cog"></i> 三级指标</h4>
+                                <ul style="font-size: 0.875rem; color: #64748b; margin-left: 1rem;">
+                                    <li>执行层/过程指标</li>
+                                    <li>具体行动的衡量</li>
+                                    <li>一线关注，实时/日报</li>
+                                    <li>如：页面停留时长、点击率</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-check-circle"></i> 好指标的标准</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-bullseye"></i><span>SMART原则：具体、可衡量、可达成、相关、有时限</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>可行动：指标变化时能指导具体行动</span></div>
+                    <div class="feature-item"><i class="fas fa-sync"></i><span>可归因：能够追溯变化原因</span></div>
+                    <div class="feature-item"><i class="fas fa-shield-alt"></i><span>抗干扰：不易被人为操纵</span></div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、指标体系搭建实战</h2>
+
+                <div class="case-study">
+                    <div class="case-study-header">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>实战案例：在线教育平台指标体系搭建</h3>
+                    </div>
+                    <div class="case-study-content">
+                        <h4>Step 1：明确北极星指标</h4>
+                        <p>经过分析，选择<strong>"月度完课学员数"</strong>作为北极星指标，因为它直接反映了平台为用户创造的价值——学习成果。</p>
+                        
+                        <h4>Step 2：拆解一级指标</h4>
+                        <ul>
+                            <li><strong>用户规模：</strong>MAU、新增学员数</li>
+                            <li><strong>学习效果：</strong>完课率、作业提交率</li>
+                            <li><strong>商业价值：</strong>付费转化率、ARPU</li>
+                            <li><strong>用户粘性：</strong>周留存率、学习天数</li>
+                        </ul>
+                        
+                        <h4>Step 3：细化二级指标</h4>
+                        <ul>
+                            <li>各课程完课率、各章节完成率</li>
+                            <li>各渠道获客数、获客成本</li>
+                            <li>直播参与率、回放观看率</li>
+                            <li>社群活跃度、答疑响应时间</li>
+                        </ul>
+                        
+                        <h4>Step 4：定义过程指标</h4>
+                        <ul>
+                            <li>视频加载速度、播放流畅度</li>
+                            <li>Push到达率、打开率</li>
+                            <li>页面加载时间、错误率</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 指标体系监控仪表盘示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 定义指标体系</span>
+metrics_system = {
+    <span class="string">'北极星'</span>: {<span class="string">'name'</span>: <span class="string">'月度完课学员数'</span>, <span class="string">'target'</span>: 50000, <span class="string">'current'</span>: 42500},
+    <span class="string">'一级指标'</span>: [
+        {<span class="string">'name'</span>: <span class="string">'MAU'</span>, <span class="string">'target'</span>: 200000, <span class="string">'current'</span>: 185000},
+        {<span class="string">'name'</span>: <span class="string">'完课率'</span>, <span class="string">'target'</span>: 0.65, <span class="string">'current'</span>: 0.58},
+        {<span class="string">'name'</span>: <span class="string">'付费转化率'</span>, <span class="string">'target'</span>: 0.08, <span class="string">'current'</span>: 0.065},
+        {<span class="string">'name'</span>: <span class="string">'周留存率'</span>, <span class="string">'target'</span>: 0.45, <span class="string">'current'</span>: 0.38}
+    ],
+    <span class="string">'二级指标'</span>: [
+        {<span class="string">'name'</span>: <span class="string">'Python课程完课率'</span>, <span class="string">'target'</span>: 0.70, <span class="string">'current'</span>: 0.62},
+        {<span class="string">'name'</span>: <span class="string">'直播参与率'</span>, <span class="string">'target'</span>: 0.55, <span class="string">'current'</span>: 0.48},
+        {<span class="string">'name'</span>: <span class="string">'作业提交率'</span>, <span class="string">'target'</span>: 0.40, <span class="string">'current'</span>: 0.32}
+    ]
+}
+
+<span class="comment"># 计算达成率</span>
+<span class="keyword">def</span> <span class="function">calc_achievement</span>(current, target):
+    <span class="keyword">return</span> (current / target) * 100
+
+<span class="comment"># 输出指标看板</span>
+<span class="string">print</span>(<span class="string">"=== 指标监控仪表盘 ===\n"</span>)
+
+<span class="string">print</span>(<span class="string">f"【北极星指标】{metrics_system['北极星']['name']}"</span>)
+achievement = calc_achievement(metrics_system[<span class="string">'北极星'</span>][<span class="string">'current'</span>], metrics_system[<span class="string">'北极星'</span>][<span class="string">'target'</span>])
+<span class="string">print</span>(<span class="string">f"  目标: {metrics_system['北极星']['target']:,} | 当前: {metrics_system['北极星']['current']:,} | 达成率: {achievement:.1f}%\n"</span>)
+
+<span class="string">print</span>(<span class="string">"【一级指标】"</span>)
+<span class="keyword">for</span> m <span class="keyword">in</span> metrics_system[<span class="string">'一级指标'</span>]:
+    achievement = calc_achievement(m[<span class="string">'current'</span>], m[<span class="string">'target'</span>])
+    status = <span class="string">"✓"</span> <span class="keyword">if</span> achievement >= 100 <span class="keyword">else</span> (<span class="string">"△"</span> <span class="keyword">if</span> achievement >= 80 <span class="keyword">else</span> <span class="string">"✗"</span>)
+    <span class="string">print</span>(<span class="string">f"  {status} {m['name']}: 目标{m['target']} | 当前{m['current']} | 达成率{achievement:.1f}%"</span>)</code>
+                </div>
+            </section>
+
+            <div class="tip-box">
+                <p><strong><i class="fas fa-lightbulb" style="color: #10b981;"></i> 小贴士：</strong>指标体系不是一成不变的，需要根据业务发展阶段定期审视和调整。初创期关注增长，成长期关注留存和变现，成熟期关注效率和利润。</p>
+            </div>
+
+            <div class="navigation-buttons">
+                <a href="chapter1-3.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    上一节：AARRR海盗模型
+                </a>
+                <a href="chapter1-5.html" class="nav-btn next">
+                    下一节：数据分析报告撰写
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() { document.querySelector('.navbar-menu').classList.toggle('active'); }
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('chapter1_progress') || '{}');
+            progress['1-4'] = { completed: true, timestamp: new Date().toISOString() };
+            localStorage.setItem('chapter1_progress', JSON.stringify(progress));
+            updateProgressIndicator();
+        }
+        function updateProgressIndicator() {
+            const progress = JSON.parse(localStorage.getItem('chapter1_progress') || '{}');
+            const indicator = document.getElementById('progress-indicator');
+            if (progress['1-4'] && progress['1-4'].completed) {
+                indicator.innerHTML = '<i class="fas fa-check-circle"></i><span>学习进度：已完成</span>';
+                indicator.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => { updateProgressIndicator(); setTimeout(saveProgress, 30000); });
+        window.addEventListener('beforeunload', () => { saveProgress(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.6 本章综合案例 - Python数据分析基础</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p { color: var(--text-secondary); font-size: 0.875rem; }
+        .error-box strong { color: #ef4444; }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem; padding: 2rem; margin: 2rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .case-study-header i { font-size: 1.5rem; color: #2563eb; }
+        .case-study-header h3 { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .case-study-content { color: #64748b; line-height: 1.8; }
+        .case-study-content h4 { color: #1e293b; font-weight: 600; margin: 1rem 0 0.5rem; }
+        .case-study-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .chapter-nav { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--border-color); }
+        .chapter-nav-btn { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background-color: var(--bg-light); border-radius: 0.75rem; text-decoration: none; color: var(--text-primary); font-weight: 600; transition: all 0.2s ease; }
+        .chapter-nav-btn:hover { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; }
+        .chapter-nav-btn i { font-size: 1.25rem; }
+        .progress-indicator { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1)); border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: #10b981; }
+        .progress-indicator i { color: #10b981; }
+        .sidebar-subsection { padding-left: 1.5rem; margin-top: 0.5rem; }
+        .sidebar-subsection .sidebar-item { font-size: 0.875rem; padding: 0.5rem 1rem; }
+        .sidebar-subsection .sidebar-item.active { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; font-weight: 600; }
+        .step-indicator { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
+        .step-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #f8fafc; border-radius: 2rem; font-size: 0.875rem; }
+        .step-item .step-num { width: 24px; height: 24px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; }
+        .chapter-summary { background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.08)); border-radius: 1rem; padding: 2rem; margin: 2rem 0; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .summary-item { background: white; padding: 1rem; border-radius: 0.5rem; text-align: center; }
+        .summary-item i { font-size: 2rem; color: #2563eb; margin-bottom: 0.5rem; }
+        .summary-item h4 { font-size: 0.875rem; color: #1e293b; margin-bottom: 0.25rem; }
+        .summary-item p { font-size: 0.75rem; color: #64748b; }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i><span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')"><i class="fas fa-user-plus"></i> 注册</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item active"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <div class="sidebar-subsection">
+                    <a href="chapter2-1.html" class="sidebar-item">2.1 Jupyter Notebook入门</a>
+                    <a href="chapter2-2.html" class="sidebar-item">2.2 NumPy数值计算</a>
+                    <a href="chapter2-3.html" class="sidebar-item">2.3 Pandas数据结构</a>
+                    <a href="chapter2-4.html" class="sidebar-item">2.4 数据清洗实战</a>
+                    <a href="chapter2-5.html" class="sidebar-item">2.5 数据合并与分组</a>
+                    <a href="chapter2-6.html" class="sidebar-item active">2.6 综合案例</a>
+                </div>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator"><i class="fas fa-check-circle"></i><span>学习进度：第二章第6节（本章最后一节）</span></div>
+            
+            <span class="course-badge">2.6</span>
+            <h1 class="course-title">本章综合案例</h1>
+            <p class="course-subtitle">综合运用本章所学知识，完成一个完整的电商销售数据分析项目</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>综合运用NumPy和Pandas进行数据分析</li>
+                    <li>完成从数据读取到结果输出的完整流程</li>
+                    <li>掌握实际业务场景中的分析思路</li>
+                    <li>学会撰写简洁清晰的分析代码</li>
+                    <li>总结本章学习要点，巩固知识体系</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、案例背景</h2>
+                <div class="section-content">
+                    <p><strong>某电商公司需要分析2024年第一季度的销售数据</strong>，了解各区域、各品类的销售表现，识别优质客户，为下一季度的营销策略提供数据支持。</p>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-database"></i> 数据说明</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-file-alt"></i><span><strong>订单数据</strong> - 订单ID、客户ID、商品ID、数量、金额、日期</span></div>
+                    <div class="feature-item"><i class="fas fa-users"></i><span><strong>客户数据</strong> - 客户ID、姓名、区域、会员等级</span></div>
+                    <div class="feature-item"><i class="fas fa-box"></i><span><strong>商品数据</strong> - 商品ID、商品名、品类、成本价</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tasks"></i> 分析流程</h3>
+                <div class="step-indicator">
+                    <div class="step-item"><span class="step-num">1</span>数据读取与探索</div>
+                    <div class="step-item"><span class="step-num">2</span>数据清洗</div>
+                    <div class="step-item"><span class="step-num">3</span>数据合并</div>
+                    <div class="step-item"><span class="step-num">4</span>指标计算</div>
+                    <div class="step-item"><span class="step-num">5</span>分组分析</div>
+                    <div class="step-item"><span class="step-num">6</span>结果输出</div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、完整代码实现</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-file-import"></i> 步骤1：导入库与创建数据</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="comment"># 设置随机种子，确保结果可复现</span>
+np.random.seed(42)
+
+<span class="comment"># ========== 创建模拟数据 ==========</span>
+
+<span class="comment"># 客户数据</span>
+customers = pd.DataFrame({
+    <span class="string">'customer_id'</span>: [<span class="string">f'C{str(i).zfill(3)}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(1, 51)],
+    <span class="string">'name'</span>: [<span class="string">f'客户{i}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(1, 51)],
+    <span class="string">'region'</span>: np.random.choice([<span class="string">'华东'</span>, <span class="string">'华南'</span>, <span class="string">'华北'</span>, <span class="string">'西南'</span>], 50),
+    <span class="string">'member_level'</span>: np.random.choice([<span class="string">'普通'</span>, <span class="string">'银卡'</span>, <span class="string">'金卡'</span>], 50, p=[0.5, 0.3, 0.2])
+})
+
+<span class="comment"># 商品数据</span>
+products = pd.DataFrame({
+    <span class="string">'product_id'</span>: [<span class="string">f'P{str(i).zfill(3)}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(1, 21)],
+    <span class="string">'product_name'</span>: [<span class="string">f'商品{i}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(1, 21)],
+    <span class="string">'category'</span>: np.random.choice([<span class="string">'数码'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>], 20),
+    <span class="string">'cost'</span>: np.random.randint(50, 500, 20)
+})
+
+<span class="comment"># 订单数据（模拟Q1数据）</span>
+n_orders = 200
+orders = pd.DataFrame({
+    <span class="string">'order_id'</span>: [<span class="string">f'O{str(i).zfill(4)}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(1, n_orders + 1)],
+    <span class="string">'customer_id'</span>: np.random.choice(customers[<span class="string">'customer_id'</span>], n_orders),
+    <span class="string">'product_id'</span>: np.random.choice(products[<span class="string">'product_id'</span>], n_orders),
+    <span class="string">'quantity'</span>: np.random.randint(1, 5, n_orders),
+    <span class="string">'order_date'</span>: pd.date_range(<span class="string">'2024-01-01'</span>, periods=n_orders, freq=<span class="string">'D'</span>)[:n_orders]
+})
+
+<span class="comment"># 添加一些数据质量问题</span>
+orders.loc[10, <span class="string">'customer_id'</span>] = <span class="keyword">None</span>  <span class="comment"># 缺失值</span>
+orders.loc[20, <span class="string">'quantity'</span>] = -1  <span class="comment"># 异常值</span>
+orders = pd.concat([orders, orders.iloc[[0, 1]]], ignore_index=<span class="keyword">True</span>)  <span class="comment"># 重复值</span>
+
+<span class="keyword">print</span>(<span class="string">"原始订单数据形状:"</span>, orders.shape)
+<span class="keyword">print</span>(orders.head())</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-broom"></i> 步骤2：数据清洗</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ========== 数据清洗 ==========</span>
+
+<span class="comment"># 1. 检查缺失值</span>
+<span class="keyword">print</span>(<span class="string">"缺失值统计:"</span>)
+<span class="keyword">print</span>(orders.isnull().sum())
+
+<span class="comment"># 2. 处理缺失值 - 删除无客户ID的订单</span>
+orders_clean = orders.dropna(subset=[<span class="string">'customer_id'</span>])
+
+<span class="comment"># 3. 处理异常值 - 数量必须大于0</span>
+orders_clean = orders_clean[orders_clean[<span class="string">'quantity'</span>] > 0]
+
+<span class="comment"># 4. 去除重复值</span>
+orders_clean = orders_clean.drop_duplicates(subset=[<span class="string">'order_id'</span>])
+
+<span class="keyword">print</span>(<span class="string">f"\n清洗后数据量: {len(orders_clean)} 条"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-code-branch"></i> 步骤3：数据合并与计算</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ========== 数据合并 ==========</span>
+
+<span class="comment"># 合并订单与客户信息</span>
+order_customer = pd.merge(orders_clean, customers, on=<span class="string">'customer_id'</span>, how=<span class="string">'left'</span>)
+
+<span class="comment"># 合并商品信息</span>
+full_data = pd.merge(order_customer, products, on=<span class="string">'product_id'</span>, how=<span class="string">'left'</span>)
+
+<span class="comment"># ========== 计算派生指标 ==========</span>
+
+<span class="comment"># 计算销售额（假设售价是成本的1.5-3倍）</span>
+np.random.seed(42)
+full_data[<span class="string">'price'</span>] = full_data[<span class="string">'cost'</span>] * np.random.uniform(1.5, 3, len(full_data))
+full_data[<span class="string">'sales_amount'</span>] = full_data[<span class="string">'quantity'</span>] * full_data[<span class="string">'price'</span>]
+full_data[<span class="string">'profit'</span>] = full_data[<span class="string">'sales_amount'</span>] - full_data[<span class="string">'quantity'</span>] * full_data[<span class="string">'cost'</span>]
+
+<span class="comment"># 提取时间维度</span>
+full_data[<span class="string">'month'</span>] = full_data[<span class="string">'order_date'</span>].dt.month
+full_data[<span class="string">'weekday'</span>] = full_data[<span class="string">'order_date'</span>].dt.day_name()
+
+<span class="keyword">print</span>(<span class="string">"完整数据预览:"</span>)
+<span class="keyword">print</span>(full_data.head())</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 步骤4：数据分析</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ========== 数据分析 ==========</span>
+
+<span class="comment"># 1. 整体销售概况</span>
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">"Q1销售概况"</span>)
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">f"总订单数: {len(full_data)}"</span>)
+<span class="keyword">print</span>(<span class="string">f"总销售额: ¥{full_data['sales_amount'].sum():,.2f}"</span>)
+<span class="keyword">print</span>(<span class="string">f"总利润: ¥{full_data['profit'].sum():,.2f}"</span>)
+<span class="keyword">print</span>(<span class="string">f"平均客单价: ¥{full_data['sales_amount'].mean():,.2f}"</span>)
+<span class="keyword">print</span>(<span class="string">f"利润率: {(full_data['profit'].sum() / full_data['sales_amount'].sum() * 100):.1f}%"</span>)
+
+<span class="comment"># 2. 区域销售分析</span>
+<span class="keyword">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">"各区域销售分析"</span>)
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+region_analysis = full_data.groupby(<span class="string">'region'</span>).agg({
+    <span class="string">'order_id'</span>: <span class="string">'count'</span>,
+    <span class="string">'sales_amount'</span>: <span class="string">'sum'</span>,
+    <span class="string">'profit'</span>: <span class="string">'sum'</span>,
+    <span class="string">'customer_id'</span>: <span class="string">'nunique'</span>
+}).rename(columns={
+    <span class="string">'order_id'</span>: <span class="string">'订单数'</span>,
+    <span class="string">'sales_amount'</span>: <span class="string">'销售额'</span>,
+    <span class="string">'profit'</span>: <span class="string">'利润'</span>,
+    <span class="string">'customer_id'</span>: <span class="string">'客户数'</span>
+})
+region_analysis[<span class="string">'客单价'</span>] = region_analysis[<span class="string">'销售额'</span>] / region_analysis[<span class="string">'订单数'</span>]
+<span class="keyword">print</span>(region_analysis.sort_values(<span class="string">'销售额'</span>, ascending=<span class="keyword">False</span>))
+
+<span class="comment"># 3. 品类销售分析</span>
+<span class="keyword">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">"各品类销售分析"</span>)
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+category_analysis = full_data.groupby(<span class="string">'category'</span>).agg({
+    <span class="string">'quantity'</span>: <span class="string">'sum'</span>,
+    <span class="string">'sales_amount'</span>: <span class="string">'sum'</span>,
+    <span class="string">'profit'</span>: [<span class="string">'sum'</span>, <span class="string">'mean'</span>]
+}).round(2)
+category_analysis.columns = [<span class="string">'销量'</span>, <span class="string">'销售额'</span>, <span class="string">'总利润'</span>, <span class="string">'平均利润'</span>]
+<span class="keyword">print</span>(category_analysis.sort_values(<span class="string">'销售额'</span>, ascending=<span class="keyword">False</span>))
+
+<span class="comment"># 4. 月度趋势分析</span>
+<span class="keyword">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">"月度销售趋势"</span>)
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+monthly_trend = full_data.groupby(<span class="string">'month'</span>).agg({
+    <span class="string">'order_id'</span>: <span class="string">'count'</span>,
+    <span class="string">'sales_amount'</span>: <span class="string">'sum'</span>
+}).rename(columns={<span class="string">'order_id'</span>: <span class="string">'订单数'</span>, <span class="string">'sales_amount'</span>: <span class="string">'销售额'</span>})
+monthly_trend[<span class="string">'环比增长'</span>] = monthly_trend[<span class="string">'销售额'</span>].pct_change() * 100
+<span class="keyword">print</span>(monthly_trend)
+
+<span class="comment"># 5. TOP10客户分析</span>
+<span class="keyword">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 50</span>)
+<span class="keyword">print</span>(<span class="string">"TOP10客户"</span>)
+<span class="keyword">print</span>(<span class="string">"=" * 50</span>)
+top_customers = full_data.groupby([<span class="string">'customer_id'</span>, <span class="string">'name'</span>]).agg({
+    <span class="string">'order_id'</span>: <span class="string">'count'</span>,
+    <span class="string">'sales_amount'</span>: <span class="string">'sum'</span>
+}).rename(columns={<span class="string">'order_id'</span>: <span class="string">'订单数'</span>, <span class="string">'sales_amount'</span>: <span class="string">'消费金额'</span>})
+top_customers = top_customers.sort_values(<span class="string">'消费金额'</span>, ascending=<span class="keyword">False</span>).head(10)
+<span class="keyword">print</span>(top_customers)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-file-export"></i> 步骤5：结果输出</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ========== 结果输出 ==========</span>
+
+<span class="comment"># 创建分析报告摘要</span>
+report = <span class="string">f"""
+========================================
+Q1销售分析报告摘要
+========================================
+报告生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+【整体表现】
+- 总销售额: ¥{full_data['sales_amount'].sum():,.2f}
+- 总利润: ¥{full_data['profit'].sum():,.2f}
+- 利润率: {(full_data['profit'].sum() / full_data['sales_amount'].sum() * 100):.1f}%
+
+【区域表现】
+- 最佳区域: {region_analysis['销售额'].idxmax()}
+- 销售额占比: {(region_analysis['销售额'].max() / region_analysis['销售额'].sum() * 100):.1f}%
+
+【品类表现】
+- 最佳品类: {category_analysis['销售额'].idxmax()}
+- 销售额: ¥{category_analysis['销售额'].max():,.2f}
+
+【客户洞察】
+- 活跃客户数: {full_data['customer_id'].nunique()}
+- TOP客户贡献: {(top_customers['消费金额'].sum() / full_data['sales_amount'].sum() * 100):.1f}%
+
+【建议】
+1. 重点发展{region_analysis['销售额'].idxmax()}区域市场
+2. 加大{category_analysis['销售额'].idxmax()}品类推广力度
+3. 针对TOP客户制定专属优惠策略
+========================================
+"""</span>
+
+<span class="keyword">print</span>(report)
+
+<span class="comment"># 导出分析结果到CSV</span>
+full_data.to_csv(<span class="string">'q1_sales_analysis.csv'</span>, index=<span class="keyword">False</span>, encoding=<span class="string">'utf-8-sig'</span>)
+<span class="keyword">print</span>(<span class="string">"\n分析数据已导出至 q1_sales_analysis.csv"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、分析结论与建议</h2>
+                
+                <div class="case-study">
+                    <div class="case-study-header"><i class="fas fa-lightbulb"></i><h3>关键发现</h3></div>
+                    <div class="case-study-content">
+                        <h4>区域表现</h4>
+                        <p>华东区域销售表现最佳，贡献了约30%的销售额，建议加大该区域的营销投入。西南区域相对薄弱，需要分析原因并制定改进策略。</p>
+                        
+                        <h4>品类分析</h4>
+                        <p>数码品类销售额领先，但利润率相对较低；食品品类虽然销售额中等，但利润率较高，是值得重点发展的品类。</p>
+                        
+                        <h4>客户价值</h4>
+                        <p>TOP10客户贡献了约25%的销售额，符合二八定律。金卡会员的客单价显著高于普通会员，会员体系运营效果良好。</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>最佳实践：</strong>在实际项目中，建议将分析流程封装成函数或类，便于复用和自动化。同时，添加异常处理和日志记录，确保分析过程的可追溯性。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、本章知识总结</h2>
+                
+                <div class="chapter-summary">
+                    <h3 style="color: #1e293b; margin-bottom: 1rem;"><i class="fas fa-graduation-cap" style="color: #2563eb;"></i> 第二章核心知识点回顾</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <i class="fas fa-laptop-code"></i>
+                            <h4>Jupyter Notebook</h4>
+                            <p>交互式编程环境</p>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-calculator"></i>
+                            <h4>NumPy</h4>
+                            <p>高效数值计算</p>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-table"></i>
+                            <h4>Pandas</h4>
+                            <p>数据处理核心</p>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-broom"></i>
+                            <h4>数据清洗</h4>
+                            <p>缺失值/异常值处理</p>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-object-group"></i>
+                            <h4>数据合并</h4>
+                            <p>concat/merge操作</p>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-layer-group"></i>
+                            <h4>分组聚合</h4>
+                            <p>groupby分析</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 常用代码速查表</span>
+
+<span class="comment"># 读取数据</span>
+df = pd.read_csv(<span class="string">'data.csv'</span>)
+
+<span class="comment"># 查看数据</span>
+df.head()          <span class="comment"># 前5行</span>
+df.info()          <span class="comment"># 数据类型</span>
+df.describe()      <span class="comment"># 统计摘要</span>
+
+<span class="comment"># 数据选择</span>
+df[<span class="string">'col'</span>]           <span class="comment"># 选择列</span>
+df.loc[0, <span class="string">'col'</span>]    <span class="comment"># 标签索引</span>
+df.iloc[0, 0]      <span class="comment"># 位置索引</span>
+df[df[<span class="string">'col'</span>] > 10]  <span class="comment"># 条件过滤</span>
+
+<span class="comment"># 数据清洗</span>
+df.dropna()        <span class="comment"># 删除缺失值</span>
+df.fillna(0)       <span class="comment"># 填充缺失值</span>
+df.drop_duplicates()  <span class="comment"># 去重</span>
+
+<span class="comment"># 数据合并</span>
+pd.merge(df1, df2, on=<span class="string">'key'</span>)  <span class="comment"># 连接</span>
+pd.concat([df1, df2])           <span class="comment"># 拼接</span>
+
+<span class="comment"># 分组聚合</span>
+df.groupby(<span class="string">'col'</span>).sum()         <span class="comment"># 分组求和</span>
+df.groupby(<span class="string">'col'</span>).agg({<span class="string">'A'</span>: <span class="string">'sum'</span>, <span class="string">'B'</span>: <span class="string">'mean'</span>})  <span class="comment"># 多重聚合</span></code>
+                </div>
+            </section>
+
+            <div class="chapter-test-container" data-chapter-test="chapter2">
+                <div class="chapter-test-title"><i class="fas fa-pencil-alt"></i> 第二章综合测评</div>
+                <div class="test-questions">
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第1题</div>
+                        <div class="question-text">以下哪个不是Pandas的核心数据结构？</div>
+                        <div class="question-options">
+                            <label class="question-option"><input type="radio" name="q1" value="A"> Series</label>
+                            <label class="question-option"><input type="radio" name="q1" value="B"> Array</label>
+                            <label class="question-option"><input type="radio" name="q1" value="C"> DataFrame</label>
+                            <label class="question-option"><input type="radio" name="q1" value="D"> Index</label>
+                        </div>
+                    </div>
+                    <div class="test-question" data-correct="C">
+                        <div class="question-number">第2题</div>
+                        <div class="question-text">处理缺失值时，以下哪个方法会删除所有包含缺失值的行？</div>
+                        <div class="question-options">
+                            <label class="question-option"><input type="radio" name="q2" value="A"> df.fillna(0)</label>
+                            <label class="question-option"><input type="radio" name="q2" value="B"> df.isnull()</label>
+                            <label class="question-option"><input type="radio" name="q2" value="C"> df.dropna()</label>
+                            <label class="question-option"><input type="radio" name="q2" value="D"> df.notnull()</label>
+                        </div>
+                    </div>
+                    <div class="test-question" data-correct="A">
+                        <div class="question-number">第3题</div>
+                        <div class="question-text">merge函数默认的连接方式是？</div>
+                        <div class="question-options">
+                            <label class="question-option"><input type="radio" name="q3" value="A"> inner（内连接）</label>
+                            <label class="question-option"><input type="radio" name="q3" value="B"> left（左连接）</label>
+                            <label class="question-option"><input type="radio" name="q3" value="C"> outer（外连接）</label>
+                            <label class="question-option"><input type="radio" name="q3" value="D"> right（右连接）</label>
+                        </div>
+                    </div>
+                    <div class="test-question" data-correct="D">
+                        <div class="question-number">第4题</div>
+                        <div class="question-text">以下哪个代码可以计算每个分组的平均值？</div>
+                        <div class="question-options">
+                            <label class="question-option"><input type="radio" name="q4" value="A"> df.groupby('A').count()</label>
+                            <label class="question-option"><input type="radio" name="q4" value="B"> df.groupby('A').sum()</label>
+                            <label class="question-option"><input type="radio" name="q4" value="C"> df.groupby('A').size()</label>
+                            <label class="question-option"><input type="radio" name="q4" value="D"> df.groupby('A').mean()</label>
+                        </div>
+                    </div>
+                    <div class="test-question" data-correct="B">
+                        <div class="question-number">第5题</div>
+                        <div class="question-text">NumPy中创建全零数组的函数是？</div>
+                        <div class="question-options">
+                            <label class="question-option"><input type="radio" name="q5" value="A"> np.ones()</label>
+                            <label class="question-option"><input type="radio" name="q5" value="B"> np.zeros()</label>
+                            <label class="question-option"><input type="radio" name="q5" value="C"> np.empty()</label>
+                            <label class="question-option"><input type="radio" name="q5" value="D"> np.full()</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="submit-test-btn" onclick="submitChapterTest('chapter2')">提交测评</button>
+                <div class="test-result hidden"></div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter2-5.html" class="chapter-nav-btn"><i class="fas fa-arrow-left"></i><span>上一节：数据合并与分组</span></a>
+                <a href="../chapter3.html" class="chapter-nav-btn"><span>下一章：市场与行业分析</span><i class="fas fa-arrow-right"></i></a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section"><div class="footer-logo"><i class="fas fa-chart-bar"></i><span>数析学院</span></div><p>专注数据分析教育，助力职业发展</p></div>
+            <div class="footer-section"><h4>快速链接</h4><ul><li><a href="../index.html#courses">课程中心</a></li><li><a href="../index.html#projects">实战项目</a></li><li><a href="../achievements.html">成就殿堂</a></li></ul></div>
+            <div class="footer-section"><h4>联系我们</h4><ul><li><i class="fas fa-envelope"></i> contact@dataschool.com</li><li><i class="fas fa-phone"></i> 400-888-8888</li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>2024 数析学院 版权所有</p></div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h3>登录</h3><button class="modal-close" onclick="closeModal('login-modal')"><i class="fas fa-times"></i></button></div>
+            <form id="login-form"><div class="form-group"><label>邮箱</label><input type="email" id="login-email" required></div><div class="form-group"><label>密码</label><input type="password" id="login-password" required></div><button type="submit" class="submit-btn">登录</button></form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h3>注册</h3><button class="modal-close" onclick="closeModal('register-modal')"><i class="fas fa-times"></i></button></div>
+            <form id="register-form"><div class="form-group"><label>昵称</label><input type="text" id="register-name" required></div><div class="form-group"><label>邮箱</label><input type="email" id="register-email" required></div><div class="form-group"><label>密码</label><input type="password" id="register-password" required></div><button type="submit" class="submit-btn">注册</button></form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() { document.querySelector('.navbar-menu').classList.toggle('active'); }
+        document.addEventListener('DOMContentLoaded', function() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress['chapter2-6'] = { completed: true, timestamp: Date.now() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        });
+    </script>
+</body>
+</html>

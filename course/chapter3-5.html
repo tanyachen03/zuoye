@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.5 本章综合案例 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        .data-table tr:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: var(--success-color);
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 1001;
+            transition: width 0.2s ease;
+        }
+        .analysis-step {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-color);
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .summary-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.1));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .summary-item {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .summary-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1rem;
+        }
+        .summary-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .conclusion-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border: 2px solid var(--success-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .conclusion-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+        .strategy-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .strategy-item {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .strategy-item.so { border-top: 4px solid #10b981; }
+        .strategy-item.wo { border-top: 4px solid #ef4444; }
+        .strategy-item.st { border-top: 4px solid #f59e0b; }
+        .strategy-item.wt { border-top: 4px solid #64748b; }
+        .strategy-label {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .strategy-item.so .strategy-label { color: #10b981; }
+        .strategy-item.wo .strategy-label { color: #ef4444; }
+        .strategy-item.st .strategy-label { color: #f59e0b; }
+        .strategy-item.wt .strategy-label { color: #64748b; }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator" id="progressIndicator"></div>
+    
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第三章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter3-1.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 3.1 市场集中度分析</a>
+                <a href="chapter3-2.html" class="sidebar-item"><i class="fas fa-globe"></i> 3.2 PEST宏观环境分析</a>
+                <a href="chapter3-3.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 3.3 波特五力模型</a>
+                <a href="chapter3-4.html" class="sidebar-item"><i class="fas fa-th-large"></i> 3.4 SWOT分析与量化</a>
+                <a href="chapter3-5.html" class="sidebar-item active"><i class="fas fa-briefcase"></i> 3.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-progress" style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="flex: 1; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                        <div id="sectionProgress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); transition: width 0.3s ease;"></div>
+                    </div>
+                    <span id="progressText" style="font-size: 0.75rem; color: var(--primary-color); font-weight: 600;">0%</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第三章 · 第5节</span>
+            <h1 class="course-title">本章综合案例</h1>
+            <p class="course-subtitle">综合运用市场集中度、PEST、波特五力、SWOT四大分析框架，完成中国新能源汽车行业深度分析</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 案例目标</h3>
+                <ul class="objectives-list">
+                    <li>综合运用本章所学的四种分析方法</li>
+                    <li>完成新能源汽车行业的完整分析报告</li>
+                    <li>掌握多框架整合分析的逻辑与方法</li>
+                    <li>形成基于数据的战略建议</li>
+                    <li>运用Python实现综合分析模型</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">案例背景：中国新能源汽车行业</h2>
+                
+                <div class="case-study">
+                    <div class="case-study-title">
+                        <i class="fas fa-car"></i>
+                        案例简介
+                    </div>
+                    <div class="section-content">
+                        <p>中国新能源汽车市场已成为全球最大的新能源汽车市场。2023年，中国新能源汽车销量达到949.5万辆，同比增长37.9%，市场渗透率达到31.6%。比亚迪、特斯拉、广汽埃安、理想、蔚来等品牌激烈竞争，行业格局快速演变。</p>
+                        <p style="margin-top: 1rem;">本案例将从市场结构、宏观环境、竞争格局、企业战略四个维度，对中国新能源汽车行业进行全面分析。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">一、市场集中度分析</h2>
+                
+                <div class="analysis-step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">计算行业CRn和HHI指数</div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>企业</th>
+                                <th>2023销量（万辆）</th>
+                                <th>市场份额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>比亚迪</td><td>302.4</td><td>31.9%</td></tr>
+                            <tr><td>2</td><td>特斯拉中国</td><td>94.7</td><td>10.0%</td></tr>
+                            <tr><td>3</td><td>广汽埃安</td><td>48.0</td><td>5.1%</td></tr>
+                            <tr><td>4</td><td>理想汽车</td><td>37.6</td><td>4.0%</td></tr>
+                            <tr><td>5</td><td>五菱新能源</td><td>35.5</td><td>3.7%</td></tr>
+                            <tr><td>6</td><td>蔚来汽车</td><td>16.0</td><td>1.7%</td></tr>
+                            <tr><td>7</td><td>小鹏汽车</td><td>14.2</td><td>1.5%</td></tr>
+                            <tr><td>8</td><td>其他</td><td>401.1</td><td>42.2%</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 新能源汽车行业集中度分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 2023年中国新能源汽车市场数据</span>
+nev_data = {
+    <span class="string">'企业'</span>: [<span class="string">'比亚迪'</span>, <span class="string">'特斯拉中国'</span>, <span class="string">'广汽埃安'</span>, <span class="string">'理想汽车'</span>, 
+             <span class="string">'五菱新能源'</span>, <span class="string">'蔚来汽车'</span>, <span class="string">'小鹏汽车'</span>, <span class="string">'其他'</span>],
+    <span class="string">'销量'</span>: [302.4, 94.7, 48.0, 37.6, 35.5, 16.0, 14.2, 401.1],
+    <span class="string">'份额'</span>: [31.9, 10.0, 5.1, 4.0, 3.7, 1.7, 1.5, 42.2]
+}
+df = pd.DataFrame(nev_data)
+
+<span class="comment"># 计算CR4和CR8</span>
+CR4 = df.head(4)[<span class="string">'份额'</span>].sum()
+CR8 = df.head(8)[<span class="string">'份额'</span>].sum()
+
+<span class="comment"># 计算HHI</span>
+HHI = (df[<span class="string">'份额'</span>] ** 2).sum()
+
+<span class="string">print</span>(<span class="string">"=== 市场集中度分析结果 ==="</span>)
+<span class="string">print</span>(<span class="string">f"CR4 = {CR4:.1f}%"</span>)
+<span class="string">print</span>(<span class="string">f"CR8 = {CR8:.1f}%"</span>)
+<span class="string">print</span>(<span class="string">f"HHI = {HHI:.0f}"</span>)
+
+<span class="comment"># 市场结构判断</span>
+<span class="string">print</span>(<span class="string">f"\n分析结论："</span>)
+<span class="string">print</span>(<span class="string">f"1. CR4={CR4:.1f}%，属于中集中寡占型市场"</span>)
+<span class="string">print</span>(<span class="string">f"2. HHI={HHI:.0f}，市场集中度中等偏高"</span>)
+<span class="string">print</span>(<span class="string">f"3. 比亚迪一家独大，份额超30%"</span>)
+<span class="string">print</span>(<span class="string">f"4. 头部企业集中度较高，但尾部竞争激烈"</span>)</code>
+                    </div>
+
+                    <div class="tip-box">
+                        <p><strong><i class="fas fa-lightbulb"></i> 分析结论：</strong>CR4=51%，属于中集中寡占型市场；HHI约1300，处于中等集中度水平。比亚迪以31.9%的市场份额领跑，形成"一超多强"格局。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、PEST宏观环境分析</h2>
+                
+                <div class="analysis-step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">评估宏观环境因素</div>
+                    </div>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 新能源汽车PEST量化分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+pest_data = {
+    <span class="string">'维度'</span>: [<span class="string">'P'</span>, <span class="string">'P'</span>, <span class="string">'E'</span>, <span class="string">'E'</span>, <span class="string">'S'</span>, <span class="string">'S'</span>, <span class="string">'T'</span>, <span class="string">'T'</span>],
+    <span class="string">'因素'</span>: [<span class="string">'双积分政策'</span>, <span class="string">'碳中和目标'</span>, <span class="string">'油价波动'</span>, <span class="string">'消费升级'</span>,
+             <span class="string">'环保意识提升'</span>, <span class="string">'限购限行政策'</span>, <span class="string">'电池技术突破'</span>, <span class="string">'智能化发展'</span>],
+    <span class="string">'影响值'</span>: [5, 5, 4, 3, 4, 5, 5, 5],
+    <span class="string">'概率'</span>: [95, 100, 70, 80, 85, 90, 85, 90]
+}
+
+df = pd.DataFrame(pest_data)
+df[<span class="string">'得分'</span>] = df[<span class="string">'影响值'</span>] * df[<span class="string">'概率'</span>] / 100
+
+dimension_score = df.groupby(<span class="string">'维度'</span>)[<span class="string">'得分'</span>].sum()
+total = df[<span class="string">'得分'</span>].sum()
+
+<span class="string">print</span>(<span class="string">"=== PEST分析结果 ==="</span>)
+<span class="string">print</span>(dimension_score)
+<span class="string">print</span>(<span class="string">f"\n综合得分: {total:.1f}"</span>)
+<span class="string">print</span>(<span class="string">"结论: 宏观环境整体非常有利"</span>)</code>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">PEST分析摘要</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-icon" style="background: linear-gradient(135deg, #ef4444, #f87171);">
+                                    <i class="fas fa-landmark"></i>
+                                </div>
+                                <div class="summary-label">政治环境</div>
+                                <div class="summary-value">9.8分</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="summary-label">经济环境</div>
+                                <div class="summary-value">5.2分</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="summary-label">社会环境</div>
+                                <div class="summary-value">8.2分</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
+                                    <i class="fas fa-microchip"></i>
+                                </div>
+                                <div class="summary-label">技术环境</div>
+                                <div class="summary-value">8.8分</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、波特五力分析</h2>
+                
+                <div class="analysis-step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">评估行业竞争格局</div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>竞争力量</th>
+                                <th>分析要点</th>
+                                <th>强度</th>
+                                <th>得分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700;">潜在进入者威胁</td>
+                                <td>技术壁垒高、资本需求大、政策支持</td>
+                                <td><span style="color: #f59e0b;">中等</span></td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">现有竞争者竞争</td>
+                                <td>比亚迪领先、新势力崛起、价格战激烈</td>
+                                <td><span style="color: #ef4444;">很强</span></td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">供应商议价能力</td>
+                                <td>锂价波动、电池供应商集中</td>
+                                <td><span style="color: #f59e0b;">较强</span></td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">购买者议价能力</td>
+                                <td>选择多、转换成本低、价格敏感</td>
+                                <td><span style="color: #f59e0b;">较强</span></td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">替代品威胁</td>
+                                <td>燃油车逐步退出、公共交通</td>
+                                <td><span style="color: #10b981;">较弱</span></td>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 波特五力量化分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+five_forces = {
+    <span class="string">'力量'</span>: [<span class="string">'潜在进入者'</span>, <span class="string">'现有竞争者'</span>, <span class="string">'供应商'</span>, <span class="string">'购买者'</span>, <span class="string">'替代品'</span>],
+    <span class="string">'权重'</span>: [0.2, 0.3, 0.15, 0.2, 0.15],
+    <span class="string">'得分'</span>: [3, 5, 4, 4, 2]
+}
+
+df = pd.DataFrame(five_forces)
+df[<span class="string">'加权'</span>] = df[<span class="string">'权重'</span>] * df[<span class="string">'得分'</span>]
+competition_index = df[<span class="string">'加权'</span>].sum()
+
+<span class="string">print</span>(<span class="string">f"行业竞争强度指数: {competition_index:.2f}"</span>)
+<span class="string">print</span>(<span class="string">"判断: 竞争较强，盈利压力较大"</span>)</code>
+                    </div>
+
+                    <div class="tip-box">
+                        <p><strong><i class="fas fa-lightbulb"></i> 分析结论：</strong>行业竞争强度指数3.7，属于竞争较强的行业。现有竞争者竞争是最关键的力量，价格战持续。供应商议价能力较强，锂价波动影响成本。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、SWOT分析（以比亚迪为例）</h2>
+                
+                <div class="analysis-step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">企业战略分析</div>
+                    </div>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 比亚迪SWOT量化分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+byd_swot = {
+    <span class="string">'类别'</span>: [<span class="string">'S'</span>, <span class="string">'S'</span>, <span class="string">'S'</span>, <span class="string">'W'</span>, <span class="string">'W'</span>, <span class="string">'O'</span>, <span class="string">'O'</span>, <span class="string">'O'</span>, <span class="string">'T'</span>, <span class="string">'T'</span>],
+    <span class="string">'因素'</span>: [<span class="string">'垂直整合优势'</span>, <span class="string">'刀片电池技术'</span>, <span class="string">'成本控制能力'</span>,
+             <span class="string">'高端品牌力不足'</span>, <span class="string">'海外布局较晚'</span>,
+             <span class="string">'国内市场持续增长'</span>, <span class="string">'出口市场扩张'</span>, <span class="string">'智能化升级'</span>,
+             <span class="string">'特斯拉降价竞争'</span>, <span class="string">'原材料成本波动'</span>],
+    <span class="string">'重要性'</span>: [5, 5, 4, 3, 3, 5, 4, 4, 5, 4],
+    <span class="string">'评分'</span>: [5, 5, 4, -3, -2, 4, 4, 3, -4, -3]
+}
+
+df = pd.DataFrame(byd_swot)
+df[<span class="string">'加权'</span>] = df[<span class="string">'重要性'</span>] * df[<span class="string">'评分'</span>]
+
+summary = df.groupby(<span class="string">'类别'</span>)[<span class="string">'加权'</span>].sum()
+net_score = summary.sum()
+
+<span class="string">print</span>(<span class="string">"=== 比亚迪SWOT得分 ==="</span>)
+<span class="string">print</span>(summary)
+<span class="string">print</span>(<span class="string">f"\n净战略得分: {net_score}"</span>)
+<span class="string">print</span>(<span class="string">"战略建议: SO增长型战略为主"</span>)</code>
+                    </div>
+
+                    <div class="strategy-matrix">
+                        <div class="strategy-item so">
+                            <div class="strategy-label">SO战略（增长型）</div>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">利用成本优势和技术优势，加速国内外市场扩张</p>
+                        </div>
+                        <div class="strategy-item wo">
+                            <div class="strategy-label">WO战略（扭转型）</div>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">借助市场增长机会，提升高端品牌形象</p>
+                        </div>
+                        <div class="strategy-item st">
+                            <div class="strategy-label">ST战略（多元化）</div>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">发挥成本优势应对价格战，技术领先抵御竞争</p>
+                        </div>
+                        <div class="strategy-item wt">
+                            <div class="strategy-label">WT战略（防御型）</div>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">优化供应链，锁定原材料价格</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、综合分析报告</h2>
+                
+                <div class="conclusion-box">
+                    <div class="conclusion-title">
+                        <i class="fas fa-file-alt"></i>
+                        综合分析结论
+                    </div>
+                    
+                    <div class="section-content">
+                        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">1. 市场结构</h4>
+                        <p style="margin-bottom: 1rem;">中国新能源汽车市场呈"一超多强"格局，CR4=51%属于中集中寡占型市场。比亚迪以31.9%份额领跑，但市场仍有较大竞争空间。</p>
+                        
+                        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">2. 宏观环境</h4>
+                        <p style="margin-bottom: 1rem;">PEST综合得分32分，宏观环境整体有利。政策支持（双积分、碳中和）和技术进步（电池、智能化）是核心驱动力。</p>
+                        
+                        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">3. 竞争格局</h4>
+                        <p style="margin-bottom: 1rem;">五力竞争指数3.7，竞争强度较高。现有竞争者竞争激烈，价格战持续；供应商议价能力较强，需关注原材料成本。</p>
+                        
+                        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">4. 战略建议</h4>
+                        <ul style="padding-left: 1.5rem;">
+                            <li>头部企业：发挥规模优势，加速技术创新，拓展海外市场</li>
+                            <li>新势力：差异化定位，聚焦细分市场，提升品牌溢价</li>
+                            <li>传统车企：加快转型，发挥渠道优势，布局混动过渡</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 综合分析模型 - 整合四大框架</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="keyword">class</span> IndustryAnalyzer:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, name):
+        self.name = name
+        self.results = {}
+    
+    <span class="keyword">def</span> <span class="function">concentration_analysis</span>(self, shares):
+        <span class="string">"""市场集中度分析"""</span>
+        df = pd.DataFrame({<span class="string">'份额'</span>: shares})
+        cr4 = df[<span class="string">'份额'</span>].head(4).sum()
+        hhi = (df[<span class="string">'份额'</span>] ** 2).sum()
+        self.results[<span class="string">'CR4'</span>] = cr4
+        self.results[<span class="string">'HHI'</span>] = hhi
+        <span class="keyword">return</span> cr4, hhi
+    
+    <span class="keyword">def</span> <span class="function">pest_analysis</span>(self, factors):
+        <span class="string">"""PEST分析"""</span>
+        df = pd.DataFrame(factors)
+        df[<span class="string">'得分'</span>] = df[<span class="string">'影响值'</span>] * df[<span class="string">'概率'</span>] / 100
+        self.results[<span class="string">'PEST'</span>] = df[<span class="string">'得分'</span>].sum()
+        <span class="keyword">return</span> self.results[<span class="string">'PEST'</span>]
+    
+    <span class="keyword">def</span> <span class="function">five_forces_analysis</span>(self, forces):
+        <span class="string">"""波特五力分析"""</span>
+        df = pd.DataFrame(forces)
+        df[<span class="string">'加权'</span>] = df[<span class="string">'权重'</span>] * df[<span class="string">'得分'</span>]
+        self.results[<span class="string">'五力'</span>] = df[<span class="string">'加权'</span>].sum()
+        <span class="keyword">return</span> self.results[<span class="string">'五力'</span>]
+    
+    <span class="keyword">def</span> <span class="function">swot_analysis</span>(self, swot):
+        <span class="string">"""SWOT分析"""</span>
+        df = pd.DataFrame(swot)
+        df[<span class="string">'加权'</span>] = df[<span class="string">'重要性'</span>] * df[<span class="string">'评分'</span>]
+        self.results[<span class="string">'SWOT'</span>] = df[<span class="string">'加权'</span>].sum()
+        <span class="keyword">return</span> self.results[<span class="string">'SWOT'</span>]
+    
+    <span class="keyword">def</span> <span class="function">generate_report</span>(self):
+        <span class="string">"""生成综合报告"""</span>
+        <span class="string">print</span>(<span class="string">f"=== {self.name} 行业分析报告 ==="</span>)
+        <span class="string">print</span>(<span class="string">f"市场集中度: CR4={self.results.get('CR4', 0):.1f}%, HHI={self.results.get('HHI', 0):.0f}"</span>)
+        <span class="string">print</span>(<span class="string">f"宏观环境得分: {self.results.get('PEST', 0):.1f}"</span>)
+        <span class="string">print</span>(<span class="string">f"竞争强度指数: {self.results.get('五力', 0):.2f}"</span>)
+        <span class="string">print</span>(<span class="string">f"战略得分: {self.results.get('SWOT', 0):.0f}"</span>)
+
+<span class="comment"># 使用示例</span>
+analyzer = IndustryAnalyzer(<span class="string">"中国新能源汽车"</span>)
+<span class="string">print</span>(<span class="string">"综合分析模型已构建完成"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">本章小结</h2>
+                
+                <div class="summary-card">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-book"></i> 知识要点回顾</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div style="background: white; border-radius: 0.5rem; padding: 1rem;">
+                            <h4 style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;">市场集中度分析</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">CRn、HHI两大指标，量化评估市场竞争格局</p>
+                        </div>
+                        <div style="background: white; border-radius: 0.5rem; padding: 1rem;">
+                            <h4 style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;">PEST宏观环境分析</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">政治、经济、社会、技术四维度系统分析</p>
+                        </div>
+                        <div style="background: white; border-radius: 0.5rem; padding: 1rem;">
+                            <h4 style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;">波特五力模型</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">五种竞争力力量化评估行业竞争强度</p>
+                        </div>
+                        <div style="background: white; border-radius: 0.5rem; padding: 1rem;">
+                            <h4 style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;">SWOT分析与量化</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary);">内外部因素交叉分析，形成战略矩阵</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong><i class="fas fa-exclamation-circle"></i> 学习建议：</strong>市场与行业分析是一个系统工程，需要综合运用多种分析工具。建议在实际工作中，将四大框架结合使用，形成完整的分析链条：市场结构→宏观环境→竞争格局→企业战略。</p>
+                </div>
+            </section>
+
+            <div class="chapter-nav">
+                <a href="chapter3-4.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：SWOT分析与量化</span>
+                </a>
+                <a href="../chapter4.html" class="nav-btn next">
+                    <span>下一章：用户画像与RFM模型</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.getElementById('hamburgerMenu').addEventListener('click', function() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        });
+
+        const sectionId = 'chapter3-5';
+        const chapterId = 'chapter3';
+
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[chapterId]) progress[chapterId] = {};
+            progress[chapterId][sectionId] = { completed: true, timestamp: new Date().toISOString() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const chapterProgress = progress[chapterId] || {};
+            const sections = ['chapter3-1', 'chapter3-2', 'chapter3-3', 'chapter3-4', 'chapter3-5'];
+            const completed = sections.filter(s => chapterProgress[s]?.completed).length;
+            const percent = Math.round((completed / sections.length) * 100);
+            document.getElementById('sectionProgress').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressIndicator').style.width = (winScroll / height * 100) + '%';
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressUI();
+            let saved = false;
+            window.addEventListener('scroll', function() {
+                if (!saved && (window.innerHeight + window.scrollY) / document.body.offsetHeight > 0.8) {
+                    saveProgress();
+                    saved = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

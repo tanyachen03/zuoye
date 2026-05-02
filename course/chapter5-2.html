@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.2 毛利与利润分析 - 第五章：销售与运营分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        .progress-indicator i {
+            color: var(--success-color);
+        }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2563eb;
+            font-family: 'Times New Roman', serif;
+        }
+        .formula-box .formula-name {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .profit-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+        }
+        .profit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 0.5rem;
+        }
+        .profit-row.revenue { border-left: 4px solid #22c55e; }
+        .profit-row.cost { border-left: 4px solid #ef4444; }
+        .profit-row.gross { border-left: 4px solid #3b82f6; }
+        .profit-row.expense { border-left: 4px solid #f59e0b; }
+        .profit-row.net { border-left: 4px solid #8b5cf6; }
+        .profit-label { font-weight: 600; }
+        .profit-value { font-weight: 700; font-size: 1.1rem; }
+        .profit-row.revenue .profit-value { color: #22c55e; }
+        .profit-row.cost .profit-value { color: #ef4444; }
+        .profit-row.gross .profit-value { color: #3b82f6; }
+        .profit-row.expense .profit-value { color: #f59e0b; }
+        .profit-row.net .profit-value { color: #8b5cf6; }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第五章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter5-1.html" class="sidebar-item"><i class="fas fa-boxes-stacked"></i> 5.1 商品ABC分析</a>
+                <a href="chapter5-2.html" class="sidebar-item active"><i class="fas fa-coins"></i> 5.2 毛利与利润分析</a>
+                <a href="chapter5-3.html" class="sidebar-item"><i class="fas fa-link"></i> 5.3 关联规则与购物篮分析</a>
+                <a href="chapter5-4.html" class="sidebar-item"><i class="fas fa-warehouse"></i> 5.4 库存与供应链分析</a>
+                <a href="chapter5-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 5.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-header" style="margin-top: 1.5rem;">全部章节</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：<span id="progress-text">未开始</span></span>
+            </div>
+            
+            <span class="course-badge">5.2</span>
+            <h1 class="course-title">毛利与利润分析</h1>
+            <p class="course-subtitle">掌握毛利率、净利率等核心财务指标的计算与分析方法</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解毛利、净利润等核心财务概念</li>
+                    <li>掌握毛利率和净利率的计算公式</li>
+                    <li>能够使用Python进行利润率分析</li>
+                    <li>学会分析利润率变化的原因</li>
+                    <li>理解利润率指标在商业决策中的应用</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、核心财务概念</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-book"></i> 基本概念解析</h3>
+                <div class="section-content">
+                    <p>利润分析是企业财务分析的核心内容，涉及以下几个关键概念：</p>
+                    <ul>
+                        <li><strong>营业收入：</strong>企业销售商品或提供服务所获得的收入总额</li>
+                        <li><strong>营业成本：</strong>销售商品或提供服务的直接成本（如采购成本、生产成本）</li>
+                        <li><strong>毛利：</strong>营业收入减去营业成本后的余额</li>
+                        <li><strong>期间费用：</strong>销售费用、管理费用、财务费用等</li>
+                        <li><strong>净利润：</strong>毛利减去期间费用和税费后的最终利润</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">利润计算流程</div>
+                    <div class="profit-flow">
+                        <div class="profit-row revenue">
+                            <span class="profit-label"><i class="fas fa-plus-circle"></i> 营业收入</span>
+                            <span class="profit-value">1,000,000 元</span>
+                        </div>
+                        <div class="profit-row cost">
+                            <span class="profit-label"><i class="fas fa-minus-circle"></i> 营业成本</span>
+                            <span class="profit-value">-600,000 元</span>
+                        </div>
+                        <div class="profit-row gross">
+                            <span class="profit-label"><i class="fas fa-equals"></i> 毛利</span>
+                            <span class="profit-value">400,000 元</span>
+                        </div>
+                        <div class="profit-row expense">
+                            <span class="profit-label"><i class="fas fa-minus-circle"></i> 期间费用</span>
+                            <span class="profit-value">-200,000 元</span>
+                        </div>
+                        <div class="profit-row net">
+                            <span class="profit-label"><i class="fas fa-equals"></i> 净利润</span>
+                            <span class="profit-value">200,000 元</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、利润率计算公式</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 毛利率公式</h3>
+                <div class="section-content">
+                    <p>毛利率反映产品本身的盈利能力，是衡量企业核心竞争力的关键指标。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">毛利率 = (营业收入 - 营业成本) / 营业收入 × 100%</div>
+                    <div class="formula-name">或写作：毛利率 = 毛利 / 营业收入 × 100%</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-percentage"></i> 净利率公式</h3>
+                <div class="section-content">
+                    <p>净利率反映企业整体盈利能力，考虑了所有成本费用后的最终盈利水平。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">净利率 = 净利润 / 营业收入 × 100%</div>
+                    <div class="formula-name">净利率体现了每100元收入能带来多少净利润</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 其他重要利润指标</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-bullseye"></i><span>营业利润率 = 营业利润 / 营业收入 × 100%</span></div>
+                    <div class="feature-item"><i class="fas fa-hand-holding-usd"></i><span>成本利润率 = 净利润 / 总成本 × 100%</span></div>
+                    <div class="feature-item"><i class="fas fa-coins"></i><span>销售利润率 = 净利润 / 销售额 × 100%</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>毛利率和净利率的差距反映了企业的费用控制能力。差距越大，说明期间费用占比越高，需要关注费用管理效率。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、Python实现利润分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 利润率计算代码</h3>
+                <div class="section-content">
+                    <p>下面是使用Python进行利润率分析的完整代码：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># ========================================
+# 毛利与利润分析 - 完整实现
+# ========================================</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 1. 准备财务数据</span>
+financial_data = {
+    <span class="string">'月份'</span>: [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>],
+    <span class="string">'营业收入'</span>: [500000, 580000, 620000, 680000, 720000, 800000],
+    <span class="string">'营业成本'</span>: [320000, 370000, 390000, 430000, 450000, 500000],
+    <span class="string">'销售费用'</span>: [40000, 45000, 48000, 52000, 55000, 60000],
+    <span class="string">'管理费用'</span>: [30000, 32000, 34000, 36000, 38000, 40000],
+    <span class="string">'财务费用'</span>: [10000, 8000, 8000, 7000, 7000, 10000]
+}
+
+df = pd.DataFrame(financial_data)
+
+<span class="comment"># 2. 计算毛利和毛利率</span>
+df[<span class="string">'毛利'</span>] = df[<span class="string">'营业收入'</span>] - df[<span class="string">'营业成本'</span>]
+df[<span class="string">'毛利率(%)'</span>] = (df[<span class="string">'毛利'</span>] / df[<span class="string">'营业收入'</span>]) * 100
+
+<span class="comment"># 3. 计算期间费用总额</span>
+df[<span class="string">'期间费用'</span>] = df[<span class="string">'销售费用'</span>] + df[<span class="string">'管理费用'</span>] + df[<span class="string">'财务费用'</span>]
+
+<span class="comment"># 4. 计算净利润和净利率</span>
+df[<span class="string">'净利润'</span>] = df[<span class="string">'毛利'</span>] - df[<span class="string">'期间费用'</span>]
+df[<span class="string">'净利率(%)'</span>] = (df[<span class="string">'净利润'</span>] / df[<span class="string">'营业收入'</span>]) * 100
+
+<span class="comment"># 5. 计算费用率</span>
+df[<span class="string">'费用率(%)'</span>] = (df[<span class="string">'期间费用'</span>] / df[<span class="string">'营业收入'</span>]) * 100
+
+<span class="comment"># 6. 输出分析结果</span>
+<span class="string">print</span>(<span class="string">"=" * 80</span>)
+<span class="string">print</span>(<span class="string">"月度利润分析报表"</span>)
+<span class="string">print</span>(<span class="string">"=" * 80</span>)
+<span class="string">print</span>(df[[<span class="string">'月份'</span>, <span class="string">'营业收入'</span>, <span class="string">'毛利'</span>, <span class="string">'毛利率(%)'</span>, <span class="string">'净利润'</span>, <span class="string">'净利率(%)'</span>]].round(2))
+
+<span class="comment"># 7. 计算环比增长</span>
+df[<span class="string">'收入环比(%)'</span>] = df[<span class="string">'营业收入'</span>].pct_change() * 100
+df[<span class="string">'毛利环比(%)'</span>] = df[<span class="string">'毛利'</span>].pct_change() * 100
+df[<span class="string">'净利环比(%)'</span>] = df[<span class="string">'净利润'</span>].pct_change() * 100
+
+<span class="string">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 80</span>)
+<span class="string">print</span>(<span class="string">"环比增长率分析"</span>)
+<span class="string">print</span>(<span class="string">"=" * 80</span>)
+<span class="string">print</span>(df[[<span class="string">'月份'</span>, <span class="string">'收入环比(%)'</span>, <span class="string">'毛利环比(%)'</span>, <span class="string">'净利环比(%)'</span>]].round(2))
+
+<span class="comment"># 8. 计算累计数据</span>
+<span class="string">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 80</span>)
+<span class="string">print</span>(<span class="string">"上半年累计分析"</span>)
+<span class="string">print</span>(<span class="string">"=" * 80</span>)
+total_revenue = df[<span class="string">'营业收入'</span>].sum()
+total_cost = df[<span class="string">'营业成本'</span>].sum()
+total_gross = df[<span class="string">'毛利'</span>].sum()
+total_expense = df[<span class="string">'期间费用'</span>].sum()
+total_net = df[<span class="string">'净利润'</span>].sum()
+
+<span class="string">print</span>(<span class="string">f"累计营业收入: {total_revenue:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"累计营业成本: {total_cost:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"累计毛利: {total_gross:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"累计毛利率: {(total_gross/total_revenue*100):.2f}%"</span>)
+<span class="string">print</span>(<span class="string">f"累计净利润: {total_net:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"累计净利率: {(total_net/total_revenue*100):.2f}%"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-layer-group"></i> 多维度利润分析</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 按产品类别的利润分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 产品销售数据</span>
+product_data = {
+    <span class="string">'产品类别'</span>: [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>, <span class="string">'美妆'</span>],
+    <span class="string">'销售额'</span>: [2800000, 1500000, 800000, 600000, 500000],
+    <span class="string">'成本'</span>: [1800000, 900000, 500000, 400000, 300000]
+}
+
+df_product = pd.DataFrame(product_data)
+
+<span class="comment"># 计算各产品毛利和毛利率</span>
+df_product[<span class="string">'毛利'</span>] = df_product[<span class="string">'销售额'</span>] - df_product[<span class="string">'成本'</span>]
+df_product[<span class="string">'毛利率(%)'</span>] = (df_product[<span class="string">'毛利'</span>] / df_product[<span class="string">'销售额'</span>]) * 100
+df_product[<span class="string">'销售额占比(%)'</span>] = (df_product[<span class="string">'销售额'</span>] / df_product[<span class="string">'销售额'</span>].sum()) * 100
+df_product[<span class="string">'毛利占比(%)'</span>] = (df_product[<span class="string">'毛利'</span>] / df_product[<span class="string">'毛利'</span>].sum()) * 100
+
+<span class="comment"># 按毛利率排序</span>
+df_product = df_product.sort_values(<span class="string">'毛利率(%)'</span>, ascending=<span class="keyword">False</span>)
+
+<span class="string">print</span>(<span class="string">"产品利润分析"</span>)
+<span class="string">print</span>(df_product[[<span class="string">'产品类别'</span>, <span class="string">'销售额'</span>, <span class="string">'毛利'</span>, <span class="string">'毛利率(%)'</span>, <span class="string">'销售额占比(%)'</span>]].round(2))
+
+<span class="comment"># 识别高毛利产品</span>
+high_margin = df_product[df_product[<span class="string">'毛利率(%)'</span>] > df_product[<span class="string">'毛利率(%)'</span>].mean()]
+<span class="string">print</span>(<span class="string">f"\n高于平均毛利率的产品: {high_margin['产品类别'].tolist()}"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、真实商业案例</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-industry"></i> 案例：某零售企业利润分析</h3>
+                <div class="section-content">
+                    <p><strong>背景：</strong>某连锁零售企业发现虽然销售额持续增长，但净利润增长缓慢，需要进行深入的利润分析找出问题所在。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">问题诊断</div>
+                    <div class="diagram" style="width: 100%; max-width: 700px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <div class="diagram-box">
+                                <h4 style="color: #22c55e;">表面现象</h4>
+                                <p>销售额增长15%</p>
+                                <p>净利润仅增长3%</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4 style="color: #ef4444;">深层问题</h4>
+                                <p>毛利率下降2%</p>
+                                <p>费用率上升3%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-search"></i> 原因分析</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-arrow-down"></i><span>毛利率下降：促销活动过多，折扣力度大</span></div>
+                    <div class="feature-item"><i class="fas fa-arrow-up"></i><span>销售费用增长：新开门店投入大</span></div>
+                    <div class="feature-item"><i class="fas fa-arrow-up"></i><span>管理费用增长：人员扩张过快</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 优化建议</h3>
+                <div class="tip-box">
+                    <p><strong>解决方案：</strong></p>
+                    <ul>
+                        <li>优化促销策略，减少无效折扣，提升毛利率</li>
+                        <li>控制门店扩张节奏，提高单店盈利能力</li>
+                        <li>优化人员结构，提升人效</li>
+                        <li>加强成本管控，降低采购成本</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、利润率分析要点</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-balance-scale"></i> 毛利率 vs 净利率</h3>
+                <div class="section-content">
+                    <p>毛利率和净利率从不同角度反映企业盈利能力：</p>
+                </div>
+
+                <table class="abc-table">
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>毛利率</th>
+                            <th>净利率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>反映内容</strong></td>
+                            <td>产品本身盈利能力</td>
+                            <td>企业整体盈利能力</td>
+                        </tr>
+                        <tr>
+                            <td><strong>影响因素</strong></td>
+                            <td>定价策略、采购成本</td>
+                            <td>费用控制、税务筹划</td>
+                        </tr>
+                        <tr>
+                            <td><strong>行业差异</strong></td>
+                            <td>软件行业高、零售行业低</td>
+                            <td>相对稳定</td>
+                        </tr>
+                        <tr>
+                            <td><strong>优化方向</strong></td>
+                            <td>提升产品溢价、降低成本</td>
+                            <td>控制费用、提升效率</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <p><strong>常见错误：</strong>只关注净利润金额而忽视利润率。一家公司可能收入很高但利润率很低，这种商业模式风险较大，一旦收入下滑，利润会急剧下降。</p>
+                </div>
+            </section>
+
+            <div class="quiz-container" data-quiz-id="chapter5-2-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">毛利率的计算公式是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="true">(营业收入 - 营业成本) / 营业收入 × 100%</div>
+                    <div class="quiz-option" data-correct="false">净利润 / 营业收入 × 100%</div>
+                    <div class="quiz-option" data-correct="false">营业成本 / 营业收入 × 100%</div>
+                    <div class="quiz-option" data-correct="false">毛利 / 营业成本 × 100%</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>毛利率 = (营业收入 - 营业成本) / 营业收入 × 100%，反映产品本身的盈利能力。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter5-2-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">毛利率和净利率的差距主要反映了什么？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">产品质量差异</div>
+                    <div class="quiz-option" data-correct="true">期间费用控制能力</div>
+                    <div class="quiz-option" data-correct="false">市场竞争力</div>
+                    <div class="quiz-option" data-correct="false">品牌价值</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>毛利率和净利率的差距 = 期间费用率，反映了企业的费用控制能力。差距越大，说明期间费用占比越高。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter5-1.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：商品ABC分析</span>
+                </a>
+                <a href="chapter5-3.html" class="chapter-nav-btn">
+                    <span>下一节：关联规则与购物篮分析</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        function saveProgress() {
+            const pageId = 'chapter5-2';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[pageId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const pageId = 'chapter5-2';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progress[pageId] && progress[pageId].completed) {
+                progressText.textContent = '已完成';
+                progressText.style.color = '#10b981';
+            } else {
+                progressText.textContent = '学习中...';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressDisplay();
+            
+            setTimeout(() => {
+                saveProgress();
+            }, 30000);
+
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const isCorrect = this.dataset.correct === 'true';
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this && !isCorrect) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                    saveProgress();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

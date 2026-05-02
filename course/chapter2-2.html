@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.2 NumPy数值计算基础 - Python数据分析基础</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: #ef4444;
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-study-header i {
+            font-size: 1.5rem;
+            color: #2563eb;
+        }
+        .case-study-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .case-study-content {
+            color: #64748b;
+            line-height: 1.8;
+        }
+        .case-study-content h4 {
+            color: #1e293b;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+        }
+        .case-study-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #10b981;
+        }
+        .progress-indicator i {
+            color: #10b981;
+        }
+        .sidebar-subsection {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-subsection .sidebar-item {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        .sidebar-subsection .sidebar-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .array-visual {
+            display: grid;
+            gap: 4px;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .array-cell {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item active"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <div class="sidebar-subsection">
+                    <a href="chapter2-1.html" class="sidebar-item">2.1 Jupyter Notebook入门</a>
+                    <a href="chapter2-2.html" class="sidebar-item active">2.2 NumPy数值计算</a>
+                    <a href="chapter2-3.html" class="sidebar-item">2.3 Pandas数据结构</a>
+                    <a href="chapter2-4.html" class="sidebar-item">2.4 数据清洗实战</a>
+                    <a href="chapter2-5.html" class="sidebar-item">2.5 数据合并与分组</a>
+                    <a href="chapter2-6.html" class="sidebar-item">2.6 综合案例</a>
+                </div>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：第二章第2节</span>
+            </div>
+            
+            <span class="course-badge">2.2</span>
+            <h1 class="course-title">NumPy数值计算基础</h1>
+            <p class="course-subtitle">掌握Python科学计算的核心库，学会使用NumPy进行高效的数组操作和数值计算</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解NumPy数组（ndarray）的概念和特点</li>
+                    <li>掌握数组的创建、索引和切片操作</li>
+                    <li>学会使用NumPy进行向量化计算</li>
+                    <li>掌握数组的形状变换和广播机制</li>
+                    <li>能够使用NumPy进行统计分析计算</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、NumPy简介与数组基础</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 什么是NumPy</h3>
+                <div class="section-content">
+                    <p>NumPy（Numerical Python）是Python科学计算的基础库，提供了高效的多维数组对象和大量的数学函数。它是Pandas、Scikit-learn等库的底层依赖。</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-bolt"></i><span><strong>高效性</strong> - 底层C语言实现，比Python列表快100倍</span></div>
+                    <div class="feature-item"><i class="fas fa-cubes"></i><span><strong>多维数组</strong> - 支持任意维度的数组操作</span></div>
+                    <div class="feature-item"><i class="fas fa-broadcast-tower"></i><span><strong>广播机制</strong> - 自动处理不同形状数组的运算</span></div>
+                    <div class="feature-item"><i class="fas fa-calculator"></i><span><strong>数学函数</strong> - 丰富的数学、统计、线性代数函数</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-play-circle"></i> 创建数组</h3>
+                <div class="section-content">
+                    <p>NumPy的核心是ndarray（N-dimensional array）对象，以下是创建数组的常用方法：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 从列表创建数组</span>
+arr1 = np.array([1, 2, 3, 4, 5])
+<span class="keyword">print</span>(<span class="string">"一维数组:"</span>, arr1)
+
+<span class="comment"># 创建二维数组</span>
+arr2 = np.array([[1, 2, 3], [4, 5, 6]])
+<span class="keyword">print</span>(<span class="string">"二维数组:\n"</span>, arr2)
+
+<span class="comment"># 创建全零数组</span>
+zeros = np.zeros((3, 4))
+<span class="keyword">print</span>(<span class="string">"全零数组:\n"</span>, zeros)
+
+<span class="comment"># 创建全一数组</span>
+ones = np.ones((2, 3))
+<span class="keyword">print</span>(<span class="string">"全一数组:\n"</span>, ones)
+
+<span class="comment"># 创建单位矩阵</span>
+identity = np.eye(3)
+<span class="keyword">print</span>(<span class="string">"单位矩阵:\n"</span>, identity)
+
+<span class="comment"># 创建等差数列</span>
+range_arr = np.arange(0, 10, 2)  <span class="comment"># 0到10，步长为2</span>
+<span class="keyword">print</span>(<span class="string">"等差数列:"</span>, range_arr)
+
+<span class="comment"># 创建线性间隔数组</span>
+linspace_arr = np.linspace(0, 1, 5)  <span class="comment"># 0到1，5个点</span>
+<span class="keyword">print</span>(<span class="string">"线性间隔:"</span>, linspace_arr)
+
+<span class="comment"># 创建随机数组</span>
+random_arr = np.random.rand(3, 3)  <span class="comment"># 0-1均匀分布</span>
+<span class="keyword">print</span>(<span class="string">"随机数组:\n"</span>, random_arr)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>使用 <code>np.arange()</code> 创建等差数列时，结束值不包含在内；而 <code>np.linspace()</code> 默认包含结束值，适合需要精确控制元素数量的场景。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、数组属性与索引</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info"></i> 数组属性</h3>
+                <div class="section-content">
+                    <p>了解数组的属性是进行数组操作的基础：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+arr = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+
+<span class="comment"># 数组形状（维度）</span>
+<span class="keyword">print</span>(<span class="string">"形状:"</span>, arr.shape)  <span class="comment"># (3, 4)</span>
+
+<span class="comment"># 数组维度数</span>
+<span class="keyword">print</span>(<span class="string">"维度数:"</span>, arr.ndim)  <span class="comment"># 2</span>
+
+<span class="comment"># 元素总数</span>
+<span class="keyword">print</span>(<span class="string">"元素总数:"</span>, arr.size)  <span class="comment"># 12</span>
+
+<span class="comment"># 元素数据类型</span>
+<span class="keyword">print</span>(<span class="string">"数据类型:"</span>, arr.dtype)  <span class="comment"># int64</span>
+
+<span class="comment"># 每个元素的字节数</span>
+<span class="keyword">print</span>(<span class="string">"字节数:"</span>, arr.itemsize)  <span class="comment"># 8</span></code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-search"></i> 索引与切片</h3>
+                <div class="section-content">
+                    <p>NumPy数组的索引和切片与Python列表类似，但支持多维操作：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+arr = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+
+<span class="comment"># 基本索引</span>
+<span class="keyword">print</span>(<span class="string">"第一行:"</span>, arr[0])          <span class="comment"># [1 2 3 4]</span>
+<span class="keyword">print</span>(<span class="string">"第二行第三列:"</span>, arr[1, 2])  <span class="comment"># 7</span>
+
+<span class="comment"># 切片操作</span>
+<span class="keyword">print</span>(<span class="string">"前两行:"</span>, arr[:2])
+<span class="keyword">print</span>(<span class="string">"所有行的第2-3列:"</span>, arr[:, 1:3])
+
+<span class="comment"># 布尔索引</span>
+<span class="keyword">print</span>(<span class="string">"大于5的元素:"</span>, arr[arr > 5])
+
+<span class="comment"># 花式索引</span>
+<span class="keyword">print</span>(<span class="string">"指定行:"</span>, arr[[0, 2]])  <span class="comment"># 第0行和第2行</span></code>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">二维数组索引示意图</div>
+                    <div class="diagram" style="width: 100%; max-width: 500px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 1rem;">
+                            <div class="array-cell">[0,0]=1</div>
+                            <div class="array-cell">[0,1]=2</div>
+                            <div class="array-cell">[0,2]=3</div>
+                            <div class="array-cell">[0,3]=4</div>
+                            <div class="array-cell">[1,0]=5</div>
+                            <div class="array-cell">[1,1]=6</div>
+                            <div class="array-cell">[1,2]=7</div>
+                            <div class="array-cell">[1,3]=8</div>
+                            <div class="array-cell">[2,0]=9</div>
+                            <div class="array-cell">[2,1]=10</div>
+                            <div class="array-cell">[2,2]=11</div>
+                            <div class="array-cell">[2,3]=12</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>使用 <code>arr[1, 2]</code> 和 <code>arr[1][2]</code> 虽然结果相同，但含义不同。前者是直接的多维索引，效率更高；后者是先取第一维再索引，链式调用。建议统一使用逗号分隔的索引方式。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、数组运算与广播</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 向量化运算</h3>
+                <div class="section-content">
+                    <p>NumPy最大的优势在于向量化运算，无需循环即可对整个数组进行操作：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建两个数组</span>
+a = np.array([1, 2, 3, 4])
+b = np.array([10, 20, 30, 40])
+
+<span class="comment"># 基本算术运算</span>
+<span class="keyword">print</span>(<span class="string">"加法:"</span>, a + b)    <span class="comment"># [11 22 33 44]</span>
+<span class="keyword">print</span>(<span class="string">"减法:"</span>, b - a)    <span class="comment"># [ 9 18 27 36]</span>
+<span class="keyword">print</span>(<span class="string">"乘法:"</span>, a * b)    <span class="comment"># [10 40 90 160]</span>
+<span class="keyword">print</span>(<span class="string">"除法:"</span>, b / a)    <span class="comment"># [10. 10. 10. 10.]</span>
+
+<span class="comment"># 标量运算</span>
+<span class="keyword">print</span>(<span class="string">"数组乘以2:"</span>, a * 2)
+<span class="keyword">print</span>(<span class="string">"数组加10:"</span>, a + 10)
+
+<span class="comment"># 数学函数</span>
+<span class="keyword">print</span>(<span class="string">"平方根:"</span>, np.sqrt(a))
+<span class="keyword">print</span>(<span class="string">"指数:"</span>, np.exp(a))
+<span class="keyword">print</span>(<span class="string">"对数:"</span>, np.log(a))
+
+<span class="comment"># 比较运算</span>
+<span class="keyword">print</span>(<span class="string">"大于2:"</span>, a > 2)  <span class="comment"># [False False  True  True]</span></code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-broadcast-tower"></i> 广播机制</h3>
+                <div class="section-content">
+                    <p>广播机制允许不同形状的数组进行运算，NumPy会自动扩展较小的数组：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 广播示例</span>
+arr = np.array([[1, 2, 3], [4, 5, 6]])  <span class="comment"># 形状 (2, 3)</span>
+row = np.array([10, 20, 30])            <span class="comment"># 形状 (3,)</span>
+
+<span class="comment"># 行向量广播到每一行</span>
+result = arr + row
+<span class="keyword">print</span>(<span class="string">"广播结果:\n"</span>, result)
+<span class="comment"># [[11 22 33]</span>
+<span class="comment">#  [14 25 36]]</span>
+
+<span class="comment"># 列向量广播</span>
+col = np.array([[1], [2]])  <span class="comment"># 形状 (2, 1)</span>
+result2 = arr + col
+<span class="keyword">print</span>(<span class="string">"列广播:\n"</span>, result2)
+<span class="comment"># [[2 3 4]</span>
+<span class="comment">#  [6 7 8]]</span></code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>广播规则：从最右边的维度开始比较，维度相等或其中一个为1时可以广播。理解广播机制可以避免很多不必要的循环操作。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、数组形状变换</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-shapes"></i> reshape与转置</h3>
+                <div class="section-content">
+                    <p>在实际数据分析中，经常需要改变数组的形状：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+arr = np.arange(12)  <span class="comment"># [0 1 2 ... 11]</span>
+
+<span class="comment"># reshape改变形状</span>
+reshaped = arr.reshape(3, 4)
+<span class="keyword">print</span>(<span class="string">"重塑为3x4:\n"</span>, reshaped)
+
+<span class="comment"># 使用-1自动计算维度</span>
+auto_reshape = arr.reshape(2, -1)  <span class="comment"># 自动计算为2x6</span>
+<span class="keyword">print</span>(<span class="string">"自动计算:\n"</span>, auto_reshape)
+
+<span class="comment"># 展平数组</span>
+flattened = reshaped.flatten()
+<span class="keyword">print</span>(<span class="string">"展平:"</span>, flattened)
+
+<span class="comment"># 转置</span>
+transposed = reshaped.T
+<span class="keyword">print</span>(<span class="string">"转置:\n"</span>, transposed)
+
+<span class="comment"># 交换轴</span>
+arr3d = np.arange(24).reshape(2, 3, 4)
+swapped = np.swapaxes(arr3d, 0, 1)  <span class="comment"># 交换第0轴和第1轴</span></code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-layer-group"></i> 数组拼接与分割</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+a = np.array([[1, 2], [3, 4]])
+b = np.array([[5, 6]])
+
+<span class="comment"># 垂直拼接</span>
+vstack = np.vstack([a, b])
+<span class="keyword">print</span>(<span class="string">"垂直拼接:\n"</span>, vstack)
+
+<span class="comment"># 水平拼接</span>
+c = np.array([[5], [6]])
+hstack = np.hstack([a, c])
+<span class="keyword">print</span>(<span class="string">"水平拼接:\n"</span>, hstack)
+
+<span class="comment"># 数组分割</span>
+arr = np.arange(12).reshape(3, 4)
+<span class="keyword">print</span>(<span class="string">"水平分割:"</span>, np.hsplit(arr, 2))
+<span class="keyword">print</span>(<span class="string">"垂直分割:"</span>, np.vsplit(arr, 3))</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、统计与数学函数</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 常用统计函数</h3>
+                <div class="section-content">
+                    <p>NumPy提供了丰富的统计函数，可以快速计算各种统计指标：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 模拟销售数据</span>
+sales = np.array([
+    [120, 150, 180, 200],
+    [90, 110, 130, 150],
+    [200, 220, 250, 280]
+])
+
+<span class="comment"># 基本统计</span>
+<span class="keyword">print</span>(<span class="string">"总和:"</span>, np.sum(sales))
+<span class="keyword">print</span>(<span class="string">"平均值:"</span>, np.mean(sales))
+<span class="keyword">print</span>(<span class="string">"中位数:"</span>, np.median(sales))
+<span class="keyword">print</span>(<span class="string">"标准差:"</span>, np.std(sales))
+<span class="keyword">print</span>(<span class="string">"方差:"</span>, np.var(sales))
+<span class="keyword">print</span>(<span class="string">"最大值:"</span>, np.max(sales))
+<span class="keyword">print</span>(<span class="string">"最小值:"</span>, np.min(sales))
+
+<span class="comment"># 按轴计算</span>
+<span class="keyword">print</span>(<span class="string">"每行总和:"</span>, np.sum(sales, axis=1))
+<span class="keyword">print</span>(<span class="string">"每列平均值:"</span>, np.mean(sales, axis=0))
+
+<span class="comment"># 累计计算</span>
+<span class="keyword">print</span>(<span class="string">"累计和:"</span>, np.cumsum(sales[0]))
+<span class="keyword">print</span>(<span class="string">"累计积:"</span>, np.cumprod(sales[0]))
+
+<span class="comment"># 百分位数</span>
+<span class="keyword">print</span>(<span class="string">"25%分位数:"</span>, np.percentile(sales, 25))
+<span class="keyword">print</span>(<span class="string">"75%分位数:"</span>, np.percentile(sales, 75))</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-sort-amount-up"></i> 排序与查找</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+arr = np.array([3, 1, 4, 1, 5, 9, 2, 6])
+
+<span class="comment"># 排序</span>
+sorted_arr = np.sort(arr)
+<span class="keyword">print</span>(<span class="string">"排序后:"</span>, sorted_arr)
+
+<span class="comment"># 排序索引</span>
+indices = np.argsort(arr)
+<span class="keyword">print</span>(<span class="string">"排序索引:"</span>, indices)
+
+<span class="comment"># 查找最大值索引</span>
+<span class="keyword">print</span>(<span class="string">"最大值索引:"</span>, np.argmax(arr))
+<span class="keyword">print</span>(<span class="string">"最小值索引:"</span>, np.argmin(arr))
+
+<span class="comment"># 条件查找</span>
+<span class="keyword">print</span>(<span class="string">"大于3的索引:"</span>, np.where(arr > 3))
+
+<span class="comment"># 唯一值</span>
+<span class="keyword">print</span>(<span class="string">"唯一值:"</span>, np.unique(arr))
+<span class="keyword">print</span>(<span class="string">"唯一值及计数:"</span>, np.unique(arr, return_counts=True))</code>
+                </div>
+            </section>
+
+            <div class="case-study">
+                <div class="case-study-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>真实商业案例：销售数据快速分析</h3>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>背景：</strong>某连锁超市需要快速分析过去12个月100家门店的销售数据，找出表现最好和最差的门店。</p>
+                    
+                    <h4>数据结构</h4>
+                    <p>使用NumPy数组存储100行×12列的销售数据，每行代表一家门店，每列代表一个月。</p>
+                    
+                    <h4>分析代码</h4>
+                    <div class="code-block">
+                        <code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 模拟100家门店12个月的销售数据（单位：万元）</span>
+np.random.seed(42)
+sales_data = np.random.randint(50, 500, size=(100, 12))
+
+<span class="comment"># 1. 计算每家门店的年销售额</span>
+annual_sales = np.sum(sales_data, axis=1)
+
+<span class="comment"># 2. 找出销售额最高的前10家门店</span>
+top_10_indices = np.argsort(annual_sales)[-10:][::-1]
+<span class="keyword">print</span>(<span class="string">"销售额前10的门店索引:"</span>, top_10_indices)
+<span class="keyword">print</span>(<span class="string">"对应销售额:"</span>, annual_sales[top_10_indices])
+
+<span class="comment"># 3. 找出销售额最低的10家门店</span>
+bottom_10_indices = np.argsort(annual_sales)[:10]
+<span class="keyword">print</span>(<span class="string">"销售额后10的门店索引:"</span>, bottom_10_indices)
+
+<span class="comment"># 4. 计算各月销售趋势</span>
+monthly_avg = np.mean(sales_data, axis=0)
+<span class="keyword">print</span>(<span class="string">"各月平均销售额:"</span>, monthly_avg.round(2))
+
+<span class="comment"># 5. 计算销售波动（标准差）</span>
+sales_volatility = np.std(sales_data, axis=1)
+<span class="keyword">print</span>(<span class="string">"销售波动最大的门店:"</span>, np.argmax(sales_volatility))</code>
+                    </div>
+                    
+                    <h4>分析结果</h4>
+                    <p>通过NumPy的向量化操作，原本需要循环遍历的计算在毫秒级别完成。分析发现：销售前10的门店贡献了总销售额的35%，符合二八定律；第6-8月是销售旺季，建议增加备货。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-2-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">创建一个3x3的全零数组，正确的代码是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">np.zeros(3)</div>
+                    <div class="quiz-option" data-correct="true">np.zeros((3, 3))</div>
+                    <div class="quiz-option" data-correct="false">np.zeros([3, 3])</div>
+                    <div class="quiz-option" data-correct="false">np.zeros(3, 3)</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong><code>np.zeros()</code> 接受一个元组作为形状参数。<code>np.zeros(3)</code> 创建的是长度为3的一维数组，而 <code>np.zeros((3, 3))</code> 才是创建3x3的二维数组。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-2-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">对于形状为(4, 5)的数组arr，arr.sum(axis=1)的结果形状是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="true">(4,)</div>
+                    <div class="quiz-option" data-correct="false">(5,)</div>
+                    <div class="quiz-option" data-correct="false">(4, 5)</div>
+                    <div class="quiz-option" data-correct="false">(1, 5)</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong><code>axis=1</code> 表示沿着列方向（第1轴）求和，即对每一行的所有列求和。原数组有4行，每行求和后得到4个值，所以结果是形状为(4,)的一维数组。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter2-1.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：Jupyter Notebook入门</span>
+                </a>
+                <a href="chapter2-3.html" class="chapter-nav-btn">
+                    <span>下一节：Pandas数据结构</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = 'chapter2-2';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[currentPage] = { completed: true, timestamp: Date.now() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            
+            initQuiz();
+        });
+
+        function initQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

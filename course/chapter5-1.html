@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.1 商品ABC分析 - 第五章：销售与运营分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        .progress-indicator i {
+            color: var(--success-color);
+        }
+        .abc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .abc-table th, .abc-table td {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .abc-table th {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .abc-table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+        .class-a { background-color: rgba(239, 68, 68, 0.1) !important; }
+        .class-b { background-color: rgba(245, 158, 11, 0.1) !important; }
+        .class-c { background-color: rgba(34, 197, 94, 0.1) !important; }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第五章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter5-1.html" class="sidebar-item active"><i class="fas fa-boxes-stacked"></i> 5.1 商品ABC分析</a>
+                <a href="chapter5-2.html" class="sidebar-item"><i class="fas fa-coins"></i> 5.2 毛利与利润分析</a>
+                <a href="chapter5-3.html" class="sidebar-item"><i class="fas fa-link"></i> 5.3 关联规则与购物篮分析</a>
+                <a href="chapter5-4.html" class="sidebar-item"><i class="fas fa-warehouse"></i> 5.4 库存与供应链分析</a>
+                <a href="chapter5-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 5.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-header" style="margin-top: 1.5rem;">全部章节</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：<span id="progress-text">未开始</span></span>
+            </div>
+            
+            <span class="course-badge">5.1</span>
+            <h1 class="course-title">商品ABC分析</h1>
+            <p class="course-subtitle">掌握ABC分类法的原理与Python实现，学会商品分级管理策略</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解ABC分类法的基本原理和帕累托法则</li>
+                    <li>掌握ABC分类的核心公式与计算步骤</li>
+                    <li>能够使用Python实现商品ABC分析</li>
+                    <li>理解不同类别商品的管理策略差异</li>
+                    <li>学会解读ABC分析结果并制定运营建议</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、ABC分类法概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 什么是ABC分类法</h3>
+                <div class="section-content">
+                    <p>ABC分类法（ABC Analysis）是一种基于<strong>帕累托法则（二八定律）</strong>的库存管理方法。它将商品按照重要程度分为A、B、C三类，帮助企业实现差异化管理。</p>
+                    <p>帕累托法则指出：<strong>约20%的商品贡献了约80%的销售额</strong>，这20%的商品就是需要重点关注的A类商品。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">ABC分类示意图</div>
+                    <div class="diagram" style="width: 100%; max-width: 700px;">
+                        <div style="display: flex; height: 200px; align-items: flex-end; gap: 2rem; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div style="width: 100px; height: 160px; background: linear-gradient(135deg, #ef4444, #f87171); border-radius: 0.5rem 0.5rem 0 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 0.5rem;">
+                                    <span style="color: white; font-weight: 700; font-size: 1.5rem;">80%</span>
+                                </div>
+                                <p style="margin-top: 0.5rem; font-weight: 600; color: #ef4444;">A类商品</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);">占品种10-20%</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 100px; height: 40px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 0.5rem 0.5rem 0 0; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: white; font-weight: 700;">15%</span>
+                                </div>
+                                <p style="margin-top: 0.5rem; font-weight: 600; color: #f59e0b;">B类商品</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);">占品种20-30%</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 100px; height: 10px; background: linear-gradient(135deg, #22c55e, #4ade80); border-radius: 0.5rem 0.5rem 0 0;"></div>
+                                <p style="margin-top: 0.5rem; font-weight: 600; color: #22c55e;">C类商品</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);">占品种50-60%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-table"></i> ABC分类标准</h3>
+                <div class="section-content">
+                    <p>ABC分类通常按照销售额（或销售量、利润等指标）进行划分，具体标准如下：</p>
+                </div>
+
+                <table class="abc-table">
+                    <thead>
+                        <tr>
+                            <th>类别</th>
+                            <th>销售额占比</th>
+                            <th>品种占比</th>
+                            <th>管理策略</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="class-a">
+                            <td><strong>A类</strong></td>
+                            <td>70%-80%</td>
+                            <td>10%-20%</td>
+                            <td>重点管理、严格控制库存</td>
+                        </tr>
+                        <tr class="class-b">
+                            <td><strong>B类</strong></td>
+                            <td>15%-20%</td>
+                            <td>20%-30%</td>
+                            <td>常规管理、定期检查</td>
+                        </tr>
+                        <tr class="class-c">
+                            <td><strong>C类</strong></td>
+                            <td>5%-10%</td>
+                            <td>50%-60%</td>
+                            <td>简化管理、批量采购</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>ABC分类的阈值可以根据企业实际情况调整。有些企业采用更细分的A+、A、B、C、D五类分类法，以实现更精细的管理。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、ABC分类计算公式</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 核心计算步骤</h3>
+                <div class="section-content">
+                    <p>ABC分类的计算过程包括以下关键步骤：</p>
+                    <ol>
+                        <li><strong>计算各商品销售额：</strong>销售额 = 单价 × 销售量</li>
+                        <li><strong>按销售额降序排列：</strong>从高到低排序</li>
+                        <li><strong>计算累计销售额：</strong>逐项累加销售额</li>
+                        <li><strong>计算累计销售额占比：</strong>累计销售额 / 总销售额 × 100%</li>
+                        <li><strong>确定ABC类别：</strong>根据累计占比划分类别</li>
+                    </ol>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">ABC分类计算流程</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">原始销售数据</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">计算销售额并排序</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">计算累计占比</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">划分ABC类别</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-square-root-variable"></i> 关键公式</h3>
+                <div class="section-content">
+                    <p><strong>销售额计算：</strong></p>
+                    <p style="text-align: center; font-size: 1.1rem; background: var(--bg-light); padding: 1rem; border-radius: 0.5rem;">
+                        销售额<sub>i</sub> = 单价<sub>i</sub> × 销售量<sub>i</sub>
+                    </p>
+                    
+                    <p style="margin-top: 1.5rem;"><strong>累计销售额占比：</strong></p>
+                    <p style="text-align: center; font-size: 1.1rem; background: var(--bg-light); padding: 1rem; border-radius: 0.5rem;">
+                        累计占比<sub>i</sub> = (∑<sub>j=1</sub><sup>i</sup> 销售额<sub>j</sub>) / 总销售额 × 100%
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、Python实现ABC分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 完整代码实现</h3>
+                <div class="section-content">
+                    <p>下面是使用Python实现商品ABC分析的完整代码，包含数据生成、分类计算和结果可视化：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># ========================================
+# 商品ABC分析 - 完整实现
+# ========================================</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 1. 准备示例数据</span>
+data = {
+    <span class="string">'商品ID'</span>: [<span class="string">'P001'</span>, <span class="string">'P002'</span>, <span class="string">'P003'</span>, <span class="string">'P004'</span>, <span class="string">'P005'</span>, 
+               <span class="string">'P006'</span>, <span class="string">'P007'</span>, <span class="string">'P008'</span>, <span class="string">'P009'</span>, <span class="string">'P010'</span>],
+    <span class="string">'商品名称'</span>: [<span class="string">'高端手机'</span>, <span class="string">'笔记本电脑'</span>, <span class="string">'平板电脑'</span>, <span class="string">'智能手表'</span>, <span class="string">'无线耳机'</span>,
+                 <span class="string">'充电宝'</span>, <span class="string">'手机壳'</span>, <span class="string">'数据线'</span>, <span class="string">'屏幕贴膜'</span>, <span class="string">'清洁套装'</span>],
+    <span class="string">'单价'</span>: [5999, 8999, 3999, 2999, 1299, 199, 49, 29, 19, 15],
+    <span class="string">'销售量'</span>: [150, 80, 200, 120, 500, 800, 2000, 3000, 5000, 4000]
+}
+
+df = pd.DataFrame(data)
+
+<span class="comment"># 2. 计算销售额</span>
+df[<span class="string">'销售额'</span>] = df[<span class="string">'单价'</span>] * df[<span class="string">'销售量'</span>]
+
+<span class="comment"># 3. 按销售额降序排列</span>
+df = df.sort_values(<span class="string">'销售额'</span>, ascending=<span class="keyword">False</span>).reset_index(drop=<span class="keyword">True</span>)
+
+<span class="comment"># 4. 计算累计销售额和累计占比</span>
+df[<span class="string">'累计销售额'</span>] = df[<span class="string">'销售额'</span>].cumsum()
+total_sales = df[<span class="string">'销售额'</span>].sum()
+df[<span class="string">'销售额占比(%)'</span>] = (df[<span class="string">'销售额'</span>] / total_sales * 100).round(2)
+df[<span class="string">'累计占比(%)'</span>] = (df[<span class="string">'累计销售额'</span>] / total_sales * 100).round(2)
+
+<span class="comment"># 5. ABC分类函数</span>
+<span class="keyword">def</span> <span class="function">classify_abc</span>(cumulative_pct):
+    <span class="string">"""根据累计占比划分ABC类别"""</span>
+    <span class="keyword">if</span> cumulative_pct <= 80:
+        <span class="keyword">return</span> <span class="string">'A'</span>
+    <span class="keyword">elif</span> cumulative_pct <= 95:
+        <span class="keyword">return</span> <span class="string">'B'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'C'</span>
+
+df[<span class="string">'ABC类别'</span>] = df[<span class="string">'累计占比(%)'</span>].apply(classify_abc)
+
+<span class="comment"># 6. 输出分析结果</span>
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="string">print</span>(<span class="string">"商品ABC分析结果"</span>)
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+<span class="string">print</span>(df[[<span class="string">'商品名称'</span>, <span class="string">'销售额'</span>, <span class="string">'销售额占比(%)'</span>, <span class="string">'累计占比(%)'</span>, <span class="string">'ABC类别'</span>]])
+
+<span class="comment"># 7. 统计各类别情况</span>
+<span class="string">print</span>(<span class="string">"\n"</span> + <span class="string">"=" * 60</span>)
+<span class="string">print</span>(<span class="string">"各类别统计汇总"</span>)
+<span class="string">print</span>(<span class="string">"=" * 60</span>)
+
+summary = df.groupby(<span class="string">'ABC类别'</span>).agg({
+    <span class="string">'商品ID'</span>: <span class="string">'count'</span>,
+    <span class="string">'销售额'</span>: <span class="string">'sum'</span>
+}).rename(columns={<span class="string">'商品ID'</span>: <span class="string">'商品数量'</span>})
+
+summary[<span class="string">'品种占比(%)'</span>] = (summary[<span class="string">'商品数量'</span>] / len(df) * 100).round(1)
+summary[<span class="string">'销售额占比(%)'</span>] = (summary[<span class="string">'销售额'</span>] / total_sales * 100).round(1)
+summary = summary.sort_index()
+
+<span class="string">print</span>(summary)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 进阶：可视化分析</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ABC分析可视化</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>]
+plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>
+
+<span class="comment"># 创建图表</span>
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+<span class="comment"># 左图：帕累托图</span>
+ax1 = axes[0]
+colors = {<span class="string">'A'</span>: <span class="string">'#ef4444'</span>, <span class="string">'B'</span>: <span class="string">'#f59e0b'</span>, <span class="string">'C'</span>: <span class="string">'#22c55e'</span>}
+bar_colors = [colors[c] <span class="keyword">for</span> c <span class="keyword">in</span> df[<span class="string">'ABC类别'</span>]]
+
+ax1.bar(df[<span class="string">'商品名称'</span>], df[<span class="string">'销售额'</span>], color=bar_colors, alpha=0.7)
+ax1.set_xlabel(<span class="string">'商品名称'</span>)
+ax1.set_ylabel(<span class="string">'销售额（元）'</span>)
+ax1.set_title(<span class="string">'商品销售额分布（ABC分类）'</span>)
+ax1.tick_params(axis=<span class="string">'x'</span>, rotation=45)
+
+<span class="comment"># 右图：各类别占比饼图</span>
+ax2 = axes[1]
+category_sales = df.groupby(<span class="string">'ABC类别'</span>)[<span class="string">'销售额'</span>].sum()
+pie_colors = [colors[c] <span class="keyword">for</span> c <span class="keyword">in</span> category_sales.index]
+ax2.pie(category_sales, labels=category_sales.index, autopct=<span class="string">'%1.1f%%'</span>, 
+        colors=pie_colors, explode=[0.05, 0, 0])
+ax2.set_title(<span class="string">'ABC类别销售额占比'</span>)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、真实商业案例</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-store"></i> 案例：某电商平台商品管理优化</h3>
+                <div class="section-content">
+                    <p><strong>背景：</strong>某电商平台拥有5000+SKU，库存周转率低，资金占用严重。运营团队决定采用ABC分类法优化商品管理。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">案例数据概览</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="diagram-box">
+                                <h4>A类商品</h4>
+                                <p>520个SKU</p>
+                                <p style="color: #ef4444; font-weight: 700;">贡献78%销售额</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4>B类商品</h4>
+                                <p>1250个SKU</p>
+                                <p style="color: #f59e0b; font-weight: 700;">贡献17%销售额</p>
+                            </div>
+                            <div class="diagram-box threat">
+                                <h4>C类商品</h4>
+                                <p>3230个SKU</p>
+                                <p style="color: #22c55e; font-weight: 700;">贡献5%销售额</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tasks"></i> 优化措施</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-star"></i><span>A类：每日监控库存，设置安全库存预警，优先补货</span></div>
+                    <div class="feature-item"><i class="fas fa-clock"></i><span>B类：每周盘点，采用定期订货策略</span></div>
+                    <div class="feature-item"><i class="fas fa-box"></i><span>C类：批量采购，降低采购频次，减少管理成本</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>案例启示：</strong>通过ABC分类管理，该平台库存周转率提升了35%，库存资金占用降低了28%，实现了精细化运营。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、ABC分类管理策略</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-cogs"></i> 各类别管理要点</h3>
+                
+                <table class="abc-table">
+                    <thead>
+                        <tr>
+                            <th>管理维度</th>
+                            <th>A类商品</th>
+                            <th>B类商品</th>
+                            <th>C类商品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>库存检查</strong></td>
+                            <td>每日检查</td>
+                            <td>每周检查</td>
+                            <td>每月检查</td>
+                        </tr>
+                        <tr>
+                            <td><strong>订货策略</strong></td>
+                            <td>定量订货（小批量多批次）</td>
+                            <td>定期订货</td>
+                            <td>批量订货</td>
+                        </tr>
+                        <tr>
+                            <td><strong>安全库存</strong></td>
+                            <td>较高（避免缺货）</td>
+                            <td>适中</td>
+                            <td>较低</td>
+                        </tr>
+                        <tr>
+                            <td><strong>供应商管理</strong></td>
+                            <td>建立战略合作关系</td>
+                            <td>保持良好关系</td>
+                            <td>选择性价比高的供应商</td>
+                        </tr>
+                        <tr>
+                            <td><strong>预测精度</strong></td>
+                            <td>高精度预测</td>
+                            <td>一般预测</td>
+                            <td>简单预测</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <p><strong>常见错误：</strong>很多企业只关注A类商品而忽视C类商品的管理。实际上，C类商品数量多，管理不当也会造成库存积压和资金浪费。应该简化而非忽视C类商品的管理。</p>
+                </div>
+            </section>
+
+            <div class="quiz-container" data-quiz-id="chapter5-1-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">ABC分类法基于哪个管理学原理？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">长尾理论</div>
+                    <div class="quiz-option" data-correct="true">帕累托法则（二八定律）</div>
+                    <div class="quiz-option" data-correct="false">木桶理论</div>
+                    <div class="quiz-option" data-correct="false">马斯洛需求层次理论</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>ABC分类法基于帕累托法则，即二八定律。该法则指出约20%的商品贡献约80%的销售额，这20%的商品应归为A类重点管理。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter5-1-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">根据ABC分类标准，A类商品的累计销售额占比通常为？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">50%-60%</div>
+                    <div class="quiz-option" data-correct="false">60%-70%</div>
+                    <div class="quiz-option" data-correct="true">70%-80%</div>
+                    <div class="quiz-option" data-correct="false">80%-90%</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>按照ABC分类标准，A类商品虽然品种只占10%-20%，但销售额贡献达到70%-80%，是需要重点管理的核心商品。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="../chapter5.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回章节概览</span>
+                </a>
+                <a href="chapter5-2.html" class="chapter-nav-btn">
+                    <span>下一节：毛利与利润分析</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        function saveProgress() {
+            const pageId = 'chapter5-1';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[pageId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const pageId = 'chapter5-1';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progress[pageId] && progress[pageId].completed) {
+                progressText.textContent = '已完成';
+                progressText.style.color = '#10b981';
+            } else {
+                progressText.textContent = '学习中...';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressDisplay();
+            
+            setTimeout(() => {
+                saveProgress();
+            }, 30000);
+
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const isCorrect = this.dataset.correct === 'true';
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this && !isCorrect) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                    saveProgress();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

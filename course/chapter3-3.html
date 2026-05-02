@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.3 波特五力模型 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        .data-table tr:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: var(--success-color);
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 1001;
+            transition: width 0.2s ease;
+        }
+        .porter-diagram {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .porter-center {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin: 0 auto;
+            max-width: 300px;
+            box-shadow: var(--shadow-lg);
+        }
+        .porter-center h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .porter-center p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        .porter-forces {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .force-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-top: 4px solid;
+        }
+        .force-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .force-card.suppliers { border-color: #f59e0b; grid-column: 1; }
+        .force-card.buyers { border-color: #10b981; grid-column: 3; }
+        .force-card.new-entrants { border-color: #8b5cf6; grid-column: 2; grid-row: 1; }
+        .force-card.substitutes { border-color: #ec4899; grid-column: 2; grid-row: 3; }
+        .force-card.rivalry { border-color: #ef4444; grid-column: 2; grid-row: 2; }
+        .force-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .force-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .force-icon i { font-size: 1rem; color: white; }
+        .force-card.suppliers .force-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .force-card.buyers .force-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .force-card.new-entrants .force-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .force-card.substitutes .force-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .force-card.rivalry .force-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .force-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .force-factors {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .force-factors li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .force-factors li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+        .force-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem;
+            pointer-events: none;
+        }
+        .arrow-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+        .strength-meter {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+        }
+        .strength-bar {
+            height: 6px;
+            flex: 1;
+            border-radius: 3px;
+            background: var(--border-color);
+        }
+        .strength-bar.filled { background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); }
+        .strength-bar.warning { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .strength-bar.danger { background: linear-gradient(90deg, #ef4444, #f87171); }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator" id="progressIndicator"></div>
+    
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第三章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter3-1.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 3.1 市场集中度分析</a>
+                <a href="chapter3-2.html" class="sidebar-item"><i class="fas fa-globe"></i> 3.2 PEST宏观环境分析</a>
+                <a href="chapter3-3.html" class="sidebar-item active"><i class="fas fa-project-diagram"></i> 3.3 波特五力模型</a>
+                <a href="chapter3-4.html" class="sidebar-item"><i class="fas fa-th-large"></i> 3.4 SWOT分析与量化</a>
+                <a href="chapter3-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 3.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-progress" style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="flex: 1; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                        <div id="sectionProgress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); transition: width 0.3s ease;"></div>
+                    </div>
+                    <span id="progressText" style="font-size: 0.75rem; color: var(--primary-color); font-weight: 600;">0%</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第三章 · 第3节</span>
+            <h1 class="course-title">波特五力模型</h1>
+            <p class="course-subtitle">掌握迈克尔·波特的行业竞争分析框架，深入理解行业竞争格局，制定有效竞争策略</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解波特五力模型的核心逻辑</li>
+                    <li>掌握五种竞争力的分析要点</li>
+                    <li>学会评估各力量的强度与影响</li>
+                    <li>能够运用五力模型分析行业竞争格局</li>
+                    <li>运用Python实现五力量化评分</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、波特五力模型概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 模型简介</h3>
+                <div class="section-content">
+                    <p><strong>波特五力模型（Porter's Five Forces）</strong>由哈佛商学院教授迈克尔·波特于1979年提出，是分析行业竞争结构的经典框架。模型认为，一个行业的竞争强度和盈利能力由五种力量决定：</p>
+                </div>
+
+                <div class="porter-diagram">
+                    <div class="porter-center">
+                        <h3>行业竞争态势</h3>
+                        <p>五种力量决定行业盈利能力</p>
+                    </div>
+                    
+                    <div class="porter-forces">
+                        <div class="force-card new-entrants">
+                            <div class="force-header">
+                                <div class="force-icon"><i class="fas fa-door-open"></i></div>
+                                <div class="force-title">潜在进入者威胁</div>
+                            </div>
+                            <ul class="force-factors">
+                                <li>进入壁垒高度</li>
+                                <li>资本需求</li>
+                                <li>品牌忠诚度</li>
+                            </ul>
+                            <div class="strength-meter">
+                                <div class="strength-bar filled"></div>
+                                <div class="strength-bar filled"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="force-card suppliers">
+                            <div class="force-header">
+                                <div class="force-icon"><i class="fas fa-truck"></i></div>
+                                <div class="force-title">供应商议价能力</div>
+                            </div>
+                            <ul class="force-factors">
+                                <li>供应商集中度</li>
+                                <li>替代投入品可用性</li>
+                                <li>转换成本</li>
+                            </ul>
+                            <div class="strength-meter">
+                                <div class="strength-bar warning"></div>
+                                <div class="strength-bar warning"></div>
+                                <div class="strength-bar warning"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="force-card rivalry">
+                            <div class="force-header">
+                                <div class="force-icon"><i class="fas fa-swords"></i></div>
+                                <div class="force-title">现有竞争者竞争</div>
+                            </div>
+                            <ul class="force-factors">
+                                <li>竞争者数量与规模</li>
+                                <li>行业增长率</li>
+                                <li>产品差异化程度</li>
+                            </ul>
+                            <div class="strength-meter">
+                                <div class="strength-bar danger"></div>
+                                <div class="strength-bar danger"></div>
+                                <div class="strength-bar danger"></div>
+                                <div class="strength-bar danger"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="force-card buyers">
+                            <div class="force-header">
+                                <div class="force-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="force-title">购买者议价能力</div>
+                            </div>
+                            <ul class="force-factors">
+                                <li>买家集中度</li>
+                                <li>价格敏感度</li>
+                                <li>后向整合能力</li>
+                            </ul>
+                            <div class="strength-meter">
+                                <div class="strength-bar filled"></div>
+                                <div class="strength-bar filled"></div>
+                                <div class="strength-bar filled"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="force-card substitutes">
+                            <div class="force-header">
+                                <div class="force-icon"><i class="fas fa-exchange-alt"></i></div>
+                                <div class="force-title">替代品威胁</div>
+                            </div>
+                            <ul class="force-factors">
+                                <li>替代品性价比</li>
+                                <li>转换成本</li>
+                                <li>买家替代意愿</li>
+                            </ul>
+                            <div class="strength-meter">
+                                <div class="strength-bar warning"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                                <div class="strength-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb"></i> 核心逻辑：</strong>五力越强，行业竞争越激烈，行业平均盈利能力越低。企业应选择五力相对较弱的行业进入，或在现有行业中构建防御壁垒。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、五力详解</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-door-open"></i> 1. 潜在进入者威胁</h3>
+                <div class="section-content">
+                    <p>新进入者会带来新的产能和对市场份额的渴望，从而压低价格或抬高成本，降低行业盈利能力。进入威胁的大小取决于<strong>进入壁垒</strong>的高度和<strong>现有企业的反击预期</strong>。</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>进入壁垒因素</th>
+                            <th>说明</th>
+                            <th>高壁垒示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>规模经济</strong></td>
+                            <td>大规模生产带来的成本优势</td>
+                            <td>汽车制造、半导体</td>
+                        </tr>
+                        <tr>
+                            <td><strong>产品差异化</strong></td>
+                            <td>品牌认知和客户忠诚度</td>
+                            <td>奢侈品、高端化妆品</td>
+                        </tr>
+                        <tr>
+                            <td><strong>资本需求</strong></td>
+                            <td>进入所需的资金投入</td>
+                            <td>航空、电信运营商</td>
+                        </tr>
+                        <tr>
+                            <td><strong>转换成本</strong></td>
+                            <td>客户更换供应商的成本</td>
+                            <td>企业软件、云服务</td>
+                        </tr>
+                        <tr>
+                            <td><strong>分销渠道</strong></td>
+                            <td>获取销售渠道的难度</td>
+                            <td>快消品、零售</td>
+                        </tr>
+                        <tr>
+                            <td><strong>政府政策</strong></td>
+                            <td>许可、资质等政策限制</td>
+                            <td>金融、医疗、烟草</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="section-subtitle"><i class="fas fa-swords"></i> 2. 现有竞争者竞争强度</h3>
+                <div class="section-content">
+                    <p>现有企业之间的竞争是五力的核心，竞争越激烈，行业盈利能力越低。竞争强度受以下因素影响：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-users"></i><span>竞争者数量：竞争者越多，竞争越激烈</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>行业增长率：增长缓慢时竞争更激烈</span></div>
+                    <div class="feature-item"><i class="fas fa-cubes"></i><span>固定成本占比：高固定成本导致价格战</span></div>
+                    <div class="feature-item"><i class="fas fa-puzzle-piece"></i><span>产品差异化：差异化低则价格竞争激烈</span></div>
+                    <div class="feature-item"><i class="fas fa-sign-out-alt"></i><span>退出壁垒：退出成本高则竞争更持久</span></div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-truck"></i> 3. 供应商议价能力</h3>
+                <div class="section-content">
+                    <p>强势的供应商可以通过提高价格或降低质量来挤压行业利润。供应商议价能力强的情形：</p>
+                </div>
+
+                <ul style="padding-left: 2rem; margin: 1rem 0;">
+                    <li>供应商集中度高，少数几家控制供应</li>
+                    <li>替代投入品稀缺或不存在</li>
+                    <li>行业不是供应商的重要客户</li>
+                    <li>供应商产品是行业的关键投入</li>
+                    <li>供应商具有前向整合的威胁</li>
+                    <li>转换成本高，难以更换供应商</li>
+                </ul>
+
+                <h3 class="section-subtitle"><i class="fas fa-shopping-cart"></i> 4. 购买者议价能力</h3>
+                <div class="section-content">
+                    <p>强势的购买者可以压低价格、要求更高质量或更多服务，从而降低行业利润。购买者议价能力强的情形：</p>
+                </div>
+
+                <ul style="padding-left: 2rem; margin: 1rem 0;">
+                    <li>购买者集中，采购量大</li>
+                    <li>产品标准化，替代品多</li>
+                    <li>购买者对价格敏感</li>
+                    <li>购买者有后向整合能力</li>
+                    <li>产品对购买者成本影响大</li>
+                    <li>转换成本低，易于更换供应商</li>
+                </ul>
+
+                <h3 class="section-subtitle"><i class="fas fa-exchange-alt"></i> 5. 替代品威胁</h3>
+                <div class="section-content">
+                    <p>替代品通过设定价格上限来限制行业盈利能力。替代品威胁大的情形：</p>
+                </div>
+
+                <ul style="padding-left: 2rem; margin: 1rem 0;">
+                    <li>替代品性价比高，功能相近</li>
+                    <li>转换成本低</li>
+                    <li>替代品行业利润率高，有降价空间</li>
+                    <li>购买者替代意愿强</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、五力量化评分</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 量化评估方法</h3>
+                <div class="section-content">
+                    <p>为了使五力分析更加客观，可以对每个力量进行量化评分，综合评估行业竞争强度：</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">行业竞争强度指数 = Σ(各力量得分 × 权重)</div>
+                    <div class="formula-desc">各力量得分取1-5分（1=很弱，5=很强），权重根据行业特点设定</div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 波特五力量化评分模型</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 定义五力评分框架</span>
+five_forces = {
+    <span class="string">'力量'</span>: [<span class="string">'潜在进入者威胁'</span>, <span class="string">'现有竞争者竞争'</span>, <span class="string">'供应商议价能力'</span>, 
+             <span class="string">'购买者议价能力'</span>, <span class="string">'替代品威胁'</span>],
+    <span class="string">'权重'</span>: [0.2, 0.3, 0.15, 0.2, 0.15],
+    <span class="string">'评分(1-5)'</span>: [3, 4, 2, 3, 2]  <span class="comment"># 1=很弱, 5=很强</span>
+}
+
+df = pd.DataFrame(five_forces)
+
+<span class="comment"># 计算加权得分</span>
+df[<span class="string">'加权得分'</span>] = df[<span class="string">'权重'</span>] * df[<span class="string">'评分(1-5)'</span>]
+
+<span class="string">print</span>(<span class="string">"=== 波特五力评分表 ==="</span>)
+<span class="string">print</span>(df)
+
+<span class="comment"># 计算综合竞争强度指数</span>
+competition_index = df[<span class="string">'加权得分'</span>].sum()
+<span class="string">print</span>(<span class="string">f"\n行业竞争强度指数: {competition_index:.2f}"</span>)
+
+<span class="comment"># 竞争强度判断</span>
+<span class="keyword">if</span> competition_index < 2:
+    level = <span class="string">"竞争较弱 - 行业盈利能力较好"</span>
+<span class="keyword">elif</span> competition_index < 3:
+    level = <span class="string">"竞争中等 - 行业盈利能力一般"</span>
+<span class="keyword">elif</span> competition_index < 4:
+    level = <span class="string">"竞争较强 - 行业盈利能力较差"</span>
+<span class="keyword">else</span>:
+    level = <span class="string">"竞争激烈 - 行业盈利能力很差"</span>
+
+<span class="string">print</span>(<span class="string">f"竞争强度判断: {level}"</span>)
+
+<span class="comment"># 识别关键竞争力量</span>
+key_force = df.loc[df[<span class="string">'评分(1-5)'</span>].idxmax(), <span class="string">'力量'</span>]
+<span class="string">print</span>(<span class="string">f"\n最关键的竞争力量: {key_force}"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、真实商业案例</h2>
+                
+                <div class="case-study">
+                    <div class="case-study-title">
+                        <i class="fas fa-industry"></i>
+                        案例：中国咖啡连锁行业五力分析
+                    </div>
+                    <div class="section-content">
+                        <p><strong>背景：</strong>分析中国咖啡连锁行业（如瑞幸、星巴克、Manner等）的竞争格局。</p>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>竞争力量</th>
+                                <th>分析要点</th>
+                                <th>强度评估</th>
+                                <th>得分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; color: #8b5cf6;">潜在进入者威胁</td>
+                                <td>
+                                    • 品牌壁垒中等<br>
+                                    • 资本需求较高（门店扩张）<br>
+                                    • 选址资源稀缺
+                                </td>
+                                <td><span style="color: #f59e0b; font-weight: 600;">中等</span></td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ef4444;">现有竞争者竞争</td>
+                                <td>
+                                    • 瑞幸、星巴克、Manner等多强争霸<br>
+                                    • 价格战激烈（9.9元咖啡）<br>
+                                    • 门店快速扩张，同质化严重
+                                </td>
+                                <td><span style="color: #ef4444; font-weight: 600;">很强</span></td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #f59e0b;">供应商议价能力</td>
+                                <td>
+                                    • 咖啡豆供应商分散<br>
+                                    • 大型连锁有采购规模优势<br>
+                                    • 设备供应商选择多
+                                </td>
+                                <td><span style="color: #10b981; font-weight: 600;">较弱</span></td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #10b981;">购买者议价能力</td>
+                                <td>
+                                    • 消费者选择多，转换成本低<br>
+                                    • 价格敏感度高<br>
+                                    • 品牌忠诚度有限
+                                </td>
+                                <td><span style="color: #f59e0b; font-weight: 600;">较强</span></td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #ec4899;">替代品威胁</td>
+                                <td>
+                                    • 茶饮、奶茶等替代品丰富<br>
+                                    • 即饮咖啡、速溶咖啡<br>
+                                    • 功能饮料等
+                                </td>
+                                <td><span style="color: #f59e0b; font-weight: 600;">较强</span></td>
+                                <td>4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 中国咖啡连锁行业五力分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 咖啡行业五力评分</span>
+coffee_forces = {
+    <span class="string">'力量'</span>: [<span class="string">'潜在进入者威胁'</span>, <span class="string">'现有竞争者竞争'</span>, <span class="string">'供应商议价能力'</span>, 
+             <span class="string">'购买者议价能力'</span>, <span class="string">'替代品威胁'</span>],
+    <span class="string">'权重'</span>: [0.2, 0.3, 0.15, 0.2, 0.15],
+    <span class="string">'评分'</span>: [3, 5, 2, 4, 4]
+}
+
+df = pd.DataFrame(coffee_forces)
+df[<span class="string">'加权得分'</span>] = df[<span class="string">'权重'</span>] * df[<span class="string">'评分'</span>]
+
+<span class="string">print</span>(<span class="string">"=== 中国咖啡连锁行业五力分析 ==="</span>)
+<span class="string">print</span>(df[[<span class="string">'力量'</span>, <span class="string">'评分'</span>, <span class="string">'加权得分'</span>]])
+
+total = df[<span class="string">'加权得分'</span>].sum()
+<span class="string">print</span>(<span class="string">f"\n行业竞争强度指数: {total:.2f}"</span>)
+
+<span class="string">print</span>(<span class="string">"\n=== 分析结论 ==="</span>)
+<span class="string">print</span>(<span class="string">"1. 现有竞争者竞争最激烈，价格战持续"</span>)
+<span class="string">print</span>(<span class="string">"2. 购买者议价能力强，消费者选择多"</span>)
+<span class="string">print</span>(<span class="string">"3. 替代品威胁大，茶饮等分流客群"</span>)
+<span class="string">print</span>(<span class="string">"4. 供应商议价能力弱，成本可控"</span>)
+<span class="string">print</span>(<span class="string">"5. 建议：差异化定位、提升品牌价值、优化成本结构"</span>)</code>
+                    </div>
+
+                    <div class="tip-box">
+                        <p><strong><i class="fas fa-lightbulb"></i> 案例洞察：</strong>中国咖啡连锁行业竞争强度指数达3.7，属于竞争较强的行业。现有竞争者竞争是最关键的力量，瑞幸、星巴克等品牌通过价格战和门店扩张激烈竞争。企业需要通过差异化定位、品牌建设和成本控制来获取竞争优势。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、五力分析的战略应用</h2>
+                
+                <div class="section-content">
+                    <p>波特五力分析不仅用于评估行业吸引力，更是制定竞争战略的基础：</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>战略定位</th>
+                            <th>适用条件</th>
+                            <th>战略要点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>成本领先战略</strong></td>
+                            <td>购买者价格敏感、产品同质化</td>
+                            <td>规模经济、成本控制、效率提升</td>
+                        </tr>
+                        <tr>
+                            <td><strong>差异化战略</strong></td>
+                            <td>客户需求多样、愿意为特色付费</td>
+                            <td>品牌建设、产品创新、服务升级</td>
+                        </tr>
+                        <tr>
+                            <td><strong>集中化战略</strong></td>
+                            <td>细分市场有特殊需求</td>
+                            <td>聚焦细分市场、深度服务</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle"></i> 常见错误：</strong></p>
+                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                        <li>只分析不行动，五力分析应服务于战略决策</li>
+                        <li>忽视力量之间的相互影响</li>
+                        <li>静态分析，未考虑力量变化趋势</li>
+                        <li>过于关注竞争，忽视合作机会</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong><i class="fas fa-exclamation-circle"></i> 注意：</strong>波特五力模型主要分析行业竞争结构，但现代商业环境中，企业之间的合作、生态系统竞争同样重要。建议将五力分析与蓝海战略、生态系统理论结合使用。</p>
+                </div>
+            </section>
+
+            <div class="chapter-nav">
+                <a href="chapter3-2.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：PEST宏观环境分析</span>
+                </a>
+                <a href="chapter3-4.html" class="nav-btn next">
+                    <span>下一节：SWOT分析与量化</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.getElementById('hamburgerMenu').addEventListener('click', function() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        });
+
+        const sectionId = 'chapter3-3';
+        const chapterId = 'chapter3';
+
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[chapterId]) {
+                progress[chapterId] = {};
+            }
+            progress[chapterId][sectionId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const chapterProgress = progress[chapterId] || {};
+            const sections = ['chapter3-1', 'chapter3-2', 'chapter3-3', 'chapter3-4', 'chapter3-5'];
+            const completed = sections.filter(s => chapterProgress[s]?.completed).length;
+            const percent = Math.round((completed / sections.length) * 100);
+            
+            document.getElementById('sectionProgress').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressIndicator').style.width = scrolled + '%';
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressUI();
+            let saved = false;
+            window.addEventListener('scroll', function() {
+                if (!saved) {
+                    const scrollPercent = (window.innerHeight + window.scrollY) / document.body.offsetHeight;
+                    if (scrollPercent > 0.8) {
+                        saveProgress();
+                        saved = true;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

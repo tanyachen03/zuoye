@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.4 库存与供应链分析 - 第五章：销售与运营分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        .progress-indicator i {
+            color: var(--success-color);
+        }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2563eb;
+            font-family: 'Times New Roman', serif;
+        }
+        .formula-box .formula-name {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .inventory-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .metric-card .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+        }
+        .metric-card .icon i {
+            font-size: 1.25rem;
+            color: white;
+        }
+        .metric-card h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        .metric-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .metric-card .unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .supply-chain-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .flow-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            min-width: 100px;
+        }
+        .flow-item i {
+            font-size: 1.5rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        .flow-arrow {
+            color: var(--success-color);
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第五章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter5-1.html" class="sidebar-item"><i class="fas fa-boxes-stacked"></i> 5.1 商品ABC分析</a>
+                <a href="chapter5-2.html" class="sidebar-item"><i class="fas fa-coins"></i> 5.2 毛利与利润分析</a>
+                <a href="chapter5-3.html" class="sidebar-item"><i class="fas fa-link"></i> 5.3 关联规则与购物篮分析</a>
+                <a href="chapter5-4.html" class="sidebar-item active"><i class="fas fa-warehouse"></i> 5.4 库存与供应链分析</a>
+                <a href="chapter5-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 5.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-header" style="margin-top: 1.5rem;">全部章节</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：<span id="progress-text">未开始</span></span>
+            </div>
+            
+            <span class="course-badge">5.4</span>
+            <h1 class="course-title">库存与供应链分析</h1>
+            <p class="course-subtitle">掌握库存周转率、安全库存等核心指标，优化供应链效率</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解库存管理的核心指标及其意义</li>
+                    <li>掌握库存周转率和周转天数的计算方法</li>
+                    <li>学会计算安全库存和补货点</li>
+                    <li>能够使用Python进行库存分析</li>
+                    <li>理解供应链优化的关键因素</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、库存管理核心指标</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 关键指标概览</h3>
+                <div class="section-content">
+                    <p>库存管理是供应链运营的核心环节，以下是最关键的库存指标：</p>
+                </div>
+
+                <div class="inventory-metrics">
+                    <div class="metric-card">
+                        <div class="icon"><i class="fas fa-sync-alt"></i></div>
+                        <h4>库存周转率</h4>
+                        <div class="value">次/年</div>
+                        <p class="unit">衡量库存流动速度</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h4>库存周转天数</h4>
+                        <div class="value">天</div>
+                        <p class="unit">库存平均停留时间</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>安全库存</h4>
+                        <div class="value">件</div>
+                        <p class="unit">防止缺货的缓冲量</p>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-industry"></i> 供应链流程</h3>
+                <div class="supply-chain-flow">
+                    <div class="flow-item">
+                        <i class="fas fa-industry"></i>
+                        <p><strong>供应商</strong></p>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-item">
+                        <i class="fas fa-truck"></i>
+                        <p><strong>运输</strong></p>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-item">
+                        <i class="fas fa-warehouse"></i>
+                        <p><strong>仓库</strong></p>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-item">
+                        <i class="fas fa-store"></i>
+                        <p><strong>门店</strong></p>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-item">
+                        <i class="fas fa-user"></i>
+                        <p><strong>消费者</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、库存周转率分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> 计算公式</h3>
+                <div class="section-content">
+                    <p>库存周转率反映企业库存转化为销售的速度，是衡量库存管理效率的核心指标。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">库存周转率 = 销售成本 / 平均库存金额</div>
+                    <div class="formula-name">或：库存周转率 = 销售量 / 平均库存量</div>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">库存周转天数 = 365 / 库存周转率 = 平均库存 × 365 / 销售成本</div>
+                    <div class="formula-name">表示库存从入库到销售出去所需的平均天数</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 指标解读</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-arrow-up"></i><span>周转率高 → 销售旺盛、资金效率高</span></div>
+                    <div class="feature-item"><i class="fas fa-arrow-down"></i><span>周转率低 → 库存积压、资金占用多</span></div>
+                    <div class="feature-item"><i class="fas fa-balance-scale"></i><span>需结合行业特点：生鲜周转快、耐用品周转慢</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>库存周转率并非越高越好。过高的周转率可能导致缺货风险增加，需要在效率和风险之间找到平衡点。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、安全库存与补货点</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-shield-alt"></i> 安全库存计算</h3>
+                <div class="section-content">
+                    <p>安全库存是为了应对需求和供应不确定性而设置的缓冲库存。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">安全库存 = Z × σ<sub>d</sub> × √L</div>
+                    <div class="formula-name">Z为服务水平系数，σ<sub>d</sub>为需求标准差，L为提前期</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-flag-checkered"></i> 补货点计算</h3>
+                <div class="section-content">
+                    <p>补货点（再订货点）是触发补货的库存水平。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">补货点 = 平均日需求 × 提前期 + 安全库存</div>
+                    <div class="formula-name">当库存降至补货点时，应立即下单补货</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-table"></i> 服务水平与Z值对照</h3>
+                <table class="abc-table">
+                    <thead>
+                        <tr>
+                            <th>服务水平</th>
+                            <th>90%</th>
+                            <th>95%</th>
+                            <th>99%</th>
+                            <th>99.5%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Z值</strong></td>
+                            <td>1.28</td>
+                            <td>1.65</td>
+                            <td>2.33</td>
+                            <td>2.58</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、Python实现库存分析</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 库存周转率计算</h3>
+                <div class="code-block">
+                    <code><span class="comment"># ========================================
+# 库存与供应链分析 - 完整实现
+# ========================================</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 1. 准备库存数据</span>
+inventory_data = {
+    <span class="string">'季度'</span>: [<span class="string">'Q1'</span>, <span class="string">'Q2'</span>, <span class="string">'Q3'</span>, <span class="string">'Q4'</span>],
+    <span class="string">'期初库存'</span>: [200000, 180000, 150000, 160000],
+    <span class="string">'期末库存'</span>: [180000, 150000, 160000, 140000],
+    <span class="string">'销售成本'</span>: [600000, 680000, 720000, 800000]
+}
+
+df = pd.DataFrame(inventory_data)
+
+<span class="comment"># 2. 计算平均库存</span>
+df[<span class="string">'平均库存'</span>] = (df[<span class="string">'期初库存'</span>] + df[<span class="string">'期末库存'</span>]) / 2
+
+<span class="comment"># 3. 计算库存周转率</span>
+df[<span class="string">'库存周转率'</span>] = df[<span class="string">'销售成本'</span>] / df[<span class="string">'平均库存'</span>]
+
+<span class="comment"># 4. 计算库存周转天数</span>
+df[<span class="string">'库存周转天数'</span>] = 90 / df[<span class="string">'库存周转率'</span>]
+
+<span class="comment"># 5. 输出结果</span>
+<span class="string">print</span>(<span class="string">"=" * 70</span>)
+<span class="string">print</span>(<span class="string">"季度库存周转分析"</span>)
+<span class="string">print</span>(<span class="string">"=" * 70</span>)
+<span class="string">print</span>(df[[<span class="string">'季度'</span>, <span class="string">'平均库存'</span>, <span class="string">'销售成本'</span>, <span class="string">'库存周转率'</span>, <span class="string">'库存周转天数'</span>]].round(2))
+
+<span class="comment"># 6. 年度汇总分析</span>
+total_cost = df[<span class="string">'销售成本'</span>].sum()
+avg_inventory = df[<span class="string">'平均库存'</span>].mean()
+annual_turnover = total_cost / avg_inventory
+annual_days = 365 / annual_turnover
+
+<span class="string">print</span>(<span class="string">f"\n年度库存周转率: {annual_turnover:.2f} 次"</span>)
+<span class="string">print</span>(<span class="string">f"年度库存周转天数: {annual_days:.1f} 天"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-boxes-stacked"></i> 安全库存计算</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 安全库存和补货点计算</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> norm
+
+<span class="comment"># 参数设置</span>
+avg_daily_demand = 100  <span class="comment"># 平均日需求</span>
+demand_std = 20         <span class="comment"># 需求标准差</span>
+lead_time = 7           <span class="comment"># 提前期（天）</span>
+service_level = 0.95    <span class="comment"># 目标服务水平</span>
+
+<span class="comment"># 计算Z值</span>
+z_value = norm.ppf(service_level)
+<span class="string">print</span>(<span class="string">f"服务水平 {service_level*100}% 对应的Z值: {z_value:.2f}"</span>)
+
+<span class="comment"># 计算安全库存</span>
+safety_stock = z_value * demand_std * np.sqrt(lead_time)
+<span class="string">print</span>(<span class="string">f"安全库存: {safety_stock:.0f} 件"</span>)
+
+<span class="comment"># 计算补货点</span>
+reorder_point = avg_daily_demand * lead_time + safety_stock
+<span class="string">print</span>(<span class="string">f"补货点: {reorder_point:.0f} 件"</span>)
+
+<span class="comment"># 计算经济订货量(EOQ)</span>
+annual_demand = avg_daily_demand * 365
+ordering_cost = 500     <span class="comment"># 每次订货成本</span>
+holding_cost = 10       <span class="comment"># 单位库存持有成本</span>
+
+eoq = np.sqrt(2 * annual_demand * ordering_cost / holding_cost)
+<span class="string">print</span>(<span class="string">f"经济订货量(EOQ): {eoq:.0f} 件"</span>)
+
+<span class="comment"># 计算年度总成本</span>
+annual_ordering_cost = (annual_demand / eoq) * ordering_cost
+annual_holding_cost = (eoq / 2) * holding_cost
+total_cost = annual_ordering_cost + annual_holding_cost
+
+<span class="string">print</span>(<span class="string">f"\n年度订货成本: {annual_ordering_cost:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"年度持有成本: {annual_holding_cost:,.0f} 元"</span>)
+<span class="string">print</span>(<span class="string">f"年度总库存成本: {total_cost:,.0f} 元"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 多产品库存分析</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 多产品库存周转分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 产品库存数据</span>
+product_inventory = {
+    <span class="string">'产品ID'</span>: [<span class="string">'P001'</span>, <span class="string">'P002'</span>, <span class="string">'P003'</span>, <span class="string">'P004'</span>, <span class="string">'P005'</span>],
+    <span class="string">'产品名称'</span>: [<span class="string">'产品A'</span>, <span class="string">'产品B'</span>, <span class="string">'产品C'</span>, <span class="string">'产品D'</span>, <span class="string">'产品E'</span>],
+    <span class="string">'平均库存'</span>: [5000, 8000, 3000, 12000, 2000],
+    <span class="string">'年销售成本'</span>: [60000, 48000, 72000, 36000, 90000],
+    <span class="string">'单价'</span>: [100, 50, 200, 30, 150]
+}
+
+df_product = pd.DataFrame(product_inventory)
+
+<span class="comment"># 计算库存周转率</span>
+df_product[<span class="string">'周转率'</span>] = df_product[<span class="string">'年销售成本'</span>] / (df_product[<span class="string">'平均库存'</span>] * df_product[<span class="string">'单价'</span>])
+df_product[<span class="string">'周转天数'</span>] = 365 / df_product[<span class="string">'周转率'</span>]
+
+<span class="comment"># 库存金额</span>
+df_product[<span class="string">'库存金额'</span>] = df_product[<span class="string">'平均库存'</span>] * df_product[<span class="string">'单价'</span>]
+
+<span class="comment"># 评估库存健康度</span>
+<span class="keyword">def</span> <span class="function">inventory_health</span>(turnover):
+    <span class="keyword">if</span> turnover >= 6:
+        <span class="keyword">return</span> <span class="string">'优秀'</span>
+    <span class="keyword">elif</span> turnover >= 4:
+        <span class="keyword">return</span> <span class="string">'良好'</span>
+    <span class="keyword">elif</span> turnover >= 2:
+        <span class="keyword">return</span> <span class="string">'一般'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'需优化'</span>
+
+df_product[<span class="string">'健康度'</span>] = df_product[<span class="string">'周转率'</span>].apply(inventory_health)
+
+<span class="string">print</span>(<span class="string">"产品库存分析报告"</span>)
+<span class="string">print</span>(df_product[[<span class="string">'产品名称'</span>, <span class="string">'周转率'</span>, <span class="string">'周转天数'</span>, <span class="string">'库存金额'</span>, <span class="string">'健康度'</span>]].round(2))
+
+<span class="comment"># 识别问题产品</span>
+problem_products = df_product[df_product[<span class="string">'健康度'</span>] == <span class="string">'需优化'</span>]
+<span class="string">print</span>(<span class="string">f"\n需优化的产品: {problem_products['产品名称'].tolist()}"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、真实商业案例</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-building"></i> 案例：某零售企业库存优化</h3>
+                <div class="section-content">
+                    <p><strong>背景：</strong>某连锁零售企业库存周转率持续下降，资金占用严重，需要进行库存诊断和优化。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">问题诊断</div>
+                    <div class="diagram" style="width: 100%; max-width: 700px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <div class="diagram-box threat">
+                                <h4 style="color: #ef4444;">问题表现</h4>
+                                <p>库存周转天数从35天升至52天</p>
+                                <p>库存资金占用增加40%</p>
+                                <p>缺货率反而上升至8%</p>
+                            </div>
+                            <div class="diagram-box opportunity">
+                                <h4 style="color: #22c55e;">优化措施</h4>
+                                <p>实施ABC分类管理</p>
+                                <p>优化补货策略</p>
+                                <p>清理滞销库存</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tasks"></i> 优化方案</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-tags"></i><span>A类商品：降低安全库存，提高补货频次</span></div>
+                    <div class="feature-item"><i class="fas fa-clock"></i><span>B类商品：优化补货点，平衡成本与服务</span></div>
+                    <div class="feature-item"><i class="fas fa-trash-alt"></i><span>C类商品：清理滞销品，减少SKU数量</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>建立库存预警机制，实时监控</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>优化效果：</strong>经过6个月优化，库存周转天数降至38天，库存资金占用减少25%，缺货率降至3%，实现了效率与服务的平衡。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、供应链优化要点</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-cogs"></i> 供应链KPI体系</h3>
+                <table class="abc-table">
+                    <thead>
+                        <tr>
+                            <th>指标类别</th>
+                            <th>具体指标</th>
+                            <th>计算方法</th>
+                            <th>目标方向</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>效率指标</strong></td>
+                            <td>库存周转率</td>
+                            <td>销售成本/平均库存</td>
+                            <td>越高越好</td>
+                        </tr>
+                        <tr>
+                            <td><strong>服务指标</strong></td>
+                            <td>订单满足率</td>
+                            <td>按时交付订单/总订单</td>
+                            <td>≥95%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>成本指标</strong></td>
+                            <td>库存持有成本</td>
+                            <td>库存金额×持有成本率</td>
+                            <td>越低越好</td>
+                        </tr>
+                        <tr>
+                            <td><strong>质量指标</strong></td>
+                            <td>库存准确率</td>
+                            <td>账实相符数/盘点总数</td>
+                            <td>≥99%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <p><strong>常见错误：</strong>只追求高周转率而忽视服务水平。正确的做法是在保证服务水平的前提下提高周转效率，实现成本与服务的最优平衡。</p>
+                </div>
+            </section>
+
+            <div class="quiz-container" data-quiz-id="chapter5-4-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">库存周转天数的计算公式是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">销售成本 / 平均库存</div>
+                    <div class="quiz-option" data-correct="true">365 / 库存周转率</div>
+                    <div class="quiz-option" data-correct="false">平均库存 / 销售成本</div>
+                    <div class="quiz-option" data-correct="false">期初库存 + 期末库存</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>库存周转天数 = 365 / 库存周转率 = 平均库存 × 365 / 销售成本，表示库存平均需要多少天才能销售出去。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter5-4-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">补货点的计算公式是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">平均日需求 × 提前期</div>
+                    <div class="quiz-option" data-correct="false">安全库存 × 提前期</div>
+                    <div class="quiz-option" data-correct="true">平均日需求 × 提前期 + 安全库存</div>
+                    <div class="quiz-option" data-correct="false">经济订货量 / 2</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>补货点 = 平均日需求 × 提前期 + 安全库存。当库存降至这个水平时，需要立即下单补货，以确保在等待补货期间不会缺货。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter5-3.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：关联规则与购物篮分析</span>
+                </a>
+                <a href="chapter5-5.html" class="chapter-nav-btn">
+                    <span>下一节：本章综合案例</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        function saveProgress() {
+            const pageId = 'chapter5-4';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[pageId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const pageId = 'chapter5-4';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progress[pageId] && progress[pageId].completed) {
+                progressText.textContent = '已完成';
+                progressText.style.color = '#10b981';
+            } else {
+                progressText.textContent = '学习中...';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressDisplay();
+            
+            setTimeout(() => {
+                saveProgress();
+            }, 30000);
+
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const isCorrect = this.dataset.correct === 'true';
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this && !isCorrect) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                    saveProgress();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

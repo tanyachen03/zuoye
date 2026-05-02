@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.1 用户画像基础 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+        .chapter-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+        }
+        .chapter-nav-btn.disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .chapter-nav-btn.disabled:hover {
+            transform: none;
+        }
+        .sidebar-subsection {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-subsection .sidebar-item {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: #2563eb;
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e2e8f0;
+            z-index: 999;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #06b6d4);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1e40af;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+            .navbar-menu {
+                display: none;
+            }
+            .navbar-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第四章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter4-1.html" class="sidebar-item active"><i class="fas fa-user-circle"></i> 4.1 用户画像基础</a>
+                <a href="chapter4-2.html" class="sidebar-item"><i class="fas fa-layer-group"></i> 4.2 RFM模型详解</a>
+                <a href="chapter4-3.html" class="sidebar-item"><i class="fas fa-calculator"></i> 4.3 RFM实战：打分与分层</a>
+                <a href="chapter4-4.html" class="sidebar-item"><i class="fas fa-sync-alt"></i> 4.4 用户生命周期管理</a>
+                <a href="chapter4-5.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 4.5 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.75rem;">
+                <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.5rem;">学习进度</div>
+                <div id="sectionProgress" style="font-weight: 700; color: #2563eb;">1 / 5 小节</div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第四章 · 第1节</span>
+            <h1 class="course-title">用户画像基础</h1>
+            <p class="course-subtitle">理解用户画像的概念、构建方法与应用场景，掌握用户标签体系设计</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解用户画像的定义与核心价值</li>
+                    <li>掌握用户画像的构建流程与方法</li>
+                    <li>学会设计用户标签体系</li>
+                    <li>了解用户画像的典型应用场景</li>
+                    <li>能够使用Pandas构建基础用户画像</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、用户画像概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 什么是用户画像</h3>
+                <div class="section-content">
+                    <p>用户画像（User Persona）是根据用户的社会属性、消费习惯、行为特征等信息构建的标签化用户模型。它是数据驱动运营的核心基础设施，帮助企业实现精准营销和个性化服务。</p>
+                    <p><strong>用户画像的核心价值：</strong></p>
+                    <ul>
+                        <li><strong>精准营销</strong>：基于用户特征进行精准触达，提升转化率</li>
+                        <li><strong>个性化推荐</strong>：根据用户偏好推荐商品或内容</li>
+                        <li><strong>产品设计</strong>：理解用户需求，优化产品设计</li>
+                        <li><strong>风险控制</strong>：识别异常用户，降低业务风险</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">用户画像构建流程</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">数据采集</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">数据清洗</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">特征提取</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">标签构建</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">画像应用</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tags"></i> 用户标签体系</h3>
+                <div class="section-content">
+                    <p>用户标签是用户画像的核心组成部分，通常分为以下几类：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-id-card"></i><span>基础属性标签：性别、年龄、地域、职业</span></div>
+                    <div class="feature-item"><i class="fas fa-shopping-bag"></i><span>消费行为标签：消费金额、频次、偏好品类</span></div>
+                    <div class="feature-item"><i class="fas fa-mouse-pointer"></i><span>行为特征标签：活跃度、浏览路径、操作习惯</span></div>
+                    <div class="feature-item"><i class="fas fa-heart"></i><span>兴趣偏好标签：内容偏好、品牌偏好、价格敏感度</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>价值分层标签：高价值、中价值、低价值用户</span></div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>构建用户标签体系时，要遵循"可量化、可执行、可验证"原则。标签应该能够用数据量化，能够指导业务行动，并且效果可以验证。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、用户画像构建方法</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-database"></i> 数据源与数据采集</h3>
+                <div class="section-content">
+                    <p>构建用户画像需要整合多源数据，常见的数据来源包括：</p>
+                    <ul>
+                        <li><strong>交易数据</strong>：订单、支付、退款等消费记录</li>
+                        <li><strong>行为数据</strong>：浏览、点击、收藏、搜索等行为日志</li>
+                        <li><strong>属性数据</strong>：注册信息、认证信息、设备信息</li>
+                        <li><strong>外部数据</strong>：第三方数据、社交媒体数据</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 使用Pandas构建用户画像</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 用户画像构建示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 用户基础数据</span>
+user_data = {
+    <span class="string">'user_id'</span>: [<span class="string">'U001'</span>, <span class="string">'U002'</span>, <span class="string">'U003'</span>, <span class="string">'U004'</span>, <span class="string">'U005'</span>],
+    <span class="string">'gender'</span>: [<span class="string">'男'</span>, <span class="string">'女'</span>, <span class="string">'女'</span>, <span class="string">'男'</span>, <span class="string">'女'</span>],
+    <span class="string">'age'</span>: [25, 32, 28, 45, 35],
+    <span class="string">'city'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, <span class="string">'深圳'</span>, <span class="string">'杭州'</span>],
+    <span class="string">'total_orders'</span>: [15, 42, 8, 65, 23],
+    <span class="string">'total_amount'</span>: [3500, 12800, 1800, 25000, 6800],
+    <span class="string">'last_active_days'</span>: [2, 0, 15, 1, 5]
+}
+df = pd.DataFrame(user_data)
+
+<span class="comment"># 构建用户标签</span>
+<span class="comment"># 1. 年龄分段标签</span>
+<span class="keyword">def</span> <span class="function">age_group</span>(age):
+    <span class="keyword">if</span> age < 25:
+        <span class="keyword">return</span> <span class="string">'青年'</span>
+    <span class="keyword">elif</span> age < 35:
+        <span class="keyword">return</span> <span class="string">'青壮年'</span>
+    <span class="keyword">elif</span> age < 45:
+        <span class="keyword">return</span> <span class="string">'中年'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'中老年'</span>
+
+df[<span class="string">'age_group'</span>] = df[<span class="string">'age'</span>].apply(age_group)
+
+<span class="comment"># 2. 消费能力标签</span>
+df[<span class="string">'avg_order_amount'</span>] = df[<span class="string">'total_amount'</span>] / df[<span class="string">'total_orders'</span>]
+df[<span class="string">'spending_level'</span>] = pd.cut(
+    df[<span class="string">'total_amount'</span>], 
+    bins=[0, 3000, 10000, 20000, float(<span class="string">'inf'</span>)],
+    labels=[<span class="string">'低消费'</span>, <span class="string">'中消费'</span>, <span class="string">'高消费'</span>, <span class="string">'超高消费'</span>]
+)
+
+<span class="comment"># 3. 活跃度标签</span>
+df[<span class="string">'activity_level'</span>] = df[<span class="string">'last_active_days'</span>].apply(
+    <span class="keyword">lambda</span> x: <span class="string">'活跃'</span> <span class="keyword">if</span> x <= 7 <span class="keyword">else</span> <span class="string">'沉默'</span>
+)
+
+<span class="comment"># 4. 城市等级标签</span>
+city_tier = {
+    <span class="string">'北京'</span>: <span class="string">'一线城市'</span>, <span class="string">'上海'</span>: <span class="string">'一线城市'</span>, 
+    <span class="string">'广州'</span>: <span class="string">'一线城市'</span>, <span class="string">'深圳'</span>: <span class="string">'一线城市'</span>,
+    <span class="string">'杭州'</span>: <span class="string">'新一线城市'</span>
+}
+df[<span class="string">'city_tier'</span>] = df[<span class="string">'city'</span>].map(city_tier)
+
+<span class="string">print</span>(<span class="string">"=== 用户画像标签表 ==="</span>)
+<span class="string">print</span>(df[[<span class="string">'user_id'</span>, <span class="string">'age_group'</span>, <span class="string">'spending_level'</span>, 
+          <span class="string">'activity_level'</span>, <span class="string">'city_tier'</span>]])</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>在构建用户画像时，常见以下错误：1) 标签定义过于主观，缺乏数据支撑；2) 标签粒度过粗或过细，无法有效区分用户；3) 忽视标签的时效性，使用过期的用户特征；4) 标签之间高度相关，造成信息冗余。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、用户画像应用场景</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-bullhorn"></i> 精准营销</h3>
+                <div class="section-content">
+                    <p>基于用户画像进行精准营销，可以显著提升营销效率和ROI。常见的应用包括：</p>
+                    <ul>
+                        <li>人群定向：根据用户标签筛选目标人群</li>
+                        <li>内容个性化：根据用户偏好推送个性化内容</li>
+                        <li>时机优化：根据用户活跃时间选择最佳触达时机</li>
+                    </ul>
+                </div>
+
+                <div class="case-study">
+                    <div class="case-study-title"><i class="fas fa-building"></i> 真实商业案例：某电商平台用户画像应用</div>
+                    <p><strong>背景：</strong>某电商平台拥有5000万注册用户，希望通过用户画像提升营销效果。</p>
+                    <p><strong>方案：</strong></p>
+                    <ul>
+                        <li>构建200+用户标签，覆盖基础属性、消费行为、兴趣偏好等维度</li>
+                        <li>基于RFM模型将用户分为8个价值层级</li>
+                        <li>针对不同层级用户制定差异化营销策略</li>
+                    </ul>
+                    <p><strong>效果：</strong>营销点击率提升35%，转化率提升28%，营销成本降低20%。</p>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 用户分群分析示例</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 用户分群分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 模拟用户数据</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+np.random.seed(42)
+n_users = 1000
+
+user_df = pd.DataFrame({
+    <span class="string">'user_id'</span>: [<span class="string">f'U{i:04d}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n_users)],
+    <span class="string">'gender'</span>: np.random.choice([<span class="string">'男'</span>, <span class="string">'女'</span>], n_users),
+    <span class="string">'age'</span>: np.random.randint(18, 60, n_users),
+    <span class="string">'total_orders'</span>: np.random.exponential(10, n_users).astype(<span class="string">'int'</span>) + 1,
+    <span class="string">'total_amount'</span>: np.random.exponential(2000, n_users) + 100,
+    <span class="string">'favorite_category'</span>: np.random.choice(
+        [<span class="string">'数码'</span>, <span class="string">'服饰'</span>, <span class="string">'美妆'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>], n_users
+    )
+})
+
+<span class="comment"># 用户分群统计</span>
+<span class="string">print</span>(<span class="string">"=== 性别分布 ==="</span>)
+<span class="string">print</span>(user_df[<span class="string">'gender'</span>].value_counts())
+
+<span class="string">print</span>(<span class="string">"\n=== 年龄分布 ==="</span>)
+user_df[<span class="string">'age_group'</span>] = pd.cut(user_df[<span class="string">'age'</span>], 
+                            bins=[0, 25, 35, 45, 60],
+                            labels=[<span class="string">'18-25'</span>, <span class="string">'26-35'</span>, <span class="string">'36-45'</span>, <span class="string">'46-60'</span>])
+<span class="string">print</span>(user_df[<span class="string">'age_group'</span>].value_counts())
+
+<span class="string">print</span>(<span class="string">"\n=== 品类偏好分布 ==="</span>)
+<span class="string">print</span>(user_df[<span class="string">'favorite_category'</span>].value_counts())
+
+<span class="string">print</span>(<span class="string">"\n=== 消费能力分析 ==="</span>)
+<span class="string">print</span>(user_df[<span class="string">'total_amount'</span>].describe().round(2))</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>用户画像不是一成不变的，需要定期更新。建议根据业务特点设置更新周期，高频业务可按周更新，低频业务可按月更新。</p>
+                </div>
+            </section>
+
+            <div class="quiz-container" data-quiz-id="chapter4-1-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">用户画像的核心价值不包括以下哪一项？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">精准营销</div>
+                    <div class="quiz-option" data-correct="false">个性化推荐</div>
+                    <div class="quiz-option" data-correct="true">数据存储优化</div>
+                    <div class="quiz-option" data-correct="false">风险控制</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>用户画像的核心价值包括精准营销、个性化推荐、产品设计和风险控制等，数据存储优化不是用户画像的核心价值。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="../chapter3.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    上一章：市场与行业分析
+                </a>
+                <a href="chapter4-2.html" class="chapter-nav-btn">
+                    下一节：RFM模型详解
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function switchModal(id) {
+            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+            openModal(id);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var progress = localStorage.getItem('chapter4_progress') || '{}';
+            var progressObj = JSON.parse(progress);
+            progressObj['chapter4-1'] = true;
+            localStorage.setItem('chapter4_progress', JSON.stringify(progressObj));
+
+            var completed = Object.keys(progressObj).filter(function(k) {
+                return progressObj[k] === true;
+            }).length;
+            document.getElementById('sectionProgress').textContent = completed + ' / 5 小节';
+
+            var scrollPercent = 0;
+            window.addEventListener('scroll', function() {
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                scrollPercent = (scrollTop / scrollHeight) * 100;
+                document.getElementById('progressBar').style.width = scrollPercent + '%';
+            });
+        });
+
+        document.querySelectorAll('.quiz-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                var container = this.closest('.quiz-container');
+                var options = container.querySelectorAll('.quiz-option');
+                var explanation = container.querySelector('.quiz-explanation');
+                
+                options.forEach(function(opt) {
+                    opt.style.pointerEvents = 'none';
+                    if (opt.dataset.correct === 'true') {
+                        opt.classList.add('quiz-correct');
+                    } else if (opt === this && opt.dataset.correct !== 'true') {
+                        opt.classList.add('quiz-incorrect');
+                    }
+                }.bind(this));
+                
+                explanation.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

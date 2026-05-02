@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.1 商务图表设计原则 - 数据可视化与叙事</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .section-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.disabled {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        .sidebar-subsection {
+            margin-left: 1.5rem;
+            font-size: 0.875rem;
+        }
+        .sidebar-subsection .sidebar-item {
+            padding: 0.5rem 1rem;
+        }
+        .sidebar-subsection .sidebar-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .chart-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .chart-type-card {
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .chart-type-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        .chart-type-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+        .chart-type-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .chart-type-card p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+        .design-principle {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+        .design-principle .principle-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .design-principle .principle-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .design-principle .principle-content p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+        .color-palette {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .color-swatch {
+            width: 60px;
+            height: 40px;
+            border-radius: 0.375rem;
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: var(--danger-color);
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第六章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter6-1.html" class="sidebar-item active"><i class="fas fa-palette"></i> 6.1 商务图表设计原则</a>
+                <a href="chapter6-2.html" class="sidebar-item"><i class="fas fa-chart-bar"></i> 6.2 Matplotlib基础绘图</a>
+                <a href="chapter6-3.html" class="sidebar-item"><i class="fas fa-chart-line"></i> 6.3 Seaborn高级可视化</a>
+                <a href="chapter6-4.html" class="sidebar-item"><i class="fas fa-mouse-pointer"></i> 6.4 Plotly交互式可视化</a>
+                <a href="chapter6-5.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 6.5 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div class="progress-indicator">
+                    <i class="fas fa-book-open"></i>
+                    <span id="progress-text">正在学习 6.1</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第六章 · 第1节</span>
+            <h1 class="course-title">商务图表设计原则</h1>
+            <p class="course-subtitle">掌握数据可视化的核心设计原则，创建专业、清晰、有说服力的商务图表</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解数据可视化的核心价值和目的</li>
+                    <li>掌握选择正确图表类型的方法</li>
+                    <li>学习商务图表的配色与设计原则</li>
+                    <li>了解常见的设计错误及避免方法</li>
+                    <li>能够设计专业、清晰的数据图表</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、数据可视化的核心价值</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-lightbulb"></i> 为什么需要数据可视化？</h3>
+                <div class="section-content">
+                    <p>数据可视化是将抽象数据转化为直观图形的过程，它能够帮助我们发现数据中的模式、趋势和异常。在商务场景中，好的可视化能够：</p>
+                    <ul>
+                        <li><strong>提高信息传递效率：</strong>人脑处理图像的速度比处理文字快6万倍</li>
+                        <li><strong>发现隐藏洞察：</strong>可视化能揭示表格中难以发现的规律</li>
+                        <li><strong>支持决策制定：</strong>直观呈现帮助决策者快速理解复杂情况</li>
+                        <li><strong>增强说服力：</strong>专业的图表让报告更具可信度</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">数据可视化价值链</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node">原始数据</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">数据处理</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">可视化呈现</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">洞察发现</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node">决策支持</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>数据可视化的核心不是"画图"，而是"讲故事"。每一个图表都应该有明确的传递信息，服务于你的分析结论。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、图表类型选择指南</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-th-large"></i> 常见图表类型及其应用场景</h3>
+                <div class="section-content">
+                    <p>选择正确的图表类型是数据可视化的第一步。以下是商务分析中最常用的图表类型：</p>
+                </div>
+
+                <div class="chart-type-grid">
+                    <div class="chart-type-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>柱状图</h4>
+                        <p>比较不同类别的数值大小</p>
+                    </div>
+                    <div class="chart-type-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>折线图</h4>
+                        <p>展示数据随时间的变化趋势</p>
+                    </div>
+                    <div class="chart-type-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <h4>饼图</h4>
+                        <p>展示各部分占整体的比例</p>
+                    </div>
+                    <div class="chart-type-card">
+                        <i class="fas fa-braille"></i>
+                        <h4>散点图</h4>
+                        <p>展示两个变量之间的关系</p>
+                    </div>
+                    <div class="chart-type-card">
+                        <i class="fas fa-th"></i>
+                        <h4>热力图</h4>
+                        <p>展示数据分布密度或相关性</p>
+                    </div>
+                    <div class="chart-type-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>地图</h4>
+                        <p>展示地理位置相关的数据</p>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-question-circle"></i> 如何选择正确的图表？</h3>
+                <div class="section-content">
+                    <p>选择图表时，首先要明确你的分析目的：</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 图表选择决策树</span>
+<span class="keyword">def</span> <span class="function">choose_chart</span>(purpose, data_type):
+    <span class="string">"""
+    根据分析目的选择合适的图表类型
+    
+    参数:
+        purpose: 分析目的 ('比较', '趋势', '占比', '关系', '分布')
+        data_type: 数据类型 ('分类', '时间序列', '数值')
+    """</span>
+    
+    <span class="keyword">if</span> purpose == <span class="string">'比较'</span>:
+        <span class="keyword">return</span> <span class="string">'柱状图 或 条形图'</span>
+    <span class="keyword">elif</span> purpose == <span class="string">'趋势'</span>:
+        <span class="keyword">return</span> <span class="string">'折线图 或 面积图'</span>
+    <span class="keyword">elif</span> purpose == <span class="string">'占比'</span>:
+        <span class="keyword">return</span> <span class="string">'饼图 或 环形图'</span>
+    <span class="keyword">elif</span> purpose == <span class="string">'关系'</span>:
+        <span class="keyword">return</span> <span class="string">'散点图 或 气泡图'</span>
+    <span class="keyword">elif</span> purpose == <span class="string">'分布'</span>:
+        <span class="keyword">return</span> <span class="string">'直方图 或 箱线图'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'请明确分析目的'</span>
+
+<span class="comment"># 示例：选择展示销售趋势的图表</span>
+chart = choose_chart(<span class="string">'趋势'</span>, <span class="string">'时间序列'</span>)
+print(f<span class="string">"推荐图表: {chart}"</span>)  <span class="comment"># 输出: 推荐图表: 折线图 或 面积图</span></code>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-1-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">想要展示公司各产品线的销售额占比，最适合使用哪种图表？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">柱状图</div>
+                        <div class="quiz-option" data-correct="true">饼图</div>
+                        <div class="quiz-option" data-correct="false">折线图</div>
+                        <div class="quiz-option" data-correct="false">散点图</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>饼图最适合展示各部分占整体的比例关系，能够直观地看出各产品线的销售份额。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、商务图表设计五大原则</h2>
+                
+                <div class="design-principle">
+                    <div class="principle-number">1</div>
+                    <div class="principle-content">
+                        <h4>简洁原则</h4>
+                        <p>去除不必要的装饰元素，让数据成为焦点。避免3D效果、过度装饰的背景、多余的网格线等"图表垃圾"。</p>
+                    </div>
+                </div>
+
+                <div class="design-principle">
+                    <div class="principle-number">2</div>
+                    <div class="principle-content">
+                        <h4>对齐原则</h4>
+                        <p>图表元素应当整齐对齐，标题、图例、坐标轴标签位置统一。对齐能创造视觉秩序，提升专业感。</p>
+                    </div>
+                </div>
+
+                <div class="design-principle">
+                    <div class="principle-number">3</div>
+                    <div class="principle-content">
+                        <h4>对比原则</h4>
+                        <p>通过颜色、大小、形状的对比突出重点数据。但对比要适度，通常突出1-2个关键点即可。</p>
+                    </div>
+                </div>
+
+                <div class="design-principle">
+                    <div class="principle-number">4</div>
+                    <div class="principle-content">
+                        <h4>一致性原则</h4>
+                        <p>同一报告中的图表风格应保持一致，包括配色方案、字体、图例位置等。一致性体现专业性。</p>
+                    </div>
+                </div>
+
+                <div class="design-principle">
+                    <div class="principle-number">5</div>
+                    <div class="principle-content">
+                        <h4>信息层次原则</h4>
+                        <p>通过视觉层次引导读者注意力。标题最醒目，数据次之，注释最弱。建立清晰的信息优先级。</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>好的图表应该让读者在3秒内理解主要信息。如果需要长时间解释才能看懂，说明图表设计有问题。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、配色方案设计</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-palette"></i> 商务图表配色原则</h3>
+                <div class="section-content">
+                    <p>配色是图表设计中最容易被忽视却最重要的环节。好的配色能够：</p>
+                    <ul>
+                        <li>增强数据区分度</li>
+                        <li>传递情感和品牌形象</li>
+                        <li>引导视觉焦点</li>
+                        <li>提升整体美感</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-swatchbook"></i> 推荐配色方案</h3>
+                <div class="section-content">
+                    <p><strong>经典商务蓝：</strong>适合正式场合，传递专业、可信的形象</p>
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background-color: #2563eb;"></div>
+                    <div class="color-swatch" style="background-color: #3b82f6;"></div>
+                    <div class="color-swatch" style="background-color: #60a5fa;"></div>
+                    <div class="color-swatch" style="background-color: #93c5fd;"></div>
+                    <div class="color-swatch" style="background-color: #bfdbfe;"></div>
+                </div>
+
+                <div class="section-content">
+                    <p><strong>数据对比色：</strong>适合需要突出对比的图表</p>
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background-color: #2563eb;"></div>
+                    <div class="color-swatch" style="background-color: #10b981;"></div>
+                    <div class="color-swatch" style="background-color: #f59e0b;"></div>
+                    <div class="color-swatch" style="background-color: #ef4444;"></div>
+                    <div class="color-swatch" style="background-color: #8b5cf6;"></div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># Python中设置图表配色</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 定义商务配色方案</span>
+business_colors = [<span class="string">'#2563eb'</span>, <span class="string">'#10b981'</span>, <span class="string">'#f59e0b'</span>, 
+                   <span class="string">'#ef4444'</span>, <span class="string">'#8b5cf6'</span>]
+
+<span class="comment"># 设置全局配色</span>
+plt.rcParams[<span class="string">'axes.prop_cycle'</span>] = plt.cycler(color=business_colors)
+
+<span class="comment"># 或者使用内置配色方案</span>
+plt.style.available  <span class="comment"># 查看所有可用样式</span>
+plt.style.use(<span class="string">'seaborn-v0_8-whitegrid'</span>)  <span class="comment"># 使用seaborn风格</span></code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>使用过于鲜艳或过多的颜色。商务图表中，建议主色不超过3种，用灰色处理次要数据。避免使用红绿对比（色盲友好考虑）。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、真实商业案例：销售报表可视化改造</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-building"></i> 案例背景</h3>
+                <div class="section-content">
+                    <p>某电商公司需要制作月度销售报表，原始图表存在以下问题：颜色杂乱、信息层次不清、缺乏重点突出。我们需要运用设计原则进行改造。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 销售数据可视化改造示例</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+months = [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>]
+sales_2023 = [120, 135, 150, 145, 160, 175]
+sales_2024 = [145, 160, 178, 185, 195, 210]
+
+<span class="comment"># 创建专业商务图表</span>
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 设置商务配色</span>
+color_2023 = <span class="string">'#94a3b8'</span>  <span class="comment"># 灰色表示历史数据</span>
+color_2024 = <span class="string">'#2563eb'</span>  <span class="comment"># 蓝色突出当前数据</span>
+
+<span class="comment"># 绘制折线图</span>
+ax.plot(months, sales_2023, marker=<span class="string">'o'</span>, color=color_2023, 
+        linewidth=2, label=<span class="string">'2023年'</span>, markersize=6)
+ax.plot(months, sales_2024, marker=<span class="string">'o'</span>, color=color_2024, 
+        linewidth=3, label=<span class="string">'2024年'</span>, markersize=8)
+
+<span class="comment"># 添加数据标签（仅关键点）</span>
+ax.annotate(<span class="string">f'{sales_2024[-1]}万'</span>, xy=(months[-1], sales_2024[-1]), 
+            xytext=(10, 0), textcoords=<span class="string">'offset points'</span>,
+            fontsize=12, fontweight=<span class="string">'bold'</span>, color=color_2024)
+
+<span class="comment"># 美化图表</span>
+ax.set_title(<span class="string">'月度销售额对比分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, pad=20)
+ax.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=12)
+ax.legend(loc=<span class="string">'upper left'</span>, frameon=<span class="keyword">False</span>)
+
+<span class="comment"># 移除上边框和右边框</span>
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+<span class="comment"># 添加网格线（仅水平）</span>
+ax.yaxis.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=0.3)
+ax.set_axisbelow(<span class="keyword">True</span>)
+
+plt.tight_layout()
+plt.savefig(<span class="string">'sales_report.png'</span>, dpi=150, bbox_inches=<span class="string">'tight'</span>)
+plt.show()
+
+print(<span class="string">"图表已保存！同比增长率："</span>, 
+      round((sales_2024[-1] - sales_2023[-1]) / sales_2023[-1] * 100, 1), <span class="string">"%"</span>)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>改造要点：</strong>1) 用灰色弱化历史数据，蓝色突出当前数据；2) 仅标注关键数据点，避免标签过多；3) 移除多余边框，保留水平网格辅助读数；4) 添加同比增长率作为分析结论。</p>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-1-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">在商务图表中，如何处理历史对比数据？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">使用相同颜色和线宽</div>
+                        <div class="quiz-option" data-correct="true">用灰色弱化历史数据，突出当前数据</div>
+                        <div class="quiz-option" data-correct="false">使用鲜艳颜色吸引注意力</div>
+                        <div class="quiz-option" data-correct="false">删除历史数据只保留当前</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>通过颜色深浅和线宽粗细区分数据层次，用灰色弱化历史数据可以让读者聚焦当前数据，同时保留对比信息。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、常见设计错误与避免方法</h2>
+                
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>饼图扇区过多（建议不超过5-6个）</span></div>
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>3D效果影响数据读取</span></div>
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>坐标轴截断夸大差异</span></div>
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>颜色过多造成视觉混乱</span></div>
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>缺少数据来源和时间</span></div>
+                    <div class="feature-item"><i class="fas fa-times-circle"></i><span>图表标题与内容不符</span></div>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>严重错误：</strong>坐标轴不从零开始是常见的数据误导行为。在柱状图中，Y轴必须从0开始，否则会严重扭曲数据对比。折线图可以例外，但需要明确标注。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 正确设置坐标轴起点</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+<span class="comment"># 错误示例：Y轴不从0开始</span>
+categories = [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>]
+values = [95, 98, 100, 102]
+
+ax1.bar(categories, values, color=<span class="string">'#ef4444'</span>)
+ax1.set_ylim(90, 105)  <span class="comment"># 错误：截断Y轴</span>
+ax1.set_title(<span class="string">'错误：夸大差异'</span>, color=<span class="string">'#ef4444'</span>)
+
+<span class="comment"># 正确示例：Y轴从0开始</span>
+ax2.bar(categories, values, color=<span class="string">'#2563eb'</span>)
+ax2.set_ylim(0, 120)  <span class="comment"># 正确：从0开始</span>
+ax2.set_title(<span class="string">'正确：真实比例'</span>, color=<span class="string">'#2563eb'</span>)
+
+plt.suptitle(<span class="string">'坐标轴设置对比'</span>, fontsize=14, fontweight=<span class="string">'bold'</span>)
+plt.tight_layout()
+plt.show()</code>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        Python代码练习
+                    </div>
+                    <div class="challenge-description">
+                        <h4>练习任务</h4>
+                        <p>使用Matplotlib创建一个符合商务设计原则的柱状图，展示各部门的季度业绩。要求：使用商务配色、添加数据标签、移除多余边框。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 导入库
+import matplotlib.pyplot as plt
+
+# 准备数据
+departments = ['销售部', '市场部', '技术部', '运营部']
+performance = [156, 128, 142, 98]
+
+# 创建图表
+fig, ax = plt.subplots(figsize=(8, 5))
+
+# 使用商务配色
+colors = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd']
+
+# 绘制柱状图
+bars = ax.bar(departments, performance, color=colors)
+
+# 添加数据标签
+for bar, value in zip(bars, performance):
+    ax.annotate(f'{value}万', 
+                xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                xytext=(0, 5), textcoords='offset points',
+                ha='center', fontsize=10, fontweight='bold')
+
+# 美化图表
+ax.set_title('各部门季度业绩', fontsize=14, fontweight='bold', pad=15)
+ax.set_ylabel('业绩（万元）', fontsize=11)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.yaxis.grid(True, linestyle='--', alpha=0.3)
+
+plt.tight_layout()
+plt.show()"># 导入库
+import matplotlib.pyplot as plt
+
+# 准备数据
+departments = ['销售部', '市场部', '技术部', '运营部']
+performance = [156, 128, 142, 98]
+
+# 创建图表
+fig, ax = plt.subplots(figsize=(8, 5))
+
+# 使用商务配色
+colors = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd']
+
+# 绘制柱状图
+bars = ax.bar(departments, performance, color=colors)
+
+# 添加数据标签
+for bar, value in zip(bars, performance):
+    ax.annotate(f'{value}万', 
+                xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                xytext=(0, 5), textcoords='offset points',
+                ha='center', fontsize=10, fontweight='bold')
+
+# 美化图表
+ax.set_title('各部门季度业绩', fontsize=14, fontweight='bold', pad=15)
+ax.set_ylabel('业绩（万元）', fontsize=11)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.yaxis.grid(True, linestyle='--', alpha=0.3)
+
+plt.tight_layout()
+plt.show()</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-nav">
+                <a href="../chapter5.html" class="nav-btn"><i class="fas fa-arrow-left"></i> 上一章：销售与运营分析</a>
+                <a href="chapter6-2.html" class="nav-btn">下一节：Matplotlib基础绘图 <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            saveLearningProgress('chapter6-1', '6.1 商务图表设计原则');
+        });
+
+        function saveLearningProgress(section, title) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress.currentSection = section;
+            progress.currentTitle = title;
+            progress.lastVisit = new Date().toISOString();
+            progress[section] = {
+                completed: false,
+                visited: true,
+                visitTime: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.navbar-menu');
+            menu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

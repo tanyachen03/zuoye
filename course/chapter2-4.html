@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.4 数据清洗实战 - Python数据分析基础</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: #ef4444;
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-study-header i {
+            font-size: 1.5rem;
+            color: #2563eb;
+        }
+        .case-study-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .case-study-content {
+            color: #64748b;
+            line-height: 1.8;
+        }
+        .case-study-content h4 {
+            color: #1e293b;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+        }
+        .case-study-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .chapter-nav-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+        }
+        .chapter-nav-btn i {
+            font-size: 1.25rem;
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #10b981;
+        }
+        .progress-indicator i {
+            color: #10b981;
+        }
+        .sidebar-subsection {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-subsection .sidebar-item {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        .sidebar-subsection .sidebar-item.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .cleaning-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        .cleaning-step {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .cleaning-arrow {
+            color: #2563eb;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">课程目录</div>
+            <nav class="sidebar-nav">
+                <a href="../chapter1.html" class="sidebar-item"><i class="fas fa-brain"></i> 第一章：数据分析思维</a>
+                <a href="../chapter2.html" class="sidebar-item active"><i class="fab fa-python"></i> 第二章：Python分析基础</a>
+                <div class="sidebar-subsection">
+                    <a href="chapter2-1.html" class="sidebar-item">2.1 Jupyter Notebook入门</a>
+                    <a href="chapter2-2.html" class="sidebar-item">2.2 NumPy数值计算</a>
+                    <a href="chapter2-3.html" class="sidebar-item">2.3 Pandas数据结构</a>
+                    <a href="chapter2-4.html" class="sidebar-item active">2.4 数据清洗实战</a>
+                    <a href="chapter2-5.html" class="sidebar-item">2.5 数据合并与分组</a>
+                    <a href="chapter2-6.html" class="sidebar-item">2.6 综合案例</a>
+                </div>
+                <a href="../chapter3.html" class="sidebar-item"><i class="fas fa-globe"></i> 第三章：市场与行业分析</a>
+                <a href="../chapter4.html" class="sidebar-item"><i class="fas fa-users"></i> 第四章：用户画像与RFM模型</a>
+                <a href="../chapter5.html" class="sidebar-item"><i class="fas fa-shopping-cart"></i> 第五章：销售与运营分析</a>
+                <a href="../chapter6.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 第六章：数据可视化叙事</a>
+            </nav>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：第二章第4节</span>
+            </div>
+            
+            <span class="course-badge">2.4</span>
+            <h1 class="course-title">数据清洗实战</h1>
+            <p class="course-subtitle">掌握数据清洗的核心技术，学会处理缺失值、重复值、异常值等常见数据质量问题</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解数据清洗的重要性和基本流程</li>
+                    <li>掌握缺失值的检测和处理方法</li>
+                    <li>学会识别和处理重复数据</li>
+                    <li>掌握异常值的检测和处理技巧</li>
+                    <li>能够进行数据类型转换和格式标准化</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、数据清洗概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-broom"></i> 为什么需要数据清洗</h3>
+                <div class="section-content">
+                    <p>数据清洗是数据分析的第一步，也是最耗时的环节。据统计，数据分析师约60%-80%的时间花在数据清洗上。脏数据会导致分析结果偏差，甚至得出错误结论。</p>
+                </div>
+
+                <div class="cleaning-flow">
+                    <div class="cleaning-step">原始数据</div>
+                    <i class="fas fa-arrow-right cleaning-arrow"></i>
+                    <div class="cleaning-step">缺失值处理</div>
+                    <i class="fas fa-arrow-right cleaning-arrow"></i>
+                    <div class="cleaning-step">重复值处理</div>
+                    <i class="fas fa-arrow-right cleaning-arrow"></i>
+                    <div class="cleaning-step">异常值处理</div>
+                    <i class="fas fa-arrow-right cleaning-arrow"></i>
+                    <div class="cleaning-step">格式标准化</div>
+                    <i class="fas fa-arrow-right cleaning-arrow"></i>
+                    <div class="cleaning-step">干净数据</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-exclamation-triangle"></i> 常见数据质量问题</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-question-circle"></i><span><strong>缺失值</strong> - 数据不完整，字段为空或NULL</span></div>
+                    <div class="feature-item"><i class="fas fa-copy"></i><span><strong>重复值</strong> - 相同记录出现多次</span></div>
+                    <div class="feature-item"><i class="fas fa-exclamation-circle"></i><span><strong>异常值</strong> - 明显偏离正常范围的数据</span></div>
+                    <div class="feature-item"><i class="fas fa-text-width"></i><span><strong>格式不一致</strong> - 日期、数字等格式混乱</span></div>
+                    <div class="feature-item"><i class="fas fa-code"></i><span><strong>数据类型错误</strong> - 数值存储为字符串等</span></div>
+                    <div class="feature-item"><i class="fas fa-align-left"></i><span><strong>逻辑错误</strong> - 数据之间存在矛盾</span></div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、缺失值处理</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-search"></i> 检测缺失值</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建含缺失值的数据</span>
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="keyword">None</span>, <span class="string">'王五'</span>],
+    <span class="string">'age'</span>: [25, np.nan, 30, 28],
+    <span class="string">'city'</span>: [<span class="string">'北京'</span>, <span class="string">'上海'</span>, <span class="string">'广州'</span>, np.nan],
+    <span class="string">'salary'</span>: [15000, 20000, np.nan, 18000]
+})
+
+<span class="comment"># 检测缺失值</span>
+<span class="keyword">print</span>(<span class="string">"缺失值检测:"</span>)
+<span class="keyword">print</span>(df.isnull())
+
+<span class="comment"># 每列缺失值数量</span>
+<span class="keyword">print</span>(<span class="string">"\n每列缺失值数量:"</span>)
+<span class="keyword">print</span>(df.isnull().sum())
+
+<span class="comment"># 缺失值比例</span>
+<span class="keyword">print</span>(<span class="string">"\n缺失值比例:"</span>)
+<span class="keyword">print</span>((df.isnull().sum() / len(df) * 100).round(2))
+
+<span class="comment"># 查看含有缺失值的行</span>
+<span class="keyword">print</span>(<span class="string">"\n含缺失值的行:"</span>)
+<span class="keyword">print</span>(df[df.isnull().any(axis=1)])</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-trash-alt"></i> 删除缺失值</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+df = pd.DataFrame({
+    <span class="string">'A'</span>: [1, np.nan, 3, np.nan],
+    <span class="string">'B'</span>: [5, 6, np.nan, 8],
+    <span class="string">'C'</span>: [9, 10, 11, 12]
+})
+
+<span class="comment"># 删除含有缺失值的行</span>
+df_drop_rows = df.dropna()
+<span class="keyword">print</span>(<span class="string">"删除含缺失值的行:"</span>)
+<span class="keyword">print</span>(df_drop_rows)
+
+<span class="comment"># 删除含有缺失值的列</span>
+df_drop_cols = df.dropna(axis=1)
+<span class="keyword">print</span>(<span class="string">"\n删除含缺失值的列:"</span>)
+<span class="keyword">print</span>(df_drop_cols)
+
+<span class="comment"># 只删除全部为缺失值的行</span>
+df_drop_all = df.dropna(how=<span class="string">'all'</span>)
+
+<span class="comment"># 至少有2个非缺失值才保留</span>
+df_drop_thresh = df.dropna(thresh=2)
+
+<span class="comment"># 指定列判断</span>
+df_drop_subset = df.dropna(subset=[<span class="string">'A'</span>, <span class="string">'B'</span>])</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-fill-drip"></i> 填充缺失值</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="keyword">None</span>, <span class="string">'王五'</span>],
+    <span class="string">'age'</span>: [25, np.nan, 30, 28],
+    <span class="string">'salary'</span>: [15000, 20000, np.nan, 18000]
+})
+
+<span class="comment"># 用固定值填充</span>
+df[<span class="string">'name'</span>] = df[<span class="string">'name'</span>].fillna(<span class="string">'未知'</span>)
+
+<span class="comment"># 用均值填充</span>
+mean_salary = df[<span class="string">'salary'</span>].mean()
+df[<span class="string">'salary'</span>] = df[<span class="string">'salary'</span>].fillna(mean_salary)
+
+<span class="comment"># 用中位数填充</span>
+median_age = df[<span class="string">'age'</span>].median()
+df[<span class="string">'age'</span>] = df[<span class="string">'age'</span>].fillna(median_age)
+
+<span class="comment"># 用前一个值填充（前向填充）</span>
+df_ffill = df.fillna(method=<span class="string">'ffill'</span>)
+
+<span class="comment"># 用后一个值填充（后向填充）</span>
+df_bfill = df.fillna(method=<span class="string">'bfill'</span>)
+
+<span class="comment"># 不同列使用不同填充值</span>
+df_fill = df.fillna({
+    <span class="string">'name'</span>: <span class="string">'未知'</span>,
+    <span class="string">'age'</span>: df[<span class="string">'age'</span>].mean(),
+    <span class="string">'salary'</span>: df[<span class="string">'salary'</span>].median()
+})
+
+<span class="keyword">print</span>(df_fill)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>选择填充策略要考虑业务场景：数值型数据常用均值/中位数填充；时间序列数据常用前向/后向填充；分类数据常用众数填充。缺失比例过高（>50%）的列建议删除。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、重复值处理</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-copy"></i> 检测与删除重复值</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'order_id'</span>: [<span class="string">'A001'</span>, <span class="string">'A002'</span>, <span class="string">'A001'</span>, <span class="string">'A003'</span>, <span class="string">'A002'</span>],
+    <span class="string">'customer'</span>: [<span class="string">'张三'</span>, <span class="string">'李四'</span>, <span class="string">'张三'</span>, <span class="string">'王五'</span>, <span class="string">'李四'</span>],
+    <span class="string">'amount'</span>: [100, 200, 100, 150, 200]
+})
+
+<span class="comment"># 检测重复行</span>
+<span class="keyword">print</span>(<span class="string">"重复行检测:"</span>)
+<span class="keyword">print</span>(df.duplicated())
+
+<span class="comment"># 查看重复行</span>
+<span class="keyword">print</span>(<span class="string">"\n重复的行:"</span>)
+<span class="keyword">print</span>(df[df.duplicated()])
+
+<span class="comment"># 删除完全重复的行</span>
+df_unique = df.drop_duplicates()
+<span class="keyword">print</span>(<span class="string">"\n删除重复后:"</span>)
+<span class="keyword">print</span>(df_unique)
+
+<span class="comment"># 基于指定列判断重复</span>
+df_by_order = df.drop_duplicates(subset=[<span class="string">'order_id'</span>])
+<span class="keyword">print</span>(<span class="string">"\n按order_id去重:"</span>)
+<span class="keyword">print</span>(df_by_order)
+
+<span class="comment"># 保留最后一个重复项</span>
+df_keep_last = df.drop_duplicates(keep=<span class="string">'last'</span>)
+
+<span class="comment"># 统计重复数量</span>
+<span class="keyword">print</span>(<span class="string">"\n重复数量:"</span>, df.duplicated().sum())</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>删除重复时没有指定subset，导致只删除完全相同的行。实际业务中，通常需要根据关键字段（如订单ID、用户ID）判断重复。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、异常值处理</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 异常值检测方法</h3>
+                <div class="section-content">
+                    <p>异常值检测是数据清洗的重要环节，常用的方法包括统计方法、箱线图方法和业务规则方法。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 创建含异常值的数据</span>
+np.random.seed(42)
+df = pd.DataFrame({
+    <span class="string">'age'</span>: [25, 28, 30, 32, 35, 150, 29, 31, -5, 33],  <span class="comment"># 150和-5是异常值</span>
+    <span class="string">'salary'</span>: [8000, 12000, 15000, 18000, 20000, 500000, 16000, 17000, 14000, 19000]
+})
+
+<span class="comment"># 方法1：描述性统计</span>
+<span class="keyword">print</span>(<span class="string">"描述性统计:"</span>)
+<span class="keyword">print</span>(df.describe())
+
+<span class="comment"># 方法2：箱线图方法（IQR）</span>
+<span class="keyword">def</span> detect_outliers_iqr(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+    <span class="keyword">return</span> outliers, lower_bound, upper_bound
+
+outliers, low, high = detect_outliers_iqr(df, <span class="string">'age'</span>)
+<span class="keyword">print</span>(<span class="string">f"\nage异常值（范围: {low:.1f} - {high:.1f}）:"</span>)
+<span class="keyword">print</span>(outliers)
+
+<span class="comment"># 方法3：Z-Score方法</span>
+<span class="keyword">from</span> scipy <span class="keyword">import</span> stats
+
+z_scores = np.abs(stats.zscore(df[<span class="string">'salary'</span>]))
+outliers_zscore = df[z_scores > 3]
+<span class="keyword">print</span>(<span class="string">"\nsalary异常值（Z-Score > 3）:"</span>)
+<span class="keyword">print</span>(outliers_zscore)
+
+<span class="comment"># 方法4：业务规则</span>
+<span class="keyword">print</span>(<span class="string">"\n业务规则检测（年龄0-100）:"</span>)
+<span class="keyword">print</span>(df[(df[<span class="string">'age'</span>] < 0) | (df[<span class="string">'age'</span>] > 100)])</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-tools"></i> 异常值处理方法</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+df = pd.DataFrame({
+    <span class="string">'age'</span>: [25, 28, 30, 32, 35, 150, 29, 31, -5, 33],
+    <span class="string">'salary'</span>: [8000, 12000, 15000, 18000, 20000, 500000, 16000, 17000, 14000, 19000]
+})
+
+<span class="comment"># 方法1：删除异常值</span>
+df_clean = df[(df[<span class="string">'age'</span>] >= 0) & (df[<span class="string">'age'</span>] <= 100)]
+
+<span class="comment"># 方法2：替换为边界值（Winsorization）</span>
+df_cap = df.copy()
+Q1 = df_cap[<span class="string">'salary'</span>].quantile(0.25)
+Q3 = df_cap[<span class="string">'salary'</span>].quantile(0.75)
+upper = Q3 + 1.5 * (Q3 - Q1)
+df_cap.loc[df_cap[<span class="string">'salary'</span>] > upper, <span class="string">'salary'</span>] = upper
+
+<span class="comment"># 方法3：替换为均值/中位数</span>
+df_replace = df.copy()
+mean_age = df_replace[(df_replace[<span class="string">'age'</span>] >= 0) & (df_replace[<span class="string">'age'</span>] <= 100)][<span class="string">'age'</span>].mean()
+df_replace.loc[(df_replace[<span class="string">'age'</span>] < 0) | (df_replace[<span class="string">'age'</span>] > 100), <span class="string">'age'</span>] = mean_age
+
+<span class="comment"># 方法4：标记异常值</span>
+df_flag = df.copy()
+df_flag[<span class="string">'age_outlier'</span>] = (df_flag[<span class="string">'age'</span>] < 0) | (df_flag[<span class="string">'age'</span>] > 100)
+
+<span class="keyword">print</span>(<span class="string">"标记异常值后:"</span>)
+<span class="keyword">print</span>(df_flag)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>处理异常值前，先确认是数据错误还是真实的极端情况。对于明显的数据错误（如年龄-5），可以直接修正或删除；对于可能的极端情况（如超高收入），建议保留并标记。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、数据格式标准化</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-text-height"></i> 字符串处理</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'name'</span>: [<span class="string">'  张三  '</span>, <span class="string">'李四'</span>, <span class="string">'王 五'</span>, <span class="string">'赵六  '</span>],
+    <span class="string">'phone'</span>: [<span class="string">'138-1234-5678'</span>, <span class="string">'13912345678'</span>, <span class="string">'138 1234 5678'</span>, <span class="string">'137-1234-5679'</span>],
+    <span class="string">'email'</span>: [<span class="string">'Zhang@Example.COM'</span>, <span class="string">'li@test.com'</span>, <span class="string">'WANG@TEST.CN'</span>, <span class="string">'zhao@mail.com'</span>]
+})
+
+<span class="comment"># 去除空格</span>
+df[<span class="string">'name'</span>] = df[<span class="string">'name'</span>].str.strip()
+
+<span class="comment"># 统一电话格式</span>
+df[<span class="string">'phone_clean'</span>] = df[<span class="string">'phone'</span>].str.replace(<span class="string">r'[-\s]'</span>, <span class="string">''</span>, regex=<span class="keyword">True</span>)
+
+<span class="comment"># 邮箱转小写</span>
+df[<span class="string">'email'</span>] = df[<span class="string">'email'</span>].str.lower()
+
+<span class="comment"># 提取手机号前3位</span>
+df[<span class="string">'phone_prefix'</span>] = df[<span class="string">'phone_clean'</span>].str[:3]
+
+<span class="comment"># 字符串分割</span>
+df[<span class="string">'email_domain'</span>] = df[<span class="string">'email'</span>].str.split(<span class="string">'@'</span>).str[1]
+
+<span class="comment"># 正则提取</span>
+df[<span class="string">'phone_valid'</span>] = df[<span class="string">'phone_clean'</span>].str.match(<span class="string">r'^1[3-9]\d{9}$'</span>)
+
+<span class="keyword">print</span>(df)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-calendar-alt"></i> 日期处理</h3>
+                <div class="code-block">
+                    <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df = pd.DataFrame({
+    <span class="string">'date_str'</span>: [<span class="string">'2024/01/15'</span>, <span class="string">'2024-02-20'</span>, <span class="string">'2024.03.25'</span>, <span class="string">'2024/04/30'</span>],
+    <span class="string">'datetime_str'</span>: [<span class="string">'2024-01-15 10:30:00'</span>, <span class="string">'2024-02-20 14:45:30'</span>, 
+                   <span class="string">'2024-03-25 09:15:00'</span>, <span class="string">'2024-04-30 16:00:00'</span>]
+})
+
+<span class="comment"># 转换日期</span>
+df[<span class="string">'date'</span>] = pd.to_datetime(df[<span class="string">'date_str'</span>])
+
+<span class="comment"># 转换日期时间</span>
+df[<span class="string">'datetime'</span>] = pd.to_datetime(df[<span class="string">'datetime_str'</span>])
+
+<span class="comment"># 提取日期组件</span>
+df[<span class="string">'year'</span>] = df[<span class="string">'date'</span>].dt.year
+df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+df[<span class="string">'day'</span>] = df[<span class="string">'date'</span>].dt.day
+df[<span class="string">'weekday'</span>] = df[<span class="string">'date'</span>].dt.day_name()
+df[<span class="string">'quarter'</span>] = df[<span class="string">'date'</span>].dt.quarter
+
+<span class="comment"># 提取时间组件</span>
+df[<span class="string">'hour'</span>] = df[<span class="string">'datetime'</span>].dt.hour
+df[<span class="string">'minute'</span>] = df[<span class="string">'datetime'</span>].dt.minute
+
+<span class="comment"># 日期计算</span>
+df[<span class="string">'days_diff'</span>] = (pd.Timestamp(<span class="string">'2024-12-31'</span>) - df[<span class="string">'date'</span>]).dt.days
+
+<span class="comment"># 日期格式化</span>
+df[<span class="string">'date_formatted'</span>] = df[<span class="string">'date'</span>].dt.strftime(<span class="string">'%Y年%m月%d日'</span>)
+
+<span class="keyword">print</span>(df[[<span class="string">'date'</span>, <span class="string">'year'</span>, <span class="string">'month'</span>, <span class="string">'weekday'</span>]])</code>
+                </div>
+            </section>
+
+            <div class="case-study">
+                <div class="case-study-header">
+                    <i class="fas fa-database"></i>
+                    <h3>真实商业案例：客户数据清洗</h3>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>背景：</strong>某公司CRM系统导出的客户数据存在多种质量问题，需要进行全面清洗后才能进行分析。</p>
+                    
+                    <h4>原始数据问题</h4>
+                    <ul>
+                        <li>客户姓名存在空格、大小写不一致</li>
+                        <li>手机号格式不统一（有的带横线，有的带空格）</li>
+                        <li>注册日期格式混乱</li>
+                        <li>存在重复客户记录</li>
+                        <li>年龄字段存在异常值</li>
+                    </ul>
+                    
+                    <h4>清洗代码</h4>
+                    <div class="code-block">
+                        <code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 模拟原始数据</span>
+df = pd.DataFrame({
+    <span class="string">'customer_id'</span>: [<span class="string">'C001'</span>, <span class="string">'C002'</span>, <span class="string">'C003'</span>, <span class="string">'C001'</span>, <span class="string">'C004'</span>],
+    <span class="string">'name'</span>: [<span class="string">'  张三  '</span>, <span class="string">'李四'</span>, <span class="string">'王五'</span>, <span class="string">'张三'</span>, <span class="string">'赵六'</span>],
+    <span class="string">'phone'</span>: [<span class="string">'138-1234-5678'</span>, <span class="string">'13912345678'</span>, <span class="string">'138 1234 5678'</span>, <span class="string">'138-1234-5678'</span>, <span class="keyword">None</span>],
+    <span class="string">'age'</span>: [25, 30, 150, 25, 28],
+    <span class="string">'register_date'</span>: [<span class="string">'2024/01/15'</span>, <span class="string">'2024-02-20'</span>, <span class="string">'2024.03.25'</span>, <span class="string">'2024/01/15'</span>, <span class="string">'2024-04-30'</span>],
+    <span class="string">'total_purchase'</span>: [5000, np.nan, 8000, 5000, 3000]
+})
+
+<span class="comment"># 1. 去除姓名空格</span>
+df[<span class="string">'name'</span>] = df[<span class="string">'name'</span>].str.strip()
+
+<span class="comment"># 2. 统一手机号格式</span>
+df[<span class="string">'phone'</span>] = df[<span class="string">'phone'</span>].str.replace(<span class="string">r'[-\s]'</span>, <span class="string">''</span>, regex=<span class="keyword">True</span>)
+
+<span class="comment"># 3. 处理年龄异常值</span>
+df.loc[(df[<span class="string">'age'</span>] < 0) | (df[<span class="string">'age'</span>] > 120), <span class="string">'age'</span>] = np.nan
+df[<span class="string">'age'</span>] = df[<span class="string">'age'</span>].fillna(df[<span class="string">'age'</span>].median())
+
+<span class="comment"># 4. 统一日期格式</span>
+df[<span class="string">'register_date'</span>] = pd.to_datetime(df[<span class="string">'register_date'</span>])
+
+<span class="comment"># 5. 去重（保留最后一条）</span>
+df_clean = df.drop_duplicates(subset=[<span class="string">'customer_id'</span>], keep=<span class="string">'last'</span>)
+
+<span class="comment"># 6. 填充缺失的消费金额</span>
+df_clean[<span class="string">'total_purchase'</span>] = df_clean[<span class="string">'total_purchase'</span>].fillna(0)
+
+<span class="keyword">print</span>(<span class="string">"清洗后的数据:"</span>)
+<span class="keyword">print</span>(df_clean)</code>
+                    </div>
+                    
+                    <h4>清洗结果</h4>
+                    <p>通过系统化的数据清洗，将5条脏数据处理为4条干净数据，数据质量显著提升，可用于后续的客户分析和营销决策。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-4-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">处理缺失值时，以下哪种方法不适合时间序列数据？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">前向填充（ffill）</div>
+                    <div class="quiz-option" data-correct="false">后向填充（bfill）</div>
+                    <div class="quiz-option" data-correct="true">随机删除缺失行</div>
+                    <div class="quiz-option" data-correct="false">线性插值</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>时间序列数据具有时间连续性，随机删除缺失行会破坏时间序列的完整性。应该使用前向填充、后向填充或插值方法保持时间连续性。</p>
+                </div>
+            </div>
+
+            <div class="quiz-container" data-quiz-id="chapter2-4-quiz2">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">使用IQR方法检测异常值时，异常值的判定范围是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">小于Q1或大于Q3</div>
+                    <div class="quiz-option" data-correct="true">小于Q1-1.5*IQR或大于Q3+1.5*IQR</div>
+                    <div class="quiz-option" data-correct="false">小于均值-标准差或大于均值+标准差</div>
+                    <div class="quiz-option" data-correct="false">小于最小值或大于最大值</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>IQR（四分位距）方法中，IQR = Q3 - Q1。异常值定义为小于Q1 - 1.5*IQR或大于Q3 + 1.5*IQR的值。这是箱线图中常用的异常值判定标准。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter2-3.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：Pandas数据结构</span>
+                </a>
+                <a href="chapter2-5.html" class="chapter-nav-btn">
+                    <span>下一节：数据合并与分组</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = 'chapter2-4';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress[currentPage] = { completed: true, timestamp: Date.now() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            
+            initQuiz();
+        });
+
+        function initQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const container = this.closest('.quiz-container');
+                    const options = container.querySelectorAll('.quiz-option');
+                    const explanation = container.querySelector('.quiz-explanation');
+                    
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('quiz-correct');
+                        } else if (opt === this) {
+                            opt.classList.add('quiz-incorrect');
+                        }
+                    });
+                    
+                    explanation.classList.remove('hidden');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

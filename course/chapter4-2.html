@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.2 RFM模型详解 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+        .chapter-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+        }
+        .chapter-nav-btn.disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: #2563eb;
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e2e8f0;
+            z-index: 999;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #06b6d4);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1e40af;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .rfm-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .rfm-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .rfm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .rfm-card.r-card {
+            border-color: #ef4444;
+        }
+        .rfm-card.f-card {
+            border-color: #10b981;
+        }
+        .rfm-card.m-card {
+            border-color: #f59e0b;
+        }
+        .rfm-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1rem;
+        }
+        .rfm-card.r-card .rfm-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .rfm-card.f-card .rfm-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        .rfm-card.m-card .rfm-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        .rfm-icon i {
+            font-size: 1.5rem;
+        }
+        .rfm-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .rfm-desc {
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .segment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .segment-table th,
+        .segment-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .segment-table th {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            font-weight: 600;
+        }
+        .segment-table tr:last-child td {
+            border-bottom: none;
+        }
+        .segment-table tr:hover td {
+            background: rgba(37, 99, 235, 0.05);
+        }
+        .segment-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+            .navbar-menu {
+                display: none;
+            }
+            .navbar-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .rfm-diagram {
+                grid-template-columns: 1fr;
+            }
+            .segment-table {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第四章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter4-1.html" class="sidebar-item"><i class="fas fa-user-circle"></i> 4.1 用户画像基础</a>
+                <a href="chapter4-2.html" class="sidebar-item active"><i class="fas fa-layer-group"></i> 4.2 RFM模型详解</a>
+                <a href="chapter4-3.html" class="sidebar-item"><i class="fas fa-calculator"></i> 4.3 RFM实战：打分与分层</a>
+                <a href="chapter4-4.html" class="sidebar-item"><i class="fas fa-sync-alt"></i> 4.4 用户生命周期管理</a>
+                <a href="chapter4-5.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 4.5 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.75rem;">
+                <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.5rem;">学习进度</div>
+                <div id="sectionProgress" style="font-weight: 700; color: #2563eb;">2 / 5 小节</div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第四章 · 第2节</span>
+            <h1 class="course-title">RFM模型详解</h1>
+            <p class="course-subtitle">深入理解RFM模型的原理、计算方法与用户分层策略</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解RFM模型的三个核心维度</li>
+                    <li>掌握RFM各维度的计算方法</li>
+                    <li>学会解读8种用户分层的含义</li>
+                    <li>了解RFM模型的应用场景与局限</li>
+                    <li>能够使用Pandas计算RFM指标</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、RFM模型概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-cubes"></i> 什么是RFM模型</h3>
+                <div class="section-content">
+                    <p>RFM模型是客户价值分析的经典模型，通过三个核心维度衡量客户的价值和贡献。该模型由美国数据库营销研究所Arthur Hughes提出，广泛应用于客户细分、精准营销和客户关系管理。</p>
+                </div>
+
+                <div class="rfm-diagram">
+                    <div class="rfm-card r-card">
+                        <div class="rfm-icon"><i class="fas fa-clock"></i></div>
+                        <div class="rfm-title">R - Recency</div>
+                        <div class="rfm-desc">最近一次消费时间<br>反映用户活跃度</div>
+                    </div>
+                    <div class="rfm-card f-card">
+                        <div class="rfm-icon"><i class="fas fa-redo"></i></div>
+                        <div class="rfm-title">F - Frequency</div>
+                        <div class="rfm-desc">消费频次<br>反映用户忠诚度</div>
+                    </div>
+                    <div class="rfm-card m-card">
+                        <div class="rfm-icon"><i class="fas fa-coins"></i></div>
+                        <div class="rfm-title">M - Monetary</div>
+                        <div class="rfm-desc">消费金额<br>反映用户贡献度</div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> RFM三个维度详解</h3>
+                <div class="section-content">
+                    <p><strong>R (Recency) - 最近一次消费时间：</strong></p>
+                    <ul>
+                        <li>衡量用户距离上次消费的时间间隔</li>
+                        <li>R值越小，说明用户最近有消费，活跃度越高</li>
+                        <li>通常以天为单位计算</li>
+                    </ul>
+                    <p><strong>F (Frequency) - 消费频次：</strong></p>
+                    <ul>
+                        <li>衡量用户在统计周期内的消费次数</li>
+                        <li>F值越大，说明用户消费越频繁，忠诚度越高</li>
+                        <li>可根据业务特点选择统计周期（月/季/年）</li>
+                    </ul>
+                    <p><strong>M (Monetary) - 消费金额：</strong></p>
+                    <ul>
+                        <li>衡量用户在统计周期内的消费总金额</li>
+                        <li>M值越大，说明用户贡献度越高</li>
+                        <li>是衡量用户价值最直接的指标</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>RFM三个维度中，R最重要，因为最近消费的用户最可能再次消费；F次之，消费频次反映了用户的购买习惯；M反映的是历史贡献，但高消费用户不一定未来还会高消费。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、RFM用户分层</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-users-cog"></i> 8类用户分层</h3>
+                <div class="section-content">
+                    <p>通过对R、F、M三个维度进行高低划分，可以将用户分为8个层级。每个层级代表不同的用户特征和价值。</p>
+                </div>
+
+                <table class="segment-table">
+                    <thead>
+                        <tr>
+                            <th>分层</th>
+                            <th>R</th>
+                            <th>F</th>
+                            <th>M</th>
+                            <th>用户特征</th>
+                            <th>运营策略</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">重要价值</span></td>
+                            <td>高</td>
+                            <td>高</td>
+                            <td>高</td>
+                            <td>最近消费、频次高、金额大</td>
+                            <td>VIP服务、专属权益</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">重要发展</span></td>
+                            <td>高</td>
+                            <td>低</td>
+                            <td>高</td>
+                            <td>最近消费、频次低、金额大</td>
+                            <td>提升复购、会员引导</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">重要保持</span></td>
+                            <td>低</td>
+                            <td>高</td>
+                            <td>高</td>
+                            <td>许久未消费、频次高、金额大</td>
+                            <td>主动触达、流失预警</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">重要挽留</span></td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>高</td>
+                            <td>许久未消费、频次低、金额大</td>
+                            <td>重点挽回、优惠刺激</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">一般价值</span></td>
+                            <td>高</td>
+                            <td>高</td>
+                            <td>低</td>
+                            <td>最近消费、频次高、金额小</td>
+                            <td>提升客单、关联推荐</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(6, 182, 212, 0.1); color: #06b6d4;">一般发展</span></td>
+                            <td>高</td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>最近消费、频次低、金额小</td>
+                            <td>培养习惯、促销引导</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">一般保持</span></td>
+                            <td>低</td>
+                            <td>高</td>
+                            <td>低</td>
+                            <td>许久未消费、频次高、金额小</td>
+                            <td>定期触达、唤醒活动</td>
+                        </tr>
+                        <tr>
+                            <td><span class="segment-badge" style="background: rgba(100, 116, 139, 0.1); color: #64748b;">低价值</span></td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>低</td>
+                            <td>许久未消费、频次低、金额小</td>
+                            <td>低成本维护或放弃</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="case-study">
+                    <div class="case-study-title"><i class="fas fa-building"></i> 真实商业案例：某美妆品牌RFM分层应用</div>
+                    <p><strong>背景：</strong>某美妆品牌拥有200万会员，希望通过RFM模型优化会员运营策略。</p>
+                    <p><strong>分析结果：</strong></p>
+                    <ul>
+                        <li>重要价值用户占比5%，贡献45%的销售额</li>
+                        <li>重要保持用户占比8%，存在流失风险</li>
+                        <li>低价值用户占比35%，贡献仅5%的销售额</li>
+                    </ul>
+                    <p><strong>策略调整：</strong>针对重要价值用户推出专属会员日，针对重要保持用户进行定向召回，低价值用户采用自动化营销降低成本。</p>
+                    <p><strong>效果：</strong>3个月后，重要保持用户留存率提升25%，整体销售额增长15%。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、RFM指标计算</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> 使用Pandas计算RFM</h3>
+                <div class="code-block">
+                    <code><span class="comment"># RFM指标计算示例</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta
+
+<span class="comment"># 模拟交易数据</span>
+np.random.seed(42)
+n_orders = 1000
+
+orders = pd.DataFrame({
+    <span class="string">'order_id'</span>: [<span class="string">f'O{i:05d}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n_orders)],
+    <span class="string">'user_id'</span>: np.random.choice([<span class="string">f'U{i:04d}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(100)], n_orders),
+    <span class="string">'order_date'</span>: pd.date_range(
+        start=<span class="string">'2024-01-01'</span>, 
+        periods=n_orders, 
+        freq=<span class="string">'6H'</span>
+    ).astype(<span class="string">'str'</span>),
+    <span class="string">'amount'</span>: np.random.exponential(200, n_orders) + 50
+})
+
+<span class="comment"># 转换日期格式</span>
+orders[<span class="string">'order_date'</span>] = pd.to_datetime(orders[<span class="string">'order_date'</span>])
+
+<span class="comment"># 设置分析基准日期（假设为数据最后一天+1天）</span>
+analysis_date = orders[<span class="string">'order_date'</span>].max() + timedelta(days=1)
+
+<span class="comment"># 计算RFM指标</span>
+rfm = orders.groupby(<span class="string">'user_id'</span>).agg({
+    <span class="string">'order_date'</span>: <span class="keyword">lambda</span> x: (analysis_date - x.max()).days,  <span class="comment"># R</span>
+    <span class="string">'order_id'</span>: <span class="string">'count'</span>,  <span class="comment"># F</span>
+    <span class="string">'amount'</span>: <span class="string">'sum'</span>    <span class="comment"># M</span>
+}).reset_index()
+
+rfm.columns = [<span class="string">'user_id'</span>, <span class="string">'R'</span>, <span class="string">'F'</span>, <span class="string">'M'</span>]
+
+<span class="string">print</span>(<span class="string">"=== RFM指标计算结果 ==="</span>)
+<span class="string">print</span>(rfm.head(10))
+
+<span class="string">print</span>(<span class="string">"\n=== RFM统计描述 ==="</span>)
+<span class="string">print</span>(rfm[[<span class="string">'R'</span>, <span class="string">'F'</span>, <span class="string">'M'</span>]].describe().round(2))</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>计算RFM时常见以下错误：1) R值计算时没有明确基准日期，导致结果不一致；2) F值统计周期选择不当，无法反映真实消费频次；3) M值没有考虑退款，导致金额虚高；4) 数据中存在异常值（如测试订单）未清洗。</p>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> RFM分值计算方法</h3>
+                <div class="section-content">
+                    <p>计算完RFM原始值后，需要进行标准化打分。常用的打分方法有：</p>
+                    <ul>
+                        <li><strong>分位数法</strong>：将每个维度按分位数分为5档，分别赋值1-5分</li>
+                        <li><strong>均值法</strong>：高于均值赋高分，低于均值赋低分</li>
+                        <li><strong>自定义规则</strong>：根据业务特点自定义打分规则</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># RFM分值计算（分位数法）</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 使用分位数法打分（1-5分）</span>
+<span class="comment"># R值：越小越好，所以用降序（R小得高分）</span>
+rfm[<span class="string">'R_score'</span>] = pd.qcut(rfm[<span class="string">'R'</span>], 5, labels=[5, 4, 3, 2, 1]).astype(<span class="string">'int'</span>)
+
+<span class="comment"># F值：越大越好，用升序</span>
+rfm[<span class="string">'F_score'</span>] = pd.qcut(rfm[<span class="string">'F'</span>], 5, labels=[1, 2, 3, 4, 5]).astype(<span class="string">'int'</span>)
+
+<span class="comment"># M值：越大越好，用升序</span>
+rfm[<span class="string">'M_score'</span>] = pd.qcut(rfm[<span class="string">'M'</span>], 5, labels=[1, 2, 3, 4, 5]).astype(<span class="string">'int'</span>)
+
+<span class="comment"># 计算RFM总分</span>
+rfm[<span class="string">'RFM_score'</span>] = (
+    rfm[<span class="string">'R_score'</span>].astype(<span class="string">'str'</span>) + 
+    rfm[<span class="string">'F_score'</span>].astype(<span class="string">'str'</span>) + 
+    rfm[<span class="string">'M_score'</span>].astype(<span class="string">'str'</span>)
+)
+
+<span class="string">print</span>(<span class="string">"=== RFM分值结果 ==="</span>
+<span class="string">print</span>(rfm[[<span class="string">'user_id'</span>, <span class="string">'R'</span>, <span class="string">'F'</span>, <span class="string">'M'</span>, <span class="string">'R_score'</span>, <span class="string">'F_score'</span>, <span class="string">'M_score'</span>]].head(10))
+
+<span class="string">print</span>(<span class="string">"\n=== RFM分值分布 ==="</span>
+<span class="string">print</span>(rfm[<span class="string">'RFM_score'</span>].value_counts().head(10))</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>RFM分值的计算方法应根据业务特点选择。对于新业务或数据量较小的情况，建议使用简单的均值法；对于成熟业务，分位数法更能反映用户分布特征。</p>
+                </div>
+            </section>
+
+            <div class="quiz-container" data-quiz-id="chapter4-2-quiz1">
+                <div class="quiz-title">
+                    <i class="fas fa-question-circle"></i>
+                    知识点测验
+                </div>
+                <p class="quiz-question">在RFM模型中，R值（最近消费时间）的特点是？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">R值越大，用户越活跃</div>
+                    <div class="quiz-option" data-correct="true">R值越小，用户越活跃</div>
+                    <div class="quiz-option" data-correct="false">R值与用户活跃度无关</div>
+                    <div class="quiz-option" data-correct="false">R值等于消费频次</div>
+                </div>
+                <div class="quiz-explanation hidden">
+                    <p><strong>解析：</strong>R值表示最近一次消费时间距离现在的天数，R值越小，说明用户最近刚消费过，活跃度越高；R值越大，说明用户越久没有消费，活跃度越低。</p>
+                </div>
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter4-1.html" class="chapter-nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    上一节：用户画像基础
+                </a>
+                <a href="chapter4-3.html" class="chapter-nav-btn">
+                    下一节：RFM实战：打分与分层
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function switchModal(id) {
+            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+            openModal(id);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var progress = localStorage.getItem('chapter4_progress') || '{}';
+            var progressObj = JSON.parse(progress);
+            progressObj['chapter4-2'] = true;
+            localStorage.setItem('chapter4_progress', JSON.stringify(progressObj));
+
+            var completed = Object.keys(progressObj).filter(function(k) {
+                return progressObj[k] === true;
+            }).length;
+            document.getElementById('sectionProgress').textContent = completed + ' / 5 小节';
+
+            window.addEventListener('scroll', function() {
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                var scrollPercent = (scrollTop / scrollHeight) * 100;
+                document.getElementById('progressBar').style.width = scrollPercent + '%';
+            });
+        });
+
+        document.querySelectorAll('.quiz-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                var container = this.closest('.quiz-container');
+                var options = container.querySelectorAll('.quiz-option');
+                var explanation = container.querySelector('.quiz-explanation');
+                
+                options.forEach(function(opt) {
+                    opt.style.pointerEvents = 'none';
+                    if (opt.dataset.correct === 'true') {
+                        opt.classList.add('quiz-correct');
+                    } else if (opt === this && opt.dataset.correct !== 'true') {
+                        opt.classList.add('quiz-incorrect');
+                    }
+                }.bind(this));
+                
+                explanation.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.1 市场集中度分析 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.disabled {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.25rem;
+            font-family: 'Times New Roman', serif;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .formula-box .formula-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        .data-table tr:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: var(--success-color);
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: var(--danger-color);
+        }
+        .model-diagram {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .model-diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+        .concentration-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2rem;
+            height: 200px;
+            padding: 1rem;
+        }
+        .chart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .bar {
+            width: 60px;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
+            border-radius: 0.5rem 0.5rem 0 0;
+            transition: all 0.3s ease;
+        }
+        .bar:hover {
+            transform: scaleY(1.05);
+        }
+        .bar-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .bar-value {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 1001;
+            transition: width 0.2s ease;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator" id="progressIndicator"></div>
+    
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第三章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter3-1.html" class="sidebar-item active"><i class="fas fa-chart-pie"></i> 3.1 市场集中度分析</a>
+                <a href="chapter3-2.html" class="sidebar-item"><i class="fas fa-globe"></i> 3.2 PEST宏观环境分析</a>
+                <a href="chapter3-3.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 3.3 波特五力模型</a>
+                <a href="chapter3-4.html" class="sidebar-item"><i class="fas fa-th-large"></i> 3.4 SWOT分析与量化</a>
+                <a href="chapter3-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 3.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-progress" style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="flex: 1; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                        <div id="sectionProgress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); transition: width 0.3s ease;"></div>
+                    </div>
+                    <span id="progressText" style="font-size: 0.75rem; color: var(--primary-color); font-weight: 600;">0%</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第三章 · 第1节</span>
+            <h1 class="course-title">市场集中度分析</h1>
+            <p class="course-subtitle">掌握CRn和HHI两大核心指标，学会量化评估市场竞争格局，识别垄断与竞争市场结构</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解市场集中度的概念与意义</li>
+                    <li>掌握CRn集中度指标的计算与应用</li>
+                    <li>掌握HHI指数的计算与解读</li>
+                    <li>能够识别不同的市场结构类型</li>
+                    <li>运用Python进行市场集中度分析</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、市场集中度概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 什么是市场集中度</h3>
+                <div class="section-content">
+                    <p><strong>市场集中度（Market Concentration）</strong>是指某一行业中少数几家最大企业所占的市场份额，是衡量市场竞争程度的重要指标。集中度越高，市场竞争越不充分；集中度越低，市场竞争越激烈。</p>
+                    <p style="margin-top: 1rem;">市场集中度分析对于企业战略决策、投资分析、反垄断监管等领域具有重要意义：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-building"></i><span>企业战略：判断行业竞争格局，制定竞争策略</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>投资分析：评估行业盈利能力和投资价值</span></div>
+                    <div class="feature-item"><i class="fas fa-balance-scale"></i><span>反垄断监管：识别垄断行为，维护市场公平</span></div>
+                    <div class="feature-item"><i class="fas fa-search"></i><span>市场研究：了解行业结构和发展趋势</span></div>
+                </div>
+
+                <div class="model-diagram">
+                    <div class="diagram-title" style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem;">市场结构类型与集中度关系</div>
+                    <div class="concentration-chart">
+                        <div class="chart-bar">
+                            <div class="bar" style="height: 20px; background: linear-gradient(180deg, #10b981, #34d399);"></div>
+                            <span class="bar-label">完全竞争</span>
+                            <span class="bar-value">CR4 &lt; 30%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar" style="height: 60px; background: linear-gradient(180deg, #3b82f6, #60a5fa);"></div>
+                            <span class="bar-label">垄断竞争</span>
+                            <span class="bar-value">CR4 30-50%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar" style="height: 120px; background: linear-gradient(180deg, #f59e0b, #fbbf24);"></div>
+                            <span class="bar-label">寡头垄断</span>
+                            <span class="bar-value">CR4 50-80%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="bar" style="height: 180px; background: linear-gradient(180deg, #ef4444, #f87171);"></div>
+                            <span class="bar-label">完全垄断</span>
+                            <span class="bar-value">CR4 &gt; 80%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、CRn集中度指标</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-calculator"></i> CRn指标定义</h3>
+                <div class="section-content">
+                    <p><strong>CRn（Concentration Ratio）</strong>即行业集中度指数，是指行业中前n家最大企业的市场份额之和。最常用的是CR4（前4家企业）和CR8（前8家企业）。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">CR<sub>n</sub> = (X<sub>1</sub> + X<sub>2</sub> + ... + X<sub>n</sub>) / X<sub>总</sub> × 100%</div>
+                    <div class="formula-desc">其中 X<sub>i</sub> 为第i家企业的销售额/产量，X<sub>总</sub> 为行业总销售额/总产量</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-table"></i> CRn指标评判标准</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>CR4值</th>
+                            <th>CR8值</th>
+                            <th>市场结构</th>
+                            <th>竞争程度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CR4 &lt; 30%</td>
+                            <td>CR8 &lt; 40%</td>
+                            <td>竞争型市场</td>
+                            <td>高度竞争</td>
+                        </tr>
+                        <tr>
+                            <td>30% ≤ CR4 &lt; 50%</td>
+                            <td>40% ≤ CR8 &lt; 60%</td>
+                            <td>低集中寡占型</td>
+                            <td>竞争较充分</td>
+                        </tr>
+                        <tr>
+                            <td>50% ≤ CR4 &lt; 70%</td>
+                            <td>60% ≤ CR8 &lt; 80%</td>
+                            <td>中集中寡占型</td>
+                            <td>竞争一般</td>
+                        </tr>
+                        <tr>
+                            <td>70% ≤ CR4 &lt; 90%</td>
+                            <td>80% ≤ CR8 &lt; 100%</td>
+                            <td>高集中寡占型</td>
+                            <td>竞争不充分</td>
+                        </tr>
+                        <tr>
+                            <td>CR4 ≥ 90%</td>
+                            <td>CR8 ≥ 100%</td>
+                            <td>极高集中寡占型</td>
+                            <td>接近垄断</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> Python计算CRn指标</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 计算CRn集中度指标</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 某行业企业销售数据（单位：亿元）</span>
+market_data = {
+    <span class="string">'企业'</span>: [<span class="string">'企业A'</span>, <span class="string">'企业B'</span>, <span class="string">'企业C'</span>, <span class="string">'企业D'</span>, <span class="string">'企业E'</span>, 
+             <span class="string">'企业F'</span>, <span class="string">'企业G'</span>, <span class="string">'企业H'</span>, <span class="string">'其他'</span>],
+    <span class="string">'销售额'</span>: [500, 350, 280, 200, 150, 120, 80, 50, 270]
+}
+df = pd.DataFrame(market_data)
+
+<span class="comment"># 按销售额降序排列</span>
+df = df.sort_values(<span class="string">'销售额'</span>, ascending=<span class="keyword">False</span>).reset_index(drop=<span class="keyword">True</span>)
+
+<span class="comment"># 计算市场份额</span>
+total_sales = df[<span class="string">'销售额'</span>].sum()
+df[<span class="string">'市场份额(%)'</span>] = (df[<span class="string">'销售额'</span>] / total_sales * 100).round(2)
+
+<span class="comment"># 计算CR4和CR8</span>
+CR4 = df.head(4)[<span class="string">'市场份额(%)'</span>].sum()
+CR8 = df.head(8)[<span class="string">'市场份额(%)'</span>].sum()
+
+<span class="string">print</span>(<span class="string">"=== 市场份额排名 ==="</span>)
+<span class="string">print</span>(df)
+<span class="string">print</span>(<span class="string">f"\nCR4 = {CR4:.2f}%"</span>)
+<span class="string">print</span>(<span class="string">f"CR8 = {CR8:.2f}%"</span>)
+
+<span class="comment"># 判断市场结构</span>
+<span class="keyword">if</span> CR4 < 30:
+    structure = <span class="string">"竞争型市场"</span>
+<span class="keyword">elif</span> CR4 < 50:
+    structure = <span class="string">"低集中寡占型"</span>
+<span class="keyword">elif</span> CR4 < 70:
+    structure = <span class="string">"中集中寡占型"</span>
+<span class="keyword">elif</span> CR4 < 90:
+    structure = <span class="string">"高集中寡占型"</span>
+<span class="keyword">else</span>:
+    structure = <span class="string">"极高集中寡占型"</span>
+
+<span class="string">print</span>(<span class="string">f"市场结构判断: {structure}"</span>)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb"></i> 小贴士：</strong>CRn指标计算简单、易于理解，但存在局限性：只考虑前n家企业，忽略了其他企业的分布情况；无法区分"几家独大"和"多家均衡"的市场格局差异。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、HHI指数</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> HHI指数定义</h3>
+                <div class="section-content">
+                    <p><strong>HHI指数（Herfindahl-Hirschman Index）</strong>即赫芬达尔-赫希曼指数，是衡量市场集中度的综合指标，考虑了所有企业的市场份额，能够更全面地反映市场结构。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">HHI = S<sub>1</sub><sup>2</sup> + S<sub>2</sub><sup>2</sup> + ... + S<sub>n</sub><sup>2</sup> = ΣS<sub>i</sub><sup>2</sup></div>
+                    <div class="formula-desc">其中 S<sub>i</sub> 为第i家企业的市场份额百分比，HHI取值范围：0 ~ 10000</div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-ruler"></i> HHI指数评判标准</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>HHI值范围</th>
+                            <th>市场类型</th>
+                            <th>竞争状况</th>
+                            <th>监管关注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HHI &lt; 1000</td>
+                            <td>低集中度市场</td>
+                            <td>竞争充分</td>
+                            <td>无需关注</td>
+                        </tr>
+                        <tr>
+                            <td>1000 ≤ HHI &lt; 1800</td>
+                            <td>中集中度市场</td>
+                            <td>竞争较充分</td>
+                            <td>适度关注</td>
+                        </tr>
+                        <tr>
+                            <td>HHI ≥ 1800</td>
+                            <td>高集中度市场</td>
+                            <td>竞争不充分</td>
+                            <td>重点关注</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="section-subtitle"><i class="fas fa-code"></i> Python计算HHI指数</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 计算HHI指数</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 使用前面的市场数据</span>
+market_data = {
+    <span class="string">'企业'</span>: [<span class="string">'企业A'</span>, <span class="string">'企业B'</span>, <span class="string">'企业C'</span>, <span class="string">'企业D'</span>, <span class="string">'企业E'</span>, 
+             <span class="string">'企业F'</span>, <span class="string">'企业G'</span>, <span class="string">'企业H'</span>, <span class="string">'其他'</span>],
+    <span class="string">'销售额'</span>: [500, 350, 280, 200, 150, 120, 80, 50, 270]
+}
+df = pd.DataFrame(market_data)
+
+<span class="comment"># 计算市场份额百分比</span>
+total_sales = df[<span class="string">'销售额'</span>].sum()
+df[<span class="string">'市场份额'</span>] = df[<span class="string">'销售额'</span>] / total_sales * 100
+
+<span class="comment"># 计算HHI指数</span>
+HHI = (df[<span class="string">'市场份额'</span>] ** 2).sum()
+
+<span class="string">print</span>(<span class="string">f"HHI指数 = {HHI:.2f}"</span>)
+
+<span class="comment"># 判断市场集中度</span>
+<span class="keyword">if</span> HHI < 1000:
+    concentration = <span class="string">"低集中度市场"</span>
+<span class="keyword">elif</span> HHI < 1800:
+    concentration = <span class="string">"中集中度市场"</span>
+<span class="keyword">else</span>:
+    concentration = <span class="string">"高集中度市场"</span>
+
+<span class="string">print</span>(<span class="string">f"市场集中度判断: {concentration}"</span>)
+
+<span class="comment"># HHI变化分析（模拟并购影响）</span>
+<span class="string">print</span>(<span class="string">"\n=== 并购影响分析 ==="</span>)
+<span class="string">print</span>(<span class="string">"如果企业A并购企业B，HHI将增加:"</span>)
+delta_HHI = (df.loc[0, <span class="string">'市场份额'</span>] + df.loc[1, <span class="string">'市场份额'</span>])**2 - \
+            df.loc[0, <span class="string">'市场份额'</span>]**2 - df.loc[1, <span class="string">'市场份额'</span>]**2
+<span class="string">print</span>(<span class="string">f"ΔHHI = {delta_HHI:.2f}"</span>)
+<span class="string">print</span>(<span class="string">f"并购后HHI = {HHI + delta_HHI:.2f}"</span>)</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle"></i> 常见错误：</strong>计算HHI时，市场份额应该用<strong>百分比数值</strong>（如25.5），而不是小数形式（如0.255）。如果用小数形式计算，HHI值会非常小，无法与标准判断准则对应。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、真实商业案例</h2>
+                
+                <div class="case-study">
+                    <div class="case-study-title">
+                        <i class="fas fa-industry"></i>
+                        案例：中国智能手机市场集中度分析
+                    </div>
+                    <div class="section-content">
+                        <p><strong>背景：</strong>2023年中国智能手机市场出货量数据，让我们分析市场集中度情况。</p>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>品牌</th>
+                                <th>出货量（百万台）</th>
+                                <th>市场份额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>荣耀</td><td>44.5</td><td>17.1%</td></tr>
+                            <tr><td>2</td><td>OPPO</td><td>43.0</td><td>16.5%</td></tr>
+                            <tr><td>3</td><td>苹果</td><td>42.0</td><td>16.1%</td></tr>
+                            <tr><td>4</td><td>vivo</td><td>39.5</td><td>15.2%</td></tr>
+                            <tr><td>5</td><td>小米</td><td>35.0</td><td>13.4%</td></tr>
+                            <tr><td>6</td><td>华为</td><td>25.0</td><td>9.6%</td></tr>
+                            <tr><td>7</td><td>其他</td><td>31.0</td><td>11.9%</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <code><span class="comment"># 中国智能手机市场集中度分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 2023年中国智能手机市场数据</span>
+phone_data = {
+    <span class="string">'品牌'</span>: [<span class="string">'荣耀'</span>, <span class="string">'OPPO'</span>, <span class="string">'苹果'</span>, <span class="string">'vivo'</span>, <span class="string">'小米'</span>, <span class="string">'华为'</span>, <span class="string">'其他'</span>],
+    <span class="string">'出货量'</span>: [44.5, 43.0, 42.0, 39.5, 35.0, 25.0, 31.0],
+    <span class="string">'市场份额'</span>: [17.1, 16.5, 16.1, 15.2, 13.4, 9.6, 11.9]
+}
+df = pd.DataFrame(phone_data)
+
+<span class="comment"># 计算CR4</span>
+CR4 = df.head(4)[<span class="string">'市场份额'</span>].sum()
+<span class="string">print</span>(<span class="string">f"CR4 = {CR4:.1f}%"</span>)
+
+<span class="comment"># 计算HHI</span>
+HHI = (df[<span class="string">'市场份额'</span>] ** 2).sum()
+<span class="string">print</span>(<span class="string">f"HHI = {HHI:.2f}"</span>)
+
+<span class="string">print</span>(<span class="string">"\n=== 分析结论 ==="</span>)
+<span class="string">print</span>(<span class="string">f"1. CR4={CR4:.1f}%，属于中集中寡占型市场"</span>)
+<span class="string">print</span>(<span class="string">f"2. HHI={HHI:.0f}，市场集中度适中"</span>)
+<span class="string">print</span>(<span class="string">"3. 前六名品牌占据88%市场份额，竞争激烈"</span>)
+<span class="string">print</span>(<span class="string">"4. 各品牌份额相近，无明显垄断者"</span>)</code>
+                    </div>
+
+                    <div class="tip-box">
+                        <p><strong><i class="fas fa-lightbulb"></i> 案例洞察：</strong>中国智能手机市场呈现"多强争霸"格局，CR4约65%属于中集中寡占型市场，但HHI约1200处于中等集中度，说明各品牌份额相对均衡，竞争激烈。这种市场结构下，企业需要持续创新才能保持竞争优势。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、CRn与HHI的对比</h2>
+                
+                <div class="section-content">
+                    <p>两种指标各有优劣，实际分析中建议结合使用：</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>对比维度</th>
+                            <th>CRn指标</th>
+                            <th>HHI指数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>计算复杂度</td>
+                            <td>简单</td>
+                            <td>中等</td>
+                        </tr>
+                        <tr>
+                            <td>数据要求</td>
+                            <td>仅需前n家企业</td>
+                            <td>需要全部企业数据</td>
+                        </tr>
+                        <tr>
+                            <td>信息完整性</td>
+                            <td>较低</td>
+                            <td>较高</td>
+                        </tr>
+                        <tr>
+                            <td>敏感性</td>
+                            <td>对份额变化不敏感</td>
+                            <td>对份额变化敏感</td>
+                        </tr>
+                        <tr>
+                            <td>适用场景</td>
+                            <td>快速判断市场结构</td>
+                            <td>反垄断分析、并购评估</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <p><strong><i class="fas fa-exclamation-circle"></i> 注意：</strong>在进行市场集中度分析时，首先要明确"市场边界"的定义。产品市场范围（如智能手机vs功能手机）和地理市场范围（如全国市场vs区域市场）的定义会直接影响分析结果。</p>
+                </div>
+            </section>
+
+            <div class="chapter-nav">
+                <a href="../chapter2.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一章：Python分析基础</span>
+                </a>
+                <a href="chapter3-2.html" class="nav-btn next">
+                    <span>下一节：PEST宏观环境分析</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // 汉堡菜单切换
+        document.getElementById('hamburgerMenu').addEventListener('click', function() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        });
+
+        // 学习进度记录
+        const sectionId = 'chapter3-1';
+        const chapterId = 'chapter3';
+
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[chapterId]) {
+                progress[chapterId] = {};
+            }
+            progress[chapterId][sectionId] = {
+                completed: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const chapterProgress = progress[chapterId] || {};
+            const sections = ['chapter3-1', 'chapter3-2', 'chapter3-3', 'chapter3-4', 'chapter3-5'];
+            const completed = sections.filter(s => chapterProgress[s]?.completed).length;
+            const percent = Math.round((completed / sections.length) * 100);
+            
+            document.getElementById('sectionProgress').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        // 页面滚动进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressIndicator').style.width = scrolled + '%';
+        });
+
+        // 页面加载完成后记录进度
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressUI();
+            // 滚动到底部时保存进度
+            let saved = false;
+            window.addEventListener('scroll', function() {
+                if (!saved) {
+                    const scrollPercent = (window.innerHeight + window.scrollY) / document.body.offsetHeight;
+                    if (scrollPercent > 0.8) {
+                        saveProgress();
+                        saved = true;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

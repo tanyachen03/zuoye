@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.2 业务指标拆解 - 数据分析思维与业务理解</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p { color: #64748b; font-size: 0.875rem; }
+        .error-box strong { color: #ef4444; }
+        .case-study {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-study-header i { font-size: 1.5rem; color: #2563eb; }
+        .case-study-header h3 { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .case-study-content { color: #64748b; line-height: 1.8; }
+        .case-study-content h4 { color: #1e293b; font-weight: 600; margin: 1rem 0 0.5rem; }
+        .case-study-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .nav-btn.prev { background-color: #f1f5f9; color: #64748b; }
+        .nav-btn.prev:hover { background-color: #e2e8f0; color: #1e293b; }
+        .nav-btn.next { background-color: #2563eb; color: white; }
+        .nav-btn.next:hover { background-color: #1d4ed8; transform: translateY(-1px); }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+        .hamburger-menu { display: none; background: none; border: none; font-size: 1.5rem; color: #1e40af; cursor: pointer; padding: 0.5rem; }
+        @media (max-width: 768px) {
+            .hamburger-menu { display: block; }
+            .navbar-menu { display: none; }
+            .navbar-menu.active {
+                display: flex; flex-direction: column; position: absolute;
+                top: 70px; left: 0; right: 0; background-color: white;
+                padding: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+        }
+        .formula-box {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e40af;
+            font-family: 'Fira Code', monospace;
+        }
+        .formula-box .formula-desc {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        .tree-diagram {
+            background-color: #f8fafc;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+        .tree-node {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin: 0.5rem;
+        }
+        .tree-node.root { background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; }
+        .tree-node.level1 { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; border: 2px solid #2563eb; }
+        .tree-node.level2 { background-color: rgba(16, 185, 129, 0.1); color: #10b981; border: 2px solid #10b981; }
+        .tree-connector { color: #94a3b8; font-size: 1.5rem; }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第一章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter1-1.html" class="sidebar-item"><i class="fas fa-route"></i> 1.1 数据驱动决策流程</a>
+                <a href="chapter1-2.html" class="sidebar-item active"><i class="fas fa-puzzle-piece"></i> 1.2 业务指标拆解</a>
+                <a href="chapter1-3.html" class="sidebar-item"><i class="fas fa-ship"></i> 1.3 AARRR海盗模型</a>
+                <a href="chapter1-4.html" class="sidebar-item"><i class="fas fa-sitemap"></i> 1.4 数据指标体系搭建</a>
+                <a href="chapter1-5.html" class="sidebar-item"><i class="fas fa-file-alt"></i> 1.5 数据分析报告撰写</a>
+                <a href="chapter1-6.html" class="sidebar-item"><i class="fas fa-tasks"></i> 1.6 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem;">
+                <a href="../chapter1.html" class="sidebar-item" style="display: block; text-align: center; background: rgba(37, 99, 235, 0.1);">
+                    <i class="fas fa-arrow-left"></i> 返回章节概览
+                </a>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <div class="progress-indicator" id="progress-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>学习进度：未开始</span>
+            </div>
+
+            <span class="course-badge">第一章 · 第2节</span>
+            <h1 class="course-title">业务指标拆解</h1>
+            <p class="course-subtitle">掌握将复杂业务目标分解为可量化、可执行子指标的方法，精准定位问题根源</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解指标拆解的核心价值和意义</li>
+                    <li>掌握MECE原则及其应用方法</li>
+                    <li>学会销售额、用户增长等核心指标的拆解</li>
+                    <li>能够运用杜邦分析法进行深度拆解</li>
+                    <li>识别指标拆解中的常见误区</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、为什么需要指标拆解</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-question-circle"></i> 业务痛点</h3>
+                <div class="section-content">
+                    <p>在实际业务中，我们经常面临这样的困境：</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>目标太大：</strong>"提高销售额"这样的目标过于笼统，无从下手</li>
+                        <li><strong>问题模糊：</strong>"用户留存不好"不知道具体是哪个环节出了问题</li>
+                        <li><strong>责任不清：</strong>多个部门互相推诿，找不到问题根源</li>
+                        <li><strong>优化无方：</strong>不知道该从哪里入手改进</li>
+                    </ul>
+                </div>
+
+                <div class="section-content" style="margin-top: 1.5rem;">
+                    <p><strong>指标拆解</strong>正是解决这些问题的利器。它将复杂的业务目标分解为可量化、可执行的子指标，帮助我们：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-search"></i><span>精准定位问题所在环节</span></div>
+                    <div class="feature-item"><i class="fas fa-tasks"></i><span>明确各部门的责任边界</span></div>
+                    <div class="feature-item"><i class="fas fa-route"></i><span>制定针对性的优化策略</span></div>
+                    <div class="feature-item"><i class="fas fa-chart-line"></i><span>量化评估改进效果</span></div>
+                </div>
+
+                <div class="case-study">
+                    <div class="case-study-header">
+                        <i class="fas fa-store"></i>
+                        <h3>真实案例：某连锁餐饮品牌的销售额提升</h3>
+                    </div>
+                    <div class="case-study-content">
+                        <p>某连锁餐饮品牌发现季度销售额同比下降15%，通过指标拆解找到问题：</p>
+                        <ul>
+                            <li><strong>第一层拆解：</strong>销售额 = 客流量 × 客单价</li>
+                            <li><strong>数据对比：</strong>客流量下降20%，客单价上升6%</li>
+                            <li><strong>第二层拆解：</strong>客流量 = 新客数 + 老客数</li>
+                            <li><strong>数据对比：</strong>新客数下降35%，老客数下降8%</li>
+                        </ul>
+                        <p><strong>结论：</strong>新客获取是主要问题，进一步分析发现是新店选址策略失误。调整选址策略后，下季度销售额回升12%。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、MECE原则：拆解的核心方法论</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-puzzle-piece"></i> 什么是MECE</h3>
+                <div class="section-content">
+                    <p><strong>MECE（Mutually Exclusive, Collectively Exhaustive）</strong>是麦肯锡咨询公司提出的经典原则，意思是"相互独立，完全穷尽"。这是指标拆解必须遵循的核心原则。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">MECE原则图解</div>
+                    <div class="diagram" style="width: 100%; max-width: 600px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div class="diagram-box" style="background-color: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                                <h4 style="color: #10b981;"><i class="fas fa-check-circle"></i> 相互独立 (Mutually Exclusive)</h4>
+                                <p>各子指标之间没有重叠，边界清晰</p>
+                            </div>
+                            <div class="diagram-box" style="background-color: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">
+                                <h4 style="color: #3b82f6;"><i class="fas fa-check-circle"></i> 完全穷尽 (Collectively Exhaustive)</h4>
+                                <p>所有子指标加起来等于整体，没有遗漏</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-check-double"></i> MECE的正确与错误示例</h3>
+                
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb" style="color: #10b981;"></i> 正确示例：</strong>将用户分为"新用户"和"老用户"，相互独立且完全穷尽。</p>
+                </div>
+
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> 错误示例1（有重叠）：</strong>将用户分为"男性用户"、"女性用户"、"年轻用户"，存在重叠。</p>
+                    <p><strong><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> 错误示例2（有遗漏）：</strong>将用户分为"活跃用户"和"沉默用户"，遗漏了"流失用户"。</p>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-layer-group"></i> 常见的拆解维度</h3>
+                <div class="section-content">
+                    <p>根据业务特点，可以从以下维度进行拆解：</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item"><i class="fas fa-calculator"></i><span>公式拆解：销售额 = 流量 × 转化率 × 客单价</span></div>
+                    <div class="feature-item"><i class="fas fa-clock"></i><span>时间拆解：年度 → 季度 → 月度 → 日</span></div>
+                    <div class="feature-item"><i class="fas fa-map-marker-alt"></i><span>空间拆解：全国 → 区域 → 城市 → 门店</span></div>
+                    <div class="feature-item"><i class="fas fa-users"></i><span>用户拆解：新客/老客、高价值/低价值</span></div>
+                    <div class="feature-item"><i class="fas fa-box"></i><span>产品拆解：品类 → 系列 → SKU</span></div>
+                    <div class="feature-item"><i class="fas fa-ad"></i><span>渠道拆解：线上/线下、各渠道来源</span></div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、核心指标拆解实战</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-dollar-sign"></i> 销售额拆解</h3>
+                <div class="section-content">
+                    <p>销售额是最常见的业务指标，拆解方式有多种：</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">销售额 = 访客数 × 转化率 × 客单价</div>
+                    <div class="formula-desc">电商/零售行业最常用的拆解公式</div>
+                </div>
+
+                <div class="tree-diagram">
+                    <div style="text-align: center;">
+                        <div class="tree-node root">销售额</div>
+                        <div class="tree-connector"><i class="fas fa-chevron-down"></i></div>
+                        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                            <div>
+                                <div class="tree-node level1">访客数</div>
+                                <div class="tree-connector"><i class="fas fa-chevron-down"></i></div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                                    <div class="tree-node level2">自然流量</div>
+                                    <div class="tree-node level2">付费流量</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="tree-node level1">转化率</div>
+                                <div class="tree-connector"><i class="fas fa-chevron-down"></i></div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                                    <div class="tree-node level2">加购率</div>
+                                    <div class="tree-node level2">下单率</div>
+                                    <div class="tree-node level2">支付率</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="tree-node level1">客单价</div>
+                                <div class="tree-connector"><i class="fas fa-chevron-down"></i></div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                                    <div class="tree-node level2">商品单价</div>
+                                    <div class="tree-node level2">购买件数</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 销售额指标拆解分析</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 模拟电商数据</span>
+data = {
+    <span class="string">'月份'</span>: [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>],
+    <span class="string">'访客数'</span>: [100000, 105000, 98000, 110000, 115000, 120000],
+    <span class="string">'下单人数'</span>: [5000, 5775, 4900, 6600, 7475, 8400],
+    <span class="string">'支付人数'</span>: [4500, 5200, 4410, 5940, 6728, 7560],
+    <span class="string">'销售额'</span>: [900000, 1092000, 882000, 1306800, 1513800, 1747800]
+}
+df = pd.DataFrame(data)
+
+<span class="comment"># 计算拆解指标</span>
+df[<span class="string">'转化率(%)'</span>] = (df[<span class="string">'下单人数'</span>] / df[<span class="string">'访客数'</span>]) * 100
+df[<span class="string">'支付率(%)'</span>] = (df[<span class="string">'支付人数'</span>] / df[<span class="string">'下单人数'</span>]) * 100
+df[<span class="string">'客单价'</span>] = df[<span class="string">'销售额'</span>] / df[<span class="string">'支付人数'</span>]
+
+<span class="comment"># 计算环比变化</span>
+df[<span class="string">'销售额环比(%)'</span>] = df[<span class="string">'销售额'</span>].pct_change() * 100
+df[<span class="string">'访客数环比(%)'</span>] = df[<span class="string">'访客数'</span>].pct_change() * 100
+df[<span class="string">'转化率环比(%)'</span>] = df[<span class="string">'转化率(%)'</span>].pct_change() * 100
+df[<span class="string">'客单价环比(%)'</span>] = df[<span class="string">'客单价'</span>].pct_change() * 100
+
+<span class="string">print</span>(<span class="string">"=== 销售额指标拆解分析 ==="</span>)
+<span class="string">print</span>(df[[<span class="string">'月份'</span>, <span class="string">'销售额'</span>, <span class="string">'访客数'</span>, <span class="string">'转化率(%)'</span>, <span class="string">'客单价'</span>]].round(2))
+
+<span class="comment"># 分析销售额变化的主要驱动因素</span>
+<span class="string">print</span>(<span class="string">"\n=== 6月vs1月 变化分析 ==="</span>)
+sales_change = (df.loc[5, <span class="string">'销售额'</span>] / df.loc[0, <span class="string">'销售额'</span>] - 1) * 100
+traffic_change = (df.loc[5, <span class="string">'访客数'</span>] / df.loc[0, <span class="string">'访客数'</span>] - 1) * 100
+cvr_change = df.loc[5, <span class="string">'转化率(%)'</span>] - df.loc[0, <span class="string">'转化率(%)'</span>]
+aov_change = (df.loc[5, <span class="string">'客单价'</span>] / df.loc[0, <span class="string">'客单价'</span>] - 1) * 100
+
+<span class="string">print</span>(<span class="string">f"销售额增长: {sales_change:.1f}%"</span>)
+<span class="string">print</span>(<span class="string">f"访客数增长: {traffic_change:.1f}%"</span>)
+<span class="string">print</span>(<span class="string">f"转化率变化: {cvr_change:.1f}个百分点"</span>)
+<span class="string">print</span>(<span class="string">f"客单价增长: {aov_change:.1f}%"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-user-plus"></i> 用户增长拆解</h3>
+                <div class="formula-box">
+                    <div class="formula">新增用户 = 渠道A新增 + 渠道B新增 + ... + 渠道N新增</div>
+                    <div class="formula-desc">按渠道拆解用户来源</div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 用户增长渠道拆解</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 各渠道用户数据</span>
+channel_data = {
+    <span class="string">'渠道'</span>: [<span class="string">'自然搜索'</span>, <span class="string">'付费广告'</span>, <span class="string">'社交媒体'</span>, <span class="string">'应用商店'</span>, <span class="string">'老客推荐'</span>],
+    <span class="string">'新增用户'</span>: [50000, 80000, 35000, 25000, 10000],
+    <span class="string">'获客成本'</span>: [5, 25, 8, 3, 2],
+    <span class="string">'次日留存率'</span>: [0.45, 0.35, 0.40, 0.50, 0.65]
+}
+df = pd.DataFrame(channel_data)
+
+<span class="comment"># 计算总获客成本和留存用户数</span>
+df[<span class="string">'总获客成本'</span>] = df[<span class="string">'新增用户'</span>] * df[<span class="string">'获客成本'</span>]
+df[<span class="string">'留存用户数'</span>] = df[<span class="string">'新增用户'</span>] * df[<span class="string">'次日留存率'</span>]
+df[<span class="string">'有效获客成本'</span>] = df[<span class="string">'总获客成本'</span>] / df[<span class="string">'留存用户数'</span>]
+
+<span class="comment"># 计算占比</span>
+total_users = df[<span class="string">'新增用户'</span>].sum()
+df[<span class="string">'用户占比(%)'</span>] = (df[<span class="string">'新增用户'</span>] / total_users) * 100
+
+<span class="string">print</span>(<span class="string">"=== 用户渠道分析 ==="</span>)
+<span class="string">print</span>(df.sort_values(<span class="string">'新增用户'</span>, ascending=False).round(2))
+
+<span class="string">print</span>(<span class="string">f"\n总新增用户: {total_users:,}"</span>)
+<span class="string">print</span>(<span class="string">f"平均获客成本: {df['总获客成本'].sum() / total_users:.2f}元"</span>)
+
+<span class="comment"># 找出最优渠道</span>
+best_channel = df.loc[df[<span class="string">'有效获客成本'</span>].idxmin()]
+<span class="string">print</span>(<span class="string">f"\n最优渠道: {best_channel['渠道']} (有效获客成本: {best_channel['有效获客成本']:.2f}元)"</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、杜邦分析法</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-sitemap"></i> 杜邦分析原理</h3>
+                <div class="section-content">
+                    <p><strong>杜邦分析法（DuPont Analysis）</strong>是一种经典的财务分析方法，通过将净资产收益率（ROE）分解为多个财务比率的乘积，来分析企业盈利能力的驱动因素。</p>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula">ROE = 净利率 × 资产周转率 × 权益乘数</div>
+                    <div class="formula-desc">杜邦分析核心公式</div>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">杜邦分析体系图</div>
+                    <div class="diagram" style="width: 100%; max-width: 800px;">
+                        <div style="text-align: center;">
+                            <div class="tree-node root" style="display: inline-block;">ROE (净资产收益率)</div>
+                        </div>
+                        <div style="text-align: center; margin: 0.5rem 0;">
+                            <span class="tree-connector">=</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <div class="tree-node level1">净利率<br><small>盈利能力</small></div>
+                            <span class="tree-connector">×</span>
+                            <div class="tree-node level1">资产周转率<br><small>运营效率</small></div>
+                            <span class="tree-connector">×</span>
+                            <div class="tree-node level1">权益乘数<br><small>财务杠杆</small></div>
+                        </div>
+                        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="text-align: center;">
+                                <div class="tree-node level2">净利润/营收</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="tree-node level2">营收/总资产</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="tree-node level2">总资产/净资产</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-study">
+                    <div class="case-study-header">
+                        <i class="fas fa-industry"></i>
+                        <h3>案例：两家零售企业ROE对比分析</h3>
+                    </div>
+                    <div class="case-study-content">
+                        <p>A公司和B公司ROE相同（15%），但驱动因素完全不同：</p>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                            <tr style="background-color: #f1f5f9;">
+                                <th style="padding: 0.75rem; text-align: left; border: 1px solid #e2e8f0;">指标</th>
+                                <th style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">A公司</th>
+                                <th style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">B公司</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">净利率</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">10%</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">5%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">资产周转率</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">1.0</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">2.0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">权益乘数</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">1.5</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0;">1.5</td>
+                            </tr>
+                            <tr style="background-color: rgba(37, 99, 235, 0.05);">
+                                <td style="padding: 0.75rem; border: 1px solid #e2e8f0; font-weight: 700;">ROE</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15%</td>
+                                <td style="padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15%</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 1rem;"><strong>分析结论：</strong>A公司靠高利润率盈利，B公司靠高周转率盈利。两家公司的经营策略完全不同，风险点也不同。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、常见误区与注意事项</h2>
+
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> 常见错误：</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>拆解过细：</strong>层级太多导致指标难以追踪和优化，建议不超过3层</li>
+                        <li><strong>忽视关联：</strong>各子指标之间可能存在此消彼长的关系，需要综合考量</li>
+                        <li><strong>唯指标论：</strong>过度关注指标数字，忽视业务本质和用户价值</li>
+                        <li><strong>静态分析：</strong>不考虑时间维度，忽视指标的变化趋势</li>
+                        <li><strong>平均数陷阱：</strong>用平均值掩盖了细分群体的问题</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb" style="color: #10b981;"></i> 小贴士：</strong>指标拆解的目的是找到可操作的抓手，而不是为了拆解而拆解。每拆解一层，都要问自己"这个指标我能做什么？"</p>
+                </div>
+            </section>
+
+            <div class="navigation-buttons">
+                <a href="chapter1-1.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    上一节：数据驱动决策流程
+                </a>
+                <a href="chapter1-3.html" class="nav-btn next">
+                    下一节：AARRR海盗模型
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        }
+
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('chapter1_progress') || '{}');
+            progress['1-2'] = { completed: true, timestamp: new Date().toISOString() };
+            localStorage.setItem('chapter1_progress', JSON.stringify(progress));
+            updateProgressIndicator();
+        }
+
+        function updateProgressIndicator() {
+            const progress = JSON.parse(localStorage.getItem('chapter1_progress') || '{}');
+            const indicator = document.getElementById('progress-indicator');
+            if (progress['1-2'] && progress['1-2'].completed) {
+                indicator.innerHTML = '<i class="fas fa-check-circle"></i><span>学习进度：已完成</span>';
+                indicator.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressIndicator();
+            setTimeout(saveProgress, 30000);
+        });
+
+        window.addEventListener('beforeunload', () => { saveProgress(); });
+    </script>
+</body>
+</html>

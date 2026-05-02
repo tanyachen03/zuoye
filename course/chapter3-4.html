@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.4 SWOT分析与量化 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+        .formula-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        .data-table tr:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .case-study {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+        .case-study-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .case-study-title i {
+            color: var(--success-color);
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .progress-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 1001;
+            transition: width 0.2s ease;
+        }
+        .swot-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .swot-quadrant {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        .swot-quadrant:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .swot-quadrant.strengths { border-top: 4px solid #10b981; }
+        .swot-quadrant.weaknesses { border-top: 4px solid #ef4444; }
+        .swot-quadrant.opportunities { border-top: 4px solid #3b82f6; }
+        .swot-quadrant.threats { border-top: 4px solid #f59e0b; }
+        .swot-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .swot-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .swot-icon i { font-size: 1.25rem; color: white; }
+        .swot-quadrant.strengths .swot-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .swot-quadrant.weaknesses .swot-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .swot-quadrant.opportunities .swot-icon { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .swot-quadrant.threats .swot-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .swot-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .swot-subtitle { font-size: 0.75rem; color: var(--text-secondary); }
+        .swot-list { list-style: none; padding: 0; margin: 0; }
+        .swot-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .swot-list li:last-child { border-bottom: none; }
+        .swot-list li::before { content: '•'; position: absolute; left: 0; font-weight: bold; }
+        .swot-quadrant.strengths .swot-list li::before { color: #10b981; }
+        .swot-quadrant.weaknesses .swot-list li::before { color: #ef4444; }
+        .swot-quadrant.opportunities .swot-list li::before { color: #3b82f6; }
+        .swot-quadrant.threats .swot-list li::before { color: #f59e0b; }
+        .tows-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .tows-quadrant {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .tows-quadrant.so { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid #10b981; }
+        .tows-quadrant.wo { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid #ef4444; }
+        .tows-quadrant.st { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(245, 158, 11, 0.1)); border: 2px solid #f59e0b; }
+        .tows-quadrant.wt { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1)); border: 2px solid #64748b; }
+        .tows-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tows-quadrant.so .tows-title { color: #10b981; }
+        .tows-quadrant.wo .tows-title { color: #ef4444; }
+        .tows-quadrant.st .tows-title { color: #f59e0b; }
+        .tows-quadrant.wt .tows-title { color: #64748b; }
+        .quantitative-swot {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(6, 182, 212, 0.05));
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body class="course-page">
+    <div class="progress-indicator" id="progressIndicator"></div>
+    
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu" id="navbarMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第三章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter3-1.html" class="sidebar-item"><i class="fas fa-chart-pie"></i> 3.1 市场集中度分析</a>
+                <a href="chapter3-2.html" class="sidebar-item"><i class="fas fa-globe"></i> 3.2 PEST宏观环境分析</a>
+                <a href="chapter3-3.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 3.3 波特五力模型</a>
+                <a href="chapter3-4.html" class="sidebar-item active"><i class="fas fa-th-large"></i> 3.4 SWOT分析与量化</a>
+                <a href="chapter3-5.html" class="sidebar-item"><i class="fas fa-briefcase"></i> 3.5 本章综合案例</a>
+            </nav>
+            <div class="sidebar-progress" style="margin-top: 1.5rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="flex: 1; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                        <div id="sectionProgress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); transition: width 0.3s ease;"></div>
+                    </div>
+                    <span id="progressText" style="font-size: 0.75rem; color: var(--primary-color); font-weight: 600;">0%</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第三章 · 第4节</span>
+            <h1 class="course-title">SWOT分析与量化</h1>
+            <p class="course-subtitle">掌握SWOT分析框架及其量化方法，系统评估企业内外部环境，制定科学的战略组合</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解SWOT分析的基本框架与逻辑</li>
+                    <li>掌握优势、劣势、机会、威胁的识别方法</li>
+                    <li>学会构建TOWS战略矩阵</li>
+                    <li>掌握SWOT量化分析方法</li>
+                    <li>运用Python实现SWOT量化评分模型</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、SWOT分析框架概述</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 什么是SWOT分析</h3>
+                <div class="section-content">
+                    <p><strong>SWOT分析</strong>是一种战略分析工具，通过系统评估企业的<strong>S</strong>trengths（优势）、<strong>W</strong>eaknesses（劣势）、<strong>O</strong>pportunities（机会）和<strong>T</strong>hreats（威胁），帮助企业制定适合自身条件的战略。</p>
+                    <p style="margin-top: 1rem;">SWOT分析将因素分为内部（优势、劣势）和外部（机会、威胁）两个维度，以及正面（优势、机会）和负面（劣势、威胁）两个方向，形成四个象限的分析矩阵。</p>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">SWOT分析矩阵</div>
+                    <div style="background: white; border-radius: 1rem; padding: 2rem; max-width: 700px; margin: 0 auto;">
+                        <div style="display: grid; grid-template-columns: auto 1fr 1fr; gap: 0.5rem; text-align: center;">
+                            <div></div>
+                            <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: 0.5rem; font-weight: 700; color: #10b981;">正面（有帮助）</div>
+                            <div style="padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 0.5rem; font-weight: 700; color: #ef4444;">负面（有害处）</div>
+                            
+                            <div style="padding: 0.75rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.5rem; font-weight: 700; color: #3b82f6; writing-mode: vertical-lr;">内部因素</div>
+                            <div style="padding: 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); border-radius: 0.5rem; border: 2px solid #10b981;">
+                                <div style="font-weight: 700; color: #10b981; margin-bottom: 0.5rem;"><i class="fas fa-plus-circle"></i> Strengths 优势</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">企业内部的积极因素</div>
+                            </div>
+                            <div style="padding: 1rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2)); border-radius: 0.5rem; border: 2px solid #ef4444;">
+                                <div style="font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;"><i class="fas fa-minus-circle"></i> Weaknesses 劣势</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">企业内部的消极因素</div>
+                            </div>
+                            
+                            <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 0.5rem; font-weight: 700; color: #f59e0b; writing-mode: vertical-lr;">外部因素</div>
+                            <div style="padding: 1rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2)); border-radius: 0.5rem; border: 2px solid #3b82f6;">
+                                <div style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;"><i class="fas fa-arrow-up"></i> Opportunities 机会</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">外部环境的有利因素</div>
+                            </div>
+                            <div style="padding: 1rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2)); border-radius: 0.5rem; border: 2px solid #f59e0b;">
+                                <div style="font-weight: 700; color: #f59e0b; margin-bottom: 0.5rem;"><i class="fas fa-arrow-down"></i> Threats 威胁</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">外部环境的不利因素</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、四要素详解</h2>
+                
+                <div class="swot-matrix">
+                    <div class="swot-quadrant strengths">
+                        <div class="swot-header">
+                            <div class="swot-icon"><i class="fas fa-plus"></i></div>
+                            <div>
+                                <div class="swot-title">Strengths 优势</div>
+                                <div class="swot-subtitle">内部积极因素</div>
+                            </div>
+                        </div>
+                        <ul class="swot-list">
+                            <li>核心技术/专利优势</li>
+                            <li>品牌知名度和美誉度</li>
+                            <li>成本领先优势</li>
+                            <li>优秀的管理团队</li>
+                            <li>完善的分销网络</li>
+                            <li>充足的资金储备</li>
+                        </ul>
+                    </div>
+
+                    <div class="swot-quadrant weaknesses">
+                        <div class="swot-header">
+                            <div class="swot-icon"><i class="fas fa-minus"></i></div>
+                            <div>
+                                <div class="swot-title">Weaknesses 劣势</div>
+                                <div class="swot-subtitle">内部消极因素</div>
+                            </div>
+                        </div>
+                        <ul class="swot-list">
+                            <li>技术研发能力不足</li>
+                            <li>品牌影响力较弱</li>
+                            <li>成本结构偏高</li>
+                            <li>人才流失严重</li>
+                            <li>渠道覆盖不足</li>
+                            <li>资金链紧张</li>
+                        </ul>
+                    </div>
+
+                    <div class="swot-quadrant opportunities">
+                        <div class="swot-header">
+                            <div class="swot-icon"><i class="fas fa-arrow-up"></i></div>
+                            <div>
+                                <div class="swot-title">Opportunities 机会</div>
+                                <div class="swot-subtitle">外部有利因素</div>
+                            </div>
+                        </div>
+                        <ul class="swot-list">
+                            <li>市场需求快速增长</li>
+                            <li>政策支持与补贴</li>
+                            <li>新技术带来新机遇</li>
+                            <li>竞争对手退出市场</li>
+                            <li>消费升级趋势</li>
+                            <li>国际化扩张机会</li>
+                        </ul>
+                    </div>
+
+                    <div class="swot-quadrant threats">
+                        <div class="swot-header">
+                            <div class="swot-icon"><i class="fas fa-arrow-down"></i></div>
+                            <div>
+                                <div class="swot-title">Threats 威胁</div>
+                                <div class="swot-subtitle">外部不利因素</div>
+                            </div>
+                        </div>
+                        <ul class="swot-list">
+                            <li>市场竞争加剧</li>
+                            <li>政策法规变化</li>
+                            <li>技术替代风险</li>
+                            <li>新进入者威胁</li>
+                            <li>经济下行压力</li>
+                            <li>供应链风险</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong><i class="fas fa-lightbulb"></i> 小贴士：</strong>SWOT分析的关键在于因素识别的准确性和全面性。建议采用头脑风暴、专家访谈、数据分析等多种方法，确保不遗漏重要因素。同时，因素应该是具体的、可操作的，而非笼统的描述。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、TOWS战略矩阵</h2>
+                
+                <div class="section-content">
+                    <p>将SWOT四个象限进行交叉组合，可以形成四种战略选择，这就是<strong>TOWS矩阵</strong>（也叫SWOT战略矩阵）：</p>
+                </div>
+
+                <div class="tows-matrix">
+                    <div class="tows-quadrant so">
+                        <div class="tows-title"><i class="fas fa-rocket"></i> SO战略（增长型战略）</div>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">利用优势把握机会</p>
+                        <ul style="font-size: 0.8rem; color: var(--text-primary); padding-left: 1.25rem;">
+                            <li>发挥核心优势，快速扩张</li>
+                            <li>利用机会强化市场地位</li>
+                            <li>整合资源，抓住发展机遇</li>
+                        </ul>
+                    </div>
+
+                    <div class="tows-quadrant wo">
+                        <div class="tows-title"><i class="fas fa-tools"></i> WO战略（扭转型战略）</div>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">利用机会弥补劣势</p>
+                        <ul style="font-size: 0.8rem; color: var(--text-primary); padding-left: 1.25rem;">
+                            <li>借助外部机会改进内部短板</li>
+                            <li>引进人才/技术弥补劣势</li>
+                            <li>通过合作获取缺失资源</li>
+                        </ul>
+                    </div>
+
+                    <div class="tows-quadrant st">
+                        <div class="tows-title"><i class="fas fa-shield-alt"></i> ST战略（多元化战略）</div>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">利用优势规避威胁</p>
+                        <ul style="font-size: 0.8rem; color: var(--text-primary); padding-left: 1.25rem;">
+                            <li>发挥优势抵御外部威胁</li>
+                            <li>多元化分散风险</li>
+                            <li>建立竞争壁垒</li>
+                        </ul>
+                    </div>
+
+                    <div class="tows-quadrant wt">
+                        <div class="tows-title"><i class="fas fa-compress-arrows-alt"></i> WT战略（防御型战略）</div>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">减少劣势规避威胁</p>
+                        <ul style="font-size: 0.8rem; color: var(--text-primary); padding-left: 1.25rem;">
+                            <li>收缩战线，聚焦核心</li>
+                            <li>削减成本，提高效率</li>
+                            <li>寻求被收购或合并</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、SWOT量化分析方法</h2>
+                
+                <div class="section-content">
+                    <p>传统SWOT分析是定性分析，为了提高分析的科学性，可以引入<strong>量化评分方法</strong>：</p>
+                </div>
+
+                <div class="quantitative-swot">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-calculator"></i> 量化评分模型</h3>
+                    
+                    <div class="formula-box">
+                        <div class="formula">战略得分 = Σ(因素重要性 × 因素得分)</div>
+                        <div class="formula-desc">重要性取1-5分，因素得分：优势/机会取正值，劣势/威胁取负值</div>
+                    </div>
+
+                    <div class="code-block">
+                        <code><span class="comment"># SWOT量化评分模型</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 定义SWOT因素评分</span>
+swot_factors = {
+    <span class="string">'类别'</span>: [<span class="string">'S'</span>, <span class="string">'S'</span>, <span class="string">'S'</span>, <span class="string">'W'</span>, <span class="string">'W'</span>, <span class="string">'W'</span>, 
+             <span class="string">'O'</span>, <span class="string">'O'</span>, <span class="string">'O'</span>, <span class="string">'T'</span>, <span class="string">'T'</span>, <span class="string">'T'</span>],
+    <span class="string">'因素'</span>: [<span class="string">'技术领先'</span>, <span class="string">'品牌优势'</span>, <span class="string">'成本控制'</span>,
+             <span class="string">'渠道不足'</span>, <span class="string">'人才短缺'</span>, <span class="string">'资金紧张'</span>,
+             <span class="string">'市场增长'</span>, <span class="string">'政策支持'</span>, <span class="string">'消费升级'</span>,
+             <span class="string">'竞争加剧'</span>, <span class="string">'成本上升'</span>, <span class="string">'技术替代'</span>],
+    <span class="string">'重要性(1-5)'</span>: [5, 4, 4, 3, 4, 3, 5, 4, 3, 5, 3, 4],
+    <span class="string">'评分(1-5)'</span>: [4, 4, 3, -3, -4, -2, 4, 3, 3, -4, -3, -3]
+}
+
+df = pd.DataFrame(swot_factors)
+df[<span class="string">'加权得分'</span>] = df[<span class="string">'重要性(1-5)'</span>] * df[<span class="string">'评分(1-5)'</span>]
+
+<span class="string">print</span>(<span class="string">"=== SWOT因素评分表 ==="</span>)
+<span class="string">print</span>(df)
+
+<span class="comment"># 按类别汇总</span>
+summary = df.groupby(<span class="string">'类别'</span>)[<span class="string">'加权得分'</span>].sum()
+<span class="string">print</span>(<span class="string">"\n=== 各维度得分 ==="</span>)
+<span class="string">print</span>(summary)
+
+<span class="comment"># 计算净战略得分</span>
+net_score = summary.sum()
+<span class="string">print</span>(<span class="string">f"\n净战略得分: {net_score}"</span>)
+
+<span class="comment"># 战略建议</span>
+<span class="keyword">if</span> net_score > 10:
+    strategy = <span class="string">"SO增长型战略"</span>
+<span class="keyword">elif</span> net_score > 0:
+    strategy = <span class="string">"WO扭转型战略"</span>
+<span class="keyword">elif</span> net_score > -10:
+    strategy = <span class="string">"ST多元化战略"</span>
+<span class="keyword">else</span>:
+    strategy = <span class="string">"WT防御型战略"</span>
+
+<span class="string">print</span>(<span class="string">f"建议战略: {strategy}"</span>)</code>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、真实商业案例</h2>
+                
+                <div class="case-study">
+                    <div class="case-study-title">
+                        <i class="fas fa-industry"></i>
+                        案例：某新能源汽车企业SWOT分析
+                    </div>
+                    <div class="section-content">
+                        <p><strong>背景：</strong>以某新能源汽车企业为例，进行SWOT分析并制定战略。</p>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>维度</th>
+                                <th>关键因素</th>
+                                <th>重要性</th>
+                                <th>评分</th>
+                                <th>加权得分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: rgba(16, 185, 129, 0.05);">
+                                <td rowspan="3" style="font-weight: 700; color: #10b981;">优势(S)</td>
+                                <td>电池技术领先</td>
+                                <td>5</td>
+                                <td>+4</td>
+                                <td>+20</td>
+                            </tr>
+                            <tr style="background: rgba(16, 185, 129, 0.05);">
+                                <td>品牌认知度高</td>
+                                <td>4</td>
+                                <td>+4</td>
+                                <td>+16</td>
+                            </tr>
+                            <tr style="background: rgba(16, 185, 129, 0.05);">
+                                <td>直营销售模式</td>
+                                <td>3</td>
+                                <td>+3</td>
+                                <td>+9</td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.05);">
+                                <td rowspan="3" style="font-weight: 700; color: #ef4444;">劣势(W)</td>
+                                <td>产能不足</td>
+                                <td>4</td>
+                                <td>-3</td>
+                                <td>-12</td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.05);">
+                                <td>售后服务网络薄弱</td>
+                                <td>3</td>
+                                <td>-3</td>
+                                <td>-9</td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.05);">
+                                <td>资金压力大</td>
+                                <td>4</td>
+                                <td>-2</td>
+                                <td>-8</td>
+                            </tr>
+                            <tr style="background: rgba(59, 130, 246, 0.05);">
+                                <td rowspan="3" style="font-weight: 700; color: #3b82f6;">机会(O)</td>
+                                <td>政策补贴延续</td>
+                                <td>4</td>
+                                <td>+4</td>
+                                <td>+16</td>
+                            </tr>
+                            <tr style="background: rgba(59, 130, 246, 0.05);">
+                                <td>消费者接受度提升</td>
+                                <td>5</td>
+                                <td>+4</td>
+                                <td>+20</td>
+                            </tr>
+                            <tr style="background: rgba(59, 130, 246, 0.05);">
+                                <td>海外市场拓展</td>
+                                <td>3</td>
+                                <td>+3</td>
+                                <td>+9</td>
+                            </tr>
+                            <tr style="background: rgba(245, 158, 11, 0.05);">
+                                <td rowspan="3" style="font-weight: 700; color: #f59e0b;">威胁(T)</td>
+                                <td>传统车企转型竞争</td>
+                                <td>5</td>
+                                <td>-4</td>
+                                <td>-20</td>
+                            </tr>
+                            <tr style="background: rgba(245, 158, 11, 0.05);">
+                                <td>原材料成本上涨</td>
+                                <td>4</td>
+                                <td>-3</td>
+                                <td>-12</td>
+                            </tr>
+                            <tr style="background: rgba(245, 158, 11, 0.05);">
+                                <td>补贴退坡</td>
+                                <td>3</td>
+                                <td>-2</td>
+                                <td>-6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <p><strong><i class="fas fa-lightbulb"></i> 案例洞察：</strong>该企业优势得分+45，劣势得分-29，机会得分+45，威胁得分-38，净战略得分为+23。整体战略位置较好，建议采用SO增长型战略为主，同时通过WO战略弥补产能和售后短板。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、SWOT分析的局限与改进</h2>
+                
+                <div class="error-box">
+                    <p><strong><i class="fas fa-exclamation-triangle"></i> 常见错误：</strong></p>
+                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                        <li>因素列举过于笼统，缺乏具体内容</li>
+                        <li>内外部因素混淆，分类不清</li>
+                        <li>只做分析不做战略，流于形式</li>
+                        <li>静态分析，忽视因素变化趋势</li>
+                        <li>忽视因素之间的关联和权重差异</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong><i class="fas fa-exclamation-circle"></i> 注意：</strong>SWOT分析应与其他分析工具结合使用。建议将SWOT与PEST（外部宏观环境）、波特五力（行业竞争）、VRIO（内部资源能力）等工具结合，形成完整的战略分析框架。</p>
+                </div>
+            </section>
+
+            <div class="chapter-nav">
+                <a href="chapter3-3.html" class="nav-btn prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一节：波特五力模型</span>
+                </a>
+                <a href="chapter3-5.html" class="nav-btn next">
+                    <span>下一节：本章综合案例</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.getElementById('hamburgerMenu').addEventListener('click', function() {
+            document.getElementById('navbarMenu').classList.toggle('active');
+        });
+
+        const sectionId = 'chapter3-4';
+        const chapterId = 'chapter3';
+
+        function saveProgress() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[chapterId]) progress[chapterId] = {};
+            progress[chapterId][sectionId] = { completed: true, timestamp: new Date().toISOString() };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const chapterProgress = progress[chapterId] || {};
+            const sections = ['chapter3-1', 'chapter3-2', 'chapter3-3', 'chapter3-4', 'chapter3-5'];
+            const completed = sections.filter(s => chapterProgress[s]?.completed).length;
+            const percent = Math.round((completed / sections.length) * 100);
+            document.getElementById('sectionProgress').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressIndicator').style.width = (winScroll / height * 100) + '%';
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressUI();
+            let saved = false;
+            window.addEventListener('scroll', function() {
+                if (!saved && (window.innerHeight + window.scrollY) / document.body.offsetHeight > 0.8) {
+                    saveProgress();
+                    saved = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

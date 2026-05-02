@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.2 Matplotlib基础绘图 - 数据可视化与叙事</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <style>
+        .section-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-btn.disabled {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        .error-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 0 0.5rem 0.5rem 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .error-box strong {
+            color: var(--danger-color);
+        }
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9375rem;
+        }
+        .api-table th, .api-table td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .api-table th {
+            background-color: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .api-table td {
+            color: var(--text-secondary);
+        }
+        .api-table code {
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            color: var(--primary-color);
+        }
+        .chart-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .chart-demo-item {
+            background-color: var(--bg-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .chart-demo-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        .chart-demo-item p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="course-page">
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" onclick="location.href='../index.html'">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </div>
+            <button class="hamburger-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="navbar-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="../index.html#courses" class="nav-link">课程中心</a>
+                <a href="../index.html#projects" class="nav-link">实战项目</a>
+                <a href="../achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <div class="navbar-auth">
+                <div id="user-profile" class="user-profile hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
+                    <span id="user-name">用户名</span>
+                    <button id="logout-btn" class="logout-btn">退出</button>
+                </div>
+                <button id="login-btn" class="auth-btn login-btn" onclick="openModal('login-modal')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button id="register-btn" class="auth-btn register-btn" onclick="openModal('register-modal')">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">第六章目录</div>
+            <nav class="sidebar-nav">
+                <a href="chapter6-1.html" class="sidebar-item"><i class="fas fa-palette"></i> 6.1 商务图表设计原则</a>
+                <a href="chapter6-2.html" class="sidebar-item active"><i class="fas fa-chart-bar"></i> 6.2 Matplotlib基础绘图</a>
+                <a href="chapter6-3.html" class="sidebar-item"><i class="fas fa-chart-line"></i> 6.3 Seaborn高级可视化</a>
+                <a href="chapter6-4.html" class="sidebar-item"><i class="fas fa-mouse-pointer"></i> 6.4 Plotly交互式可视化</a>
+                <a href="chapter6-5.html" class="sidebar-item"><i class="fas fa-project-diagram"></i> 6.5 本章综合案例</a>
+            </nav>
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: rgba(37, 99, 235, 0.05); border-radius: 0.5rem;">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">学习进度</div>
+                <div class="progress-indicator">
+                    <i class="fas fa-book-open"></i>
+                    <span id="progress-text">正在学习 6.2</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="course-content">
+            <span class="course-badge">第六章 · 第2节</span>
+            <h1 class="course-title">Matplotlib基础绘图</h1>
+            <p class="course-subtitle">掌握Python最核心的数据可视化库，创建专业的商务图表</p>
+
+            <div class="chapter-objectives">
+                <h3 class="objectives-title"><i class="fas fa-bullseye"></i> 本节目标</h3>
+                <ul class="objectives-list">
+                    <li>理解Matplotlib的图表结构和绘图流程</li>
+                    <li>掌握柱状图、折线图、饼图等基础图表绑制</li>
+                    <li>学会设置图表标题、坐标轴、图例等元素</li>
+                    <li>能够自定义图表样式和配色方案</li>
+                    <li>完成一个完整的销售数据可视化案例</li>
+                </ul>
+            </div>
+
+            <section>
+                <h2 class="section-title">一、Matplotlib简介与环境配置</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-info-circle"></i> 什么是Matplotlib？</h3>
+                <div class="section-content">
+                    <p>Matplotlib是Python中最基础、最广泛使用的数据可视化库，由John D. Hunter于2003年创建。它提供了类似MATLAB的绘图接口，能够生成出版质量级别的图表。</p>
+                    <ul>
+                        <li><strong>优势：</strong>功能强大、高度可定制、与NumPy/Pandas无缝集成</li>
+                        <li><strong>应用场景：</strong>数据探索、报告制作、学术论文图表</li>
+                        <li><strong>生态系统：</strong>Seaborn、Pandas绘图功能都基于Matplotlib构建</li>
+                    </ul>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-cog"></i> 环境配置与导入</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 安装Matplotlib（如未安装）</span>
+<span class="comment"># pip install matplotlib</span>
+
+<span class="comment"># 标准导入方式</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 在Jupyter Notebook中显示图表</span>
+<span class="comment"># %matplotlib inline</span>
+
+<span class="comment"># 设置中文字体（解决中文乱码问题）</span>
+plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>, <span class="string">'Arial Unicode MS'</span>]
+plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>
+
+<span class="comment"># 设置默认图表大小和分辨率</span>
+plt.rcParams[<span class="string">'figure.figsize'</span>] = (10, 6)
+plt.rcParams[<span class="string">'figure.dpi'</span>] = 100
+
+print(<span class="string">"Matplotlib版本:"</span>, plt.__version__)</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>使用plt.style.use()可以快速应用预设样式，如'seaborn-v0_8-whitegrid'、'ggplot'等，让你的图表瞬间变得专业美观。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">二、Matplotlib图表结构</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-sitemap"></i> Figure与Axes的关系</h3>
+                <div class="section-content">
+                    <p>理解Matplotlib的层级结构是掌握绑图的关键：</p>
+                    <ul>
+                        <li><strong>Figure（画布）：</strong>整个图形的最外层容器，可以包含多个子图</li>
+                        <li><strong>Axes（子图）：</strong>单个图表区域，包含坐标轴、数据、标签等</li>
+                        <li><strong>Axis（坐标轴）：</strong>X轴和Y轴，控制刻度、标签和范围</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">Matplotlib图表层级结构</div>
+                    <div class="diagram">
+                        <div class="diagram-flow">
+                            <div class="diagram-node" style="min-width: 150px;">Figure（画布）</div>
+                            <div class="diagram-arrow"></div>
+                            <div class="diagram-node" style="min-width: 150px;">Axes（子图）</div>
+                            <div class="diagram-arrow"></div>
+                            <div style="display: flex; gap: 1rem;">
+                                <div class="diagram-node" style="min-width: 80px; font-size: 0.875rem;">Axis</div>
+                                <div class="diagram-node" style="min-width: 80px; font-size: 0.875rem;">Legend</div>
+                                <div class="diagram-node" style="min-width: 80px; font-size: 0.875rem;">Title</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 两种创建图表的方式</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 方式1：简单方式（适合快速绘图）</span>
+plt.figure(figsize=(8, 5))
+plt.plot([1, 2, 3, 4], [1, 4, 2, 3])
+plt.title(<span class="string">'简单折线图'</span>)
+plt.show()
+
+<span class="comment"># 方式2：面向对象方式（推荐，更灵活）</span>
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+ax.set_title(<span class="string">'面向对象折线图'</span>)
+plt.show()
+
+<span class="comment"># 创建多子图</span>
+fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+<span class="comment"># axes是一个2x2的数组，通过axes[0,0], axes[0,1]等访问</span></code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>混淆plt.title()和ax.set_title()。前者是MATLAB风格的全局函数，后者是面向对象方法。建议统一使用面向对象方式，代码更清晰。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">三、柱状图绑制</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 基础柱状图</h3>
+                <div class="section-content">
+                    <p>柱状图是最常用的比较类图表，适合展示分类数据的数值大小。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 柱状图完整示例</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+categories = [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>, <span class="string">'美妆'</span>]
+sales = [156, 128, 95, 82, 68]
+
+<span class="comment"># 创建图表</span>
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 设置商务配色</span>
+colors = [<span class="string">'#2563eb'</span>, <span class="string">'#3b82f6'</span>, <span class="string">'#60a5fa'</span>, <span class="string">'#93c5fd'</span>, <span class="string">'#bfdbfe'</span>]
+
+<span class="comment"># 绑制柱状图</span>
+bars = ax.bar(categories, sales, color=colors, width=0.6, edgecolor=<span class="string">'white'</span>, linewidth=1.2)
+
+<span class="comment"># 添加数据标签</span>
+<span class="keyword">for</span> bar <span class="keyword">in</span> bars:
+    height = bar.get_height()
+    ax.annotate(<span class="string">f'{height}万'</span>,
+                xy=(bar.get_x() + bar.get_width() / 2, height),
+                xytext=(0, 5),
+                textcoords=<span class="string">'offset points'</span>,
+                ha=<span class="string">'center'</span>, va=<span class="string">'bottom'</span>,
+                fontsize=11, fontweight=<span class="string">'bold'</span>)
+
+<span class="comment"># 设置标题和坐标轴</span>
+ax.set_title(<span class="string">'各品类季度销售额对比'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, pad=20)
+ax.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=12)
+ax.set_xlabel(<span class="string">'商品品类'</span>, fontsize=12)
+
+<span class="comment"># 美化图表</span>
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+ax.yaxis.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=0.3)
+ax.set_axisbelow(<span class="keyword">True</span>)
+
+<span class="comment"># 设置Y轴范围</span>
+ax.set_ylim(0, max(sales) * 1.15)
+
+plt.tight_layout()
+plt.savefig(<span class="string">'bar_chart.png'</span>, dpi=150, bbox_inches=<span class="string">'tight'</span>)
+plt.show()
+
+print(<span class="string">"柱状图已保存！"</span>)</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-chart-bar"></i> 分组柱状图</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 分组柱状图：多系列对比</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+quarters = [<span class="string">'Q1'</span>, <span class="string">'Q2'</span>, <span class="string">'Q3'</span>, <span class="string">'Q4'</span>]
+online_sales = [120, 145, 168, 195]
+offline_sales = [85, 78, 92, 88]
+
+x = np.arange(len(quarters))
+width = 0.35
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 绑制两组柱状图</span>
+bars1 = ax.bar(x - width/2, online_sales, width, label=<span class="string">'线上销售'</span>, color=<span class="string">'#2563eb'</span>)
+bars2 = ax.bar(x + width/2, offline_sales, width, label=<span class="string">'线下销售'</span>, color=<span class="string">'#10b981'</span>)
+
+<span class="comment"># 设置坐标轴</span>
+ax.set_xlabel(<span class="string">'季度'</span>, fontsize=12)
+ax.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=12)
+ax.set_title(<span class="string">'线上线下销售对比分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, pad=20)
+ax.set_xticks(x)
+ax.set_xticklabels(quarters)
+ax.legend(loc=<span class="string">'upper left'</span>, frameon=<span class="keyword">False</span>)
+
+<span class="comment"># 美化</span>
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+ax.yaxis.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=0.3)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <div class="quiz-container" data-quiz-id="chapter6-2-quiz1">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">在Matplotlib中，哪个函数用于绑制柱状图？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">plt.line()</div>
+                        <div class="quiz-option" data-correct="true">plt.bar() 或 ax.bar()</div>
+                        <div class="quiz-option" data-correct="false">plt.histogram()</div>
+                        <div class="quiz-option" data-correct="false">plt.column()</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>plt.bar()或ax.bar()用于绑制垂直柱状图，plt.barh()用于绑制水平条形图。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">四、折线图绑制</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-line"></i> 基础折线图</h3>
+                <div class="section-content">
+                    <p>折线图适合展示数据随时间的变化趋势，是时间序列分析的核心图表。</p>
+                </div>
+
+                <div class="code-block">
+                    <code><span class="comment"># 折线图完整示例</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+months = [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>]
+sales_2023 = [120, 135, 148, 142, 158, 172]
+sales_2024 = [145, 162, 178, 185, 198, 215]
+
+<span class="comment"># 创建图表</span>
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 绑制折线图</span>
+ax.plot(months, sales_2023, marker=<span class="string">'o'</span>, color=<span class="string">'#94a3b8'</span>, 
+        linewidth=2, markersize=6, label=<span class="string">'2023年'</span>)
+ax.plot(months, sales_2024, marker=<span class="string">'o'</span>, color=<span class="string">'#2563eb'</span>, 
+        linewidth=3, markersize=8, label=<span class="string">'2024年'</span>)
+
+<span class="comment"># 添加关键数据标注</span>
+ax.annotate(<span class="string">f'{sales_2024[-1]}万'</span>, 
+            xy=(months[-1], sales_2024[-1]),
+            xytext=(10, 0), textcoords=<span class="string">'offset points'</span>,
+            fontsize=12, fontweight=<span class="string">'bold'</span>, color=<span class="string">'#2563eb'</span>)
+
+<span class="comment"># 设置标题和坐标轴</span>
+ax.set_title(<span class="string">'月度销售趋势对比'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, pad=20)
+ax.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=12)
+ax.set_xlabel(<span class="string">'月份'</span>, fontsize=12)
+ax.legend(loc=<span class="string">'upper left'</span>, frameon=<span class="keyword">False</span>)
+
+<span class="comment"># 美化</span>
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+ax.yaxis.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=0.3)
+
+<span class="comment"># 计算并显示增长率</span>
+growth_rate = (sales_2024[-1] - sales_2023[-1]) / sales_2023[-1] * 100
+ax.text(0.02, 0.98, <span class="string">f'同比增长: {growth_rate:.1f}%'</span>, 
+        transform=ax.transAxes, fontsize=11, 
+        verticalalignment=<span class="string">'top'</span>,
+        bbox=dict(boxstyle=<span class="string">'round'</span>, facecolor=<span class="string">'#f0fdf4'</span>, edgecolor=<span class="string">'#10b981'</span>))
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-area-chart"></i> 面积图</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 面积图：强调累积效果</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 准备数据</span>
+months = [<span class="string">'1月'</span>, <span class="string">'2月'</span>, <span class="string">'3月'</span>, <span class="string">'4月'</span>, <span class="string">'5月'</span>, <span class="string">'6月'</span>]
+revenue = [100, 120, 135, 142, 155, 168]
+costs = [65, 75, 82, 88, 95, 102]
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 绑制填充区域</span>
+ax.fill_between(months, revenue, alpha=0.3, color=<span class="string">'#2563eb'</span>, label=<span class="string">'收入'</span>)
+ax.fill_between(months, costs, alpha=0.3, color=<span class="string">'#ef4444'</span>, label=<span class="string">'成本'</span>)
+
+<span class="comment"># 绑制折线</span>
+ax.plot(months, revenue, color=<span class="string">'#2563eb'</span>, linewidth=2, marker=<span class="string">'o'</span>)
+ax.plot(months, costs, color=<span class="string">'#ef4444'</span>, linewidth=2, marker=<span class="string">'o'</span>)
+
+ax.set_title(<span class="string">'收入与成本趋势分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>)
+ax.set_ylabel(<span class="string">'金额（万元）'</span>, fontsize=12)
+ax.legend(loc=<span class="string">'upper left'</span>, frameon=<span class="keyword">False</span>)
+
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>小贴士：</strong>折线图中使用marker参数添加数据点标记，可以让读者更清楚地看到具体数据位置。常用marker样式：'o'圆点、's'方块、'^'三角形、'D'菱形。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">五、饼图与环形图</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-chart-pie"></i> 基础饼图</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 饼图示例</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 准备数据</span>
+labels = [<span class="string">'电子产品'</span>, <span class="string">'服装'</span>, <span class="string">'食品'</span>, <span class="string">'家居'</span>, <span class="string">'其他'</span>]
+sizes = [35, 25, 20, 12, 8]
+colors = [<span class="string">'#2563eb'</span>, <span class="string">'#3b82f6'</span>, <span class="string">'#60a5fa'</span>, <span class="string">'#93c5fd'</span>, <span class="string">'#bfdbfe'</span>]
+explode = (0.05, 0, 0, 0, 0)  <span class="comment"># 突出第一块</span>
+
+fig, ax = plt.subplots(figsize=(8, 8))
+
+wedges, texts, autotexts = ax.pie(sizes, 
+                                   explode=explode,
+                                   labels=labels, 
+                                   colors=colors,
+                                   autopct=<span class="string">'%1.1f%%'</span>,
+                                   startangle=90,
+                                   pctdistance=0.75,
+                                   shadow=<span class="keyword">False</span>)
+
+<span class="comment"># 设置字体</span>
+<span class="keyword">for</span> text <span class="keyword">in</span> texts:
+    text.set_fontsize(12)
+<span class="keyword">for</span> autotext <span class="keyword">in</span> autotexts:
+    autotext.set_fontsize(11)
+    autotext.set_fontweight(<span class="string">'bold'</span>)
+
+ax.set_title(<span class="string">'产品销售占比分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>, pad=20)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-circle-notch"></i> 环形图（更现代的选择）</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 环形图：现代商务风格</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># 准备数据</span>
+labels = [<span class="string">'新客户'</span>, <span class="string">'老客户'</span>, <span class="string">'会员客户'</span>]
+sizes = [35, 45, 20]
+colors = [<span class="string">'#2563eb'</span>, <span class="string">'#10b981'</span>, <span class="string">'#f59e0b'</span>]
+
+fig, ax = plt.subplots(figsize=(8, 8))
+
+<span class="comment"># 绑制环形图</span>
+wedges, texts, autotexts = ax.pie(sizes, 
+                                   labels=labels,
+                                   colors=colors,
+                                   autopct=<span class="string">'%1.1f%%'</span>,
+                                   startangle=90,
+                                   pctdistance=0.75,
+                                   wedgeprops=dict(width=0.5, edgecolor=<span class="string">'white'</span>))
+
+<span class="comment"># 中心添加文字</span>
+ax.text(0, 0, <span class="string">'客户\n结构'</span>, ha=<span class="string">'center'</span>, va=<span class="string">'center'</span>, 
+        fontsize=16, fontweight=<span class="string">'bold'</span>, color=<span class="string">'#1e293b'</span>)
+
+ax.set_title(<span class="string">'客户结构分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <div class="error-box">
+                    <p><strong>常见错误：</strong>饼图扇区过多（超过6个）会导致难以阅读。建议将小比例项合并为"其他"类别，或者改用柱状图展示。</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">六、散点图与气泡图</h2>
+                
+                <h3 class="section-subtitle"><i class="fas fa-braille"></i> 散点图：展示变量关系</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 散点图：分析广告投入与销售额的关系</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+np.random.seed(42)
+ad_spend = np.random.uniform(10, 100, 50)
+sales = ad_spend * 2.5 + np.random.normal(0, 20, 50)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 绑制散点图</span>
+scatter = ax.scatter(ad_spend, sales, 
+                      c=<span class="string">'#2563eb'</span>, 
+                      s=60, 
+                      alpha=0.6,
+                      edgecolors=<span class="string">'white'</span>,
+                      linewidths=1)
+
+<span class="comment"># 添加趋势线</span>
+z = np.polyfit(ad_spend, sales, 1)
+p = np.poly1d(z)
+ax.plot(ad_spend, p(ad_spend), color=<span class="string">'#ef4444'</span>, 
+        linewidth=2, linestyle=<span class="string">'--'</span>, label=<span class="string">'趋势线'</span>)
+
+ax.set_title(<span class="string">'广告投入与销售额关系分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>)
+ax.set_xlabel(<span class="string">'广告投入（万元）'</span>, fontsize=12)
+ax.set_ylabel(<span class="string">'销售额（万元）'</span>, fontsize=12)
+ax.legend(frameon=<span class="keyword">False</span>)
+
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+<span class="comment"># 计算相关系数</span>
+correlation = np.corrcoef(ad_spend, sales)[0, 1]
+ax.text(0.02, 0.98, <span class="string">f'相关系数: {correlation:.2f}'</span>, 
+        transform=ax.transAxes, fontsize=11,
+        verticalalignment=<span class="string">'top'</span>)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+
+                <h3 class="section-subtitle"><i class="fas fa-circle"></i> 气泡图：三维数据展示</h3>
+                <div class="code-block">
+                    <code><span class="comment"># 气泡图：展示三维数据</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 准备数据</span>
+products = [<span class="string">'产品A'</span>, <span class="string">'产品B'</span>, <span class="string">'产品C'</span>, <span class="string">'产品D'</span>, <span class="string">'产品E'</span>]
+price = [50, 80, 120, 200, 150]  <span class="comment"># 价格</span>
+volume = [500, 350, 200, 100, 280]  <span class="comment"># 销量</span>
+profit_margin = [15, 25, 35, 45, 30]  <span class="comment"># 利润率（决定气泡大小）</span>
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+<span class="comment"># 绑制气泡图</span>
+scatter = ax.scatter(price, volume, 
+                      s=[p*10 <span class="keyword">for</span> p <span class="keyword">in</span> profit_margin],  <span class="comment"># 气泡大小</span>
+                      c=profit_margin,  <span class="comment"># 颜色映射</span>
+                      cmap=<span class="string">'Blues'</span>,
+                      alpha=0.6,
+                      edgecolors=<span class="string">'white'</span>,
+                      linewidths=2)
+
+<span class="comment"># 添加产品标签</span>
+<span class="keyword">for</span> i, product <span class="keyword">in</span> enumerate(products):
+    ax.annotate(product, (price[i], volume[i]), 
+                textcoords=<span class="string">'offset points'</span>,
+                xytext=(0, 10), ha=<span class="string">'center'</span>)
+
+<span class="comment"># 添加颜色条</span>
+cbar = plt.colorbar(scatter)
+cbar.set_label(<span class="string">'利润率(%)'</span>, fontsize=11)
+
+ax.set_title(<span class="string">'产品价格-销量-利润分析'</span>, fontsize=16, fontweight=<span class="string">'bold'</span>)
+ax.set_xlabel(<span class="string">'价格（元）'</span>, fontsize=12)
+ax.set_ylabel(<span class="string">'销量（件）'</span>, fontsize=12)
+
+ax.spines[<span class="string">'top'</span>].set_visible(<span class="keyword">False</span>)
+ax.spines[<span class="string">'right'</span>].set_visible(<span class="keyword">False</span>)
+
+plt.tight_layout()
+plt.show()</code>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">七、常用API速查表</h2>
+                
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>功能</th>
+                            <th>函数/方法</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>创建画布</td>
+                            <td><code>plt.figure()</code></td>
+                            <td>创建新的Figure对象</td>
+                        </tr>
+                        <tr>
+                            <td>创建子图</td>
+                            <td><code>fig, ax = plt.subplots()</code></td>
+                            <td>创建Figure和Axes对象</td>
+                        </tr>
+                        <tr>
+                            <td>柱状图</td>
+                            <td><code>ax.bar(x, height)</code></td>
+                            <td>垂直柱状图</td>
+                        </tr>
+                        <tr>
+                            <td>折线图</td>
+                            <td><code>ax.plot(x, y)</code></td>
+                            <td>折线图</td>
+                        </tr>
+                        <tr>
+                            <td>饼图</td>
+                            <td><code>ax.pie(sizes)</code></td>
+                            <td>饼图/环形图</td>
+                        </tr>
+                        <tr>
+                            <td>散点图</td>
+                            <td><code>ax.scatter(x, y)</code></td>
+                            <td>散点图</td>
+                        </tr>
+                        <tr>
+                            <td>设置标题</td>
+                            <td><code>ax.set_title()</code></td>
+                            <td>设置图表标题</td>
+                        </tr>
+                        <tr>
+                            <td>设置坐标轴</td>
+                            <td><code>ax.set_xlabel/ylabel()</code></td>
+                            <td>设置坐标轴标签</td>
+                        </tr>
+                        <tr>
+                            <td>添加图例</td>
+                            <td><code>ax.legend()</code></td>
+                            <td>显示图例</td>
+                        </tr>
+                        <tr>
+                            <td>保存图片</td>
+                            <td><code>plt.savefig()</code></td>
+                            <td>保存图表为文件</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="quiz-container" data-quiz-id="chapter6-2-quiz2">
+                    <div class="quiz-title">
+                        <i class="fas fa-question-circle"></i>
+                        知识点测验
+                    </div>
+                    <p class="quiz-question">以下哪个方法可以为折线图添加数据点标记？</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">point=True</div>
+                        <div class="quiz-option" data-correct="true">marker='o'</div>
+                        <div class="quiz-option" data-correct="false">dot=True</div>
+                        <div class="quiz-option" data-correct="false">show_points=True</div>
+                    </div>
+                    <div class="quiz-explanation hidden">
+                        <p><strong>解析：</strong>marker参数用于设置数据点标记样式，'o'表示圆点，'s'表示方块，'^'表示三角形等。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="code-challenge">
+                    <div class="code-challenge-title">
+                        <i class="fas fa-code"></i>
+                        Python代码练习
+                    </div>
+                    <div class="challenge-description">
+                        <h4>练习任务</h4>
+                        <p>使用Matplotlib创建一个完整的销售数据可视化图表，包含柱状图和折线图的组合，展示销售额和增长率。</p>
+                    </div>
+                    <div class="code-playground">
+                        <div class="code-editor-panel">
+                            <div class="code-editor-header">
+                                <span>代码编辑器</span>
+                                <div class="code-editor-controls">
+                                    <button class="run-code-btn" onclick="runCodeChallenge(this)">运行代码</button>
+                                    <button class="reset-code-btn" onclick="resetCodeChallenge(this)">重置代码</button>
+                                </div>
+                            </div>
+                            <textarea class="code-editor" data-original-code="# 导入库
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 准备数据
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [120, 135, 142, 158, 168, 185]
+growth_rate = [0, 12.5, 5.2, 11.3, 6.3, 10.1]
+
+# 创建图表和双Y轴
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# 绑制柱状图（销售额）
+bars = ax1.bar(months, sales, color='#2563eb', alpha=0.7, label='销售额')
+ax1.set_ylabel('销售额（万元）', fontsize=12, color='#2563eb')
+ax1.set_ylim(0, 220)
+
+# 添加数据标签
+for bar, val in zip(bars, sales):
+    ax1.annotate(f'{val}', xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                 xytext=(0, 5), textcoords='offset points', ha='center', fontsize=9)
+
+# 创建第二个Y轴
+ax2 = ax1.twinx()
+ax2.plot(months, growth_rate, color='#ef4444', marker='o', linewidth=2, label='增长率')
+ax2.set_ylabel('增长率（%）', fontsize=12, color='#ef4444')
+ax2.set_ylim(-5, 20)
+
+# 设置标题
+ax1.set_title('销售额与增长率双轴图', fontsize=16, fontweight='bold', pad=20)
+
+# 添加图例
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left', frameon=False)
+
+# 美化
+ax1.spines['top'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+
+plt.tight_layout()
+plt.show()"># 导入库
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 准备数据
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [120, 135, 142, 158, 168, 185]
+growth_rate = [0, 12.5, 5.2, 11.3, 6.3, 10.1]
+
+# 创建图表和双Y轴
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# 绑制柱状图（销售额）
+bars = ax1.bar(months, sales, color='#2563eb', alpha=0.7, label='销售额')
+ax1.set_ylabel('销售额（万元）', fontsize=12, color='#2563eb')
+ax1.set_ylim(0, 220)
+
+# 添加数据标签
+for bar, val in zip(bars, sales):
+    ax1.annotate(f'{val}', xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                 xytext=(0, 5), textcoords='offset points', ha='center', fontsize=9)
+
+# 创建第二个Y轴
+ax2 = ax1.twinx()
+ax2.plot(months, growth_rate, color='#ef4444', marker='o', linewidth=2, label='增长率')
+ax2.set_ylabel('增长率（%）', fontsize=12, color='#ef4444')
+ax2.set_ylim(-5, 20)
+
+# 设置标题
+ax1.set_title('销售额与增长率双轴图', fontsize=16, fontweight='bold', pad=20)
+
+# 添加图例
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left', frameon=False)
+
+# 美化
+ax1.spines['top'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+
+plt.tight_layout()
+plt.show()</textarea>
+                        </div>
+                        <div class="code-output-panel">
+                            <div class="code-output-header">输出结果</div>
+                            <div class="code-output">
+                                <div class="output-placeholder">点击"运行代码"按钮执行代码</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-nav">
+                <a href="chapter6-1.html" class="nav-btn"><i class="fas fa-arrow-left"></i> 上一节：商务图表设计原则</a>
+                <a href="chapter6-3.html" class="nav-btn">下一节：Seaborn高级可视化 <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数析学院</span>
+                </div>
+                <p>专注数据分析教育，助力职业发展</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="../index.html#courses">课程中心</a></li>
+                    <li><a href="../index.html#projects">实战项目</a></li>
+                    <li><a href="../achievements.html">成就殿堂</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
+                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 数析学院 版权所有</p>
+        </div>
+    </footer>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>登录</h3>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+            <p class="modal-link">还没有账号？<a href="#" onclick="switchModal('register-modal')">立即注册</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注册</h3>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="submit-btn">注册</button>
+            </form>
+            <p class="modal-link">已有账号？<a href="#" onclick="switchModal('login-modal')">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            saveLearningProgress('chapter6-2', '6.2 Matplotlib基础绘图');
+        });
+
+        function saveLearningProgress(section, title) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            progress.currentSection = section;
+            progress.currentTitle = title;
+            progress.lastVisit = new Date().toISOString();
+            progress[section] = {
+                completed: false,
+                visited: true,
+                visitTime: new Date().toISOString()
+            };
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.navbar-menu');
+            menu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
