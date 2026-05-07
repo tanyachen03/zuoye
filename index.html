@@ -3,348 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商务数据分析实战训练营 - 数析学院</title>
+    <title>Pandas 数据分析实战训练营 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
-        .hero-new {
+        /* 全局基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 35px rgba(0, 0, 0, 0.12);
+            --max-width: 1200px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+            font-size: 15px;
+        }
+
+        /* 简化导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-logo i {
+            font-size: 1.5rem;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .navbar-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .auth-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .login-btn:hover {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* 英雄区域 */
+        .hero {
+            padding: 140px 2rem 80px;
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
-            padding: 4rem 2rem;
             text-align: center;
             color: white;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        .hero-new h1 {
+        .hero h1 {
             font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            line-height: 1.3;
             max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
-        .hero-new p {
-            font-size: 1.125rem;
-            opacity: 0.9;
+        .hero .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.95;
             margin-bottom: 2.5rem;
+            font-weight: 400;
         }
 
         .hero-features {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
+            gap: 1.5rem;
+            max-width: 800px;
         }
 
-        .feature-item {
+        .hero-feature {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            background: rgba(255,255,255,0.15);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
+            gap: 0.625rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.875rem 1.5rem;
+            border-radius: 9999px;
             backdrop-filter: blur(10px);
-        }
-
-        .feature-item i {
-            font-size: 1.25rem;
-        }
-
-        .feature-item span {
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 15px;
         }
 
-        .projects-section-new {
-            padding: 4rem 2rem;
-            background: #f8fafc;
+        .hero-feature i {
+            font-size: 1.125rem;
         }
 
-        .projects-section-new .section-header {
+        /* 项目列表区域 */
+        .projects-section {
+            padding: 5rem 2rem;
+            background: var(--bg-light);
+        }
+
+        .section-header {
             text-align: center;
             margin-bottom: 3rem;
         }
 
-        .projects-section-new .section-header h2 {
+        .section-header h2 {
             font-size: 2rem;
             font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
         }
 
-        .projects-section-new .section-header p {
-            color: #64748b;
-            font-size: 1.1rem;
+        .section-header p {
+            font-size: 1rem;
+            color: var(--text-secondary);
         }
 
-        .projects-grid-new {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            max-width: 1400px;
+        /* 项目卡片网格 */
+        .projects-grid {
+            max-width: var(--max-width);
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
-        .project-card-new {
-            background: white;
-            border-radius: 16px;
+        .project-card {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
             padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e2e8f0;
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .project-card-new:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
         }
 
-        .project-card-new .project-header {
+        /* 难度标签 */
+        .project-card.beginner {
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .project-card.beginner:hover {
+            border-color: var(--success-color);
+        }
+
+        .project-card.intermediate {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .project-card.intermediate:hover {
+            border-color: var(--primary-color);
+        }
+
+        .project-card.advanced {
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .project-card.advanced:hover {
+            border-color: var(--warning-color);
+        }
+
+        .project-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
         }
 
-        .project-card-new .project-icon {
-            width: 48px;
-            height: 48px;
+        .project-icon {
+            width: 52px;
+            height: 52px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
             color: white;
         }
 
-        .project-card-new .difficulty-tag {
-            padding: 0.25rem 0.75rem;
+        .project-card.beginner .project-icon {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .project-card.intermediate .project-icon {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .project-card.advanced .project-icon {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .difficulty-tag {
+            padding: 0.25rem 0.875rem;
             border-radius: 9999px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
-        .difficulty-tag.beginner {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #10b981;
+        .project-card.beginner .difficulty-tag {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
         }
 
-        .difficulty-tag.intermediate {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: #f59e0b;
+        .project-card.intermediate .difficulty-tag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
         }
 
-        .difficulty-tag.advanced {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
+        .project-card.advanced .difficulty-tag {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
         }
 
-        .project-card-new h3 {
+        .project-info {
+            flex: 1;
+        }
+
+        .project-info h3 {
             font-size: 1.125rem;
-            font-weight: 600;
-            color: #1e293b;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
-        .project-card-new p {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.5;
+        .project-info p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
         }
 
-        .project-card-new .project-meta {
+        .project-meta {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: #94a3b8;
+            align-items: center;
+            gap: 1rem;
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
-        .project-card-new .meta-item {
+        .project-meta span {
             display: flex;
             align-items: center;
             gap: 0.375rem;
         }
 
-        .project-card-new .dataset-name {
-            background: #f1f5f9;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            color: #334155;
+        .dataset-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-light);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: 'Fira Code', 'Monaco', monospace;
         }
 
-        .project-card-new .start-btn {
+        .dataset-tag i {
+            color: var(--text-muted);
+        }
+
+        .start-btn {
             width: 100%;
-            padding: 0.75rem;
-            background: #3b82f6;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 500;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
-        .project-card-new .start-btn:hover {
-            background: #2563eb;
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
 
-        .cta-section {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            padding: 3rem 2rem;
+        /* 学习收获区域 */
+        .benefits-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .benefits-header {
             text-align: center;
-            border-top: 1px solid #d1fae5;
+            margin-bottom: 3rem;
         }
 
-        .cta-section p {
+        .benefits-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .benefits-header p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .benefits-grid {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .benefit-icon i {
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        .benefit-card h3 {
             font-size: 1.125rem;
-            color: #065f46;
-            font-weight: 500;
-            margin: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.625rem;
         }
 
+        .benefit-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 常见问题区域 */
+        .faq-section {
+            padding: 5rem 2rem;
+            background: var(--bg-light);
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .faq-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-header p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 底部区域 */
+        .footer {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: var(--max-width);
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        /* 登录提示 */
+        .login-prompt {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px 8px 0 0;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            text-align: center;
+        }
+
+        .login-prompt span {
+            font-size: 12px;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+
+        /* 汉堡菜单 */
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .hero-new h1 {
+            .hero h1 {
                 font-size: 1.75rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1rem;
             }
 
             .hero-features {
                 gap: 1rem;
             }
 
-            .feature-item {
-                padding: 0.75rem 1rem;
+            .hero-feature {
+                padding: 0.75rem 1.25rem;
+                font-size: 14px;
+            }
+
+            .navbar-menu {
+                display: none;
+            }
+
+            .hamburger-menu {
+                display: block;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
             }
         }
-    
-    <style>
-        .project-login-prompt {
-            transition: all 0.3s ease;
-        }
-        
-        .project-login-prompt:hover {
-            background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
-        }
-        
-        /* 增强导航栏进度显示 */
-        .navbar-auth {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
-            border-radius: 9999px;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-        
-        .user-profile.hidden {
-            display: none;
-        }
-        
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-color);
-        }
-        
-        #user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .user-progress-info {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            color: var(--success-color);
-            font-weight: 600;
-        }
-        
-        .user-progress-info.hidden {
-            display: none;
-        }
-        
-        .user-progress-info i {
-            font-size: 0.75rem;
-        }
-        
-        .logout-btn {
-            padding: 0.5rem 1rem;
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
-        }
-        
-        /* 增强按钮样式 */
-        .auth-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .login-btn {
-            background: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-        
-        .login-btn:hover {
-            background: rgba(59, 130, 246, 0.08);
-            transform: translateY(-2px);
-        }
-        
-        .register-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-    </style>
-    
     </style>
 </head>
 <body>
+    <!-- 导航栏 -->
     <header class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -352,352 +662,413 @@
                 <span>数析学院</span>
             </div>
             <nav class="navbar-menu">
-                <a href="index.html" class="nav-link active">首页</a>
-                <a href="courses.html" class="nav-link">课程体系</a>
-                <a href="projects.html" class="nav-link">实战项目</a>
-                <a href="achievements.html" class="nav-link">成就殿堂</a>
+                <a href="#hero" class="nav-link active">首页</a>
+                <a href="#projects" class="nav-link">项目列表</a>
+                <a href="#benefits" class="nav-link">学习收获</a>
+                <a href="#faq" class="nav-link">常见问题</a>
             </nav>
             <button class="hamburger-menu" id="hamburger-menu">
                 <i class="fas fa-bars"></i>
             </button>
             <div class="navbar-auth">
-                <div id="user-profile" class="user-profile hidden">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="用户头像" class="avatar">
-                    <span id="user-name">用户名</span>
-                    <span id="user-progress-info" class="user-progress-info hidden">
-                        <i class="fas fa-trophy"></i>
-                        <span id="progress-percent">0%</span>
-                    </span>
-                    <button id="logout-btn" class="logout-btn">退出</button>
-                </div>
-                <button id="login-btn" class="auth-btn login-btn">
+                <a href="#" class="auth-btn login-btn" onclick="showLoginModal()">
                     <i class="fas fa-sign-in-alt"></i>
                     登录
-                </button>
-                <button id="register-btn" class="auth-btn register-btn">
+                </a>
+                <a href="#" class="auth-btn register-btn" onclick="showRegisterModal()">
                     <i class="fas fa-user-plus"></i>
                     注册
-                </button>
+                </a>
             </div>
         </div>
     </header>
 
-    <section class="hero-new">
-        <h1>商务数据分析实战训练营</h1>
-        <p>从零基础到实战高手，用真实数据解决真实业务问题</p>
+    <!-- 英雄区域 -->
+    <section class="hero" id="hero">
+        <h1>Pandas 数据分析实战训练营</h1>
+        <p class="subtitle">10个精选实战项目，从零基础到可写进简历</p>
         <div class="hero-features">
-            <div class="feature-item">
-                <i class="fas fa-list-check"></i>
-                <span>10个精选项目</span>
+            <div class="hero-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>无需安装</span>
             </div>
-            <div class="feature-item">
-                <i class="fas fa-browser"></i>
-                <span>浏览器运行代码</span>
+            <div class="hero-feature">
+                <i class="fas fa-code"></i>
+                <span>实时运行代码</span>
             </div>
-            <div class="feature-item">
-                <i class="fas fa-database"></i>
-                <span>真实数据集</span>
+            <div class="hero-feature">
+                <i class="fas fa-folder-open"></i>
+                <span>10个实战项目</span>
             </div>
-            <div class="feature-item">
-                <i class="fas fa-award"></i>
-                <span>成就徽章</span>
+            <div class="hero-feature">
+                <i class="fas fa-certificate"></i>
+                <span>获得证书徽章</span>
             </div>
         </div>
     </section>
 
-    <section class="projects-section-new">
+    <!-- 项目列表区域 -->
+    <section class="projects-section" id="projects">
         <div class="section-header">
-            <h2>实战项目</h2>
+            <h2>项目列表</h2>
             <p>真实业务场景，边学边练，学以致用</p>
         </div>
-        
-        <div class="projects-grid-new">
-            <div class="project-card-new">
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
-                <div class="project-login-prompt" style="display:none; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 0.5rem 0.75rem; border-radius: 8px 8px 0 0; margin: -1.5rem -1.5rem 1rem -1.5rem; text-align: center;">
-                <span style="font-size: 0.75rem; color: #92400e; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                    <i class="fas fa-info-circle"></i>
-                    登录后保存学习进度
-                </span>
-            </div>
+
+        <div class="projects-grid">
+            <!-- 项目1 -->
+            <div class="project-card beginner">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-file-excel"></i>
                     </div>
-                    <span class="difficulty-tag beginner">入门</span>
+                    <span class="difficulty-tag">入门</span>
                 </div>
-                <h3>项目1：销售数据清洗</h3>
-                <p>学习数据清洗基础技能，处理缺失值、异常值和格式统一</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 30分钟</span>
+                <div class="project-info">
+                    <h3>项目1：销售数据清洗</h3>
+                    <p>掌握数据清洗基础技能，处理缺失值、异常值和格式统一</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 30分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">数据清洗</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">数据预处理</span></div>
-                <div class="dataset-name">sales_data.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    sales_data.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project1.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目2 -->
+            <div class="project-card beginner">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-store"></i>
                     </div>
-                    <span class="difficulty-tag beginner">入门</span>
+                    <span class="difficulty-tag">入门</span>
                 </div>
-                <h3>项目2：门店销售对比分析</h3>
-                <p>分析6个区域门店的销售表现，找出销售最好的区域</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 30分钟</span>
+                <div class="project-info">
+                    <h3>项目2：门店销售对比分析</h3>
+                    <p>分析6个区域门店的销售表现，找出销售冠军门店</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 30分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">groupby聚合</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">数据可视化</span></div>
-                <div class="dataset-name">store_sales.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    store_sales.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project2.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目3 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目3：用户行为路径分析</h3>
-                <p>分析用户从浏览到购买的转化路径，找出流失严重环节</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                <div class="project-info">
+                    <h3>项目3：用户行为路径分析</h3>
+                    <p>分析用户从浏览到购买的转化路径，找出流失严重环节</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 45分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">漏斗分析</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">用户路径</span></div>
-                <div class="dataset-name">user_behavior.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    user_behavior.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project3.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目4 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目4：RFM客户价值分析</h3>
-                <p>通过RFM模型对客户进行价值分群，识别高价值客户</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                <div class="project-info">
+                    <h3>项目4：RFM客户价值分析</h3>
+                    <p>通过RFM模型对客户进行价值分群，识别高价值客户</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 45分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">RFM模型</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">客户分群</span></div>
-                <div class="dataset-name">customer_data.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    customer_data.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project4.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目5 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-link"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目5：商品关联规则分析</h3>
-                <p>发现经常一起购买的商品组合，优化商品陈列策略</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 50分钟</span>
+                <div class="project-info">
+                    <h3>项目5：商品关联规则分析</h3>
+                    <p>发现经常一起购买的商品组合，优化商品陈列策略</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 50分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Apriori算法</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">关联规则</span></div>
-                <div class="dataset-name">basket_data.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    basket_data.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project5.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目6 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-flask"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目6：A/B测试效果分析</h3>
-                <p>分析按钮颜色的A/B测试结果，判断哪种方案更优</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 40分钟</span>
+                <div class="project-info">
+                    <h3>项目6：A/B测试效果分析</h3>
+                    <p>分析按钮颜色的A/B测试结果，判断哪种方案更优</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 40分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">统计检验</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">转化率分析</span></div>
-                <div class="dataset-name">ab_test.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    ab_test.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project6.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目7 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目7：时间序列趋势分析</h3>
-                <p>分析销售数据的时间趋势，识别增长或下降趋势</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                <div class="project-info">
+                    <h3>项目7：时间序列趋势分析</h3>
+                    <p>分析销售数据的时间趋势，识别增长或下降趋势</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 45分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">时间序列</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">趋势分析</span></div>
-                <div class="dataset-name">time_series.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    time_series.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project7.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目8 -->
+            <div class="project-card intermediate">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-rotate-cw"></i>
                     </div>
-                    <span class="difficulty-tag intermediate">进阶</span>
+                    <span class="difficulty-tag">进阶</span>
                 </div>
-                <h3>项目8：用户留存率分析</h3>
-                <p>分析用户在不同时间段的留存情况，评估产品粘性</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                <div class="project-info">
+                    <h3>项目8：用户留存率分析</h3>
+                    <p>分析用户在不同时间段的留存情况，评估产品粘性</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 45分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">留存分析</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">cohort分析</span></div>
-                <div class="dataset-name">retention.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    retention.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project8.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目9 -->
+            <div class="project-card beginner">
                 <div class="project-header">
                     <div class="project-icon">
-                        <i class="fas fa-bar-chart"></i>
+                        <i class="fas fa-chart-bar"></i>
                     </div>
-                    <span class="difficulty-tag beginner">入门</span>
+                    <span class="difficulty-tag">入门</span>
                 </div>
-                <h3>项目9：数据可视化实战</h3>
-                <p>将销售数据以图表形式展示，便于管理层快速了解业务</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 35分钟</span>
+                <div class="project-info">
+                    <h3>项目9：数据可视化实战</h3>
+                    <p>将销售数据以图表形式展示，便于管理层快速了解业务</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 35分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Matplotlib</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Seaborn</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">数据可视化</span></div>
-                <div class="dataset-name">visualization.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    visualization.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project9.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
 
-            <div class="project-card-new">
+            <!-- 项目10 -->
+            <div class="project-card advanced">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-trending-up"></i>
                     </div>
-                    <span class="difficulty-tag advanced">高级</span>
+                    <span class="difficulty-tag">高级</span>
                 </div>
-                <h3>项目10：销售趋势预测</h3>
-                <p>基于历史销售数据，使用移动平均法预测未来趋势</p>
-                <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-clock"></i> 60分钟</span>
+                <div class="project-info">
+                    <h3>项目10：销售趋势预测</h3>
+                    <p>基于历史销售数据，使用移动平均法预测未来趋势</p>
+                    <div class="project-meta">
+                        <span><i class="fas fa-clock"></i> 60分钟</span>
+                    </div>
                 </div>
-                <div class="skill-tags" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;"><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #3b82f6, #60a5fa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">Pandas</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #10b981, #34d399); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">移动平均</span><span style="padding:0.25rem 0.625rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color:white; font-size:0.75rem; font-weight:500; border-radius:9999px;">趋势预测</span></div>
-                <div class="dataset-name">forecast_data.csv</div>
+                <div class="dataset-tag">
+                    <i class="fas fa-database"></i>
+                    forecast_data.csv
+                </div>
                 <button class="start-btn" onclick="location.href='projects/project10.html'">
-                    <i class="fas fa-play"></i> 开始学习
+                    <i class="fas fa-play"></i>
+                    立即开始
                 </button>
             </div>
         </div>
     </section>
 
-    <section class="cta-section">
-        <p>开始你的数据分析之旅，无需任何安装，点击上方卡片即可开始！</p>
+    <!-- 学习收获区域 -->
+    <section class="benefits-section" id="benefits">
+        <div class="benefits-header">
+            <h2>学习收获</h2>
+            <p>系统掌握数据分析核心技能，提升职场竞争力</p>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3>数据处理能力</h3>
+                <p>熟练使用 Pandas 进行数据清洗、转换、合并等操作</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3>可视化技能</h3>
+                <p>掌握 Matplotlib、Seaborn 等工具制作专业图表</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>业务分析思维</h3>
+                <p>学会从数据中发现业务问题，提出解决方案</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>实战项目经验</h3>
+                <p>10个真实业务场景项目，可写入简历的作品集</p>
+            </div>
+        </div>
     </section>
 
+    <!-- 常见问题区域 -->
+    <section class="faq-section" id="faq">
+        <div class="faq-header">
+            <h2>常见问题</h2>
+            <p>解答您最关心的问题</p>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <h4>需要编程基础吗？</h4>
+                <p>不需要。本课程从零开始，通过浏览器即可在线编写和运行代码，适合完全零基础的学习者。</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>学习时间是固定的吗？</h4>
+                <p>不是固定的。课程内容可以随时学习，每个项目大约需要30-60分钟，您可以根据自己的时间安排学习进度。</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>学完后能获得什么？</h4>
+                <p>完成项目后可获得成就徽章和电子证书，积累真实的项目经验，这些都可以写入您的简历。</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>课程内容会更新吗？</h4>
+                <p>会的。我们会根据行业发展和技术更新持续优化课程内容，确保您学到的是最新、最实用的技能。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <div class="footer-logo">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>数析学院</span>
-                </div>
-                <p>专注数据分析教育，助力职业发展</p>
+                <h4>数析学院</h4>
+                <p style="color: rgba(255,255,255,0.7); font-size: 14px;">专注数据分析教育<br>从零基础到实战高手</p>
             </div>
             <div class="footer-section">
                 <h4>快速链接</h4>
                 <ul>
-                    <li><a href="courses.html">课程体系</a></li>
-                    <li><a href="projects.html">实战项目</a></li>
-                    <li><a href="achievements.html">成就殿堂</a></li>
+                    <li><a href="#hero">首页</a></li>
+                    <li><a href="#projects">项目列表</a></li>
+                    <li><a href="#benefits">学习收获</a></li>
+                    <li><a href="#faq">常见问题</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>联系我们</h4>
                 <ul>
-                    <li><i class="fas fa-envelope"></i> contact@dataschool.com</li>
-                    <li><i class="fas fa-phone"></i> 400-888-8888</li>
+                    <li>咨询邮箱：contact@dataschool.com</li>
+                    <li>工作时间：周一至周五 9:00-18:00</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>2024 数析学院 版权所有</p>
+            <p>&copy; 2024 数析学院 版权所有</p>
         </div>
     </footer>
 
+    <!-- 登录弹窗 -->
     <div id="login-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -721,6 +1092,7 @@
         </div>
     </div>
 
+    <!-- 注册弹窗 -->
     <div id="register-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -750,64 +1122,50 @@
 
     <script src="script.js"></script>
     <script>
-        function updateProgressDisplay() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const progressInfo = document.getElementById('user-progress-info');
-            const progressPercent = document.getElementById('progress-percent');
-            
-            if (currentUser && progressInfo && progressPercent) {
-                progressInfo.classList.remove('hidden');
-                const progress = typeof getLearningProgress === 'function' ? getLearningProgress() : 0;
-                progressPercent.textContent = progress + '%';
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            updateProgressDisplay();
-            
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    setTimeout(updateProgressDisplay, 500);
-                });
-            }
-            
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    const progressInfo = document.getElementById('user-progress-info');
-                    if (progressInfo) {
-                        progressInfo.classList.add('hidden');
-                    }
-                });
-            }
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-    </script>
 
-    <script>
-        // 检查登录状态并显示提示
-        function checkLoginStatus() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            const prompts = document.querySelectorAll('.project-login-prompt');
-            
-            if (!currentUser) {
-                // 未登录，显示提示
-                prompts.forEach(prompt => {
-                    prompt.style.display = 'block';
-                });
-            } else {
-                // 已登录，隐藏提示
-                prompts.forEach(prompt => {
-                    prompt.style.display = 'none';
-                });
-            }
+        // 显示登录弹窗
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
         }
-        
-        // 页面加载时检查
-        document.addEventListener('DOMContentLoaded', checkLoginStatus);
-        
-        // 监听登录状态变化
-        window.addEventListener('storage', checkLoginStatus);
+
+        // 显示注册弹窗
+        function showRegisterModal() {
+            document.getElementById('register-modal').classList.remove('hidden');
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // 切换弹窗
+        function switchModal(modalId) {
+            closeModal('login-modal');
+            closeModal('register-modal');
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        // 点击弹窗外部关闭
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body>
 </html>
