@@ -1031,6 +1031,224 @@
             }
         }
 
+    
+        /* 学员评价区域 */
+        .testimonials-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: var(--max-width);
+            margin: 3rem auto 0;
+        }
+
+        .testimonial-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-light);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+        }
+
+        .testimonial-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+        }
+
+        .testimonial-rating {
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-rating i {
+            color: #fbbf24;
+            font-size: 1rem;
+            margin-right: 0.125rem;
+        }
+
+        .testimonial-quote {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary-light);
+            opacity: 0.3;
+            line-height: 0;
+            vertical-align: -1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        /* 师资简介区域 */
+        .instructor-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+        }
+
+        .instructor-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .instructor-image {
+            flex-shrink: 0;
+        }
+
+        .instructor-image img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-color);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .instructor-content {
+            flex: 1;
+        }
+
+        .instructor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .instructor-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .instructor-bio {
+            margin-bottom: 1.5rem;
+        }
+
+        .instructor-bio p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .instructor-bio p::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .instructor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .instructor-tags span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--primary-color);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 9999px;
+        }
+
+        .instructor-tags span i {
+            font-size: 0.75rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .instructor-wrapper {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .instructor-image img {
+                width: 140px;
+                height: 140px;
+            }
+
+            .instructor-bio p {
+                text-align: left;
+            }
+
+            .instructor-tags {
+                justify-content: center;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1736,8 +1954,17 @@
             <div class="footer-section">
                 <h4>联系我们</h4>
                 <ul>
-                    <li>咨询邮箱：contact@dataschool.com</li>
-                    <li>工作时间：周一至周五 9:00-18:00</li>
+                    <li>📧 邮箱：contact@dataschool.com</li>
+                    <li>⏰ 工作时间：周一至周五 9:00-18:00</li>
+                    <li>📝 <a href="#consultation" onclick="showConsultationModal()">在线咨询</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>其他信息</h4>
+                <ul>
+                    <li>📖 <a href="#changelog">更新日志</a></li>
+                    <li>📜 <a href="#privacy">隐私政策</a></li>
+                    <li>📋 <a href="#terms">使用条款</a></li>
                 </ul>
             </div>
         </div>
