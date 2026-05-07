@@ -3,9 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据分析在线教育平台</title>
+    <title>商务数据分析实战训练营 - 数析学院</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-new {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-new h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-new p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255,255,255,0.15);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-item i {
+            font-size: 1.25rem;
+        }
+
+        .feature-item span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .projects-section-new {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .projects-section-new .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .projects-section-new .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .projects-section-new .section-header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .projects-grid-new {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card-new {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .project-card-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-card-new .project-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .project-card-new .project-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+        }
+
+        .project-card-new .difficulty-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .difficulty-tag.beginner {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .difficulty-tag.intermediate {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .difficulty-tag.advanced {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .project-card-new h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card-new p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-card-new .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .project-card-new .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .project-card-new .dataset-name {
+            background: #f1f5f9;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: #334155;
+        }
+
+        .project-card-new .start-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .project-card-new .start-btn:hover {
+            background: #2563eb;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid #d1fae5;
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            color: #065f46;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-new h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero-features {
+                gap: 1rem;
+            }
+
+            .feature-item {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="navbar">
@@ -16,7 +238,7 @@
             </div>
             <nav class="navbar-menu">
                 <a href="index.html" class="nav-link active">首页</a>
-                <a href="#courses" class="nav-link">课程中心</a>
+                <a href="courses.html" class="nav-link">课程体系</a>
                 <a href="projects.html" class="nav-link">实战项目</a>
                 <a href="achievements.html" class="nav-link">成就殿堂</a>
             </nav>
@@ -45,213 +267,220 @@
         </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>掌握数据分析，驱动商业决策</h1>
-            <p>从零基础到实战高手，系统化学习商务数据分析技能</p>
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <span class="stat-number">5000+</span>
-                    <span class="stat-label">学员</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">98%</span>
-                    <span class="stat-label">好评率</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">120+</span>
-                    <span class="stat-label">实战案例</span>
-                </div>
+    <section class="hero-new">
+        <h1>商务数据分析实战训练营</h1>
+        <p>从零基础到实战高手，用真实数据解决真实业务问题</p>
+        <div class="hero-features">
+            <div class="feature-item">
+                <i class="fas fa-list-check"></i>
+                <span>10个精选项目</span>
             </div>
-            <a href="#courses" class="cta-button">开始学习</a>
-        </div>
-        <div class="hero-visual">
-            <div class="chart-container">
-                <i class="fas fa-chart-line"></i>
+            <div class="feature-item">
+                <i class="fas fa-browser"></i>
+                <span>浏览器运行代码</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-database"></i>
+                <span>真实数据集</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-award"></i>
+                <span>成就徽章</span>
             </div>
         </div>
     </section>
 
-    <section id="courses" class="courses-section">
-        <div class="section-header">
-            <h2>热门课程</h2>
-            <p>精选优质课程，助你快速成长</p>
-        </div>
-        <div class="courses-grid">
-            <div class="course-card" onclick="location.href='course/chapter1-1.html'">
-                <div class="course-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <h3>第一章：数据分析思维</h3>
-                <p>建立数据驱动决策的核心思维模式</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 6小节</span>
-                    <span><i class="fas fa-clock"></i> 3小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">业务指标</span>
-                    <span class="tag">AARRR模型</span>
-                </div>
-            </div>
-            <div class="course-card" onclick="location.href='course/chapter2-1.html'">
-                <div class="course-icon">
-                    <i class="fab fa-python"></i>
-                </div>
-                <h3>第二章：Python分析基础</h3>
-                <p>掌握Pandas数据处理核心技能</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 6小节</span>
-                    <span><i class="fas fa-clock"></i> 4小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">Pandas</span>
-                    <span class="tag">数据清洗</span>
-                </div>
-            </div>
-            <div class="course-card" onclick="location.href='course/chapter3-1.html'">
-                <div class="course-icon">
-                    <i class="fas fa-globe"></i>
-                </div>
-                <h3>第三章：市场与行业分析</h3>
-                <p>掌握市场分析的核心方法论</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 5小节</span>
-                    <span><i class="fas fa-clock"></i> 2.5小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">PEST分析</span>
-                    <span class="tag">SWOT分析</span>
-                </div>
-            </div>
-            <div class="course-card" onclick="location.href='course/chapter4-1.html'">
-                <div class="course-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>第四章：用户画像与RFM模型</h3>
-                <p>构建用户画像，实现精准运营</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 5小节</span>
-                    <span><i class="fas fa-clock"></i> 3小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">RFM模型</span>
-                    <span class="tag">用户分层</span>
-                </div>
-            </div>
-            <div class="course-card" onclick="location.href='course/chapter5-1.html'">
-                <div class="course-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <h3>第五章：销售与运营分析</h3>
-                <p>深入分析销售数据，优化运营策略</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 5小节</span>
-                    <span><i class="fas fa-clock"></i> 3小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">关联规则</span>
-                    <span class="tag">毛利率分析</span>
-                </div>
-            </div>
-            <div class="course-card" onclick="location.href='course/chapter6-1.html'">
-                <div class="course-icon">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <h3>第六章：数据可视化叙事</h3>
-                <p>用图表讲述数据故事</p>
-                <div class="course-meta-info">
-                    <span><i class="fas fa-book"></i> 5小节</span>
-                    <span><i class="fas fa-clock"></i> 2.5小时</span>
-                </div>
-                <div class="course-tags">
-                    <span class="tag">Matplotlib</span>
-                    <span class="tag">Seaborn</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="projects-section">
+    <section class="projects-section-new">
         <div class="section-header">
             <h2>实战项目</h2>
-            <p>真实业务场景，学以致用</p>
+            <p>真实业务场景，边学边练，学以致用</p>
         </div>
-        <div class="projects-grid">
-            <div class="project-card" onclick="location.href='projects.html'">
-                <div class="project-image">
-                    <i class="fas fa-store"></i>
+        
+        <div class="projects-grid-new">
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="difficulty-tag beginner">入门</span>
                 </div>
-                <h3>电商销售数据分析</h3>
-                <p>分析电商平台销售数据，挖掘业务洞察</p>
+                <h3>项目1：销售数据清洗</h3>
+                <p>学习数据清洗基础技能，处理缺失值、异常值和格式统一</p>
                 <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-file-code"></i> 实战案例</span>
-                    <span class="meta-item"><i class="fas fa-users"></i> 328人参与</span>
+                    <span class="meta-item"><i class="fas fa-clock"></i> 30分钟</span>
                 </div>
+                <div class="dataset-name">sales_data.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project1.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
             </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <i class="fas fa-user-friends"></i>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <span class="difficulty-tag beginner">入门</span>
                 </div>
-                <h3>用户行为分析项目</h3>
-                <p>基于用户行为数据，构建用户画像体系</p>
+                <h3>项目2：门店销售对比分析</h3>
+                <p>分析6个区域门店的销售表现，找出销售最好的区域</p>
                 <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-file-code"></i> 实战案例</span>
-                    <span class="meta-item"><i class="fas fa-users"></i> 256人参与</span>
+                    <span class="meta-item"><i class="fas fa-clock"></i> 30分钟</span>
                 </div>
+                <div class="dataset-name">store_sales.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project2.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
             </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <i class="fas fa-trending-up"></i>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
                 </div>
-                <h3>市场竞品分析报告</h3>
-                <p>综合运用多种分析方法，完成竞品分析</p>
+                <h3>项目3：用户行为路径分析</h3>
+                <p>分析用户从浏览到购买的转化路径，找出流失严重环节</p>
                 <div class="project-meta">
-                    <span class="meta-item"><i class="fas fa-file-code"></i> 实战案例</span>
-                    <span class="meta-item"><i class="fas fa-users"></i> 189人参与</span>
+                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
                 </div>
+                <div class="dataset-name">user_behavior.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project3.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
+                </div>
+                <h3>项目4：RFM客户价值分析</h3>
+                <p>通过RFM模型对客户进行价值分群，识别高价值客户</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                </div>
+                <div class="dataset-name">customer_data.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project4.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
+                </div>
+                <h3>项目5：商品关联规则分析</h3>
+                <p>发现经常一起购买的商品组合，优化商品陈列策略</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 50分钟</span>
+                </div>
+                <div class="dataset-name">basket_data.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project5.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
+                </div>
+                <h3>项目6：A/B测试效果分析</h3>
+                <p>分析按钮颜色的A/B测试结果，判断哪种方案更优</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 40分钟</span>
+                </div>
+                <div class="dataset-name">ab_test.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project6.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
+                </div>
+                <h3>项目7：时间序列趋势分析</h3>
+                <p>分析销售数据的时间趋势，识别增长或下降趋势</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                </div>
+                <div class="dataset-name">time_series.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project7.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-rotate-cw"></i>
+                    </div>
+                    <span class="difficulty-tag intermediate">进阶</span>
+                </div>
+                <h3>项目8：用户留存率分析</h3>
+                <p>分析用户在不同时间段的留存情况，评估产品粘性</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 45分钟</span>
+                </div>
+                <div class="dataset-name">retention.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project8.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-bar-chart"></i>
+                    </div>
+                    <span class="difficulty-tag beginner">入门</span>
+                </div>
+                <h3>项目9：数据可视化实战</h3>
+                <p>将销售数据以图表形式展示，便于管理层快速了解业务</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 35分钟</span>
+                </div>
+                <div class="dataset-name">visualization.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project9.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
+            </div>
+
+            <div class="project-card-new">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-trending-up"></i>
+                    </div>
+                    <span class="difficulty-tag advanced">高级</span>
+                </div>
+                <h3>项目10：销售趋势预测</h3>
+                <p>基于历史销售数据，使用移动平均法预测未来趋势</p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-clock"></i> 60分钟</span>
+                </div>
+                <div class="dataset-name">forecast_data.csv</div>
+                <button class="start-btn" onclick="location.href='projects/project10.html'">
+                    <i class="fas fa-play"></i> 开始学习
+                </button>
             </div>
         </div>
     </section>
 
-    <section id="achievements" class="achievements-section">
-        <div class="section-header">
-            <h2>成就殿堂</h2>
-            <p>见证学员成长与成就</p>
-        </div>
-        <div class="achievements-grid">
-            <div class="achievement-card">
-                <div class="achievement-icon">
-                    <i class="fas fa-trophy"></i>
-                </div>
-                <h3>数据分析专家</h3>
-                <p>完成全部课程学习并通过考核</p>
-                <div class="achievement-count">128人获得</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">
-                    <i class="fas fa-award"></i>
-                </div>
-                <h3>实战之星</h3>
-                <p>完成3个以上实战项目</p>
-                <div class="achievement-count">86人获得</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">
-                    <i class="fas fa-fire"></i>
-                </div>
-                <h3>学习达人</h3>
-                <p>连续学习30天以上</p>
-                <div class="achievement-count">203人获得</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <h3>数据领袖</h3>
-                <p>帮助100+学员完成学习目标</p>
-                <div class="achievement-count">15人获得</div>
-            </div>
-        </div>
+    <section class="cta-section">
+        <p>开始你的数据分析之旅，无需任何安装，点击上方卡片即可开始！</p>
     </section>
 
     <footer class="footer">
@@ -266,9 +495,9 @@
             <div class="footer-section">
                 <h4>快速链接</h4>
                 <ul>
-                    <li><a href="#courses">课程中心</a></li>
+                    <li><a href="courses.html">课程体系</a></li>
                     <li><a href="projects.html">实战项目</a></li>
-                    <li><a href="#achievements">成就殿堂</a></li>
+                    <li><a href="achievements.html">成就殿堂</a></li>
                 </ul>
             </div>
             <div class="footer-section">
