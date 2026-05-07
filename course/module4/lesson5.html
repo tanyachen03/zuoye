@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业务报表实战 - 数析学院</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#3b82f6;--b:#f8fafc;--w:#fff}
+body{font-family:-apple-system,sans-serif;background:var(--b);color:#1e293b;line-height:1.7}
+.n{position:fixed;top:0;left:0;right:0;background:var(--w);box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:100}
+.nc{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nl{display:flex;align-items:center;gap:.5rem;font-size:1.25rem;font-weight:700;color:var(--p);text-decoration:none}
+.bl{color:#64748b;text-decoration:none;font-size:.9rem}
+.lc{display:grid;grid-template-columns:260px 1fr;gap:2rem;max-width:1400px;margin:80px auto 2rem;padding:0 2rem}
+.s{position:sticky;top:80px;height:fit-content}
+.sc{background:var(--w);border-radius:12px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.st{font-size:.9rem;font-weight:600;color:#64748b;margin-bottom:1rem}
+.lni{display:flex;align-items:center;padding:.75rem;border-radius:8px;text-decoration:none;color:#1e293b;font-size:.9rem;margin-bottom:.5rem;transition:all .2s}
+.lni:hover{background:#f1f5f9}
+.lni.active{background:#eff6ff;color:var(--p);font-weight:600}
+.nn{width:24px;height:24px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.75rem;margin-right:.75rem}
+.nt{flex:1}
+.mc{background:var(--w);border-radius:12px;padding:2rem;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.lh{border-bottom:2px solid #f1f5f9;padding-bottom:1.5rem;margin-bottom:2rem}
+.lm{display:flex;gap:1rem;margin-bottom:.75rem}
+.mt{padding:.25rem .75rem;border-radius:9999px;font-size:.8rem;font-weight:600;background:#eff6ff;color:var(--p)}
+.lh h1{font-size:1.75rem;font-weight:700;color:#1e293b;margin-bottom:.5rem}
+.lh p{color:#64748b;font-size:1rem}
+.se{margin-bottom:2rem}
+.se h2{font-size:1.25rem;font-weight:700;color:#1e293b;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid #e2e8f0}
+.se p{color:#475569;margin-bottom:1rem}
+.se ul{padding-left:1.5rem;color:#475569;margin-bottom:1rem}
+.se li{margin-bottom:.5rem}
+.tb{background:#eff6ff;border-left:4px solid var(--p);padding:1rem;border-radius:8px;margin:1rem 0}
+.tt{font-weight:600;color:var(--p);margin-bottom:.5rem}
+.eb{background:#fef2f2;border-left:4px solid #ef4444;padding:1rem;border-radius:8px;margin:1rem 0}
+.et{font-weight:600;color:#ef4444;margin-bottom:.5rem}
+.ec{background:white;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;margin:1.5rem 0}
+.etb{background:#f8fafc;padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;gap:10px}
+.etb button{padding:8px 16px;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer}
+.br{background:#22c55e;color:white}
+.bz{background:#f1f5f9;color:#475569}
+.CodeMirror{height:300px!important;font-size:14px}
+.oa{background:#0f172a;padding:16px}
+.oa pre{margin:0;color:#e2e8f0;font-family:monospace;font-size:14px}
+.cb{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:linear-gradient(135deg,#10b981,#06b6d4);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer}
+@media(max-width:1024px){.lc{grid-template-columns:1fr}.s{position:static}}
+</style>
+</head>
+<body>
+<header class="n">
+<div class="nc">
+<a href="../../course-center.html" class="bl"><i class="fas fa-arrow-left"></i> 返回课程中心</a>
+<a href="../../index.html" class="nl"><i class="fas fa-chart-bar"></i> 数析学院</a>
+</div>
+</header>
+<div class="lc">
+<aside class="s">
+<div class="sc">
+<div class="st">模块四：数据可视化分析</div>
+<a href="lesson1.html" class="lesson-nav-item "><span class="nav-number">1</span><span class="nav-title">Matplotlib基础</span></a><a href="lesson2.html" class="lesson-nav-item "><span class="nav-number">2</span><span class="nav-title">常用图表类型</span></a><a href="lesson3.html" class="lesson-nav-item "><span class="nav-number">3</span><span class="nav-title">分布分析图表</span></a><a href="lesson4.html" class="lesson-nav-item "><span class="nav-number">4</span><span class="nav-title">图表美化</span></a><a href="lesson5.html" class="lesson-nav-item active"><span class="nav-number">5</span><span class="nav-title">业务报表实战</span></a>
+</div>
+</aside>
+<main class="mc">
+<div class="lh">
+<div class="lm"><span class="mt">进阶</span></div>
+<h1>LESSON_业务报表实战</h1>
+<p>综合案例</p>
+</div>
+<div class="se">
+<h2>学习目标</h2>
+<ul>
+<li>理解LESSON_业务报表实战的核心概念</li>
+<li>掌握相关的代码实现方法</li>
+<li>能够在实际项目中应用</li>
+</ul>
+</div>
+<div class="se">
+<h2>知识点讲解</h2>
+<p>综合案例。本节将详细介绍相关概念和实用技巧。</p>
+</div>
+<div class="tb"><div class="tt">小贴士</div><p>多动手实践，遇到问题多查看官方文档。</p></div>
+<div class="se">
+<h2>代码示例</h2>
+<p>在下方编辑器中尝试运行代码：</p>
+</div>
+<div class="ec">
+<div class="etb">
+<button class="br" onclick="runCode()"><i class="fas fa-play"></i> 运行</button>
+<button class="bz" onclick="resetCode()"><i class="fas fa-undo"></i> 重置</button>
+<span id="status" style="margin-left:auto;color:#64748b;font-size:14px;">环境加载中...</span>
+</div>
+<div id="code-editor"></div>
+<div class="oa"><pre id="output"></pre></div>
+</div>
+<div class="eb"><div class="et">常见错误</div><p>注意代码缩进，确保Python语法正确。</p></div>
+<div style="margin-top:2rem;padding-top:2rem;border-top:2px solid #f1f5f9;">
+<button class="cb" id="completeBtn" onclick="markComplete()"><i class="fas fa-check-circle"></i><span id="btnText">标记为已完成</span></button>
+</div>
+</main>
+</div>
+<script>
+let editor, pyodide;
+function initEditor(){
+editor=CodeMirror(document.getElementById('code-editor'),{mode:'python',theme:'monokai',lineNumbers:true,tabSize:4,value:"# LESSON_业务报表实战
+print('欢迎学习数据分析!')"});
+}
+async function initPyodide(){
+try{pyodide=await loadPyodide();document.getElementById('status').textContent='环境就绪'}catch(e){document.getElementById('status').textContent='加载失败'}}
+async function runCode(){
+if(!pyodide){document.getElementById('output').textContent='环境加载中...';return}
+const code=editor.getValue();
+document.getElementById('output').textContent='运行中...';
+try{
+pyodide.runPython("import sys;from io import StringIO;sys.stdout=StringIO()");
+await pyodide.runPythonAsync(code);
+const out=pyodide.runPython("sys.stdout.getvalue()");
+document.getElementById('output').textContent=out||'（无输出）';
+}catch(e){document.getElementById('output').textContent='错误: '+e}}
+function resetCode(){editor.setValue("# LESSON_业务报表实战
+print('欢迎学习数据分析!')");document.getElementById('output').textContent=''}
+function markComplete(){
+const c=JSON.parse(localStorage.getItem('completedLessons')||'{}');
+c['m4l5']=true;
+localStorage.setItem('completedLessons',JSON.stringify(c));
+const b=document.getElementById('completeBtn');
+b.innerHTML='<i class="fas fa-check-circle"></i> 已完成';
+b.disabled=true}
+document.addEventListener('DOMContentLoaded',function(){
+initEditor();initPyodide();
+const c=JSON.parse(localStorage.getItem('completedLessons')||'{}');
+if(c['m4l5']){const b=document.getElementById('completeBtn');b.innerHTML='<i class="fas fa-check-circle"></i> 已完成';b.disabled=true}});
+</script>
+</body>
+</html>

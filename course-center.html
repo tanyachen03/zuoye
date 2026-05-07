@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商务数据分析与应用 · 系统课程 - 数析学院</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 12px;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .auth-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .login-btn:hover {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .hero {
+            padding: 120px 2rem 3rem;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .module-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .module-header:hover {
+            background: #f8fafc;
+        }
+
+        .module-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .module-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .module-card:nth-child(1) .module-number {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .module-card:nth-child(2) .module-number {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .module-card:nth-child(3) .module-number {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+
+        .module-card:nth-child(4) .module-number {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .module-title h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .module-title p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .module-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lesson-count {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            background: var(--bg-light);
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .progress-badge {
+            font-size: 0.875rem;
+            color: white;
+            background: var(--success-color);
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            display: none;
+        }
+
+        .progress-badge.show {
+            display: inline-block;
+        }
+
+        .expand-icon {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+        }
+
+        .module-card.open .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .module-lessons {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .module-card.open .module-lessons {
+            max-height: 2000px;
+        }
+
+        .lesson-list {
+            padding: 0 2rem 1.5rem;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+            background: var(--bg-light);
+        }
+
+        .lesson-item:hover {
+            background: #e0f2fe;
+            transform: translateX(5px);
+        }
+
+        .lesson-item.completed {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .lesson-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            color: var(--primary-color);
+        }
+
+        .lesson-item.completed .lesson-number {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .lesson-item.completed .lesson-number i {
+            font-size: 0.875rem;
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+
+        .lesson-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .lesson-arrow {
+            color: var(--primary-color);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .module-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .module-title h3 {
+                font-size: 1rem;
+            }
+
+            .lesson-list {
+                padding: 0 1rem 1rem;
+            }
+
+            .lesson-info h4 {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <i class="fas fa-chart-bar"></i>
+                <span>数析学院</span>
+            </a>
+            <nav class="navbar-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="course-center.html" class="nav-link active">课程中心</a>
+                <a href="projects.html" class="nav-link">实战项目</a>
+                <a href="achievements.html" class="nav-link">成就殿堂</a>
+            </nav>
+            <a href="#" class="auth-btn login-btn">登录</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>商务数据分析与应用 · 系统课程</h1>
+        <p>从零基础到实战高手，四个模块循序渐进</p>
+    </section>
+
+    <div class="course-container">
+        <!-- 模块一 -->
+        <div class="module-card open" id="module-1">
+            <div class="module-header" onclick="toggleModule(1)">
+                <div class="module-info">
+                    <div class="module-number">1</div>
+                    <div class="module-title">
+                        <h3>数据分析前置基础</h3>
+                        <p>入门必学 · 5个小节</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span class="lesson-count">5小节</span>
+                    <span class="progress-badge" id="progress-1">0/5 已完成</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+            </div>
+            <div class="module-lessons">
+                <div class="lesson-list">
+                    <a href="course/module1/lesson1.html" class="lesson-item" data-module="1" data-lesson="1">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-info">
+                            <h4>数据分析行业前景与岗位介绍</h4>
+                            <p>了解数据分析行业的发展趋势和岗位需求</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module1/lesson2.html" class="lesson-item" data-module="1" data-lesson="2">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-info">
+                            <h4>数据分析思维：业务分析逻辑、拆解方法</h4>
+                            <p>培养数据分析思维，掌握分析方法</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module1/lesson3.html" class="lesson-item" data-module="1" data-lesson="3">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-info">
+                            <h4>Python极简入门</h4>
+                            <p>只学数据分析必用的语法：变量、列表、字典、循环、函数</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module1/lesson4.html" class="lesson-item" data-module="1" data-lesson="4">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-info">
+                            <h4>Anaconda与Jupyter环境讲解</h4>
+                            <p>安装配置Anaconda和Jupyter Notebook</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module1/lesson5.html" class="lesson-item" data-module="1" data-lesson="5">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-info">
+                            <h4>浏览器在线编程平台使用教程</h4>
+                            <p>无需安装，直接在浏览器中编写和运行Python代码</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模块二 -->
+        <div class="module-card" id="module-2">
+            <div class="module-header" onclick="toggleModule(2)">
+                <div class="module-info">
+                    <div class="module-number">2</div>
+                    <div class="module-title">
+                        <h3>Pandas核心基础</h3>
+                        <p>必会 · 7个小节</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span class="lesson-count">7小节</span>
+                    <span class="progress-badge" id="progress-2">0/7 已完成</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+            </div>
+            <div class="module-lessons">
+                <div class="lesson-list">
+                    <a href="course/module2/lesson1.html" class="lesson-item" data-module="2" data-lesson="1">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-info">
+                            <h4>Pandas介绍与数据结构Series</h4>
+                            <p>了解Pandas库，学习Series数据结构</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson2.html" class="lesson-item" data-module="2" data-lesson="2">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-info">
+                            <h4>DataFrame表格结构详解</h4>
+                            <p>掌握DataFrame二维表格结构</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson3.html" class="lesson-item" data-module="2" data-lesson="3">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-info">
+                            <h4>读取各类数据：Excel、CSV、在线数据集</h4>
+                            <p>使用Pandas读取不同格式的数据文件</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson4.html" class="lesson-item" data-module="2" data-lesson="4">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-info">
+                            <h4>数据查看：head、tail、info、describe</h4>
+                            <p>快速了解数据的基本信息和统计特征</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson5.html" class="lesson-item" data-module="2" data-lesson="5">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-info">
+                            <h4>行列选取与条件筛选</h4>
+                            <p>loc、iloc、布尔索引详解</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson6.html" class="lesson-item" data-module="2" data-lesson="6">
+                        <div class="lesson-number">6</div>
+                        <div class="lesson-info">
+                            <h4>缺失值处理与重复值删除</h4>
+                            <p>处理数据中的缺失值和重复数据</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module2/lesson7.html" class="lesson-item" data-module="2" data-lesson="7">
+                        <div class="lesson-number">7</div>
+                        <div class="lesson-info">
+                            <h4>数据类型转换与字段重命名</h4>
+                            <p>修改数据类型，重命名列名</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模块三 -->
+        <div class="module-card" id="module-3">
+            <div class="module-header" onclick="toggleModule(3)">
+                <div class="module-info">
+                    <div class="module-number">3</div>
+                    <div class="module-title">
+                        <h3>数据清洗与预处理</h3>
+                        <p>工作最常用 · 7个小节</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span class="lesson-count">7小节</span>
+                    <span class="progress-badge" id="progress-3">0/7 已完成</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+            </div>
+            <div class="module-lessons">
+                <div class="lesson-list">
+                    <a href="course/module3/lesson1.html" class="lesson-item" data-module="3" data-lesson="1">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-info">
+                            <h4>异常值识别与处理</h4>
+                            <p>IQR法、Z-score法识别和处理异常值</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson2.html" class="lesson-item" data-module="3" data-lesson="2">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-info">
+                            <h4>字符串数据清洗</h4>
+                            <p>拆分、替换、提取字符串内容</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson3.html" class="lesson-item" data-module="3" data-lesson="3">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-info">
+                            <h4>时间日期数据处理</h4>
+                            <p>pd.to_datetime、日期提取年月日</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson4.html" class="lesson-item" data-module="3" data-lesson="4">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-info">
+                            <h4>新增计算字段、分箱分段</h4>
+                            <p>使用cut、qcut进行数据分箱</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson5.html" class="lesson-item" data-module="3" data-lesson="5">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-info">
+                            <h4>多表合并：merge、concat</h4>
+                            <p>多个DataFrame的拼接和合并</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson6.html" class="lesson-item" data-module="3" data-lesson="6">
+                        <div class="lesson-number">6</div>
+                        <div class="lesson-info">
+                            <h4>分组聚合groupby全套用法</h4>
+                            <p>sum、mean、count、agg统计函数</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module3/lesson7.html" class="lesson-item" data-module="3" data-lesson="7">
+                        <div class="lesson-number">7</div>
+                        <div class="lesson-info">
+                            <h4>透视表pivot_table实战</h4>
+                            <p>使用透视表进行多维度数据分析</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模块四 -->
+        <div class="module-card" id="module-4">
+            <div class="module-header" onclick="toggleModule(4)">
+                <div class="module-info">
+                    <div class="module-number">4</div>
+                    <div class="module-title">
+                        <h3>数据可视化分析</h3>
+                        <p>进阶 · 5个小节</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span class="lesson-count">5小节</span>
+                    <span class="progress-badge" id="progress-4">0/5 已完成</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+            </div>
+            <div class="module-lessons">
+                <div class="lesson-list">
+                    <a href="course/module4/lesson1.html" class="lesson-item" data-module="4" data-lesson="1">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-info">
+                            <h4>Matplotlib绘图基础</h4>
+                            <p>figure、axes、plot图表元素</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module4/lesson2.html" class="lesson-item" data-module="4" data-lesson="2">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-info">
+                            <h4>折线图、柱状图、饼图</h4>
+                            <p>适用场景与绘制方法</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module4/lesson3.html" class="lesson-item" data-module="4" data-lesson="3">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-info">
+                            <h4>直方图、箱线图做分布分析</h4>
+                            <p>数据分布的可视化展示</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module4/lesson4.html" class="lesson-item" data-module="4" data-lesson="4">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-info">
+                            <h4>子图布局、配色与图表美化</h4>
+                            <p>制作专业的可视化图表</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                    <a href="course/module4/lesson5.html" class="lesson-item" data-module="4" data-lesson="5">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-info">
+                            <h4>业务可视化报表实战</h4>
+                            <p>综合案例：制作完整的业务分析报表</p>
+                        </div>
+                        <i class="fas fa-chevron-right lesson-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2025 数析学院 · 专注数据分析教育</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleModule(moduleId) {
+            const module = document.getElementById('module-' + moduleId);
+            module.classList.toggle('open');
+        }
+
+        function updateProgress() {
+            const completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '{}');
+            
+            for (let m = 1; m <= 4; m++) {
+                let count = 0;
+                const total = m === 1 || m === 4 ? 5 : 7;
+                
+                for (let l = 1; l <= total; l++) {
+                    if (completedLessons[`m${m}l${l}`]) {
+                        count++;
+                    }
+                }
+                
+                const badge = document.getElementById('progress-' + m);
+                if (count > 0) {
+                    badge.textContent = `${count}/${total} 已完成`;
+                    badge.classList.add('show');
+                }
+                
+                for (let l = 1; l <= total; l++) {
+                    const lesson = document.querySelector(`[data-module="${m}"][data-lesson="${l}"]`);
+                    if (lesson && completedLessons[`m${m}l${l}`]) {
+                        lesson.classList.add('completed');
+                        lesson.querySelector('.lesson-number').innerHTML = '<i class="fas fa-check"></i>';
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateProgress);
+    </script>
+</body>
+</html>
