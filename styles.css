@@ -5,30 +5,42 @@
 }
 
 :root {
-    --primary-color: #1e40af;
-    --primary-light: #3b82f6;
-    --primary-dark: #1e3a8a;
-    --secondary-color: #60a5fa;
+    /* Modern Color Palette */
+    --primary-color: #3b82f6;
+    --primary-light: #60a5fa;
+    --primary-dark: #2563eb;
+    --secondary-color: #8b5cf6;
     --accent-color: #06b6d4;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
+    
+    /* Background Colors */
     --bg-light: #f8fafc;
     --bg-white: #ffffff;
+    --bg-gradient-start: #eff6ff;
+    --bg-gradient-end: #f8fafc;
+    
+    /* Text Colors */
     --text-primary: #1e293b;
     --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    
+    /* Border & Shadow */
     --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --border-radius: 12px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 35px rgba(0, 0, 0, 0.12);
 }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--text-primary);
     background-color: var(--bg-light);
+    font-size: 16px;
 }
 
 .navbar {
@@ -37,8 +49,8 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
 }
@@ -61,6 +73,11 @@ body {
     font-weight: 700;
     color: var(--primary-color);
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.02);
 }
 
 .navbar-logo i {
@@ -77,14 +94,15 @@ body {
     color: var(--text-secondary);
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
     transition: all 0.2s ease;
+    position: relative;
 }
 
 .nav-link:hover,
 .nav-link.active {
     color: var(--primary-color);
-    background-color: rgba(30, 64, 175, 0.05);
+    background-color: rgba(59, 130, 246, 0.08);
 }
 
 .navbar-auth {
@@ -284,6 +302,10 @@ body {
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .section-header p {
@@ -306,29 +328,35 @@ body {
 
 .course-card {
     background-color: white;
-    border-radius: 1rem;
+    border-radius: var(--border-radius);
     padding: 2rem;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
 }
 
 .course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary-color);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-light);
 }
 
 .course-icon {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     border-radius: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.course-card:hover .course-icon {
+    transform: scale(1.05);
 }
 
 .course-icon i {
@@ -356,11 +384,16 @@ body {
 
 .tag {
     padding: 0.375rem 0.875rem;
-    background-color: rgba(30, 64, 175, 0.05);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
     color: var(--primary-color);
     font-size: 0.8125rem;
     font-weight: 500;
     border-radius: 9999px;
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
 }
 
 .projects-section {
@@ -496,7 +529,7 @@ body {
 }
 
 .footer {
-    background-color: var(--text-primary);
+    background: linear-gradient(135deg, #1e293b, #334155);
     color: white;
     padding: 4rem 2rem;
 }
@@ -578,12 +611,12 @@ body {
 
 .modal-content {
     background-color: white;
-    border-radius: 1rem;
+    border-radius: var(--border-radius);
     width: 100%;
     max-width: 450px;
     overflow: hidden;
     box-shadow: var(--shadow-xl);
-    animation: slideUp 0.3s ease;
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes slideUp {
@@ -646,35 +679,35 @@ body {
 .form-group input {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     outline: none;
 }
 
 .form-group input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .submit-btn {
     width: 100%;
     padding: 1rem;
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
 .modal-link {
@@ -1595,14 +1628,15 @@ body {
 /* ==================== 成就激励系统样式 ==================== */
 
 .achievement-card {
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 1rem;
+    background-color: white;
+    border-radius: var(--border-radius);
     padding: 2rem;
     text-align: center;
-    border: 2px solid var(--border-color);
-    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 .achievement-card::before {
@@ -1648,14 +1682,19 @@ body {
 .achievement-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto 1.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.achievement-card:hover .achievement-icon {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
 }
 
 .achievement-icon i {
