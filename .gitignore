@@ -1,0 +1,10 @@
+# Ignore helper scripts and large data files
+*.py
+*.json
+.trae/
+css/
+js/
+
+# OS files
+.DS_Store
+Thumbs.db
