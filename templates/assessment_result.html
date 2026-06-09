@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}测评结果 · BizData{% endblock %}
+{% block content %}
+<section class="mb-4 rounded-4 p-5 text-white text-center" style="background:linear-gradient(135deg,{{ '#16a34a' if score>=60 else '#dc2626' }} 0%,#2563eb 100%);">
+    <h1 class="display-4"><i class="bi bi-{{ 'trophy-fill' if score>=60 else 'x-circle' }}"></i> {{ score }} 分</h1>
+    <p class="mb-0 opacity-90">答对 {{ correct }} / {{ total }} 题 · {{ '🎉 恭喜通过！' if score>=60 else '继续加油！' }}</p>
+    {% if score == 100 %}<p class="mt-2">满分！已解锁「完美学霸」徽章</p>{% endif %}
+</section>
+
+<div class="card border-0 shadow-sm p-4">
+    <h5 class="mb-3">📝 答题详情</h5>
+    {% for q in questions %}
+    <div class="mb-4 pb-3 border-bottom">
+        <h6 class="fw-bold">Q{{ loop.index }}. {{ q.q }}</h6>
+        {% for opt in q.options %}
+        {% set q_idx = loop.index0 %}
+        <div class="quiz-opt {% if q_idx == q.answer %}correct{% elif user_answers[loop.parent.index0] == q_idx %}wrong{% endif %}">
+            {{ opt }}
+            {% if q_idx == q.answer and user_answers[loop.parent.index0] == q_idx %} <span class="badge bg-success">✅ 你答对了</span>
+            {% elif q_idx == q.answer %} <span class="badge bg-success">正确答案</span>
+            {% elif user_answers[loop.parent.index0] == q_idx %} <span class="badge bg-danger">你的选择</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="{{ url_for('assessment') }}">再测一次</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('dashboard') }}">查看个人中心</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if new_badges %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    {% for b in new_badges %}
+    setTimeout(() => showBadges(['{{ b }}']), {{ loop.index0 * 800 }});
+    {% endfor %}
+});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} · 课程详情{% endblock %}
+{% block content %}
+<div class="mb-4 text-white rounded-4 p-5 position-relative" style="background:linear-gradient(135deg,{{ course.color }} 0%,#4f46e5 100%);">
+    <div class="position-absolute d-flex gap-2 flex-wrap" style="top:20px;right:20px;">
+        {% if next_chapter %}
+        <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=next_chapter.id) }}" class="btn btn-warning btn-sm"><i class="bi bi-play-circle"></i> 下一章节 · {{ next_chapter.title }}</a>
+        {% else %}
+        <span class="btn btn-success btn-sm disabled"><i class="bi bi-check-circle-fill"></i> 已全部完成</span>
+        {% endif %}
+        <a href="{{ url_for('assessment') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-journal-check"></i> 综合测评</a>
+        <a href="{{ url_for('projects_list') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-briefcase"></i> 项目实战</a>
+        <a href="{{ url_for('index') }}#courses" class="btn btn-light btn-sm"><i class="bi bi-book"></i> 返回课程体系</a>
+    </div>
+    <div class="d-flex align-items-start gap-4">
+        <div class="fs-1">{{ course.icon }}</div>
+        <div class="flex-grow-1">
+            <h1>{{ course.title }}</h1>
+            <p class="opacity-90 mb-3">{{ course.description }}</p>
+            <div class="d-flex gap-4 flex-wrap">
+                <span>📘 {{ course.chapters|length }} 章</span>
+                <span>🎯 {{ course.level }}</span>
+                <span>✅ {{ done }}/{{ total }} 已完成 · {{ pct }}%</span>
+            </div>
+            <div class="progress mt-3 bg-white bg-opacity-25" style="height:14px">
+                <div class="progress-bar bg-white" role="progressbar" style="width:{{ pct }}%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3"><i class="bi bi-list-stars"></i> 章节目录</h3>
+<div class="list-group mb-5 shadow-sm">
+{% for ch in course.chapters %}
+    {% set done = ch.id in done_chapters %}
+    <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=ch.id) }}" class="chapter-link list-group-item list-group-item-action d-flex align-items-center justify-content-between py-3 border-0 border-bottom">
+        <div class="d-flex align-items-center">
+            <span class="rounded-circle d-flex align-items-center justify-content-center text-white me-3" style="width:36px;height:36px;background:{{ course.color }};">{{ loop.index }}</span>
+            <div>
+                <h6 class="mb-0">{{ ch.title }}</h6>
+                <small class="text-muted">⏱ {{ ch.duration }}</small>
+            </div>
+        </div>
+        <span class="{{ 'tag-done' if done else 'tag-todo' }}"><i class="bi {{ 'bi-check-lg' if done else 'bi-circle' }}"></i> {{ '已完成' if done else '未开始' }}</span>
+    </a>
+{% endfor %}
+</div>
+{% endblock %}

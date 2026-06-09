@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第{{ chapter_number }}章 {{ chapter.title }} - {{ course.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">📚 在线学习平台</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">首页</a>
+            <a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="chapter-container">
+            <aside class="sidebar">
+                <h3>📖 章节目录 ({{ total_chapters }})</h3>
+                {% for ch in chapters %}
+                <a href="{{ url_for('chapter_detail', course_id=course.id, chapter_id=ch.id) }}"
+                   class="sidebar-chapter {% if ch.id == chapter.id %}active{% endif %}">
+                    {% if ch.done %}<span class="done-icon">✓</span>{% endif %}
+                    <span class="chapter-num">{{ '%02d' % ch.number }}.</span>
+                    <span>{{ ch.title }}</span>
+                </a>
+                {% endfor %}
+            </aside>
+
+            <main class="chapter-content">
+                <div class="chapter-header">
+                    <div class="breadcrumb">
+                        <a href="{{ url_for('index') }}">首页</a> /
+                        <a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a> /
+                        第{{ chapter_number }}章
+                    </div>
+                    <h1>第{{ chapter_number }}章 · {{ chapter.title }}</h1>
+                    <div class="chapter-meta">
+                        <span>⏱ 预计学习时长: {{ chapter.duration }}</span>
+                        <span>📘 章节 {{ chapter_number }} / {{ total_chapters }}</span>
+                        {% if is_complete %}<span style="color: #16a34a;">✓ 已完成</span>{% endif %}
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    {{ chapter.content|safe }}
+                </div>
+
+                <div class="content-section">
+                    <h2>💻 代码示例</h2>
+                    <div class="code-label">示例代码</div>
+                    <pre class="code-block">{{ chapter.code_example }}</pre>
+                </div>
+
+                <div class="content-section">
+                    <h2>✏️ 在线编辑器</h2>
+                    <div class="practice-area">
+                        <h3>动手试一试</h3>
+                        <textarea id="code-editor" spellcheck="false">{{ chapter.practice_code }}</textarea>
+                        <div class="practice-controls">
+                            <button class="btn btn-primary" onclick="runCode()">▶ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetCode()">↺ 重置</button>
+                            <button class="btn btn-success" id="complete-btn" onclick="markComplete(this)" data-course="{{ course.id }}" data-chapter="{{ chapter.id }}">
+                                {% if is_complete %}✓ 已标记完成{% else %}✓ 标记本章完成{% endif %}
+                            </button>
+                        </div>
+                        <div class="output-area" id="output">（运行结果将显示在这里）</div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2>🤔 练习题</h2>
+                    <div class="question-box">
+                        <div class="label">思考题</div>
+                        <p>{{ chapter.question }}</p>
+                    </div>
+                    <div class="tip-box">
+                        <strong>💡 提示：</strong>尝试在上方编辑器中编写你的思路，并点击"运行代码"查看结果。完成后可标记本章完成，进度将保存到数据库。
+                    </div>
+                </div>
+
+                <div class="chapter-navigation">
+                    {% if prev_chapter %}
+                    <a href="{{ url_for('chapter_detail', course_id=course.id, chapter_id=prev_chapter.id) }}" class="nav-btn">← 上一章: {{ prev_chapter.title }}</a>
+                    {% else %}
+                    <span class="nav-btn disabled">← 已是第一章</span>
+                    {% endif %}
+
+                    <a href="{{ url_for('course_detail', course_id=course.id) }}" class="nav-btn">📚 返回章节目录</a>
+
+                    {% if next_chapter %}
+                    <a href="{{ url_for('chapter_detail', course_id=course.id, chapter_id=next_chapter.id) }}" class="nav-btn">下一章: {{ next_chapter.title }} →</a>
+                    {% else %}
+                    <span class="nav-btn disabled">已是最后一章 🎉</span>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const originalCode = {{ chapter.practice_code|tojson }};
+
+        function resetCode() {
+            document.getElementById('code-editor').value = originalCode;
+            document.getElementById('output').textContent = '（运行结果将显示在这里）';
+        }
+
+        function runCode() {
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('output');
+            output.textContent = '';
+            try {
+                // 在浏览器环境中，使用 print 函数模拟 Python 的 print
+                let logs = [];
+                function printFn(...args) {
+                    logs.push(args.map(a => String(a)).join(' '));
+                }
+                // 这是一个简化的 JS 模拟器：仅支持基础的变量、循环、print。
+                // 完整 Python 运行需要服务端执行或引入 Pyodide。
+                let ctxCode = code.replace(/\bprint\s*\(/g, 'printFn(');
+                // 简单执行（仅对纯表达式/赋值有效）
+                new Function('printFn', ctxCode)(printFn);
+                output.textContent = logs.join('\n') || '（代码运行完毕，无输出）';
+            } catch (e) {
+                output.textContent = '⚠ 运行提示: 当前为前端模拟执行。完整 Python 代码请在本地环境运行。\n错误信息: ' + e.message;
+            }
+        }
+
+        function markComplete(btn) {
+            const courseId = btn.dataset.course;
+            const chapterId = btn.dataset.chapter;
+            btn.disabled = true;
+            btn.textContent = '正在保存...';
+            fetch('/api/complete_chapter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ course_id: Number(courseId), chapter_id: Number(chapterId) })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    btn.textContent = '✓ 已完成 (课程进度: ' + data.completed + '/' + data.total + ' ' + data.percent + '%)';
+                    btn.style.background = '#16a34a';
+                    // 刷新侧栏状态
+                    document.querySelectorAll('.sidebar-chapter').forEach(el => {
+                        const href = el.getAttribute('href') || '';
+                        if (href.endsWith('/chapter/' + courseId + '/' + chapterId) || href.includes('/chapter/' + courseId + '/' + chapterId)) {
+                            if (!el.querySelector('.done-icon')) {
+                                const check = document.createElement('span');
+                                check.className = 'done-icon';
+                                check.textContent = '✓';
+                                el.insertBefore(check, el.firstChild);
+                            }
+                        }
+                    });
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = '失败，请重试';
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.textContent = '网络错误，请重试';
+            });
+        }
+    </script>
+</body>
+</html>

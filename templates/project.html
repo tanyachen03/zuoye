@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} · 项目实战{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">首页</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('projects_list') }}">项目实战</a></li>
+        <li class="breadcrumb-item active">{{ project.title }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-lg-9">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="badge bg-{{ project.level_color }} me-2">{{ project.level }}</span>
+                        <small class="text-muted">⏱ {{ project.duration }}</small>
+                        <h2 class="mt-2">{{ project.title }}</h2>
+                    </div>
+                    {% if is_complete %}<span class="tag-done"><i class="bi bi-check-circle"></i> 已完成</span>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-briefcase text-warning"></i> 业务背景</h5></div>
+            <div class="card-body"><p>{{ project.background }}</p></div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-target text-danger"></i> 分析目标</h5></div>
+            <div class="card-body"><p>{{ project.goal }}</p></div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-lightbulb text-warning"></i> 小贴士</h5></div>
+            <ul class="list-group list-group-flush">
+                {% for t in project.tips %}<li class="list-group-item">💡 {{ t }}</li>{% endfor %}
+            </ul>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-exclamation-triangle text-danger"></i> 常见错误</h5></div>
+            <ul class="list-group list-group-flush">
+                {% for p in project.pitfalls %}<li class="list-group-item">⚠ {{ p }}</li>{% endfor %}
+            </ul>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-terminal text-success"></i> 动手实战 · 在线编辑器</h5>
+                <div>
+                    <button class="btn btn-sm btn-warning" onclick="pasteToEditor('editor-project', this)"><i class="bi bi-clipboard-plus"></i> 粘贴</button>
+                    <button class="btn btn-sm btn-success" onclick="runCode('project')"><i class="bi bi-play"></i> 运行</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="resetCode('project')"><i class="bi bi-arrow-counterclockwise"></i> 重置</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <textarea class="code-editor" id="editor-project" spellcheck="false">{{ project.starter_code }}</textarea>
+                <div class="mt-3 small text-muted">输出：</div>
+                <div class="output-box" id="output-project">（点击运行查看结果）</div>
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <small class="text-muted">运行无误后可标记完成</small>
+                    <button class="btn btn-{{ 'secondary' if is_complete else 'primary' }}" id="completeBtn" onclick="markComplete()">
+                        <i class="bi bi-{{ 'check-circle-fill' if is_complete else 'trophy' }}"></i> {{ '已标记完成' if is_complete else '✓ 标记项目完成' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-code-slash text-primary"></i> 完整代码示例</h5>
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyCode('demo')"><i class="bi bi-clipboard"></i> 复制</button>
+            </div>
+            <div class="card-body"><pre class="code-block" id="demo">{{ project.code }}</pre></div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card border-0 shadow-sm sticky-top">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-database"></i> 数据集</h5></div>
+            <div class="card-body">
+                <p class="small text-muted mb-3">下载项目 CSV 文件，放在 <code>data/</code> 目录下使用</p>
+                {% if dataset_exists %}
+                <a class="btn btn-success w-100 mb-3" href="{{ url_for('download_dataset', filename=project.dataset) }}"><i class="bi bi-download"></i> 下载 {{ project.dataset }}</a>
+                {% else %}
+                <div class="alert alert-warning small mb-3">请先运行 <code>python generate_datasets.py</code> 生成数据集</div>
+                {% endif %}
+                <small class="text-muted d-block mb-2">文件格式: UTF-8 CSV</small>
+            </div>
+            <div class="card-header bg-white border-top"><h5 class="mb-0"><i class="bi bi-journals"></i> 全部项目</h5></div>
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action small" href="{{ url_for('projects_list') }}">← 返回项目列表</a>
+                {% if project.id > 1 %}
+                <a class="list-group-item list-group-item-action small" href="{{ url_for('project_page', project_id=project.id - 1) }}">⬆ 项目 {{ '%02d' % (project.id - 1) }}</a>
+                {% endif %}
+                {% if project.id < 10 %}
+                <a class="list-group-item list-group-item-action small" href="{{ url_for('project_page', project_id=project.id + 1) }}">⬇ 项目 {{ '%02d' % (project.id + 1) }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const ORIGINAL = `{{ project.starter_code|replace('`', '\\`')|safe }}`;
+function copyCode(id){ var el = document.getElementById(id); var btn = el && el.previousElementSibling ? el.previousElementSibling.querySelector('button') : null; copyText(el ? el.innerText : '', btn); }
+function resetCode(id){ document.getElementById('editor-'+id).value = ORIGINAL; document.getElementById('output-'+id).textContent='（已重置）'; }
+function runCode(id){
+    var code = document.getElementById('editor-'+id).value;
+    var out = document.getElementById('output-'+id);
+    out.textContent = '⏳ 正在运行...';
+    fetch("{{ url_for('api_run_code') }}", {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({code: code})
+    }).then(function(r){ return r.json(); }).then(function(data){
+        out.textContent = data.output || '(无输出)';
+        out.style.color = data.status==='error' ? '#fca5a5' : '#86efac';
+    }).catch(function(e){ out.textContent = '网络错误: '+e; });
+}
+function markComplete(){
+    fetch("{{ url_for('api_complete_project') }}", {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({project_id:{{ project.id }}})
+    }).then(function(r){ return r.json(); }).then(function(data){
+        if(data.ok){
+            var btn = document.getElementById('completeBtn');
+            btn.className='btn btn-secondary';
+            btn.innerHTML='<i class="bi bi-check-circle-fill"></i> 已标记完成';
+            if(data.new_badges && data.new_badges.length){
+                data.new_badges.forEach(function(b){ showBadges([b]); });
+            } else { alert('🎉 项目完成！已保存进度。'); }
+        } else { alert('标记失败：'+(data.error||'请先登录')); }
+    });
+}
+</script>
+{% endblock %}

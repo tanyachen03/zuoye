@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>数析学院 - 完整学习平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0A0A0A;
+            color: #FFFFFF;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            background: #1A1A1A;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 1px solid #2A2A2A;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3B82F6;
+        }
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .nav-links button {
+            background: none;
+            border: none;
+            color: #E0E0E0;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-links button:hover {
+            background: #2A2A2A;
+            color: #FFFFFF;
+        }
+        .nav-links button.active {
+            background: #3B82F6;
+            color: white;
+        }
+        .login-btn {
+            background: #3B82F6;
+            padding: 8px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .login-btn:hover {
+            background: #2563EB;
+        }
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+        .page-title p {
+            color: #A0A0A0;
+            font-size: 16px;
+        }
+        /* 卡片网格 */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        /* 课程卡片 */
+        .course-card {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        .course-card:hover {
+            border-color: #3B82F6;
+            transform: translateY(-2px);
+        }
+        .course-emoji {
+            font-size: 42px;
+            margin-bottom: 16px;
+        }
+        .course-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+        .course-desc {
+            color: #A0A0A0;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .difficulty {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .difficulty.beginner { background: #10B981; color: white; }
+        .difficulty.intermediate { background: #F59E0B; color: white; }
+        .difficulty.advanced { background: #EF4444; color: white; }
+        .progress-text {
+            color: #3B82F6;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #2A2A2A;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #3B82F6;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        /* 课程头部（可点击区域） */
+        .course-header {
+            cursor: pointer;
+        }
+        /* 小节列表 */
+        .lessons-container {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #2A2A2A;
+            display: none;
+        }
+        .lessons-container.open {
+            display: block;
+        }
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 10px;
+            background: #0D0D0D;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-item:hover {
+            background: #151515;
+        }
+        .lesson-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            cursor: pointer;
+            min-width: 180px;
+        }
+        .lesson-info:hover .lesson-name {
+            color: #3B82F6;
+        }
+        .lesson-name {
+            flex: 1;
+            font-size: 14px;
+            color: #E0E0E0;
+        }
+        .lesson-duration {
+            color: #6B7280;
+            font-size: 12px;
+        }
+        .complete-btn {
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .complete-btn:hover {
+            background: #059669;
+        }
+        .complete-btn.done {
+            background: #2A2A2A;
+            color: #6B7280;
+            cursor: default;
+        }
+        /* 详情面板 */
+        .detail-panel {
+            margin-top: 32px;
+            padding: 28px;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            display: none;
+        }
+        .detail-panel.show {
+            display: block;
+        }
+        .detail-panel h4 {
+            margin-bottom: 16px;
+            color: #3B82F6;
+            font-size: 22px;
+        }
+        .detail-panel p {
+            line-height: 1.6;
+            color: #D0D0D0;
+            margin-bottom: 12px;
+        }
+        .detail-panel pre {
+            background: #0D0D0D;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 18px 0;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 13px;
+            border: 1px solid #2A2A2A;
+            color: #10B981;
+        }
+        .tip-box {
+            background: #0D2A1A;
+            border-left: 4px solid #10B981;
+            padding: 14px 16px;
+            margin: 18px 0;
+            border-radius: 8px;
+        }
+        .tip-box strong {
+            color: #10B981;
+        }
+        /* 练习区 */
+        .practice-area {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #2A2A2A;
+        }
+        .practice-area h5 {
+            color: #3B82F6;
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+        .practice-area textarea {
+            width: 100%;
+            background: #0D0D0D;
+            color: #E0E0E0;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            padding: 14px;
+            border: 1px solid #2A2A2A;
+            border-radius: 10px;
+            font-size: 13px;
+            resize: vertical;
+        }
+        .practice-area textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+        .run-btn {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .run-btn:hover {
+            background: #2563EB;
+        }
+        .practice-output {
+            background: #0D0D0D;
+            border: 1px solid #2A2A2A;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #10B981;
+        }
+        /* 数据集卡片 */
+        .dataset-card {
+            background: #0D0D0D;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+        .download-btn {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .download-btn:hover {
+            background: #2563EB;
+        }
+        .hidden {
+            display: none;
+        }
+        /* 响应式 */
+        @media (max-width: 700px) {
+            .courses-grid { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; text-align: center; }
+            .lesson-item { flex-direction: column; align-items: flex-start; }
+            .detail-panel { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">📊 数析学院</div>
+    <div class="nav-links">
+        <button class="nav-btn active" data-page="courses">课程中心</button>
+        <button class="nav-btn" data-page="projects">实战项目</button>
+        <button class="nav-btn" data-page="achievements">成就殿堂</button>
+    </div>
+    <button class="login-btn">登录</button>
+</div>
+
+<div class="page-container">
+    <!-- 课程中心 -->
+    <div id="coursesPage">
+        <div class="page-title">
+            <h1>📚 课程中心</h1>
+            <p>点击卡片展开小节列表，点击小节名称查看详细内容</p>
+        </div>
+        <div class="courses-grid" id="coursesGrid"></div>
+        <div id="detailPanel" class="detail-panel"></div>
+    </div>
+
+    <!-- 实战项目 -->
+    <div id="projectsPage" class="hidden">
+        <div class="page-title">
+            <h1>💻 实战项目</h1>
+            <p>下载数据集，开始你的数据分析实战</p>
+        </div>
+        <div class="courses-grid" id="projectsGrid"></div>
+    </div>
+
+    <!-- 成就殿堂 -->
+    <div id="achievementsPage" class="hidden">
+        <div class="page-title">
+            <h1>🏆 成就殿堂</h1>
+            <p>完成课程小节，解锁成就徽章</p>
+        </div>
+        <div class="courses-grid" id="achievementsGrid"></div>
+    </div>
+</div>
+
+<script>
+    // ==================== 数据集 ====================
+    const datasets = {
+        "retail_orders.csv": "订单ID,产品名称,数量,单价,日期\nORD001,笔记本电脑,2,5999,2024-01-15\nORD002,鼠标,5,99,2024-01-16\nORD003,键盘,3,299,2024-01-16\nORD004,显示器,1,1299,2024-01-17\nORD005,鼠标垫,10,29,2024-01-18\nORD006,手机,3,1999,2024-01-18\nORD007,充电器,4,59,2024-01-19",
+        "market_basket.csv": "订单号,商品\n100,牛奶\n100,面包\n101,牛奶\n101,尿布\n101,啤酒\n102,尿布\n102,啤酒\n103,牛奶\n103,面包\n103,黄油\n104,牛奶\n104,尿布\n104,啤酒",
+        "customer_features.csv": "客户ID,年龄,年消费额,购物频率,平均客单价\nC001,25,3500,12,291\nC002,32,8200,25,328\nC003,45,12500,18,694\nC004,28,4800,15,320\nC005,51,8900,9,989\nC006,35,6500,20,325"
+    };
+
+    function downloadDataset(filename) {
+        const content = datasets[filename];
+        if (!content) {
+            alert(`数据集 ${filename} 不存在`);
+            return;
+        }
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert(`✅ 开始下载 ${filename}`);
+    }
+
+    // ==================== 课程数据 ====================
+    const courses = [
+        {
+            id: 0, emoji: "🐍", title: "Python基础入门", desc: "从零开始掌握Python编程基础",
+            difficulty: "beginner", difficultyText: "入门",
+            lessons: [
+                { name: "Python安装与环境配置", duration: "15分钟", completed: false, 
+                  content: "Python是一种解释型、面向对象的编程语言，语法简洁，适合初学者。安装Python时，请访问python.org下载最新版本，安装时务必勾选'Add Python to PATH'。",
+                  code: "import sys\nprint(f'Python版本: {sys.version}')\nprint('Hello, World!')",
+                  tip: "安装时记得勾选'Add Python to PATH'",
+                  question: "你安装的Python版本是多少？",
+                  practice_code: "print('欢迎来到Python世界！')\n\n# 修改上面的文字试试" },
+                { name: "变量与数据类型", duration: "20分钟", completed: false,
+                  content: "变量是存储数据的容器。Python有int（整数）、float（浮点数）、str（字符串）、bool（布尔值）等基本数据类型。",
+                  code: "x = 10\nname = 'Python'\npi = 3.14\nprint(f'{name}的版本是{x}')",
+                  tip: "变量名要见名知意，使用下划线分隔",
+                  question: "创建一个变量存储你的年龄并打印",
+                  practice_code: "my_age = 18\nmy_name = '小明'\nprint(f'我叫{my_name}，今年{my_age}岁')" },
+                { name: "条件判断if-else", duration: "20分钟", completed: false,
+                  content: "条件判断让程序可以根据不同情况执行不同代码。if语句后面跟条件，条件为True时执行缩进的代码块。",
+                  code: "age = 18\nif age >= 18:\n    print('成年')\nelse:\n    print('未成年')",
+                  tip: "注意缩进！Python用缩进表示代码块",
+                  question: "写一个判断成绩是否及格的程序",
+                  practice_code: "score = 75\nif score >= 60:\n    print('及格了！')\nelse:\n    print('不及格')" },
+                { name: "循环语句for/while", duration: "25分钟", completed: false,
+                  content: "循环让代码重复执行。for循环用于遍历序列，while循环在条件满足时重复执行。",
+                  code: "for i in range(5):\n    print(f'第{i}次循环')",
+                  tip: "range(5)生成0,1,2,3,4",
+                  question: "用for循环打印1到10",
+                  practice_code: "for i in range(1, 11):\n    print(i)" },
+                { name: "列表与元组", duration: "20分钟", completed: false,
+                  content: "列表是可变的序列，用[]表示。元组是不可变的序列，用()表示。",
+                  code: "fruits = ['苹果', '香蕉', '橙子']\nfruits.append('葡萄')\nprint(fruits)",
+                  tip: "列表用[]，元组用()",
+                  question: "创建一个包含3个数字的列表",
+                  practice_code: "numbers = [10, 20, 30]\nnumbers.append(40)\nprint(numbers)" },
+                { name: "字典与集合", duration: "20分钟", completed: false,
+                  content: "字典存储键值对，用{}表示。集合存储不重复的元素。",
+                  code: "person = {'name': '张三', 'age': 20}\nprint(person['name'])",
+                  tip: "字典键必须是不可变类型",
+                  question: "创建一个表示你信息的字典",
+                  practice_code: "my_info = {'name': '李华', 'age': 20}\nprint(my_info)" },
+                { name: "函数定义与调用", duration: "25分钟", completed: false,
+                  content: "函数是组织好的、可重复使用的代码块，用def关键字定义。",
+                  code: "def greet(name):\n    return f'你好，{name}！'\nprint(greet('小明'))",
+                  tip: "函数名要动词开头",
+                  question: "写一个计算两个数之和的函数",
+                  practice_code: "def add(a, b):\n    return a + b\nprint(add(10, 20))" },
+                { name: "模块与包导入", duration: "15分钟", completed: false,
+                  content: "模块是包含Python代码的文件，用import语句导入。",
+                  code: "import math\nprint(f'圆周率: {math.pi}')",
+                  tip: "可以用from...import导入特定函数",
+                  question: "导入random模块生成随机数",
+                  practice_code: "import random\nnum = random.randint(1, 100)\nprint(num)" }
+            ]
+        },
+        {
+            id: 1, emoji: "📊", title: "Pandas入门", desc: "数据分析的核心工具Pandas",
+            difficulty: "beginner", difficultyText: "入门",
+            lessons: [
+                { name: "Pandas安装与Series", duration: "15分钟", completed: false, content: "Pandas是Python数据分析的核心库。Series是一维带标签的数组。", code: "import pandas as pd\ns = pd.Series([1, 2, 3, 4])\nprint(s)", tip: "建议先安装NumPy", question: "创建一个值为[5,10,15]的Series", practice_code: "import pandas as pd\ns = pd.Series([5,10,15])\nprint(s)" },
+                { name: "DataFrame创建与查看", duration: "20分钟", completed: false, content: "DataFrame是二维表格数据结构，类似Excel表格。", code: "df = pd.DataFrame({'姓名':['张三','李四'],'年龄':[20,25]})\nprint(df)", tip: "使用df.info()查看数据信息", question: "创建一个包含姓名和成绩的DataFrame", practice_code: "import pandas as pd\ndf = pd.DataFrame({'姓名':['小明','小红'],'成绩':[85,92]})\nprint(df)" }
+            ]
+        },
+        {
+            id: 2, emoji: "🧹", title: "数据清洗", desc: "脏数据到干净数据的转化",
+            difficulty: "intermediate", difficultyText: "进阶",
+            lessons: [
+                { name: "缺失值识别", duration: "15分钟", completed: false, content: "数据清洗第一步是识别缺失值。用isnull()查看缺失情况。", code: "import pandas as pd\ndf = pd.DataFrame({'A':[1,None,3]})\nprint(df.isnull())", tip: "缺失值通常用NaN表示", question: "如何查看每列的缺失值数量？", practice_code: "import pandas as pd\ndf = pd.DataFrame({'A':[1,None,3]})\nprint(df.isnull().sum())" }
+            ]
+        },
+        {
+            id: 3, emoji: "📈", title: "数据可视化", desc: "让数据说话的艺术",
+            difficulty: "intermediate", difficultyText: "进阶",
+            lessons: [
+                { name: "matplotlib基础", duration: "15分钟", completed: false, content: "Matplotlib是Python最常用的数据可视化库。", code: "import matplotlib.pyplot as plt\nplt.plot([1,2,3],[1,4,9])\nplt.show()", tip: "需要先安装：pip install matplotlib", question: "画一个简单的折线图", practice_code: "import matplotlib.pyplot as plt\nplt.plot([1,2,3],[2,4,6])\nplt.title('测试')\nplt.show()" }
+            ]
+        }
+    ];
+
+    // 加载进度
+    function loadProgress() {
+        const saved = localStorage.getItem("courseProgress");
+        if (saved) {
+            const progress = JSON.parse(saved);
+            courses.forEach((course, cId) => {
+                if (progress[cId]) {
+                    course.lessons.forEach((lesson, lId) => {
+                        if (progress[cId][lId]) lesson.completed = true;
+                    });
+                }
+            });
+        }
+    }
+
+    function saveProgress() {
+        const progress = {};
+        courses.forEach((course, cId) => {
+            progress[cId] = course.lessons.map(l => l.completed);
+        });
+        localStorage.setItem("courseProgress", JSON.stringify(progress));
+    }
+
+    function getCompletedCount(course) {
+        return course.lessons.filter(l => l.completed).length;
+    }
+
+    let openCourseId = null;
+
+    // 运行练习代码
+    window.runPracticeCode = function() {
+        const textarea = document.getElementById('practiceTextarea');
+        if (!textarea) {
+            alert('请先点击一个小节打开练习区');
+            return;
+        }
+        const code = textarea.value;
+        const outputDiv = document.getElementById('practiceOutput');
+        outputDiv.innerHTML = '⏳ 运行中...\n';
+        setTimeout(() => {
+            try {
+                const prints = [];
+                const regex = /print\((.*?)\)/g;
+                let match;
+                while ((match = regex.exec(code)) !== null) {
+                    let content = match[1].replace(/['"]/g, '');
+                    prints.push(content);
+                }
+                if (prints.length > 0) {
+                    outputDiv.innerHTML = '✅ 运行结果：\n' + prints.join('\n');
+                } else {
+                    outputDiv.innerHTML = '✅ 代码已执行（无print输出）\n\n提示：使用 print() 函数可以看到输出结果';
+                }
+            } catch(e) {
+                outputDiv.innerHTML = `❌ 错误: ${e.message}`;
+            }
+        }, 100);
+    };
+
+    // 显示小节详情
+    function showLessonDetail(courseId, lessonId) {
+        const lesson = courses[courseId].lessons[lessonId];
+        const panel = document.getElementById('detailPanel');
+        panel.innerHTML = `
+            <h4>📖 ${lesson.name}</h4>
+            <p>${lesson.content}</p>
+            <pre><code>${lesson.code}</code></pre>
+            <div class="tip-box"><strong>💡 小贴士</strong><br>${lesson.tip}</div>
+            <p><strong>❓ 思考题</strong><br>${lesson.question}</p>
+            <div class="practice-area">
+                <h5>✏️ 自己试一试</h5>
+                <textarea id="practiceTextarea" rows="6">${lesson.practice_code || lesson.code}</textarea>
+                <button class="run-btn" onclick="runPracticeCode()">▶ 运行代码</button>
+                <div id="practiceOutput" class="practice-output">⚡ 点击运行按钮，代码输出会显示在这里</div>
+            </div>
+        `;
+        panel.classList.add('show');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 渲染课程
+    function renderCourses() {
+        const grid = document.getElementById('coursesGrid');
+        grid.innerHTML = '';
+        
+        courses.forEach((course, cIdx) => {
+            const completedCount = getCompletedCount(course);
+            const totalCount = course.lessons.length;
+            const percent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+            
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.setAttribute('data-course-id', cIdx);
+            
+            const header = document.createElement('div');
+            header.className = 'course-header';
+            header.innerHTML = `
+                <div class="course-emoji">${course.emoji}</div>
+                <div class="course-title">${course.title}</div>
+                <div class="course-desc">${course.desc}</div>
+                <div class="course-meta">
+                    <span class="difficulty ${course.difficulty}">${course.difficultyText}</span>
+                    <span class="progress-text">已完成 ${completedCount}/${totalCount} 小节</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${percent}%;"></div></div>
+            `;
+            
+            const lessonsDiv = document.createElement('div');
+            lessonsDiv.className = 'lessons-container';
+            lessonsDiv.setAttribute('data-course', cIdx);
+            
+            let lessonsHtml = '';
+            course.lessons.forEach((lesson, lIdx) => {
+                const doneClass = lesson.completed ? 'done' : '';
+                const btnText = lesson.completed ? '✓ 已完成' : '✓ 标记完成';
+                lessonsHtml += `
+                    <div class="lesson-item">
+                        <div class="lesson-info" data-course="${cIdx}" data-lesson="${lIdx}">
+                            <span class="lesson-name">${lesson.name}</span>
+                            <span class="lesson-duration">${lesson.duration}</span>
+                        </div>
+                        <button class="complete-btn ${doneClass}" data-course="${cIdx}" data-lesson="${lIdx}" ${lesson.completed ? 'disabled' : ''}>${btnText}</button>
+                    </div>
+                `;
+            });
+            lessonsDiv.innerHTML = lessonsHtml;
+            
+            card.appendChild(header);
+            card.appendChild(lessonsDiv);
+            grid.appendChild(card);
+        });
+        
+        // 绑定卡片点击事件
+        document.querySelectorAll('.course-header').forEach((header, idx) => {
+            header.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = header.closest('.course-card');
+                const lessonsContainer = card.querySelector('.lessons-container');
+                const courseId = parseInt(card.getAttribute('data-course-id'));
+                
+                if (openCourseId === courseId) {
+                    lessonsContainer.classList.remove('open');
+                    openCourseId = null;
+                } else {
+                    document.querySelectorAll('.lessons-container').forEach(el => el.classList.remove('open'));
+                    lessonsContainer.classList.add('open');
+                    openCourseId = courseId;
+                }
+            });
+        });
+        
+        // 绑定小节点击事件
+        document.querySelectorAll('.lesson-info').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const courseId = parseInt(el.getAttribute('data-course'));
+                const lessonId = parseInt(el.getAttribute('data-lesson'));
+                showLessonDetail(courseId, lessonId);
+            });
+        });
+        
+        // 绑定完成按钮事件
+        document.querySelectorAll('.complete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const courseId = parseInt(btn.getAttribute('data-course'));
+                const lessonId = parseInt(btn.getAttribute('data-lesson'));
+                if (!courses[courseId].lessons[lessonId].completed) {
+                    courses[courseId].lessons[lessonId].completed = true;
+                    saveProgress();
+                    renderCourses();
+                    renderAchievements();
+                }
+            });
+        });
+    }
+
+    // 实战项目
+    function renderProjects() {
+        const grid = document.getElementById('projectsGrid');
+        const projectsList = [
+            { name: "数据清洗实战", difficulty: "入门", duration: "30分钟", desc: "掌握Pandas数据清洗核心技能", dataset: "retail_orders.csv" },
+            { name: "购物篮分析", difficulty: "进阶", duration: "45分钟", desc: "发现商品之间的关联关系", dataset: "market_basket.csv" },
+            { name: "客户聚类分析", difficulty: "进阶", duration: "45分钟", desc: "将客户分成不同的群体", dataset: "customer_features.csv" }
+        ];
+        
+        grid.innerHTML = '';
+        projectsList.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.innerHTML = `
+                <div class="course-emoji">💻</div>
+                <div class="course-title">${p.name}</div>
+                <div class="course-desc">${p.desc}</div>
+                <div class="course-meta">
+                    <span class="difficulty ${p.difficulty === '入门' ? 'beginner' : 'intermediate'}">${p.difficulty}</span>
+                    <span>${p.duration}</span>
+                </div>
+                <div class="dataset-card">
+                    <div>📁 数据集：${p.dataset}</div>
+                    <button class="download-btn" onclick="downloadDataset('${p.dataset}')">📥 下载 ${p.dataset}</button>
+                </div>
+                <button class="run-btn" style="margin-top:12px; width:100%" onclick="alert('编辑器开发中，敬请期待！\n\n你可以先下载数据集，用本地的Jupyter Notebook练习。')">▶ 开始练习</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 成就殿堂
+    function renderAchievements() {
+        const totalCompleted = courses.reduce((sum, c) => sum + getCompletedCount(c), 0);
+        const pythonCompleted = getCompletedCount(courses[0]);
+        const pythonTotal = courses[0].lessons.length;
+        
+        const achievements = [
+            { name: "🎯 入门学徒", desc: "完成3个小节", condition: totalCompleted >= 3, icon: "🎯" },
+            { name: "⭐ 代码新星", desc: "完成10个小节", condition: totalCompleted >= 10, icon: "⭐" },
+            { name: "🏆 学习达人", desc: "完成20个小节", condition: totalCompleted >= 20, icon: "🏆" },
+            { name: "🐍 Python入门", desc: "完成Python基础入门课程", condition: pythonCompleted >= pythonTotal, icon: "🐍" }
+        ];
+        
+        const grid = document.getElementById('achievementsGrid');
+        grid.innerHTML = '';
+        achievements.forEach(a => {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.style.opacity = a.condition ? '1' : '0.5';
+            card.style.filter = a.condition ? 'none' : 'grayscale(0.5)';
+            card.innerHTML = `
+                <div class="course-emoji">${a.icon}</div>
+                <div class="course-title">${a.name}</div>
+                <div class="course-desc">${a.desc}</div>
+                <div class="course-meta">${a.condition ? '✅ 已解锁' : '🔒 未解锁'}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 页面切换
+    function switchPage(page) {
+        document.getElementById('coursesPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        
+        if (page === 'courses') document.getElementById('coursesPage').classList.remove('hidden');
+        if (page === 'projects') {
+            document.getElementById('projectsPage').classList.remove('hidden');
+            renderProjects();
+        }
+        if (page === 'achievements') {
+            document.getElementById('achievementsPage').classList.remove('hidden');
+            renderAchievements();
+        }
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-page') === page) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    // 绑定导航
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchPage(btn.getAttribute('data-page'));
+        });
+    });
+
+    window.downloadDataset = downloadDataset;
+    
+    loadProgress();
+    renderCourses();
+    renderAchievements();
+    switchPage('courses');
+</script>
+</body>
+</html>

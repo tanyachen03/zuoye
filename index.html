@@ -2,184 +2,1158 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数析学院 - Python数据分析学习平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>数析学院 - 完整学习平台</title>
     <style>
-        :root{--bg-primary:#0A0A0A;--bg-secondary:#1E1E1E;--bg-tertiary:#252526;--border-color:#333;--text-primary:#FFF;--text-secondary:#B0B0B0;--text-muted:#808080;--accent-blue:#58A6FF;--accent-green:#2C974B;--accent-yellow:#F0B429;--accent-red:#F85149;--accent-purple:#A371F7;--code-bg:#161B22;--hover-bg:#2D2D2D}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-height:100vh}
-        a{color:var(--accent-blue);text-decoration:none}
-        .navbar{position:fixed;top:0;left:0;right:0;height:60px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);z-index:1000}
-        .nav-container{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
-        .nav-logo{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:bold;color:var(--text-primary)}
-        .logo-icon{font-size:24px}
-        .nav-menu{display:flex;list-style:none;gap:8px}
-        .nav-link{display:block;padding:8px 16px;color:var(--text-secondary);border-radius:6px;cursor:pointer}
-        .nav-link:hover,.nav-link.active{color:var(--text-primary);background:var(--hover-bg)}
-        .nav-login-btn{padding:8px 20px;background:var(--accent-blue);color:var(--bg-primary);border:none;border-radius:6px;cursor:pointer;font-weight:600}
-        .mobile-menu-btn{display:none;background:none;border:none;color:var(--text-primary);font-size:24px;cursor:pointer}
-        #app{min-height:calc(100vh - 60px);padding-top:60px}
-        .footer{background:var(--bg-secondary);border-top:1px solid var(--border-color);padding:48px 24px 24px;margin-top:80px}
-        .footer-content{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:48px}
-        .footer-section h4{color:var(--text-primary);margin-bottom:16px}
-        .footer-section ul{list-style:none}
-        .footer-section ul li{color:var(--text-secondary);margin-bottom:8px}
-        .footer-bottom{max-width:1200px;margin:48px auto 0;padding-top:24px;border-top:1px solid var(--border-color);text-align:center;color:var(--text-muted)}
-        .hero{padding:80px 24px;text-align:center;background:linear-gradient(180deg,var(--bg-secondary) 0%,var(--bg-primary) 100%)}
-        .hero-title{font-size:56px;font-weight:bold;margin-bottom:16px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .hero-subtitle{font-size:20px;color:var(--text-secondary);margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
-        .hero-btn{display:inline-block;padding:16px 48px;background:var(--accent-blue);color:var(--bg-primary);font-size:18px;font-weight:bold;border-radius:8px;cursor:pointer}
-        .hero-btn:hover{background:#79B8FF;transform:translateY(-2px)}
-        .stats-section{max-width:1200px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-        .stat-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:32px;text-align:center}
-        .stat-number{font-size:48px;font-weight:bold;color:var(--accent-blue);margin-bottom:8px}
-        .stat-label{color:var(--text-secondary);font-size:16px}
-        .section{max-width:1200px;margin:0 auto;padding:48px 24px}
-        .section-title{font-size:32px;font-weight:bold;margin-bottom:32px}
-        .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
-        .card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:24px;cursor:pointer;transition:all .2s}
-        .card:hover{border-color:var(--accent-blue);transform:translateY(-4px)}
-        .card-icon{font-size:48px;margin-bottom:16px}
-        .card-title{font-size:20px;font-weight:bold;margin-bottom:8px}
-        .card-desc{color:var(--text-secondary);margin-bottom:16px;font-size:14px}
-        .card-meta{display:flex;align-items:center;gap:16px;color:var(--text-muted);font-size:14px}
-        .card-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
-        .tag-easy{background:rgba(44,151,75,.2);color:var(--accent-green)}
-        .tag-medium{background:rgba(240,180,41,.2);color:var(--accent-yellow)}
-        .tag-hard{background:rgba(248,81,73,.2);color:var(--accent-red)}
-        .progress-bar{width:100%;height:6px;background:var(--border-color);border-radius:3px;overflow:hidden;margin-top:12px}
-        .progress-fill{height:100%;background:var(--accent-blue);border-radius:3px;transition:width .3s}
-        .course-detail{display:flex;height:calc(100vh - 60px)}
-        .course-sidebar{width:30%;background:var(--bg-secondary);border-right:1px solid var(--border-color);overflow-y:auto;padding:24px}
-        .course-sidebar-title{font-size:24px;font-weight:bold;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border-color)}
-        .lesson-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:8px;cursor:pointer;margin-bottom:8px}
-        .lesson-item:hover{background:var(--hover-bg)}
-        .lesson-item.active{background:var(--accent-blue);color:var(--bg-primary)}
-        .lesson-item.completed{opacity:.7}
-        .lesson-info{display:flex;align-items:center;gap:8px}
-        .lesson-title{font-size:14px}
-        .lesson-duration{font-size:12px;color:var(--text-muted)}
-        .lesson-item.active .lesson-duration{color:rgba(0,0,0,.6)}
-        .course-content{flex:1;overflow-y:auto;padding:48px}
-        .content-header{margin-bottom:32px}
-        .content-title{font-size:32px;font-weight:bold;margin-bottom:16px}
-        .content-meta{display:flex;gap:24px;color:var(--text-secondary)}
-        .content-body{max-width:800px}
-        .content-section{margin-bottom:32px}
-        .content-section h3{font-size:20px;margin-bottom:16px;color:var(--accent-blue)}
-        .content-section p{color:var(--text-secondary);margin-bottom:16px;line-height:1.8}
-        .code-block{background:var(--code-bg);border:1px solid var(--border-color);border-radius:8px;padding:16px;margin:16px 0;overflow-x:auto}
-        .code-block pre{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap;word-break:break-all}
-        .code-title{background:var(--bg-tertiary);padding:8px 16px;border-bottom:1px solid var(--border-color);font-size:12px;color:var(--text-muted)}
-        .tip-box{background:rgba(88,166,255,.1);border-left:4px solid var(--accent-blue);padding:16px;border-radius:0 8px 8px 0;margin:16px 0}
-        .tip-box.warning{background:rgba(248,81,73,.1);border-left-color:var(--accent-red)}
-        .tip-content{color:var(--text-secondary);font-size:14px}
-        .project-detail{display:flex;height:calc(100vh - 60px)}
-        .project-docs{width:40%;background:var(--bg-secondary);border-right:1px solid var(--border-color);overflow-y:auto;padding:32px}
-        .project-docs h2{font-size:28px;margin-bottom:24px}
-        .docs-section{margin-bottom:32px}
-        .docs-section h3{font-size:18px;color:var(--accent-blue);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border-color)}
-        .docs-section ul{list-style:none;padding-left:0}
-        .docs-section li{padding:8px 0;color:var(--text-secondary)}
-        .docs-section li::before{content:"•";color:var(--accent-blue);margin-right:8px}
-        .step-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-color)}
-        .step-number{width:28px;height:28px;background:var(--accent-blue);color:var(--bg-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;flex-shrink:0}
-        .step-content{flex:1}
-        .step-title{font-weight:bold;margin-bottom:4px}
-        .step-desc{color:var(--text-secondary);font-size:14px}
-        .project-editor{width:60%;display:flex;flex-direction:column}
-        .editor-header{background:var(--bg-tertiary);border-bottom:1px solid var(--border-color);padding:16px;display:flex;justify-content:space-between;align-items:center}
-        .editor-title{display:flex;align-items:center;gap:8px;font-weight:bold}
-        .editor-tabs{display:flex;gap:4px}
-        .editor-tab{padding:8px 16px;background:var(--code-bg);border-radius:6px 6px 0 0;font-size:14px}
-        .editor-area{flex:1;display:flex;flex-direction:column}
-        .code-editor{flex:1;background:var(--code-bg);padding:16px;font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:14px;line-height:1.6;color:var(--text-primary);border:none;resize:none;outline:none;min-height:200px;overflow-x:auto;white-space:pre}
-        .editor-footer{background:var(--bg-tertiary);border-top:1px solid var(--border-color);padding:16px}
-        .run-btn{padding:12px 32px;background:var(--accent-green);color:var(--text-primary);border:none;border-radius:6px;font-size:16px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:8px}
-        .run-btn:hover{background:#3CB371}
-        .run-btn:disabled{background:var(--text-muted);cursor:not-allowed}
-        .output-area{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;margin-top:16px;max-height:300px;overflow-y:auto}
-        .output-header{background:var(--bg-tertiary);padding:8px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-color)}
-        .output-content{padding:16px;font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
-        .output-content.error{color:var(--accent-red)}
-        .output-content.success{color:var(--accent-green)}
-        .loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text-muted);border-top-color:var(--accent-blue);border-radius:50%;animation:spin 1s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
-        .achievement-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
-        .achievement-card.locked{opacity:.5;filter:grayscale(100%)}
-        .achievement-card.unlocked{border-color:var(--accent-yellow);box-shadow:0 0 20px rgba(240,180,41,.2)}
-        .achievement-icon{font-size:64px;margin-bottom:16px}
-        .achievement-name{font-size:18px;font-weight:bold;margin-bottom:8px}
-        .achievement-desc{color:var(--text-secondary);font-size:14px;margin-bottom:12px}
-        .achievement-status{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
-        .achievement-card.locked .achievement-status{background:var(--border-color);color:var(--text-muted)}
-        .achievement-card.unlocked .achievement-status{background:rgba(240,180,41,.2);color:var(--accent-yellow)}
-        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center}
-        .modal.show{display:flex}
-        .modal-content{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;width:90%;max-width:400px}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border-color)}
-        .modal-header h3{font-size:20px}
-        .modal-close{background:none;border:none;color:var(--text-muted);font-size:28px;cursor:pointer;line-height:1}
-        .modal-close:hover{color:var(--text-primary)}
-        .modal-body{padding:24px}
-        .form-group{margin-bottom:16px}
-        .form-group label{display:block;margin-bottom:8px;color:var(--text-secondary)}
-        .form-group input{width:100%;padding:12px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:6px;color:var(--text-primary);font-size:14px}
-        .form-group input:focus{outline:none;border-color:var(--accent-blue)}
-        .modal-footer{padding:16px 24px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;gap:12px}
-        .btn{padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-        .btn-primary{background:var(--accent-blue);color:var(--bg-primary);border:none}
-        .btn-secondary{background:transparent;color:var(--text-secondary);border:1px solid var(--border-color)}
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px 24px;z-index:3000;opacity:0;transition:all .3s}
-        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-        .toast-message{color:var(--text-primary)}
-        .back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;color:var(--text-secondary);cursor:pointer;margin-bottom:24px}
-        .back-btn:hover{background:var(--hover-bg);color:var(--text-primary)}
-        @media(max-width:768px){.mobile-menu-btn{display:block}.nav-menu{display:none;position:absolute;top:60px;left:0;right:0;background:var(--bg-secondary);flex-direction:column;padding:16px;border-bottom:1px solid var(--border-color)}.nav-menu.show{display:flex}.nav-login-btn{display:none}.hero-title{font-size:36px}.stats-section{grid-template-columns:1fr}.course-detail,.project-detail{flex-direction:column}.course-sidebar{width:100%;max-height:40vh}.course-content{padding:24px}.project-docs,.project-editor{width:100%}.project-editor{height:60vh}.achievement-grid{grid-template-columns:1fr}}
-        @media(max-width:480px){.hero{padding:48px 16px}.hero-title{font-size:28px}.stat-number{font-size:36px}}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0A0A0A;
+            color: #FFFFFF;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            background: #1A1A1A;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 1px solid #2A2A2A;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3B82F6;
+        }
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .nav-links button {
+            background: none;
+            border: none;
+            color: #E0E0E0;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-links button:hover {
+            background: #2A2A2A;
+            color: #FFFFFF;
+        }
+        .nav-links button.active {
+            background: #3B82F6;
+            color: white;
+        }
+        .login-btn {
+            background: #3B82F6;
+            padding: 8px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .login-btn:hover {
+            background: #2563EB;
+        }
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+        .page-title p {
+            color: #A0A0A0;
+            font-size: 16px;
+        }
+        /* 卡片网格 */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        /* 课程卡片 */
+        .course-card {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .course-card:hover {
+            border-color: #3B82F6;
+            transform: translateY(-2px);
+        }
+        .course-emoji {
+            font-size: 42px;
+            margin-bottom: 16px;
+        }
+        .course-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+        .course-desc {
+            color: #A0A0A0;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .difficulty {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .difficulty.beginner { background: #10B981; color: white; }
+        .difficulty.intermediate { background: #F59E0B; color: white; }
+        .difficulty.advanced { background: #EF4444; color: white; }
+        .progress-text {
+            color: #3B82F6;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #2A2A2A;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #3B82F6;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        /* 小节列表项 */
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #0D0D0D;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .lesson-item:hover {
+            background: #151515;
+            border-color: #3B82F6;
+        }
+        .lesson-item.completed {
+            border-left: 3px solid #10B981;
+        }
+        .lesson-info {
+            flex: 1;
+        }
+        .lesson-name {
+            font-size: 15px;
+            color: #E0E0E0;
+            margin-bottom: 4px;
+        }
+        .lesson-duration {
+            color: #6B7280;
+            font-size: 12px;
+        }
+        .lesson-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .lesson-badge {
+            font-size: 18px;
+        }
+        .complete-btn {
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .complete-btn:hover {
+            background: #059669;
+        }
+        .complete-btn.done {
+            background: #2A2A2A;
+            color: #6B7280;
+            cursor: default;
+        }
+        /* 提示框 */
+        .tip-box {
+            background: #0D2A1A;
+            border-left: 4px solid #10B981;
+            padding: 14px 16px;
+            margin: 18px 0;
+            border-radius: 8px;
+        }
+        .tip-box strong {
+            color: #10B981;
+        }
+        /* 错误提示框 */
+        .error-box {
+            background: #2A0D0D;
+            border-left: 4px solid #EF4444;
+            padding: 14px 16px;
+            margin: 18px 0;
+            border-radius: 8px;
+        }
+        .error-box strong {
+            color: #EF4444;
+        }
+        /* 练习区 */
+        .practice-area {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #2A2A2A;
+        }
+        .practice-area h5 {
+            color: #3B82F6;
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+        .practice-area textarea {
+            width: 100%;
+            background: #0D0D0D;
+            color: #E0E0E0;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            padding: 14px;
+            border: 1px solid #2A2A2A;
+            border-radius: 10px;
+            font-size: 13px;
+            resize: vertical;
+        }
+        .practice-area textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+        .run-btn {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .run-btn:hover {
+            background: #2563EB;
+        }
+        .practice-output {
+            background: #0D0D0D;
+            border: 1px solid #2A2A2A;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #10B981;
+        }
+        /* 数据集卡片 */
+        .dataset-card {
+            background: #0D0D0D;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+        .download-btn {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .download-btn:hover {
+            background: #2563EB;
+        }
+        .hidden {
+            display: none;
+        }
+        /* 详情页面通用 */
+        .detail-page {
+            display: block;
+        }
+        .back-btn {
+            background: #2A2A2A;
+            color: #E0E0E0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .back-btn:hover {
+            background: #3B82F6;
+            color: white;
+        }
+        .course-detail-header {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .course-icon {
+            font-size: 48px;
+        }
+        .lessons-list-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .lessons-sidebar {
+            flex: 0 0 350px;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 20px;
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+        }
+        .lessons-sidebar h3 {
+            margin-bottom: 16px;
+            color: #FFFFFF;
+        }
+        .lesson-detail-panel {
+            flex: 1;
+            min-width: 400px;
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .lesson-detail-panel h2 {
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+        .lesson-meta {
+            color: #6B7280;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .lesson-detail-panel pre {
+            background: #0D0D0D;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 18px 0;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 13px;
+            border: 1px solid #2A2A2A;
+            color: #10B981;
+        }
+        /* 代码高亮 */
+        .code-keyword { color: #FF79C6; }
+        .code-string { color: #F1FA8C; }
+        .code-comment { color: #6272A4; }
+        .code-number { color: #BD93F9; }
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .lessons-list-container { flex-direction: column; }
+            .lessons-sidebar { flex: none; max-height: 300px; }
+            .lesson-detail-panel { min-width: 100%; }
+        }
+        @media (max-width: 700px) {
+            .courses-grid { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; text-align: center; }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#home" class="nav-logo"><span class="logo-icon">📊</span><span>数析学院</span></a>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link active" data-page="home">首页</a></li>
-                <li><a href="#courses" class="nav-link" data-page="courses">课程中心</a></li>
-                <li><a href="#projects" class="nav-link" data-page="projects">实战项目</a></li>
-                <li><a href="#achievements" class="nav-link" data-page="achievements">成就殿堂</a></li>
-            </ul>
-            <button class="nav-login-btn" id="loginBtn">登录</button>
+
+<div class="navbar">
+    <div class="logo">📊 数析学院</div>
+    <div class="nav-links">
+        <button class="nav-btn active" data-page="courses">课程中心</button>
+        <button class="nav-btn" data-page="projects">实战项目</button>
+        <button class="nav-btn" data-page="achievements">成就殿堂</button>
+    </div>
+    <button class="login-btn">登录</button>
+</div>
+
+<div class="page-container">
+    <!-- 课程列表页 -->
+    <div id="coursesListPage">
+        <div class="page-title">
+            <h1>📚 课程中心</h1>
+            <p>点击课程卡片开始学习</p>
         </div>
-    </nav>
-    <main id="app"></main>
-    <footer class="footer" id="footer">
-        <div class="footer-content">
-            <div class="footer-section"><h4>关于数析学院</h4><p>专业的Python数据分析在线学习平台</p></div>
-            <div class="footer-section"><h4>快速链接</h4><ul><li><a href="#home">首页</a></li><li><a href="#courses">课程中心</a></li><li><a href="#projects">实战项目</a></li><li><a href="#achievements">成就殿堂</a></li></ul></div>
-            <div class="footer-section"><h4>技术栈</h4><ul><li>Python 3.x</li><li>Pandas & NumPy</li><li>Pyodide WebAssembly</li></ul></div>
-        </div>
-        <div class="footer-bottom"><p>© 2024 数析学院 - 让数据分析学习更简单</p></div>
-    </footer>
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>登录数析学院</h3><button class="modal-close" id="closeLoginModal">×</button></div>
-            <div class="modal-body">
-                <p>这是一个模拟登录演示。</p>
-                <p>点击确定即可体验完整功能。</p>
-                <div class="form-group"><label>邮箱</label><input type="email" value="learner@datacademy.cn"></div>
-                <div class="form-group"><label>密码</label><input type="password" value="password123"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelLogin">取消</button>
-                <button class="btn btn-primary" id="confirmLogin">确定登录</button>
+        <div class="courses-grid" id="coursesGrid"></div>
+    </div>
+
+    <!-- 课程详情页（小节列表） -->
+    <div id="courseDetailPage" class="detail-page hidden">
+        <button class="back-btn" onclick="showCoursesList()">← 返回课程中心</button>
+        <div class="course-detail-header" id="courseDetailHeader"></div>
+        <div class="lessons-list-container">
+            <div class="lessons-sidebar" id="lessonsListSidebar"></div>
+            <div class="lesson-detail-panel">
+                <div style="text-align: center; color: #6B7280; padding: 60px 20px;">
+                    <p style="font-size: 40px; margin-bottom: 20px;">📖</p>
+                    <p style="font-size: 18px;">请点击左侧小节查看详细内容</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-    <script>
-const COURSES_DATA=[{"id": "python-basics", "title": "Python基础入门", "icon": "🐍", "description": "从零开始掌握Python编程基础", "difficulty": "入门", "lessons": [{"id": "1.1", "title": "变量与数据类型", "duration": "15分钟", "type": "图文", "content": {"text": "变量是编程中最基本的概念之一。在Python中，我们使用变量来存储数据值。Python中的基本数据类型包括：整数（int）、浮点数（float）、字符串（str）、布尔值（bool）。", "codeExamples": [{"title": "变量赋值基础", "code": "name = \"小明\"\\nage = 25\\nheight = 1.75\\nis_student = True\\nprint(\"姓名:\", name)\\nprint(\"年龄:\", age)\\nprint(\"类型:\", type(age))"}, {"title": "类型转换", "code": "num_str = \"42\"\\nnum_int = int(num_str)\\nprint(\"字符串转整数:\", num_int + 10)\\nage = 25\\nage_str = str(age)\\nprint(\"整数转字符串:\", \"年龄是 \" + age_str)"}], "tips": ["Python是动态类型语言，变量类型会在赋值时自动确定。", "使用有意义的变量名可以让代码更易读。"], "commonErrors": ["变量名以数字开头会导致SyntaxError。", "字符串引号不匹配会导致SyntaxError。"]}}, {"id": "1.2", "title": "运算符与表达式", "duration": "20分钟", "type": "图文", "content": {"text": "运算符是用于执行各种数学和逻辑操作的符号。算术运算符包括加法(+)、减法(-)、乘法(*)、除法(/)、整除(//)、取余(%)、幂运算(**)。", "codeExamples": [{"title": "算术运算符", "code": "a, b = 10, 3\\nprint(\"加法:\", a + b)\\nprint(\"减法:\", a - b)\\nprint(\"乘法:\", a * b)\\nprint(\"除法:\", a / b)\\nprint(\"整除:\", a // b)\\nprint(\"取余:\", a % b)\\nprint(\"幂运算:\", a ** b)"}, {"title": "比较和逻辑运算符", "code": "age = 18\\nprint(\"age == 18:\", age == 18)\\nprint(\"age > 18:\", age > 18)\\nis_student = True\\nprint(\"AND:\", age >= 18 and is_student)\\nprint(\"OR:\", age < 18 or is_student)\\nprint(\"NOT:\", not is_student)"}], "tips": ["在Python中，整除 // 会向下取整。", "使用括号可以明确运算顺序。"], "commonErrors": ["== 是比较运算符，= 是赋值运算符。", "除法 / 总是返回浮点数。"]}}, {"id": "1.3", "title": "字符串操作", "duration": "25分钟", "type": "图文", "content": {"text": "字符串是Python中用于表示文本的数据类型。常用字符串方法包括：upper()/lower()大小写转换、strip()去除空白、split()分割字符串、replace()替换子串。", "codeExamples": [{"title": "字符串基础操作", "code": "name = \"Python\"\\ntext = \"Hello, World!\"\\nprint(\"第一个字符:\", text[0])\\nprint(\"最后字符:\", text[-1])\\nprint(\"切片:\", text[0:5])\\nprint(\"反序:\", text[::-1])"}, {"title": "字符串方法", "code": "s = \"  Hello, Python!  \"\\nprint(\"大写:\", s.upper())\\nprint(\"小写:\", s.lower())\\nprint(\"去空格:\", s.strip())\\nprint(\"分割:\", s.split(\",\"))\\nprint(\"替换:\", s.replace(\"Python\", \"World\"))"}], "tips": ["字符串是不可变类型，所有操作都会返回新字符串。", "使用f-string可以方便地格式化字符串。"], "commonErrors": ["尝试修改字符串会导致TypeError。", "索引超出范围会导致IndexError。"]}}, {"id": "1.4", "title": "列表与元组", "duration": "25分钟", "type": "图文", "content": {"text": "列表和元组是Python中用于存储有序集合的数据结构。列表用方括号[]定义，元组用圆括号()定义。主要区别是列表可变，元组不可变。", "codeExamples": [{"title": "列表操作", "code": "fruits = [\"苹果\", \"香蕉\", \"橙子\"]\\nprint(\"列表长度:\", len(fruits))\\nfruits.append(\"葡萄\")\\nprint(\"追加后:\", fruits)\\nfruits.insert(1, \"草莓\")\\nprint(\"插入后:\", fruits)\\nfruits.remove(\"香蕉\")\\nprint(\"删除后:\", fruits)"}, {"title": "列表推导式", "code": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\\n# 筛选偶数\\nevens = [x for x in numbers if x % 2 == 0]\\nprint(\"偶数:\", evens)\\n# 计算平方\\nsquares = [x**2 for x in numbers]\\nprint(\"平方数:\", squares)"}], "tips": ["列表推导式是创建列表的简洁方式。", "元组常用于函数返回多个值。"], "commonErrors": ["列表索引从0开始，不是1。", "元组一旦创建就不能修改。"]}}, {"id": "1.5", "title": "字典与集合", "duration": "30分钟", "type": "图文", "content": {"text": "字典是键值对的数据结构，用大括号{}定义。集合是无序且不重复的元素集合。字典用于快速查找，集合用于去重和集合运算。", "codeExamples": [{"title": "字典操作", "code": "student = {\\n    \"name\": \"张三\",\\n    \"age\": 20,\\n    \"major\": \"计算机科学\"\\n}\\nprint(\"姓名:\", student[\"name\"])\\nstudent[\"age\"] = 21\\nprint(\"修改后:\", student)\\nstudent[\"grade\"] = \"A\"\\nprint(\"添加后:\", student)\\nprint(\"键列表:\", list(student.keys()))"}, {"title": "集合操作", "code": "set1 = {1, 2, 3, 4, 5}\\nset2 = {4, 5, 6, 7, 8}\\nprint(\"交集:\", set1 & set2)\\nprint(\"并集:\", set1 | set2)\\nprint(\"差集:\", set1 - set2)\\nprint(\"对称差集:\", set1 ^ set2)"}], "tips": ["字典的键必须是不可变类型（字符串、数字、元组等）。", "使用集合可以快速去重。"], "commonErrors": ["字典的键不能重复，后面的值会覆盖前面的。", "集合不支持索引访问。"]}}]}, {"id": "pandas-fundamentals", "title": "Pandas数据处理", "icon": "🐼", "description": "掌握Pandas库进行数据分析和处理", "difficulty": "入门", "lessons": [{"id": "2.1", "title": "Pandas数据结构", "duration": "20分钟", "type": "图文", "content": {"text": "Pandas两个主要数据结构是Series和DataFrame。Series是一维标签数组，DataFrame是二维表格数据，类似电子表格。", "codeExamples": [{"title": "创建Series和DataFrame", "code": "import pandas as pd\\n\\n# 创建Series\\ns = pd.Series([1, 3, 5, 7, 9])\\nprint(\"Series:\", s)\\n\\n# 创建DataFrame\\ndata = {\\n    \"姓名\": [\"张三\", \"李四\", \"王五\"],\\n    \"年龄\": [25, 30, 35],\\n    \"城市\": [\"北京\", \"上海\", \"深圳\"]\\n}\\ndf = pd.DataFrame(data)\\nprint(\"DataFrame:\")\\nprint(df)"}], "tips": ["DataFrame是数据分析中最常用的数据结构。", "善用head()和tail()方法查看数据。"], "commonErrors": ["混淆行列索引。", "忘记导入pandas库。"]}}, {"id": "2.2", "title": "数据读取与保存", "duration": "25分钟", "type": "图文", "content": {"text": "Pandas支持读取多种格式的数据，包括CSV、Excel、JSON、SQL等。read_csv()是最常用的函数。", "codeExamples": [{"title": "读取CSV文件", "code": "import pandas as pd\\n\\n# 读取CSV\\ndf = pd.read_csv(\"data.csv\")\\n\\n# 查看数据\\nprint(\"数据形状:\", df.shape)\\nprint(\"\\n前5行:\")\\nprint(df.head())\\n\\n# 保存为Excel\\ndf.to_excel(\"output.xlsx\", index=False)"}, {"title": "读取Excel文件", "code": "import pandas as pd\\n\\n# 读取Excel（可指定sheet）\\ndf = pd.read_excel(\"data.xlsx\", sheet_name=\"Sheet1\")\\nprint(\"数据预览:\")\\nprint(df.head())\\n\\n# 保存为CSV\\ndf.to_csv(\"output.csv\", index=False, encoding=\"utf-8-sig\")"}], "tips": ["read_csv有很多参数可以控制数据读取方式。", "使用encoding参数处理中文编码问题。"], "commonErrors": ["文件路径错误导致FileNotFoundError。", "编码问题导致读取失败。"]}}, {"id": "2.3", "title": "数据选择与过滤", "duration": "30分钟", "type": "图文", "content": {"text": "数据选择是数据分析的基础操作。Pandas提供了多种选择数据的方法：列选择、行选择、条件过滤等。", "codeExamples": [{"title": "选择列和行", "code": "import pandas as pd\\n\\ndf = pd.DataFrame({\\n    \"姓名\": [\"张三\", \"李四\", \"王五\", \"赵六\"],\\n    \"年龄\": [25, 30, 35, 28],\\n    \"工资\": [8000, 12000, 15000, 9500]\\n})\\n\\n# 选择单列\\nprint(\"姓名列:\", df[\"姓名\"])\\n\\n# 选择多列\\nprint(\"\\n姓名和工资:\")\\nprint(df[[\"姓名\", \"工资\"]])\\n\\n# 选择行\\nprint(\"\\n前2行:\")\\nprint(df.iloc[:2])"}, {"title": "条件过滤", "code": "import pandas as pd\\n\\ndf = pd.DataFrame({\\n    \"姓名\": [\"张三\", \"李四\", \"王五\", \"赵六\"],\\n    \"年龄\": [25, 30, 35, 28],\\n    \"工资\": [8000, 12000, 15000, 9500]\\n})\\n\\n# 单条件过滤\\nhigh_salary = df[df[\"工资\"] > 10000]\\nprint(\"高工资员工:\")\\nprint(high_salary)\\n\\n# 多条件过滤\\nsenior_young = df[(df[\"年龄\"] > 25) & (df[\"工资\"] < 15000)]\\nprint(\"\\n年轻高薪员工:\")\\nprint(senior_young)"}], "tips": ["iloc基于整数位置选择，loc基于标签选择。", "使用布尔条件过滤数据非常强大。"], "commonErrors": ["iloc和loc混淆使用。", "多条件过滤忘记用括号分组。"]}}, {"id": "2.4", "title": "数据清洗", "duration": "35分钟", "type": "图文", "content": {"text": "数据清洗是数据分析的重要步骤，包括处理缺失值、重复值、异常值，以及数据类型转换等。", "codeExamples": [{"title": "处理缺失值", "code": "import pandas as pd\\nimport numpy as np\\n\\ndf = pd.DataFrame({\\n    \"姓名\": [\"张三\", \"李四\", \"王五\", np.nan],\\n    \"年龄\": [25, np.nan, 35, 28],\\n    \"工资\": [8000, 12000, np.nan, 9500]\\n})\\n\\nprint(\"原始数据:\")\\nprint(df)\\n\\n# 检查缺失值\\nprint(\"\\n缺失值统计:\")\\nprint(df.isnull().sum())\\n\\n# 填充缺失值\\ndf[\"年龄\"].fillna(df[\"年龄\"].mean(), inplace=True)\\ndf[\"工资\"].fillna(df[\"工资\"].median(), inplace=True)\\ndf[\"姓名\"].fillna(\"未知\", inplace=True)\\nprint(\"\\n填充后:\")\\nprint(df)"}, {"title": "处理重复和异常值", "code": "import pandas as pd\\nimport numpy as np\\n\\ndf = pd.DataFrame({\\n    \"姓名\": [\"张三\", \"李四\", \"张三\", \"王五\"],\\n    \"年龄\": [25, 30, 25, 150],\\n    \"工资\": [8000, 12000, 8000, 9500]\\n})\\n\\nprint(\"原始数据:\")\\nprint(df)\\n\\n# 删除重复\\ndf.drop_duplicates(inplace=True)\\nprint(\"\\n删除重复后:\")\\nprint(df)\\n\\n# 处理异常值（年龄>100视为异常）\\ndf = df[df[\"年龄\"] < 100]\\nprint(\"\\n处理异常值后:\")\\nprint(df)"}], "tips": ["处理缺失值前先分析缺失原因。", "删除重复数据时要谨慎。"], "commonErrors": ["直接删除缺失值而不分析原因。", "忽略异常值对分析的影响。"]}}, {"id": "2.5", "title": "数据分组与聚合", "duration": "30分钟", "type": "图文", "content": {"text": "分组聚合是数据分析的核心操作。使用groupby()进行分组，然后使用聚合函数计算统计指标。", "codeExamples": [{"title": "基本分组聚合", "code": "import pandas as pd\\n\\ndf = pd.DataFrame({\\n    \"部门\": [\"技术\", \"销售\", \"技术\", \"销售\", \"技术\"],\\n    \"姓名\": [\"张三\", \"李四\", \"王五\", \"赵六\", \"孙七\"],\\n    \"工资\": [8000, 12000, 9500, 11000, 8500]\\n})\\n\\n# 按部门分组计算平均工资\\ndept_avg = df.groupby(\"部门\")[\"工资\"].mean()\\nprint(\"各部门平均工资:\")\\nprint(dept_avg)\\n\\n# 多列分组\\ndept_stats = df.groupby(\"部门\").agg({\\n    \"工资\": [\"mean\", \"max\", \"min\", \"count\"]\\n})\\nprint(\"\\n各部门工资统计:\")\\nprint(dept_stats)"}, {"title": "透视表", "code": "import pandas as pd\\n\\ndf = pd.DataFrame({\\n    \"部门\": [\"技术\", \"销售\", \"技术\", \"销售\", \"技术\"],\\n    \"职位\": [\"工程师\", \"经理\", \"工程师\", \"经理\", \"工程师\"],\\n    \"工资\": [8000, 12000, 9500, 11000, 8500]\\n})\\n\\n# 创建透视表\\npivot = pd.pivot_table(df, values=\"工资\", index=\"部门\", columns=\"职位\", aggfunc=\"mean\")\\nprint(\"工资透视表:\")\\nprint(pivot)"}], "tips": ["groupby后可以使用多个聚合函数。", "pivot_table是二维数据分析的强大工具。"], "commonErrors": ["忘记groupby返回的是GroupBy对象，需要聚合。", "聚合函数拼写错误。"]}}, {"id": "2.6", "title": "数据合并与连接", "duration": "35分钟", "type": "图文", "content": {"text": "数据合并是将多个DataFrame组合在一起的操作。concat用于简单拼接，merge用于基于键的连接。", "codeExamples": [{"title": "concat合并", "code": "import pandas as pd\\n\\ndf1 = pd.DataFrame({\\n    \"姓名\": [\"张三\", \"李四\"],\\n    \"年龄\": [25, 30]\\n})\\ndf2 = pd.DataFrame({\\n    \"姓名\": [\"王五\", \"赵六\"],\\n    \"年龄\": [35, 28]\\n})\\n\\n# 垂直合并\\ncombined = pd.concat([df1, df2], ignore_index=True)\\nprint(\"合并后:\")\\nprint(combined)"}, {"title": "merge连接", "code": "import pandas as pd\\n\\ndf1 = pd.DataFrame({\\n    \"员工ID\": [1, 2, 3],\\n    \"姓名\": [\"张三\", \"李四\", \"王五\"]\\n})\\ndf2 = pd.DataFrame({\\n    \"员工ID\": [1, 2, 4],\\n    \"工资\": [8000, 12000, 9500]\\n})\\n\\n# 内连接\\nmerged = pd.merge(df1, df2, on=\"员工ID\", how=\"inner\")\\nprint(\"内连接结果:\")\\nprint(merged)\\n\\n# 左连接\\nleft_merged = pd.merge(df1, df2, on=\"员工ID\", how=\"left\")\\nprint(\"\\n左连接结果:\")\\nprint(left_merged)"}], "tips": ["concat按行或列拼接，merge按键合并。", "了解不同连接类型的区别很重要。"], "commonErrors": ["混淆连接类型导致数据丢失。", "没有共同的键导致merge失败。"]}}]}, {"id": "data-visualization", "title": "数据可视化", "icon": "📊", "description": "使用Matplotlib和Seaborn创建专业图表", "difficulty": "入门", "lessons": [{"id": "3.1", "title": "Matplotlib基础", "duration": "25分钟", "type": "图文", "content": {"text": "Matplotlib是Python最流行的可视化库。pyplot子模块提供了类似MATLAB的绘图接口。", "codeExamples": [{"title": "基本折线图", "code": "import matplotlib.pyplot as plt\\n\\n# 基本数据\\nx = [1, 2, 3, 4, 5]\\ny = [2, 4, 6, 8, 10]\\n\\n# 绘制折线图\\nplt.plot(x, y)\\nplt.xlabel(\"X轴\")\\nplt.ylabel(\"Y轴\")\\nplt.title(\"简单折线图\")\\nplt.show()"}, {"title": "多线图和样式", "code": "import matplotlib.pyplot as plt\\n\\nx = [1, 2, 3, 4, 5]\\ny1 = [2, 4, 6, 8, 10]\\ny2 = [1, 3, 5, 7, 9]\\n\\nplt.plot(x, y1, label=\"线1\", color=\"blue\", linestyle=\"--\")\\nplt.plot(x, y2, label=\"线2\", color=\"red\", marker=\"o\")\\nplt.xlabel(\"X轴\")\\nplt.ylabel(\"Y轴\")\\nplt.title(\"多线图示例\")\\nplt.legend()\\nplt.grid(True)\\nplt.show()"}], "tips": ["使用figsize参数控制图形大小。", "保存图形使用savefig()方法。"], "commonErrors": ["忘记调用plt.show()查看图形。", "中文显示为乱码。"]}}, {"id": "3.2", "title": "常用图表类型", "duration": "30分钟", "type": "图文", "content": {"text": "不同类型的数据适合不同的图表。柱状图适合比较分类数据，折线图适合展示趋势，散点图适合展示相关性。", "codeExamples": [{"title": "柱状图", "code": "import matplotlib.pyplot as plt\\n\\ncategories = [\"A\", \"B\", \"C\", \"D\"]\\nvalues = [25, 40, 30, 55]\\n\\nplt.figure(figsize=(8, 6))\\nplt.bar(categories, values, color=[\"red\", \"blue\", \"green\", \"orange\"])\\nplt.xlabel(\"类别\")\\nplt.ylabel(\"数值\")\\nplt.title(\"柱状图示例\")\\nplt.show()"}, {"title": "散点图", "code": "import matplotlib.pyplot as plt\\nimport numpy as np\\n\\nnp.random.seed(42)\\nx = np.random.randn(50)\\ny = x + np.random.randn(50) * 0.5\\n\\nplt.figure(figsize=(8, 6))\\nplt.scatter(x, y, alpha=0.6, c=\"blue\", edgecolors=\"black\")\\nplt.xlabel(\"X\")\\nplt.ylabel(\"Y\")\\nplt.title(\"散点图示例\")\\nplt.grid(True)\\nplt.show()"}, {"title": "饼图", "code": "import matplotlib.pyplot as plt\\n\\nsizes = [30, 25, 20, 15, 10]\\nlabels = [\"A\", \"B\", \"C\", \"D\", \"E\"]\\ncolors = [\"gold\", \"yellowgreen\", \"lightcoral\", \"lightskyblue\", \"red\"]\\nexplode = (0.1, 0, 0, 0, 0)\\n\\nplt.figure(figsize=(8, 6))\\nplt.pie(sizes, explode=explode, labels=labels, colors=colors,\\n        autopct=\"%1.1f%%\", shadow=True, startangle=90)\\nplt.title(\"饼图示例\")\\nplt.show()"}], "tips": ["柱状图可以横向绘制（barh）。", "使用alpha参数调整透明度。"], "commonErrors": ["数据量太大时散点图会显得杂乱。", "饼图类别太多难以阅读。"]}}, {"id": "3.3", "title": "Seaborn高级可视化", "duration": "35分钟", "type": "图文", "content": {"text": "Seaborn是基于Matplotlib的高级可视化库，提供了更美观的默认样式和更简单的API，特别适合统计图表。", "codeExamples": [{"title": "关系图", "code": "import seaborn as sns\\nimport matplotlib.pyplot as plt\\nimport pandas as pd\\n\\n# 加载示例数据\\ntips = sns.load_dataset(\"tips\")\\n\\n# 关系散点图\\nsns.relplot(x=\"total_bill\", y=\"tip\", hue=\"smoker\", data=tips)\\nplt.title(\"小费与账单关系\")\\nplt.show()"}, {"title": "分布图", "code": "import seaborn as sns\\nimport matplotlib.pyplot as plt\\nimport pandas as pd\\n\\ntips = sns.load_dataset(\"tips\")\\n\\n# 箱线图\\nplt.figure(figsize=(10, 6))\\nsns.boxplot(x=\"day\", y=\"total_bill\", data=tips)\\nplt.title(\"各天账单分布\")\\nplt.show()"}], "tips": ["Seaborn自动处理图例和轴标签。", "set_style()可以改变整体风格。"], "commonErrors": ["忘记导入seaborn。", "混淆relplot和scatterplot。"]}}, {"id": "3.4", "title": "图表美化与保存", "duration": "25分钟", "type": "图文", "content": {"text": "好的可视化不仅要准确，还要美观。包括选择合适的颜色、添加注释、调整布局等。", "codeExamples": [{"title": "设置样式和保存", "code": "import matplotlib.pyplot as plt\\n\\n# 设置中文字体和样式\\nplt.rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans']\\nplt.rcParams['axes.unicode_minus'] = False\\nplt.style.use('seaborn-v0_8-whitegrid')\\n\\nx = [1, 2, 3, 4, 5]\\ny = [2, 4, 6, 8, 10]\\n\\nplt.figure(figsize=(10, 6), dpi=300)\\nplt.plot(x, y, linewidth=2, color='#2E86AB')\\nplt.xlabel(\"X轴\", fontsize=12)\\nplt.ylabel(\"Y轴\", fontsize=12)\\nplt.title(\"美化后的图表\", fontsize=14, fontweight='bold')\\nplt.grid(True, alpha=0.3)\\n\\n# 保存图片\\nplt.savefig('figure.png', dpi=300, bbox_inches='tight')\\nplt.show()"}], "tips": ["使用rcParams设置全局样式。", "保存时使用bbox_inches='tight'避免裁剪。"], "commonErrors": ["中文字体设置不正确。", "保存后图形显示异常。"]}}]}, {"id": "numpy-essentials", "title": "NumPy数值计算", "icon": "🔢", "description": "掌握NumPy进行高效的数值计算", "difficulty": "入门", "lessons": [{"id": "4.1", "title": "NumPy数组基础", "duration": "20分钟", "type": "图文", "content": {"text": "NumPy是Python科学计算的基础库，其核心是N维数组对象ndarray。比Python原生列表更高效。", "codeExamples": [{"title": "创建数组", "code": "import numpy as np\\n\\n# 从列表创建\\na = np.array([1, 2, 3, 4, 5])\\nprint(\"数组:\", a)\\nprint(\"类型:\", type(a))\\n\\n# 创建特殊数组\\nzeros = np.zeros(5)\\nones = np.ones((3, 3))\\narrange = np.arange(0, 10, 2)\\nlinespace = np.linspace(0, 1, 5)\\n\\nprint(\"\\nzeros:\", zeros)\\nprint(\"\\nones:\\n\", ones)\\nprint(\"\\narange:\", arrange)\\nprint(\"linespace:\", linespace)"}], "tips": ["NumPy数组支持向量化操作。", "使用.shape查看数组维度。"], "commonErrors": ["混淆列表和NumPy数组。", "数组索引越界。"]}}, {"id": "4.2", "title": "数组操作与运算", "duration": "25分钟", "type": "图文", "content": {"text": "NumPy数组支持丰富的数学运算，包括基本的算术运算、统计运算、矩阵运算等。", "codeExamples": [{"title": "基本运算", "code": "import numpy as np\\n\\na = np.array([1, 2, 3, 4, 5])\\nb = np.array([10, 20, 30, 40, 50])\\n\\nprint(\"a + b:\", a + b)\\nprint(\"a * 2:\", a * 2)\\nprint(\"a ** 2:\", a ** 2)\\nprint(\"a / b:\", a / b)\\nprint(\"a % b:\", a % b)"}, {"title": "统计函数", "code": "import numpy as np\\n\\na = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])\\n\\nprint(\"求和:\", np.sum(a))\\nprint(\"平均值:\", np.mean(a))\\nprint(\"标准差:\", np.std(a))\\nprint(\"最大值:\", np.max(a))\\nprint(\"最小值:\", np.min(a))\\nprint(\"中位数:\", np.median(a))"}], "tips": ["NumPy的函数都是针对整个数组的向量化操作。", "使用axis参数可以沿指定轴计算。"], "commonErrors": ["数组形状不匹配导致运算失败。", "忘记NumPy数组索引从0开始。"]}}, {"id": "4.3", "title": "索引与切片", "duration": "20分钟", "type": "图文", "content": {"text": "NumPy数组支持灵活的索引和切片操作，可以选择数组中的特定元素或子集。", "codeExamples": [{"title": "基本索引和切片", "code": "import numpy as np\\n\\na = np.arange(10)\\nprint(\"原始数组:\", a)\\n\\nprint(\"前3个:\", a[:3])\\nprint(\"后3个:\", a[-3:])\\nprint(\"中间:\", a[3:7])\\nprint(\"每隔一个:\", a[::2])"}, {"title": "布尔索引和花式索引", "code": "import numpy as np\\n\\na = np.array([10, 20, 30, 40, 50])\\n\\n# 布尔索引\\nmask = a > 30\\nprint(\"大于30的元素:\", a[mask])\\n\\n# 花式索引\\nindices = [0, 2, 4]\\nprint(\"指定索引:\", a[indices])"}], "tips": ["布尔索引可以组合多个条件。", "花式索引返回新数组，不是视图。"], "commonErrors": ["布尔索引使用单&而不是and。", "混淆视图和副本。"]}}, {"id": "4.4", "title": "形状操作与广播", "duration": "25分钟", "type": "图文", "content": {"text": "NumPy的广播机制允许不同形状的数组进行运算，大大简化了代码。reshape可以改变数组形状。", "codeExamples": [{"title": "reshape和transpose", "code": "import numpy as np\\n\\na = np.arange(12)\\nprint(\"原始:\", a)\\n\\n# 改变形状\\nb = a.reshape(3, 4)\\nprint(\"\\n3x4数组:\")\\nprint(b)\\n\\n# 转置\\nc = b.T\\nprint(\"\\n转置后:\")\\nprint(c)"}, {"title": "广播机制", "code": "import numpy as np\\n\\n# 标量与数组\\na = np.array([1, 2, 3, 4])\\nprint(\"a + 10:\", a + 10)\\n\\n# 一维与二维\\nb = np.arange(4).reshape(4, 1)\\nc = np.arange(4)\\nprint(\"\\nb + c:\")\\nprint(b + c)"}], "tips": ["广播从后向前比较维度。", "reshape后数组总元素数必须相同。"], "commonErrors": ["形状不兼容导致广播失败。", "reshape参数乘积不等于原元素数。"]}}]}, {"id": "statistics-basics", "title": "统计学基础", "icon": "📈", "description": "学习数据分析必备的统计学知识", "difficulty": "进阶", "lessons": [{"id": "5.1", "title": "描述性统计", "duration": "25分钟", "type": "图文", "content": {"text": "描述性统计用于总结和描述数据的基本特征，包括集中趋势、离散程度和分布形状。", "codeExamples": [{"title": "集中趋势", "code": "import numpy as np\\nimport pandas as pd\\n\\ndata = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70]\\n\\nprint(\"均值:\", np.mean(data))\\nprint(\"中位数:\", np.median(data))\\nprint(\"众数:\", pd.Series(data).mode().values)"}, {"title": "离散程度", "code": "import numpy as np\\n\\ndata = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70]\\n\\nprint(\"方差:\", np.var(data))\\nprint(\"标准差:\", np.std(data))\\nprint(\"极差:\", np.max(data) - np.min(data))\\nprint(\"四分位距:\", np.percentile(data, 75) - np.percentile(data, 25))"}], "tips": ["均值对异常值敏感，中位数更稳健。", "标准差是方差的平方根，与数据单位相同。"], "commonErrors": ["混淆样本标准和总体标准差计算。", "忽略异常值对统计量的影响。"]}}, {"id": "5.2", "title": "概率分布", "duration": "30分钟", "type": "图文", "content": {"text": "概率分布描述随机变量取值的概率规律。常见的包括正态分布、二项分布、泊松分布等。", "codeExamples": [{"title": "正态分布", "code": "import numpy as np\\nimport matplotlib.pyplot as plt\\n\\n# 生成正态分布数据\\nmu, sigma = 0, 1\\ndata = np.random.normal(mu, sigma, 1000)\\n\\n# 绘图\\nplt.hist(data, bins=30, density=True, alpha=0.7)\\nplt.xlabel(\"X\")\\nplt.ylabel(\"密度\")\\nplt.title(\"正态分布 (μ=0, σ=1)\")\\nplt.show()"}], "tips": ["正态分布由均值和标准差完全确定。", "68-95-99.7法则描述正态分布的分散程度。"], "commonErrors": ["混淆概率密度和概率。", "忽略分布的假设条件。"]}}, {"id": "5.3", "title": "假设检验", "duration": "35分钟", "type": "图文", "content": {"text": "假设检验是判断样本数据是否支持某个假设的统计方法。包括Z检验、t检验、卡方检验等。", "codeExamples": [{"title": "t检验示例", "code": "from scipy import stats\\nimport numpy as np\\n\\n# 两组样本数据\\ngroup1 = [25, 30, 35, 40, 45]\\ngroup2 = [30, 35, 40, 45, 50]\\n\\n# 独立样本t检验\\nt_stat, p_value = stats.ttest_ind(group1, group2)\\nprint(f\"t统计量: {t_stat:.4f}\")\\nprint(f\"p值: {p_value:.4f}\")\\n\\nif p_value < 0.05:\\n    print(\"结论: 两组有显著差异\")\\nelse:\\n    print(\"结论: 两组无显著差异\")"}], "tips": ["p值小于0.05通常认为有显著差异。", "需要满足假设检验的前提条件。"], "commonErrors": ["混淆第一类和第二类错误。", "p值小就认为效应大。"]}}, {"id": "5.4", "title": "相关性分析", "duration": "25分钟", "type": "图文", "content": {"text": "相关性分析用于衡量两个变量之间的关联程度和方向。皮尔逊相关系数是最常用的指标。", "codeExamples": [{"title": "计算相关系数", "code": "import numpy as np\\nfrom scipy import stats\\n\\nx = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])\\ny = np.array([2, 4, 5, 4, 5, 6, 7, 8, 9, 10])\\n\\n# 皮尔逊相关系数\\ncorrelation, p_value = stats.pearsonr(x, y)\\nprint(f\"相关系数: {correlation:.4f}\")\\nprint(f\"p值: {p_value:.4f}\")"}], "tips": ["相关系数范围是-1到1。", "相关性不等于因果性。"], "commonErrors": ["忽略异常值对相关系数的影响。", "混淆相关性和因果关系。"]}}, {"id": "5.5", "title": "回归分析", "duration": "30分钟", "type": "图文", "content": {"text": "回归分析用于研究因变量与自变量之间的定量关系。最简单的是一元线性回归。", "codeExamples": [{"title": "线性回归", "code": "import numpy as np\\nfrom sklearn.linear_model import LinearRegression\\n\\nx = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)\\ny = np.array([2, 4, 5, 4, 5])\\n\\n# 创建并训练模型\\nmodel = LinearRegression()\\nmodel.fit(x, y)\\n\\n# 输出结果\\nprint(f\"斜率: {model.coef_[0]:.4f}\")\\nprint(f\"截距: {model.intercept_:.4f}\")\\nprint(f\"R²: {model.score(x, y):.4f}\")"}], "tips": ["R²越接近1拟合效果越好。", "回归前要检查线性假设是否成立。"], "commonErrors": ["忽视残差分析。", "过拟合高次多项式。"]}}]}, {"id": "sql-fundamentals", "title": "SQL数据库查询", "icon": "🗄️", "description": "掌握SQL进行数据库数据查询", "difficulty": "进阶", "lessons": [{"id": "6.1", "title": "SQL基础", "duration": "20分钟", "type": "图文", "content": {"text": "SQL是操作数据库的标准语言。核心语句：SELECT查询、INSERT插入、UPDATE更新、DELETE删除。", "codeExamples": [{"title": "基础查询", "code": "-- 查询所有数据\\nSELECT * FROM employees;\\n\\n-- 查询特定列\\nSELECT name, salary FROM employees;\\n\\n-- 条件查询\\nSELECT * FROM employees WHERE salary > 5000;"}], "tips": ["SQL关键字通常大写，但不是强制的。", "使用DESC关键字可以降序排列。"], "commonErrors": ["忘记分号结束语句。", "字符串需要用单引号包围。"]}}, {"id": "6.2", "title": "过滤与排序", "duration": "25分钟", "type": "图文", "content": {"text": "WHERE子句用于过滤数据，ORDER BY用于排序。可以使用AND、OR、NOT组合多个条件。", "codeExamples": [{"title": "WHERE子句", "code": "-- 多个条件\\nSELECT * FROM employees\\nWHERE department = 'Sales' AND salary > 5000;\\n\\n-- IN和BETWEEN\\nSELECT * FROM products\\nWHERE price IN (100, 200, 300);\\n\\nSELECT * FROM orders\\nWHERE order_date BETWEEN '2024-01-01' AND '2024-12-31';"}, {"title": "排序", "code": "-- 升序（默认）\\nSELECT * FROM employees ORDER BY salary;\\n\\n-- 降序\\nSELECT * FROM employees ORDER BY salary DESC;\\n\\n-- 多列排序\\nSELECT * FROM employees ORDER BY department, salary DESC;"}], "tips": ["NULL值的排序需要注意。", "ORDER BY在WHERE之后执行。"], "commonErrors": ["混淆AND和OR的优先级。", "忘记ESCAPE处理特殊字符。"]}}, {"id": "6.3", "title": "聚合函数与分组", "duration": "30分钟", "type": "图文", "content": {"text": "聚合函数对一组值计算并返回单个值。常用聚合函数：COUNT、SUM、AVG、MAX、MIN。GROUP BY用于分组。", "codeExamples": [{"title": "聚合函数", "code": "-- 基本聚合\\nSELECT COUNT(*) FROM employees;\\nSELECT SUM(salary) FROM employees;\\nSELECT AVG(salary) FROM employees;\\nSELECT MAX(salary) FROM employees;\\nSELECT MIN(salary) FROM employees;"}, {"title": "分组统计", "code": "-- 按部门统计\\nSELECT department,\\n       COUNT(*) as count,\\n       AVG(salary) as avg_salary\\nFROM employees\\nGROUP BY department;\\n\\n-- HAVING过滤分组\\nSELECT department, COUNT(*) as count\\nFROM employees\\nGROUP BY department\\nHAVING COUNT(*) > 5;"}], "tips": ["SELECT中的列必须在GROUP BY中或被聚合函数包裹。", "HAVING过滤分组，WHERE过滤行。"], "commonErrors": ["WHERE中使用聚合函数。", "忘记GROUP BY后的列也要在SELECT中。"]}}, {"id": "6.4", "title": "表连接", "duration": "35分钟", "type": "图文", "content": {"text": "JOIN用于合并多个表的数据。类型包括INNER JOIN、LEFT JOIN、RIGHT JOIN、FULL OUTER JOIN。", "codeExamples": [{"title": "内连接", "code": "-- 内连接（只保留匹配的行）\\nSELECT orders.order_id, customers.customer_name\\nFROM orders\\nINNER JOIN customers\\nON orders.customer_id = customers.customer_id;"}, {"title": "外连接", "code": "-- 左连接（保留左表所有行）\\nSELECT customers.customer_name, orders.order_id\\nFROM customers\\nLEFT JOIN orders\\nON customers.customer_id = orders.customer_id;\\n\\n-- 右连接（保留右表所有行）\\nSELECT customers.customer_name, orders.order_id\\nFROM customers\\nRIGHT JOIN orders\\nON customers.customer_id = orders.customer_id;"}], "tips": ["使用表别名可以简化查询。", "确保连接键有适当的索引。"], "commonErrors": ["笛卡尔积（忘记ON条件）。", "混淆连接类型导致数据丢失。"]}}, {"id": "6.5", "title": "子查询与视图", "duration": "30分钟", "type": "图文", "content": {"text": "子查询是嵌套在另一个查询中的查询。视图是存储的查询，可以像表一样使用。", "codeExamples": [{"title": "子查询", "code": "-- 在WHERE中使用\\nSELECT * FROM employees\\nWHERE salary > (SELECT AVG(salary) FROM employees);\\n\\n-- 在FROM中使用\\nSELECT dept, AVG(salary) as avg_sal\\nFROM (SELECT department as dept, salary\\n      FROM employees\\n      WHERE salary > 5000) as high_earners\\nGROUP BY dept;"}, {"title": "视图", "code": "-- 创建视图\\nCREATE VIEW high_salary_employees AS\\nSELECT name, department, salary\\nFROM employees\\nWHERE salary > 10000;\\n\\n-- 使用视图\\nSELECT * FROM high_salary_employees\\nWHERE department = 'Sales';"}], "tips": ["子查询可以用JOIN替代时，通常JOIN更高效。", "视图不存储数据，只是查询定义。"], "commonErrors": ["子查询返回多列。", "视图更新受限制。"]}}, {"id": "6.6", "title": "窗口函数", "duration": "35分钟", "type": "图文", "content": {"text": "窗口函数在不使用GROUP BY的情况下对一组行执行聚合计算。包含OVER()、PARTITION BY等。", "codeExamples": [{"title": "窗口函数基础", "code": "-- 计算排名\\nSELECT name, salary,\\n       RANK() OVER (ORDER BY salary DESC) as rank\\nFROM employees;\\n\\n-- 计算累计和\\nSELECT order_date, amount,\\n       SUM(amount) OVER (ORDER BY order_date) as cumulative\\nFROM orders;"}, {"title": "分区窗口", "code": "-- 按部门排名\\nSELECT name, department, salary,\\n       RANK() OVER (PARTITION BY department\\n                    ORDER BY salary DESC) as dept_rank\\nFROM employees;\\n\\n-- 计算每个部门的平均工资\\nSELECT name, department, salary,\\n       AVG(salary) OVER (PARTITION BY department) as dept_avg\\nFROM employees;"}], "tips": ["窗口函数在SELECT中使用。", "PARTITION BY类似GROUP BY但不合并行。"], "commonErrors": ["混淆窗口函数和聚合函数。", "忘记ORDER BY导致结果不确定。"]}}]}, {"id": "machine-learning", "title": "机器学习入门", "icon": "🤖", "description": "了解机器学习基本概念和常用算法", "difficulty": "进阶", "lessons": [{"id": "7.1", "title": "机器学习概述", "duration": "20分钟", "type": "图文", "content": {"text": "机器学习是让计算机从数据中学习并做出预测的技术。主要分为监督学习、无监督学习和强化学习。", "codeExamples": [{"title": "分类vs回归", "code": "# 分类：预测离散标签\\n# 例如：判断邮件是垃圾还是非垃圾\\n\\n# 回归：预测连续值\\n# 例如：预测房价、预测温度"}], "tips": ["根据目标变量类型选择合适的算法。", "特征工程对模型效果影响很大。"], "commonErrors": ["混淆分类和回归问题。", "忽视数据预处理。"]}}, {"id": "7.2", "title": "线性回归", "duration": "30分钟", "type": "图文", "content": {"text": "线性回归是最基本的回归算法，寻找自变量和因变量之间的线性关系。", "codeExamples": [{"title": "简单线性回归", "code": "import numpy as np\\nfrom sklearn.linear_model import LinearRegression\\nimport matplotlib.pyplot as plt\\n\\n# 准备数据\\nx = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)\\ny = np.array([2, 4, 5, 4, 5])\\n\\n# 训练模型\\nmodel = LinearRegression()\\nmodel.fit(x, y)\\n\\n# 预测\\npredictions = model.predict(x)\\n\\n# 绘图\\nplt.scatter(x, y, color='blue')\\nplt.plot(x, predictions, color='red')\\nplt.show()\\n\\nprint(f\"系数: {model.coef_[0]:.4f}\")\\nprint(f\"截距: {model.intercept_:.4f}\")"}], "tips": ["线性回归假设特征和目标之间存在线性关系。", "使用R²评估模型拟合效果。"], "commonErrors": ["忽视异常值的影响。", "过拟合训练数据。"]}}, {"id": "7.3", "title": "逻辑回归", "duration": "30分钟", "type": "图文", "content": {"text": "逻辑回归虽然名字带回归，但实际上是一种分类算法，用于二分类问题。", "codeExamples": [{"title": "逻辑回归示例", "code": "import numpy as np\\nfrom sklearn.linear_model import LogisticRegression\\nfrom sklearn.model_selection import train_test_split\\n\\n# 准备数据\\nx = np.array([[1, 2], [2, 3], [3, 3], [4, 5], [5, 4], [6, 5]])\\ny = np.array([0, 0, 0, 1, 1, 1])\\n\\n# 分割数据\\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)\\n\\n# 训练模型\\nmodel = LogisticRegression()\\nmodel.fit(x_train, y_train)\\n\\n# 评估\\naccuracy = model.score(x_test, y_test)\\nprint(f\"准确率: {accuracy:.4f}\")"}], "tips": ["逻辑回归输出的是概率值。", "可以使用阈值将概率转为类别。"], "commonErrors": ["将逻辑回归用于回归问题。", "忽视类别不平衡问题。"]}}, {"id": "7.4", "title": "决策树", "duration": "30分钟", "type": "图文", "content": {"text": "决策树是一种树形结构的分类/回归算法，通过不断分裂特征空间来做出预测。", "codeExamples": [{"title": "决策树分类", "code": "import numpy as np\\nfrom sklearn.tree import DecisionTreeClassifier\\nfrom sklearn.datasets import load_iris\\nfrom sklearn.model_selection import train_test_split\\n\\n# 加载数据\\nirirs = load_iris()\\nx, y = irirs.data, irirs.target\\n\\n# 分割数据\\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)\\n\\n# 训练模型\\nmodel = DecisionTreeClassifier(max_depth=3)\\nmodel.fit(x_train, y_train)\\n\\n# 评估\\nprint(f\"训练集准确率: {model.score(x_train, y_train):.4f}\")\\nprint(f\"测试集准确率: {model.score(x_test, y_test):.4f}\")"}], "tips": ["max_depth可以防止过拟合。", "特征重要性可以从tree.feature_importances_获取。"], "commonErrors": ["树太深导致过拟合。", "忽视特征重要性分析。"]}}, {"id": "7.5", "title": "模型评估与交叉验证", "duration": "35分钟", "type": "图文", "content": {"text": "模型评估用于衡量模型性能，交叉验证可以更可靠地估计泛化能力。", "codeExamples": [{"title": "交叉验证", "code": "import numpy as np\\nfrom sklearn.model_selection import cross_val_score\\nfrom sklearn.ensemble import RandomForestClassifier\\nfrom sklearn.datasets import load_iris\\n\\n# 加载数据\\nirirs = load_iris()\\nx, y = irirs.data, irirs.target\\n\\n# 交叉验证\\nmodel = RandomForestClassifier(n_estimators=100)\\nscores = cross_val_score(model, x, y, cv=5)\\n\\nprint(f\"各折准确率: {scores}\")\\nprint(f\"平均准确率: {scores.mean():.4f}\")\\nprint(f\"标准差: {scores.std():.4f}\")"}], "tips": ["k折交叉验证中k通常取5或10。", "分层抽样保证每折中类别比例一致。"], "commonErrors": ["只在训练集上评估。", "忽视交叉验证的重要性。"]}}, {"id": "7.6", "title": "随机森林与集成学习", "duration": "35分钟", "type": "图文", "content": {"text": "随机森林是Bagging的代表作，通过组合多棵决策树来提高预测准确性和稳定性。", "codeExamples": [{"title": "随机森林", "code": "import numpy as np\\nfrom sklearn.ensemble import RandomForestClassifier\\nfrom sklearn.datasets import load_iris\\nfrom sklearn.model_selection import train_test_split\\n\\n# 加载数据\\nirirs = load_iris()\\nx, y = irirs.data, irirs.target\\n\\n# 分割数据\\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)\\n\\n# 训练模型\\nmodel = RandomForestClassifier(n_estimators=100, random_state=42)\\nmodel.fit(x_train, y_train)\\n\\n# 评估\\nprint(f\"训练集准确率: {model.score(x_train, y_train):.4f}\")\\nprint(f\"测试集准确率: {model.score(x_test, y_test):.4f}\")\\n\\n# 特征重要性\\nprint(f\"\\n特征重要性: {model.feature_importances_}\")"}], "tips": ["n_estimators通常选择100或更多。", "随机森林对参数不那么敏感。"], "commonErrors": ["n_estimators太小导致不稳定。", "忽视特征重要性分析。"]}}]}, {"id": "feature-engineering", "title": "特征工程", "icon": "🔧", "description": "掌握特征工程技术提升模型性能", "difficulty": "高级", "lessons": [{"id": "8.1", "title": "特征缩放", "duration": "25分钟", "type": "图文", "content": {"text": "特征缩放将不同尺度的特征转换到同一尺度，对许多机器学习算法至关重要（如SVM、神经网络）。", "codeExamples": [{"title": "标准化与归一化", "code": "import numpy as np\\nfrom sklearn.preprocessing import StandardScaler, MinMaxScaler\\n\\ndata = np.array([[1, 2], [2, 3], [3, 4], [4, 5]])\\n\\n# 标准化 (Z-score)\\nstandard = StandardScaler()\\ndata_standard = standard.fit_transform(data)\\nprint(\"标准化后:\")\\nprint(data_standard)\\n\\n# 归一化 (Min-Max)\\nnormalizer = MinMaxScaler()\\ndata_normalized = normalizer.fit_transform(data)\\nprint(\"\\n归一化后:\")\\nprint(data_normalized)"}], "tips": ["树模型不需要特征缩放。", "KNN、K-means等距离算法需要特征缩放。"], "commonErrors": ["对树模型使用特征缩放。", "测试集使用训练集的缩放参数。"]}}, {"id": "8.2", "title": "编码分类变量", "duration": "30分钟", "type": "图文", "content": {"text": "机器学习算法需要数值输入，需要将分类变量转换为数值。常用方法有LabelEncoder和OneHotEncoder。", "codeExamples": [{"title": "标签编码与独热编码", "code": "import pandas as pd\\nfrom sklearn.preprocessing import LabelEncoder, OneHotEncoder\\n\\n# 示例数据\\ndf = pd.DataFrame({\\n    '城市': ['北京', '上海', '广州', '深圳']\\n})\\n\\n# 标签编码\\nle = LabelEncoder()\\ndf['城市_编码'] = le.fit_transform(df['城市'])\\nprint(\"标签编码:\")\\nprint(df)\\n\\n# 独热编码\\ndf_dummies = pd.get_dummies(df['城市'], prefix='城市')\\nprint(\"\\n独热编码:\")\\nprint(df_dummies)"}], "tips": ["树模型可以用标签编码。", "线性模型和神经网络需要独热编码。"], "commonErrors": ["对线性模型使用标签编码。", "忽略类别变量。"]}}, {"id": "8.3", "title": "特征构建", "duration": "30分钟", "type": "图文", "content": {"text": "特征构建基于现有特征创建新特征，可以捕捉更多有意义的信息。", "codeExamples": [{"title": "数学变换特征", "code": "import pandas as pd\\nimport numpy as np\\n\\ndf = pd.DataFrame({\\n    '价格': [100, 200, 300, 400],\\n    '数量': [2, 3, 1, 4]\\n})\\n\\n# 创建新特征\\ndf['总价'] = df['价格'] * df['数量']\\ndf['价格_对数'] = np.log(df['价格'])\\ndf['价格_平方'] = df['价格'] ** 2\\ndf['价格_开方'] = np.sqrt(df['价格'])\\n\\nprint(df)"}], "tips": ["根据业务知识创建有意义的特征。", "交互特征可以捕捉特征间的关系。"], "commonErrors": ["创建太多无意义的特征。", "忽视特征与目标的关系。"]}}, {"id": "8.4", "title": "特征选择", "duration": "35分钟", "type": "图文", "content": {"text": "特征选择从大量特征中选出最相关的子集，可以提高模型性能和可解释性。", "codeExamples": [{"title": "过滤法和包装法", "code": "import pandas as pd\\nfrom sklearn.feature_selection import SelectKBest, f_classif\\n\\n# 示例数据\\nx = pd.DataFrame({\\n    'f1': [1, 2, 3, 4, 5],\\n    'f2': [2, 4, 6, 8, 10],\\n    'f3': [1, 3, 2, 4, 3]\\n})\\ny = [0, 0, 1, 1, 1]\\n\\n# 选择最好的k个特征\\nselector = SelectKBest(score_func=f_classif, k=2)\\nselector.fit(x, y)\\n\\nprint(\"特征得分:\", selector.scores_)\\nprint(\"选中的特征:\", x.columns[selector.get_support()])"}], "tips": ["使用相关性分析初步筛选。", "考虑特征之间的冗余性。"], "commonErrors": ["选择太多特征导致过拟合。", "忽视特征之间的相关性。"]}}, {"id": "8.5", "title": "缺失值处理", "duration": "25分钟", "type": "图文", "content": {"text": "缺失值处理是特征工程的重要部分。需要根据缺失原因选择合适的处理方法。", "codeExamples": [{"title": "缺失值填充策略", "code": "import pandas as pd\\nimport numpy as np\\nfrom sklearn.impute import SimpleImputer\\n\\ndf = pd.DataFrame({\\n    'A': [1, 2, np.nan, 4],\\n    'B': [5, np.nan, 7, 8]\\n})\\n\\n# 均值填充\\nimputer = SimpleImputer(strategy='mean')\\ndf_filled = imputer.fit_transform(df)\\nprint(\"均值填充后:\")\\nprint(df_filled)"}], "tips": ["根据业务逻辑选择填充策略。", "可以用模型预测缺失值。"], "commonErrors": ["简单删除缺失值行。", "用测试集的统计量填充。"]}}]}, {"id": "time-series-analysis", "title": "时间序列分析", "icon": "⏰", "description": "学习时间序列数据的分析与预测", "difficulty": "高级", "lessons": [{"id": "9.1", "title": "时间序列基础", "duration": "25分钟", "type": "图文", "content": {"text": "时间序列是按时间顺序排列的数据。分析时间序列需要考虑趋势、季节性和周期性等成分。", "codeExamples": [{"title": "创建时间序列", "code": "import pandas as pd\\nimport numpy as np\\n\\n# 创建日期范围\\ndate_range = pd.date_range(start='2024-01-01', end='2024-01-31', freq='D')\\n\\n# 创建时间序列\\nts = pd.Series(np.random.randn(len(date_range)), index=date_range)\\nprint(\"时间序列:\")\\nprint(ts.head())\\nprint(\"\\n统计信息:\")\\nprint(ts.describe())"}], "tips": ["确保时间索引是正确的datetime类型。", "处理不规则时间序列时需要注意。"], "commonErrors": ["时间索引不是datetime类型。", "忽视缺失的时间点。"]}}, {"id": "9.2", "title": "移动平均与平滑", "duration": "25分钟", "type": "图文", "content": {"text": "移动平均可以消除短期波动，显示长期趋势。是时间序列分析的基础技术。", "codeExamples": [{"title": "移动平均", "code": "import pandas as pd\\nimport numpy as np\\n\\n# 创建数据\\ndate_range = pd.date_range(start='2024-01-01', periods=30, freq='D')\\nts = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] * 3, index=date_range)\\n\\n# 移动平均\\nts_ma7 = ts.rolling(window=7).mean()\\nts_ma30 = ts.rolling(window=30).mean()\\n\\nprint(\"原始数据:\")\\nprint(ts.head(10))\\nprint(\"\\n7天移动平均:\")\\nprint(ts_ma7.head(10))"}], "tips": ["窗口大小影响平滑程度。", "可以用加权移动平均更敏感。"], "commonErrors": ["窗口太小无法消除噪声。", "窗口太大丢失重要信息。"]}}, {"id": "9.3", "title": "趋势与季节性分解", "duration": "30分钟", "type": "图文", "content": {"text": "时间序列可以分解为趋势、季节性和残差三个成分。STL分解是最常用的方法。", "codeExamples": [{"title": "季节性分解", "code": "import pandas as pd\\nimport numpy as np\\nfrom statsmodels.tsa.seasonal import seasonal_decompose\\n\\n# 创建示例数据\\nnp.random.seed(42)\\ndate_range = pd.date_range(start='2024-01-01', periods=365, freq='D')\\ntrend = np.linspace(10, 20, 365)\\nseasonal = 2 * np.sin(np.linspace(0, 10* np.pi, 365))\\nnoise = np.random.randn(365) * 0.5\\nts = trend + seasonal + noise\\nts = pd.Series(ts, index=date_range)\\n\\n# 分解\\ndecomposition = seasonal_decompose(ts, model='additive', period=30)\\nprint(\"趋势:\")\\nprint(decomposition.trend.head(35))"}], "tips": ["加法分解适用于季节波动相对稳定的数据。", "乘法分解适用于季节波动与趋势成比例的数据。"], "commonErrors": ["选择错误的分解模型。", "周期选择不当。"]}}, {"id": "9.4", "title": "ARIMA模型", "duration": "40分钟", "type": "图文", "content": {"text": "ARIMA是最常用的时间序列预测模型，包含自回归(AR)、差分(I)和移动平均(MA)三个部分。", "codeExamples": [{"title": "ARIMA建模", "code": "import pandas as pd\\nimport numpy as np\\nfrom statsmodels.tsa.arima.model import ARIMA\\n\\n# 创建示例数据\\nnp.random.seed(42)\\ndate_range = pd.date_range(start='2024-01-01', periods=100, freq='D')\\nts = pd.Series(np.cumsum(np.random.randn(100)), index=date_range)\\n\\n# 拟合ARIMA模型\\nmodel = ARIMA(ts, order=(5, 1, 2))\\nmodel_fit = model.fit()\\n\\n# 预测\\nforecast = model_fit.forecast(steps=10)\\nprint(\"未来10期预测:\")\\nprint(forecast)"}], "tips": ["使用ACF和PACF图确定p和q参数。", "差分阶数d通常为0、1或2。"], "commonErrors": ["使用非平稳序列。", "参数选择不当。"]}}, {"id": "9.5", "title": " Prophet模型", "duration": "35分钟", "type": "图文", "content": {"text": "Prophet是Facebook开发的时间序列预测库，适合处理具有强烈季节性的商业数据。", "codeExamples": [{"title": "Prophet预测", "code": "import pandas as pd\\nimport numpy as np\\n\\n# 注意：Prophet需要单独安装\\n# pip install prophet\\n# 以下为示例代码\\n\\n# from prophet import Prophet\\n# \\n# # 准备数据\\n# df = pd.DataFrame({\\n#     'ds': pd.date_range('2024-01-01', periods=365, freq='D'),\\n#     'y': np.random.randn(365).cumsum() + 100\\n# })\\n# \\n# # 建模和预测\\n# model = Prophet()\\n# model.fit(df)\\n# \\n# future = model.make_future_dataframe(periods=30)\\n# forecast = model.predict(future)\\nprint(\"Prophet安装: pip install prophet\")"}], "tips": ["Prophet自动处理缺失日期。", "可以添加节假日效应。"], "commonErrors": ["数据量太少。", "忽视异常值。"]}}]}, {"id": "ab-testing", "title": "A/B测试分析", "icon": "🧪", "description": "掌握A/B测试设计与分析方法", "difficulty": "高级", "lessons": [{"id": "10.1", "title": "A/B测试概述", "duration": "20分钟", "type": "图文", "content": {"text": "A/B测试是一种对照实验方法，通过比较两个版本的效果差异来做数据驱动的决策。", "codeExamples": [{"title": "A/B测试概念", "code": "# 对照组 (A): 原有方案\\n# 实验组 (B): 新方案\\n\\n# 随机分配用户到两组\\n# 收集关键指标数据\\n# 进行统计检验判断差异是否显著"}], "tips": ["确保样本随机分配。", "同时只测试一个变量。"], "commonErrors": ["样本量太小。", "测试时间太短。"]}}, {"id": "10.2", "title": "样本量计算", "duration": "25分钟", "type": "图文", "content": {"text": "正确的样本量计算确保测试有足够的统计功效来检测预期的效果差异。", "codeExamples": [{"title": "样本量计算", "code": "import numpy as np\\nfrom scipy import stats\\n\\ndef calculate_sample_size(baseline_rate, mde, alpha=0.05, power=0.8):\\n    \"\"\"计算A/B测试所需样本量\"\"\"\\n    z_alpha = stats.norm.ppf(1 - alpha/2)\\n    z_beta = stats.norm.ppf(power)\\n    \\n    p1 = baseline_rate\\n    p2 = baseline_rate * (1 + mde)\\n    \\n    n = 2 * ((z_alpha + z_beta)**2 * (p1*(1-p1) + p2*(1-p2)))\\n    n = n / ((p2 - p1)**2)\\n    \\n    return int(np.ceil(n))\\n\\n# 计算示例\\nn = calculate_sample_size(0.1, 0.1)\\nprint(f\"所需样本量: {n} (每组)\")"}], "tips": ["期望提升越大，所需样本量越小。", "基准转化率越低，所需样本量越大。"], "commonErrors": ["不进行样本量计算就启动测试。", "低估样本量需求。"]}}, {"id": "10.3", "title": "统计检验", "duration": "30分钟", "type": "图文", "content": {"text": "A/B测试结果需要统计检验来判断差异是否显著。常用方法有Z检验和卡方检验。", "codeExamples": [{"title": "转化率检验", "code": "from scipy import stats\\nimport numpy as np\\n\\ndef ab_test_conversion(n_control, conv_control, n_treatment, conv_treatment):\\n    \"\"\"两比例Z检验\"\"\"\\n    # 计算转化率\\n    p1 = conv_control / n_control\\n    p2 = conv_treatment / n_treatment\\n    \\n    # 合并比例\\n    p_pool = (conv_control + conv_treatment) / (n_control + n_treatment)\\n    \\n    # Z统计量\\n    se = np.sqrt(p_pool * (1 - p_pool) * (1/n_control + 1/n_treatment))\\n    z = (p2 - p1) / se\\n    \\n    # p值\\n    p_value = 2 * (1 - stats.norm.cdf(abs(z)))\\n    \\n    return z, p_value\\n\\n# 检验示例\\nz, p = ab_test_conversion(1000, 100, 1000, 120)\\nprint(f\"Z统计量: {z:.4f}\")\\nprint(f\"P值: {p:.4f}\")"}], "tips": ["p值小于0.05通常认为差异显著。", "同时考虑统计显著和实际意义。"], "commonErrors": ["只看p值不看效应量。", "多重比较问题。"]}}, {"id": "10.4", "title": "结果分析实战", "duration": "35分钟", "type": "图文", "content": {"text": "实际A/B测试分析中需要考虑多个方面，包括置信区间、效果量、异质性等。", "codeExamples": [{"title": "完整分析示例", "code": "import numpy as np\\nfrom scipy import stats\\n\\n# 模拟数据\\nnp.random.seed(42)\\ncontrol = np.random.normal(10, 2, 1000)\\ntreatment = np.random.normal(10.5, 2, 1000)\\n\\n# 计算统计量\\nmean_control = np.mean(control)\\nmean_treatment = np.mean(treatment)\\nse = np.sqrt(np.var(control)/1000 + np.var(treatment)/1000)\\n\\n# 效应量 (Cohen's d)\\npooled_std = np.sqrt((np.var(control) + np.var(treatment)) / 2)\\ncohens_d = (mean_treatment - mean_control) / pooled_std\\n\\n# 置信区间\\nci_lower = (mean_treatment - mean_control) - 1.96 * se\\nci_upper = (mean_treatment - mean_control) + 1.96 * se\\n\\nprint(f\"对照组均值: {mean_control:.4f}\")\\nprint(f\"实验组均值: {mean_treatment:.4f}\")\\nprint(f\"效应量 (d): {cohens_d:.4f}\")\\nprint(f\"95%置信区间: [{ci_lower:.4f}, {ci_upper:.4f}]\")"}], "tips": ["不仅看p值，还要看置信区间。", "效应量反映实际差异大小。"], "commonErrors": ["忽视辛普森悖论。", "不检查假设条件。"]}}, {"id": "10.5", "title": "常见问题与最佳实践", "duration": "25分钟", "type": "图文", "content": {"text": "A/B测试中有许多常见的坑和最佳实践，了解它们可以避免常见的分析错误。", "codeExamples": [{"title": "常见问题检查", "code": "# 1. 样本比率偏差\\n# 确保分流比例符合预期\\n# \\n# 2. 新奇效应\\n# 短期效果可能不代表长期\\n# \\n# 3. 节日/季节影响\\n# 选择适当的测试时间窗口\\n# \\n# 4. 多次检验\\n# 累计alpha膨胀问题\\n# \\n# 5. 指标选择\\n# 避免单一指标忽略其他影响"}], "tips": ["建立测试checklist。", "记录所有测试的细节。"], "commonErrors": ["看到显著结果就停止测试。", "忽视业务约束。"]}}]}, {"id": "data-preprocessing", "title": "数据预处理实战", "icon": "🔄", "description": "综合学习各种数据预处理技术", "difficulty": "进阶", "lessons": [{"id": "11.1", "title": "数据质量检查", "duration": "25分钟", "type": "图文", "content": {"text": "数据质量检查是预处理的第一步，包括完整性、一致性、准确性等方面。", "codeExamples": [{"title": "数据质量报告", "code": "import pandas as pd\\nimport numpy as np\\n\\ndef data_quality_report(df):\\n    \"\"\"生成数据质量报告\"\"\"\\n    report = {}\\n    report['总行数'] = len(df)\\n    report['总列数'] = len(df.columns)\\n    report['缺失值'] = df.isnull().sum().to_dict()\\n    report['重复行'] = df.duplicated().sum()\\n    \\n    print(\"=== 数据质量报告 ===\")\\n    for key, value in report.items():}\\n        if key != '缺失值':\\n            print(f\"{key}: {value}\")\\n    print(\"\\n缺失值详情:\")\\n    print(report['缺失值'])\\n    \\n    return report\\n\\ndf = pd.DataFrame({\\n    'A': [1, 2, np.nan, 4],\\n    'B': [5, 5, 7, 8]\\n})\\nreport = data_quality_report(df)"}], "tips": ["建立数据质量检查流程。", "记录数据问题及其处理方法。"], "commonErrors": ["跳过数据质量检查。", "不记录数据处理步骤。"]}}, {"id": "11.2", "title": "异常值处理", "duration": "30分钟", "type": "图文", "content": {"text": "异常值可能是数据错误，也可能是真实的极端值。处理方法取决于异常原因。", "codeExamples": [{"title": "异常值检测与处理", "code": "import pandas as pd\\nimport numpy as np\\n\\n# 创建数据\\ndf = pd.DataFrame({\\n    'value': [10, 12, 11, 13, 12, 500, 11, 12]\\n})\\n\\n# IQR方法\\nQ1 = df['value'].quantile(0.25)\\nQ3 = df['value'].quantile(0.75)\\nIQR = Q3 - Q1\\nlower = Q1 - 1.5 * IQR\\nupper = Q3 + 1.5 * IQR\\n\\n# 检测异常值\\noutliers = df[(df['value'] < lower) | (df['value'] > upper)]\\nprint(f\"异常值:\\n{outliers}\")\\n\\n# 处理：替换为边界值\\ndf_cleaned = df.copy()\\ndf_cleaned['value'] = df_cleaned['value'].clip(lower, upper)\\nprint(f\"\\n处理后数据:\\n{df_cleaned}\")"}], "tips": ["可视化有助于发现异常值。", "异常值不一定是错误。"], "commonErrors": ["盲目删除异常值。", "不检查异常原因。"]}}, {"id": "11.3", "title": "数据类型转换", "duration": "20分钟", "type": "图文", "content": {"text": "正确的数据类型对于分析和建模至关重要。需要确保日期、类别、数值类型正确。", "codeExamples": [{"title": "类型转换", "code": "import pandas as pd\\n\\ndf = pd.DataFrame({\\n    '日期': ['2024-01-01', '2024-01-02', '2024-01-03'],\\n    '数量': ['10', '20', '30'],\\n    '类别': [1, 2, 1]\\n})\\n\\n# 转换日期\\ndf['日期'] = pd.to_datetime(df['日期'])\\n\\n# 转换数值\\ndf['数量'] = df['数量'].astype(int)\\n\\n# 转换类别\\ndf['类别'] = df['类别'].astype('category')\\n\\nprint(\"数据类型:\")\\nprint(df.dtypes)"}], "tips": ["日期列应该转换为datetime类型。", "类别变量使用category类型可以节省内存。"], "commonErrors": ["数值列包含非数值字符。", "日期格式不统一。"]}}, {"id": "11.4", "title": "文本数据清洗", "duration": "30分钟", "type": "图文", "content": {"text": "文本数据清洗包括去除噪声、统一格式、提取信息等。", "codeExamples": [{"title": "文本清洗", "code": "import re\\n\\ndef clean_text(text):\\n    # 转小写\\n    text = text.lower()\\n    # 去除特殊字符\\n    text = re.sub(r'[^\\w\\s]', '', text)\\n    # 去除多余空格\\n    text = ' '.join(text.split())\\n    return text\\n\\ntexts = [\"Hello, World!\", \"  Multiple   Spaces  \", \"Special@# Characters\"]\\ncleaned = [clean_text(t) for t in texts]\\nprint(\"清洗后:\")\\nfor t in cleaned:\\n    print(f\"  - '{t}'\")"}], "tips": ["根据具体任务决定清洗策略。", "保留重要标点符号。"], "commonErrors": ["过度清洗丢失信息。", "忽视编码问题。"]}}, {"id": "11.5", "title": "数据管道构建", "duration": "35分钟", "type": "图文", "content": {"text": "使用Pipeline将多个预处理步骤串联起来，确保处理流程的一致性和可复用性。", "codeExamples": [{"title": "sklearn Pipeline", "code": "from sklearn.pipeline import Pipeline\\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\\nfrom sklearn.compose import ColumnTransformer\\nfrom sklearn.impute import SimpleImputer\\n\\n# 定义数值和类别特征\\nnumeric_features = ['age', 'salary']\\ncategorical_features = ['department']\\n\\n# 创建预处理器\\nnumeric_transformer = Pipeline([\\n    ('imputer', SimpleImputer(strategy='median')),\\n    ('scaler', StandardScaler())\\n])\\n\\ncategorical_transformer = Pipeline([\\n    ('imputer', SimpleImputer(strategy='constant')),\\n    ('onehot', OneHotEncoder())\\n])\\n\\npreprocessor = ColumnTransformer([\\n    ('num', numeric_transformer, numeric_features),\\n    ('cat', categorical_transformer, categorical_features)\\n])\\n\\nprint(\"预处理器已创建\")"}], "tips": ["Pipeline确保训练和测试使用相同处理。", "使用make_pipeline简化代码。"], "commonErrors": ["训练和测试使用不同的预处理。", "忘记处理未见过的类别。"]}}]}, {"id": "python-advanced", "title": "Python进阶技巧", "icon": "⚡", "description": "提升Python编程效率和代码质量", "difficulty": "高级", "lessons": [{"id": "12.1", "title": "函数式编程", "duration": "30分钟", "type": "图文", "content": {"text": "函数式编程强调使用纯函数和高阶函数，避免副作用，可以让代码更简洁和可测试。", "codeExamples": [{"title": "lambda和map/filter", "code": "# Lambda函数\\nsquare = lambda x: x ** 2\\nprint(square(5))\\n\\n# map函数\\nnumbers = [1, 2, 3, 4, 5]\\nsquared = list(map(lambda x: x ** 2, numbers))\\nprint(f\"平方: {squared}\")\\n\\n# filter函数\\nevens = list(filter(lambda x: x % 2 == 0, numbers))\\nprint(f\"偶数: {evens}\")\\n\\n# reduce函数\\nfrom functools import reduce\\nproduct = reduce(lambda x, y: x * y, numbers)\\nprint(f\"乘积: {product}\")"}, {"title": "列表推导式进阶", "code": "# 嵌套列表推导\\nmatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\\nflattened = [x for row in matrix for x in row]\\nprint(f\"展平: {flattened}\")\\n\\n# 条件表达式\\nnumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\\nlabeled = ['even' if x % 2 == 0 else 'odd' for x in numbers]\\nprint(f\"标签: {labeled}\")\\n\\n# 字典和集合推导式\\nsquares = {x: x**2 for x in range(5)}\nprint(f\"平方字典: {squares}\")"}], "tips": ["lambda适合简单函数，复杂逻辑用def。", "列表推导式比循环更高效。"], "commonErrors": ["列表推导式过于复杂。", "忘记filter/map返回的是迭代器。"]}}, {"id": "12.2", "title": "装饰器", "duration": "35分钟", "type": "图文", "content": {"text": "装饰器是Python的强大特性，可以在不修改原函数的情况下添加额外功能。", "codeExamples": [{"title": "基础装饰器", "code": "import time\\n\\ndef timer(func):\\n    \"\"\"计时装饰器\"\"\"\\n    def wrapper(*args, **kwargs):\\n        start = time.time()\\n        result = func(*args, **kwargs)\\n        end = time.time()\\n        print(f\"{func.__name__} 耗时 {end - start:.4f} 秒\")\\n        return result\\n    return wrapper\\n\\n@timer\\ndef slow_function():\\n    time.sleep(1)\\n    return \"完成\"\\n\\nresult = slow_function()\\nprint(f\"返回值: {result}\")"}, {"title": "带参数的装饰器", "code": "def repeat(times):\\n    \"\"\"重复执行指定次数\"\"\"\\n    def decorator(func):\\n        def wrapper(*args, **kwargs):\\n            results = []\\n            for _ in range(times):\\n                results.append(func(*args, **kwargs))\\n            return results\\n        return wrapper\\n    return decorator\\n\\n@repeat(3)\\ndef greet(name):\\n    return f\"Hello, {name}!\"\\n\\nprint(greet(\"World\"))"}], "tips": ["使用functools.wraps保留原函数信息。", "装饰器可以叠加使用。"], "commonErrors": ["忘记使用*args, **kwargs。", "装饰器顺序影响结果。"]}}, {"id": "12.3", "title": "上下文管理器", "duration": "25分钟", "type": "图文", "content": {"text": "上下文管理器确保资源正确获取和释放，使用with语句触发。", "codeExamples": [{"title": "使用with语句", "code": "# 文件操作\\nwith open('test.txt', 'w') as f:\\n    f.write('Hello, World!')\\nprint(\"文件写入完成\")\\n\\n# 自定义上下文管理器\\nfrom contextlib import contextmanager\\n\\n@contextmanager\\ndef my_context():\\n    print(\"进入上下文\")\\n    try:\\n        yield \"资源\"\\n    finally:\\n        print(\"退出上下文\")\\n\\nwith my_context() as resource:\\n    print(f\"使用 {resource}\")"}], "tips": ["with语句确保__exit__总是被调用。", "contextlib.contextmanager简化创建过程。"], "commonErrors": ["忘记关闭资源。", "异常导致资源泄漏。"]}}, {"id": "12.4", "title": "生成器与迭代器", "duration": "30分钟", "type": "图文", "content": {"text": "生成器是创建迭代器的简洁方式，按需生成值，节省内存。", "codeExamples": [{"title": "生成器函数", "code": "# 生成器函数\\ndef fibonacci(n):\\n    a, b = 0, 1\\n    for _ in range(n):\\n        yield a\\n        a, b = b, a + b\\n\\n# 使用生成器\\nfib = fibonacci(10)\\nprint(\"斐波那契数列:\")\\nfor num in fib:\\n    print(num, end=\" \")\\nprint()\\n\\n# 生成器表达式\\nsquares = (x**2 for x in range(5))\\nprint(f\"\\n平方生成器: {list(squares)}\")"}, {"title": "迭代器协议", "code": "class Counter:\\n    def __init__(self, limit):\\n        self.limit = limit\\n        self.current = 0\\n    \\n    def __iter__(self):\\n        return self\\n    \\n    def __next__(self):\\n        if self.current < self.limit:\\n            self.current += 1\\n            return self.current\\n        raise StopIteration\\n\\n# 使用迭代器\\ncounter = Counter(5)\\nprint(f\"计数器: {list(counter)}\")"}], "tips": ["生成器是惰性计算。", "生成器只能遍历一次。"], "commonErrors": ["生成器遍历后忘记重建。", "混淆生成器和列表。"]}}, {"id": "12.5", "title": "错误处理与调试", "duration": "30分钟", "type": "图文", "content": {"text": "良好的错误处理和调试技巧对于编写可靠的Python代码至关重要。", "codeExamples": [{"title": "异常处理", "code": "try:\\n    result = 10 / 0\\nexcept ZeroDivisionError as e:\\n    print(f\"除零错误: {e}\")\\nexcept Exception as e:\\n    print(f\"其他错误: {e}\")\\nfinally:\\n    print(\"清理工作\")\\n\\n# 自定义异常\\nclass ValidationError(Exception):\\n    def __init__(self, message):\\n        self.message = message\\n        super().__init__(self.message)\\n\\ntry:\\n    raise ValidationError(\"数据验证失败\")\\nexcept ValidationError as e:\\n    print(f\"捕获自定义异常: {e.message}\")"}, {"title": "调试技巧", "code": "import pdb\\n\\ndef buggy_function(x):\\n    result = x * 2\\n    # pdb.set_trace()  # 在此处设置断点\\n    return result\\n\\n# 使用logging\\nimport logging\\nlogging.basicConfig(level=logging.DEBUG)\\nlogger = logging.getLogger(__name__)\\n\\ndef logged_function(x):\\n    logger.debug(f\"输入: {x}\")\\n    result = x * 2\\n    logger.debug(f\"输出: {result}\")\\n    return result"}], "tips": ["不要捕获所有异常。", "使用具体的异常类型。"], "commonErrors": ["使用print调试而不是logging。", "裸except子句捕获所有异常。"]}}]}];
-const PROJECTS_DATA=[{"id": "data-cleaning", "title": "数据清洗实战", "icon": "🧹", "difficulty": "入门", "duration": "30分钟", "dataset": "retail_orders.csv", "description": "学习如何清洗真实零售订单数据", "content": {"objectives": ["识别并处理缺失值", "检测并处理重复数据", "修正格式不一致的数据", "处理异常值"], "datasetInfo": "retail_orders.csv 包含100条零售订单记录，包含订单ID、客户ID、产品、数量、单价、订单日期等字段。", "steps": [{"title": "加载数据并初步检查", "description": "使用Pandas读取CSV文件，查看数据的基本信息和数据类型"}, {"title": "处理缺失值", "description": "识别各列的缺失值情况，根据业务逻辑选择合适的填充或删除策略"}, {"title": "处理重复数据", "description": "检测并删除完全重复的订单记录"}, {"title": "数据格式统一", "description": "统一日期格式，确保数据类型正确"}, {"title": "处理异常值", "description": "检测数量和单价中的异常值并进行处理"}], "tips": ["使用info()可以快速了解数据类型和缺失值", "处理缺失值前先了解缺失原因", "备份原始数据再进行清洗"], "commonErrors": ["直接删除缺失值而没有分析原因", "忽略数据类型不一致的问题"]}, "starterCode": "import pandas as pd\n\n# 读取数据\ndf = pd.read_csv(\"retail_orders.csv\")\n\n# 查看数据基本信息\nprint(\"数据形状:\", df.shape)\nprint(\"\\n前5行数据:\")\nprint(df.head())\n\nprint(\"\\n数据类型:\")\nprint(df.dtypes)\n\nprint(\"\\n缺失值统计:\")\nprint(df.isnull().sum())"}];
+
+    <!-- 小节详情页（独立页面） -->
+    <div id="lessonDetailPage" class="detail-page hidden">
+        <div style="margin-bottom: 20px; display: flex; gap: 12px;">
+            <button class="back-btn" onclick="showCourseDetail(currentCourseId)">← 返回课程</button>
+            <button class="back-btn" onclick="showCoursesList()">← 返回课程中心</button>
+        </div>
+        <div class="course-detail-header" id="lessonDetailHeader"></div>
+        <div id="lessonDetailContent"></div>
+    </div>
+
+    <!-- 实战项目 -->
+    <div id="projectsPage" class="hidden">
+        <div class="page-title">
+            <h1>💻 实战项目</h1>
+            <p>下载数据集，开始你的数据分析实战</p>
+        </div>
+        <div class="courses-grid" id="projectsGrid"></div>
+    </div>
+
+    <!-- 成就殿堂 -->
+    <div id="achievementsPage" class="hidden">
+        <div class="page-title">
+            <h1>🏆 成就殿堂</h1>
+            <p>完成课程小节，解锁成就徽章</p>
+        </div>
+        <div class="courses-grid" id="achievementsGrid"></div>
+    </div>
+
+    <!-- 项目详情页面 -->
+    <div id="projectDetailPage" class="hidden">
+        <button class="back-btn" onclick="showProjectsList()">← 返回实战项目</button>
+        <div class="course-detail-header" id="projectDetailHeader"></div>
+        <div class="lessons-list-container">
+            <div style="flex:1;min-width:300px;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:16px;padding:24px;">
+                <h3 style="color:#FFFFFF;margin-bottom:20px;">📋 项目说明</h3>
+                <div id="projectDescription"></div>
+                <div style="margin-top:20px;padding-top:20px;border-top:1px solid #2A2A2A;">
+                    <h4 style="color:#3B82F6;margin-bottom:12px;">📁 数据集</h4>
+                    <div id="projectDatasetInfo"></div>
+                </div>
+            </div>
+            <div class="lesson-detail-panel" style="display:flex;flex-direction:column;">
+                <h3 style="color:#3B82F6;margin-bottom:16px;">💻 代码练习区</h3>
+                <div style="text-align:center;color:#6B7280;padding:60px 20px;">
+                    <p style="font-size:40px;margin-bottom:20px;">🔧</p>
+                    <p style="font-size:18px;margin-bottom:10px;">编辑器开发中，敬请期待！</p>
+                    <p>你可以先下载数据集，用本地的Jupyter Notebook练习。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== 数据集 ====================
+    const datasets = {
+        "retail_orders.csv": "订单ID,产品名称,数量,单价,日期\nORD001,笔记本电脑,2,5999,2024-01-15\nORD002,鼠标,5,99,2024-01-16\nORD003,键盘,3,299,2024-01-16\nORD004,显示器,1,1299,2024-01-17\nORD005,鼠标垫,10,29,2024-01-18\nORD006,手机,3,1999,2024-01-18\nORD007,充电器,4,59,2024-01-19",
+        "market_basket.csv": "订单号,商品\n100,牛奶\n100,面包\n101,牛奶\n101,尿布\n101,啤酒\n102,尿布\n102,啤酒\n103,牛奶\n103,面包\n103,黄油\n104,牛奶\n104,尿布\n104,啤酒",
+        "customer_features.csv": "客户ID,年龄,年消费额,购物频率,平均客单价\nC001,25,3500,12,291\nC002,32,8200,25,328\nC003,45,12500,18,694\nC004,28,4800,15,320\nC005,51,8900,9,989\nC006,35,6500,20,325",
+        "sales_data.csv": "月份,产品,销量,收入\n2024-01,产品A,150,15000\n2024-01,产品B,200,20000\n2024-02,产品A,180,18000\n2024-02,产品B,220,22000\n2024-03,产品A,200,20000\n2024-03,产品B,190,19000",
+        "ab_test_results.csv": "用户ID,组别,转化率,停留时间(秒)\nU001,对照组,0.02,45\nU002,测试组,0.05,68\nU003,对照组,0.03,52\nU004,测试组,0.06,75\nU005,对照组,0.02,48",
+        "daily_sales.csv": "日期,销售额,访客数\n2024-01-01,15800,250\n2024-01-02,16200,260\n2024-01-03,17500,280\n2024-01-04,14300,230\n2024-01-05,18900,300",
+        "customer_data.csv": "客户ID,最近一次消费(天),消费频率,消费金额\nCUST001,15,20,8500\nCUST002,45,8,3200\nCUST003,5,50,25000\nCUST004,90,3,1200\nCUST005,20,35,12000",
+        "reviews.csv": "评论ID,评论文本,评分\nREV001,产品质量很好,5\nREV002,发货速度有点慢,3\nREV003,性价比很高,4\nREV004,不太满意,2\nREV005,非常喜欢！,5",
+        "ecommerce_sales.csv": "订单ID,商品类别,数量,单价,国家\nECO001,电子产品,1,1999,中国\nECO002,服装,2,199,美国\nECO003,家居,3,299,日本\nECO004,电子产品,1,2999,英国\nECO005,食品,5,35,中国",
+        "stock_prices.csv": "日期,收盘价,成交量,最高价,最低价\n2024-01-01,150.5,1200000,152.3,148.2\n2024-01-02,152.8,1450000,155.1,150.3\n2024-01-03,151.2,980000,153.5,149.8\n2024-01-04,148.5,1600000,151.2,146.8\n2024-01-05,155.2,2100000,157.8,147.5"
+    };
+
+    // ==================== 项目数据 ====================
+    const projectsData = [
+        { id: 0, name: "数据清洗实战", difficulty: "入门", duration: "30分钟", desc: "掌握Pandas数据清洗核心技能", dataset: "retail_orders.csv", 
+          description: "在这个项目中，你将学习如何使用Pandas清洗零售订单数据，包括处理缺失值、重复值、异常值等。",
+          goals: ["学习数据清洗基本流程", "掌握缺失值处理方法", "学会处理异常值", "掌握重复值删除"] },
+        { id: 1, name: "购物篮分析", difficulty: "进阶", duration: "45分钟", desc: "发现商品之间的关联关系", dataset: "market_basket.csv",
+          description: "使用市场购物篮分析算法，找出商品之间的关联规则，帮助商家优化商品摆放和促销策略。",
+          goals: ["理解购物篮分析概念", "学习Apriori算法原理", "掌握关联规则挖掘", "提升商业洞察力"] },
+        { id: 2, name: "客户聚类分析", difficulty: "进阶", duration: "45分钟", desc: "将客户分成不同的群体", dataset: "customer_features.csv",
+          description: "通过客户特征数据，使用聚类算法将客户分为不同群体，实现精准营销。",
+          goals: ["理解聚类分析原理", "学习K-Means算法", "掌握客户细分方法", "提升营销效果"] },
+        { id: 3, name: "数据可视化实战", difficulty: "进阶", duration: "45分钟", desc: "使用Matplotlib和Seaborn创建专业图表", dataset: "sales_data.csv",
+          description: "学习如何使用Python的可视化库创建美观、专业的图表，让数据讲故事。",
+          goals: ["掌握Matplotlib基础", "学习Seaborn高级绘图", "创建各类专业图表", "提升数据展示能力"] },
+        { id: 4, name: "A/B测试分析", difficulty: "进阶", duration: "45分钟", desc: "学习如何进行A/B测试，评估方案效果", dataset: "ab_test_results.csv",
+          description: "通过真实的A/B测试数据，学习如何设计测试、分析结果、做出数据驱动的决策。",
+          goals: ["理解A/B测试原理", "学习假设检验方法", "掌握结果分析技巧", "提升决策能力"] },
+        { id: 5, name: "时间序列预测", difficulty: "高级", duration: "60分钟", desc: "使用时间序列分析预测未来趋势", dataset: "daily_sales.csv",
+          description: "学习时间序列分析方法，使用历史数据预测未来销售额趋势。",
+          goals: ["理解时间序列特征", "学习移动平均方法", "掌握趋势预测", "提升预测能力"] },
+        { id: 6, name: "客户价值分析", difficulty: "进阶", duration: "45分钟", desc: "RFM模型分析客户价值", dataset: "customer_data.csv",
+          description: "使用RFM模型（最近消费、消费频率、消费金额）分析客户价值，识别高价值客户。",
+          goals: ["理解RFM模型", "学习客户分群方法", "掌握价值评估", "提升用户运营"] },
+        { id: 7, name: "情感分析入门", difficulty: "高级", duration: "60分钟", desc: "使用NLP分析文本情感倾向", dataset: "reviews.csv",
+          description: "入门自然语言处理，学习如何分析用户评论的情感倾向（正面、负面、中性）。",
+          goals: ["理解NLP基础概念", "学习文本预处理", "掌握情感分析方法", "提升文本处理能力"] },
+        { id: 8, name: "电商销售分析", difficulty: "进阶", duration: "45分钟", desc: "从订单数据中提取商业洞察", dataset: "ecommerce_sales.csv",
+          description: "分析电商平台的销售数据，找出热销商品、地域分布、季节性规律等商业洞察。",
+          goals: ["理解电商数据结构", "学习销售分析方法", "掌握可视化技巧", "提取商业价值"] },
+        { id: 9, name: "股票数据基础分析", difficulty: "高级", duration: "60分钟", desc: "股票收盘价趋势与成交量分析", dataset: "stock_prices.csv",
+          description: "学习如何分析股票数据，包括价格趋势、成交量变化、移动平均线等技术指标。",
+          goals: ["理解股票数据结构", "学习技术分析基础", "掌握趋势识别", "提升投资分析能力"] }
+    ];
+
+    function downloadDataset(filename) {
+        const content = datasets[filename];
+        if (!content) {
+            alert(`数据集 ${filename} 不存在`);
+            return;
+        }
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert(`✅ 开始下载 ${filename}`);
+    }
+
+    // ==================== 课程数据（完整内容） ====================
+    const courses = [
+        {
+            id: 0, emoji: "🐍", title: "Python基础入门", desc: "从零开始掌握Python编程基础",
+            difficulty: "beginner", difficultyText: "入门",
+            lessons: [
+                { name: "Python安装与环境配置", duration: "15分钟", completed: false, 
+                  content: "Python是一种解释型、面向对象的编程语言，语法简洁，适合初学者。安装Python时，请访问python.org下载最新版本，安装时务必勾选'Add Python to PATH'选项，这样可以在命令行直接使用python命令。安装完成后，打开终端输入python --version或python3 --version来验证安装是否成功。",
+                  code: "import sys\nprint(f'Python版本: {sys.version}')\nprint('Hello, World!')",
+                  tips: [
+                    "安装时记得勾选'Add Python to PATH'",
+                    "推荐使用VS Code作为编辑器",
+                    "可以用pip install安装第三方库"
+                  ],
+                  common_errors: [
+                    { error: "命令行输入python提示找不到命令", fix: "重新运行安装程序，确保勾选'Add Python to PATH'" },
+                    { error: "中文乱码", fix: "在文件开头添加 # -*- coding: utf-8 -*-" }
+                  ],
+                  question: "你安装的Python版本是多少？",
+                  practice_code: "print('欢迎来到Python世界！')\n\n# 修改上面的文字试试"
+                },
+                { name: "变量与数据类型", duration: "20分钟", completed: false,
+                  content: "变量是存储数据的容器。Python有int（整数）、float（浮点数）、str（字符串）、bool（布尔值）等基本数据类型。Python是动态类型语言，不需要显式声明变量类型，解释器会自动推断。",
+                  code: "x = 10\nname = 'Python'\npi = 3.14\nis_student = True\nprint(f'{name}的版本是{x}')",
+                  tips: [
+                    "变量名要见名知意，使用下划线分隔",
+                    "Python是大小写敏感的，Name和name是两个不同变量",
+                    "不能用数字开头作为变量名"
+                  ],
+                  common_errors: [
+                    { error: "NameError: name 'xxx' is not defined", fix: "确保变量名拼写正确，并且在使用前已经赋值" },
+                    { error: "TypeError: can only concatenate str (not 'int') to str", fix: "用str()将数字转成字符串再拼接" }
+                  ],
+                  question: "创建一个变量存储你的年龄并打印",
+                  practice_code: "my_age = 18\nmy_name = '小明'\nprint(f'我叫{my_name}，今年{my_age}岁')"
+                },
+                { name: "运算符与表达式", duration: "18分钟", completed: false,
+                  content: "Python支持算术运算符、比较运算符、逻辑运算符等。表达式是值、变量和运算符的组合。理解运算符的优先级很重要，不确定时可以加括号。",
+                  code: "a = 10\nb = 3\nprint(a + b)      # 加法\nprint(a - b)      # 减法\nprint(a * b)      # 乘法\nprint(a / b)      # 除法\nprint(a // b)     # 整除\nprint(a % b)      # 取余\nprint(a ** b)     # 幂运算",
+                  tips: [
+                    "用括号明确运算优先级",
+                    "+=、-=等复合运算符可以简化代码",
+                    "逻辑运算符是and、or、not，不是&&、||、!"
+                  ],
+                  common_errors: [
+                    { error: "混用=和==", fix: "赋值用=，比较用==" },
+                    { error: "整数除法结果不是预期的小数", fix: "用/代替//" }
+                  ],
+                  question: "计算从1加到100的和是多少？",
+                  practice_code: "sum = 1 + 2 + 3 + 4 + 5\nprint(sum)\n# 尝试计算更多数的和"
+                },
+                { name: "字符串操作", duration: "22分钟", completed: false,
+                  content: "字符串是文本数据类型。Python字符串功能非常强大，支持切片、拼接、格式化等操作。用单引号或双引号都可以，三引号用于多行字符串。",
+                  code: "s = 'Hello Python'\nprint(len(s))           # 长度\nprint(s[0])            # 第一个字符\nprint(s[-1])           # 最后一个字符\nprint(s[0:5])          # 切片\nprint(s.upper())       # 大写\nprint(s.lower())       # 小写\nprint(s.split())       # 分割成列表",
+                  tips: [
+                    "字符串是不可变的，修改需要创建新字符串",
+                    "f-string是格式化字符串最方便的方法",
+                    "可以用in运算符检查子字符串是否存在"
+                  ],
+                  common_errors: [
+                    { error: "IndexError: string index out of range", fix: "确保索引不超过字符串长度-1" },
+                    { error: "拼接不同类型报错", fix: "用str()转换类型后再拼接" }
+                  ],
+                  question: "如何反转一个字符串？",
+                  practice_code: "text = 'Python编程'\nprint(text[::-1])  # 反转字符串\nprint(len(text))   # 查看长度"
+                },
+                { name: "条件判断if-elif-else", duration: "20分钟", completed: false,
+                  content: "条件判断让程序可以根据不同情况执行不同代码。if语句后面跟条件，条件为True时执行缩进的代码块。可以用elif添加多个条件分支，else处理其他情况。",
+                  code: "score = 85\nif score >= 90:\n    grade = '优秀'\nelif score >= 80:\n    grade = '良好'\nelif score >= 60:\n    grade = '及格'\nelse:\n    grade = '不及格'\nprint(grade)",
+                  tips: [
+                    "注意缩进！Python用缩进表示代码块，通常用4个空格",
+                    "elif是else if的缩写",
+                    "条件要互斥，顺序有影响"
+                  ],
+                  common_errors: [
+                    { error: "IndentationError", fix: "统一用4个空格或Tab，不要混用" },
+                    { error: "漏掉冒号", fix: "if、elif、else后面必须加冒号" }
+                  ],
+                  question: "写一个判断成绩等级的程序（A-F）",
+                  practice_code: "score = 75\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelse:\n    print('继续加油')"
+                },
+                { name: "循环语句for/while", duration: "25分钟", completed: false,
+                  content: "循环让代码重复执行。for循环用于遍历序列，while循环在条件满足时重复执行。可以用break跳出循环，continue进入下一次循环。",
+                  code: "for i in range(5):\n    print(f'第{i}次循环')\n\ncount = 0\nwhile count < 3:\n    print(count)\n    count += 1",
+                  tips: [
+                    "range(5)生成0,1,2,3,4",
+                    "for循环适合已知次数，while适合条件循环",
+                    "避免无限循环！"
+                  ],
+                  common_errors: [
+                    { error: "忘记更新循环变量导致无限循环", fix: "确保while有退出条件" },
+                    { error: "range参数记错", fix: "range(start, end, step)，不包含end" }
+                  ],
+                  question: "用for循环打印1到10的奇数",
+                  practice_code: "for i in range(1, 11, 2):\n    print(i)"
+                },
+                { name: "列表与列表推导式", duration: "22分钟", completed: false,
+                  content: "列表是可变的序列，用[]表示。列表可以存储不同类型的数据，支持添加、删除、切片等操作。列表推导式是创建列表的简洁方式。",
+                  code: "fruits = ['苹果', '香蕉', '橙子']\nfruits.append('葡萄')       # 添加\nprint(fruits[0])           # 索引\nprint(fruits[-1])          # 最后一个\nprint(fruits[1:3])         # 切片\n\nsquares = [x*x for x in range(10)]  # 列表推导式\nprint(squares)",
+                  tips: [
+                    "列表用[]，元组用()，元组不可变",
+                    "len()获取长度，in检查成员",
+                    "index()查找位置，count()统计次数"
+                  ],
+                  common_errors: [
+                    { error: "IndexError: list index out of range", fix: "确保索引在有效范围内" },
+                    { error: "修改正在遍历的列表", fix: "遍历副本或创建新列表" }
+                  ],
+                  question: "创建一个1到10的平方数列表",
+                  practice_code: "numbers = [1, 2, 3, 4, 5]\nnumbers.append(6)\nprint(numbers)\nprint(sum(numbers))"
+                },
+                { name: "元组与字典", duration: "20分钟", completed: false,
+                  content: "元组是不可变的序列，用()表示。字典存储键值对，用{}表示，是Python中非常重要的数据结构。字典的键必须是不可变类型。",
+                  code: "person = {'name': '张三', 'age': 20, 'city': '北京'}\nprint(person['name'])           # 访问\nperson['age'] = 21              # 修改\nperson['email'] = 'zhang@test'  # 添加\n\npoint = (10, 20)  # 元组\nx, y = point      # 解包",
+                  tips: [
+                    "字典键必须是不可变类型（字符串、数字、元组）",
+                    "用.get()可以安全访问键，不存在时返回默认值",
+                    ".keys()、.values()、.items()遍历字典"
+                  ],
+                  common_errors: [
+                    { error: "KeyError", fix: "用.get()或先检查键是否存在" },
+                    { error: "修改元组报错", fix: "元组不可变，需要创建新的" }
+                  ],
+                  question: "创建一个表示你信息的字典",
+                  practice_code: "my_info = {'name': '李华', 'age': 20, 'hobbies': ['编程', '读书']}\nprint(my_info['name'])\nprint(my_info.get('age'))"
+                }
+            ]
+        },
+        {
+            id: 1, emoji: "📊", title: "Pandas入门", desc: "数据分析的核心工具Pandas",
+            difficulty: "beginner", difficultyText: "入门",
+            lessons: [
+                { name: "Pandas安装与Series", duration: "15分钟", completed: false, content: "Pandas是Python数据分析的核心库。Series是一维带标签的数组。", code: "import pandas as pd\ns = pd.Series([1, 2, 3, 4])\nprint(s)", tips: ["建议先安装NumPy"], question: "创建一个值为[5,10,15]的Series", practice_code: "import pandas as pd\ns = pd.Series([5,10,15])\nprint(s)" },
+                { name: "DataFrame创建与查看", duration: "20分钟", completed: false, content: "DataFrame是二维表格数据结构，类似Excel表格。", code: "df = pd.DataFrame({'姓名':['张三','李四'],'年龄':[20,25]})\nprint(df)", tips: ["使用df.info()查看数据信息"], question: "创建一个包含姓名和成绩的DataFrame", practice_code: "import pandas as pd\ndf = pd.DataFrame({'姓名':['小明','小红'],'成绩':[85,92]})\nprint(df)" },
+                { name: "数据读取与写入", duration: "18分钟", completed: false, content: "Pandas可以读取各种格式的数据，CSV是最常用的。", code: "# df = pd.read_csv('data.csv')\n# df.to_excel('output.xlsx')\nprint('数据读写示例')", tips: ["注意文件编码，常用utf-8或gbk"], question: "如何读取Excel文件？", practice_code: "print('需要pandas和openpyxl库')" }
+            ]
+        },
+        {
+            id: 2, emoji: "🧹", title: "数据清洗", desc: "脏数据到干净数据的转化",
+            difficulty: "intermediate", difficultyText: "进阶",
+            lessons: [
+                { name: "缺失值识别与统计", duration: "15分钟", completed: false, content: "数据清洗第一步是识别缺失值。", code: "import pandas as pd\ndf = pd.DataFrame({'A':[1,None,3]})\nprint(df.isnull())", tips: ["缺失值通常用NaN表示"], question: "如何查看每列的缺失值数量？", practice_code: "import pandas as pd\ndf = pd.DataFrame({'A':[1,None,3]})\nprint(df.isnull().sum())" },
+                { name: "fillna填充方法", duration: "18分钟", completed: false, content: "用合理值填充缺失数据。", code: "# df.fillna(0)\n# df.fillna(method='ffill')\nprint('填充示例')", tips: ["均值、中位数、众数是常用填充值"], question: "前向填充和后向填充的区别？", practice_code: "print('内容开发中...')" }
+            ]
+        },
+        {
+            id: 3, emoji: "📈", title: "数据可视化", desc: "让数据说话的艺术",
+            difficulty: "intermediate", difficultyText: "进阶",
+            lessons: [
+                { name: "Matplotlib基础绘图", duration: "15分钟", completed: false, content: "Matplotlib是Python最常用的数据可视化库。", code: "import matplotlib.pyplot as plt\nplt.plot([1,2,3],[1,4,9])\nplt.title('示例图')\nplt.show()", tips: ["需要先安装：pip install matplotlib"], question: "画一个简单的折线图", practice_code: "import matplotlib.pyplot as plt\nplt.plot([1,2,3],[2,4,6])\nplt.title('测试')\nplt.show()" }
+            ]
+        }
+    ];
+
+    // 加载进度
+    function loadProgress() {
+        const saved = localStorage.getItem("courseProgress");
+        if (saved) {
+            const progress = JSON.parse(saved);
+            courses.forEach((course, cId) => {
+                if (progress[cId]) {
+                    course.lessons.forEach((lesson, lId) => {
+                        if (progress[cId][lId]) lesson.completed = true;
+                    });
+                }
+            });
+        }
+    }
+
+    function saveProgress() {
+        const progress = {};
+        courses.forEach((course, cId) => {
+            progress[cId] = course.lessons.map(l => l.completed);
+        });
+        localStorage.setItem("courseProgress", JSON.stringify(progress));
+    }
+
+    function getCompletedCount(course) {
+        return course.lessons.filter(l => l.completed).length;
+    }
+
+    // 当前课程ID
+    let currentCourseId = null;
+    let currentLessonId = null;
+
+    // 运行练习代码
+    window.runPracticeCode = function() {
+        const textarea = document.getElementById('practiceTextarea');
+        if (!textarea) {
+            alert('请先打开一个小节的练习区');
+            return;
+        }
+        const code = textarea.value;
+        const outputDiv = document.getElementById('practiceOutput');
+        outputDiv.innerHTML = '⏳ 运行中...\n';
+        setTimeout(() => {
+            try {
+                const prints = [];
+                const regex = /print\((.*?)\)/g;
+                let match;
+                while ((match = regex.exec(code)) !== null) {
+                    let content = match[1].replace(/['"]/g, '');
+                    prints.push(content);
+                }
+                if (prints.length > 0) {
+                    outputDiv.innerHTML = '✅ 运行结果：\n' + prints.join('\n');
+                } else {
+                    outputDiv.innerHTML = '✅ 代码已执行（无print输出）\n\n提示：使用 print() 函数可以看到输出结果';
+                }
+            } catch(e) {
+                outputDiv.innerHTML = `❌ 错误: ${e.message}`;
+            }
+        }, 100);
+    };
+
+    // ==================== 页面渲染函数 ====================
+
+    // 渲染课程列表
+    function renderCoursesList() {
+        const grid = document.getElementById('coursesGrid');
+        grid.innerHTML = '';
+        
+        courses.forEach((course, cIdx) => {
+            const completedCount = getCompletedCount(course);
+            const totalCount = course.lessons.length;
+            const percent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+            
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.innerHTML = `
+                <div class="course-emoji">${course.emoji}</div>
+                <div class="course-title">${course.title}</div>
+                <div class="course-desc">${course.desc}</div>
+                <div class="course-meta">
+                    <span class="difficulty ${course.difficulty}">${course.difficultyText}</span>
+                    <span class="progress-text">已完成 ${completedCount}/${totalCount} 小节</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${percent}%;"></div></div>
+            `;
+            card.addEventListener('click', () => showCourseDetail(cIdx));
+            grid.appendChild(card);
+        });
+    }
+
+    // 显示课程详情页（小节列表）
+    function showCourseDetail(courseId) {
+        document.getElementById('coursesListPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.add('hidden');
+        document.getElementById('courseDetailPage').classList.remove('hidden');
+        
+        currentCourseId = courseId;
+        const course = courses[courseId];
+        const completedCount = getCompletedCount(course);
+        const totalCount = course.lessons.length;
+        const percent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+        
+        // 渲染头部
+        document.getElementById('courseDetailHeader').innerHTML = `
+            <div class="course-icon">${course.emoji}</div>
+            <div class="course-info">
+                <h1 style="margin:0;color:#FFFFFF;">${course.title}</h1>
+                <p style="color:#9CA3AF;margin:8px 0;">${course.desc}</p>
+                <div style="display:flex; gap:12px; align-items:center; margin-top:12px;">
+                    <span class="difficulty ${course.difficulty}">${course.difficultyText}</span>
+                    <span style="color:#3B82F6;">进度: ${completedCount}/${totalCount} (${percent.toFixed(0)}%)</span>
+                </div>
+                <div style="width:200px;margin-top:10px;">
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${percent}%;"></div></div>
+                </div>
+            </div>
+        `;
+        
+        // 渲染小节列表
+        const sidebar = document.getElementById('lessonsListSidebar');
+        sidebar.innerHTML = `<h3>📖 课程小节</h3>`;
+        
+        course.lessons.forEach((lesson, lIdx) => {
+            const lessonDiv = document.createElement('div');
+            lessonDiv.className = `lesson-item ${lesson.completed ? 'completed' : ''}`;
+            lessonDiv.innerHTML = `
+                <div class="lesson-info">
+                    <div class="lesson-name">${lesson.name}</div>
+                    <div class="lesson-duration">${lesson.duration}</div>
+                </div>
+                <div class="lesson-status">
+                    <span class="lesson-badge">${lesson.completed ? '✅' : '⏳'}</span>
+                </div>
+            `;
+            lessonDiv.addEventListener('click', () => showLessonDetail(courseId, lIdx));
+            sidebar.appendChild(lessonDiv);
+        });
+        
+        // 更新导航
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-page="courses"]').classList.add('active');
+    }
+
+    // 显示小节详情页（独立页面）
+    function showLessonDetail(courseId, lessonId) {
+        document.getElementById('coursesListPage').classList.add('hidden');
+        document.getElementById('courseDetailPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.remove('hidden');
+        
+        currentCourseId = courseId;
+        currentLessonId = lessonId;
+        const course = courses[courseId];
+        const lesson = course.lessons[lessonId];
+        
+        // 渲染头部
+        let difficultyClass = course.difficulty;
+        document.getElementById('lessonDetailHeader').innerHTML = `
+            <div class="course-icon">${course.emoji}</div>
+            <div style="flex:1;">
+                <div style="color:#9CA3AF;margin-bottom:4px;">${course.title}</div>
+                <h1 style="margin:0;color:#FFFFFF;">${lesson.name}</h1>
+                <div class="lesson-meta">
+                    <span class="difficulty ${difficultyClass}">${course.difficultyText}</span>
+                    <span>⏱ ${lesson.duration}</span>
+                    <span>${lesson.completed ? '✅ 已完成' : '⏳ 未完成'}</span>
+                </div>
+            </div>
+            <button class="complete-btn ${lesson.completed ? 'done' : ''}" onclick="markLessonComplete(${courseId}, ${lessonId})">
+                ${lesson.completed ? '✅ 已完成' : '✓ 标记完成'}
+            </button>
+        `;
+        
+        // 渲染内容
+        let contentHtml = `
+            <div style="background:#1A1A1A;border:1px solid #2A2A2A;border-radius:16px;padding:28px;">
+                <h3 style="color:#3B82F6;margin-bottom:16px;">📚 讲解</h3>
+                <p style="line-height:1.8;color:#D1D5DB;">${lesson.content}</p>
+        `;
+        
+        if (lesson.code) {
+            contentHtml += `
+                <h4 style="color:#3B82F6;margin-top:24px;margin-bottom:12px;">💻 示例代码</h4>
+                <pre><code>${lesson.code}</code></pre>
+            `;
+        }
+        
+        if (lesson.tips && lesson.tips.length > 0) {
+            contentHtml += `
+                <h4 style="color:#3B82F6;margin-top:24px;margin-bottom:12px;">💡 小贴士</h4>
+            `;
+            lesson.tips.forEach(tip => {
+                contentHtml += `
+                    <div class="tip-box">${tip}</div>
+                `;
+            });
+        }
+        
+        if (lesson.common_errors && lesson.common_errors.length > 0) {
+            contentHtml += `
+                <h4 style="color:#EF4444;margin-top:24px;margin-bottom:12px;">⚠️ 常见错误</h4>
+            `;
+            lesson.common_errors.forEach(err => {
+                contentHtml += `
+                    <div class="error-box">
+                        <strong>❌ ${err.error}</strong><br>
+                        <span style="color:#FCA5A5;">✅ ${err.fix}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        if (lesson.question) {
+            contentHtml += `
+                <h4 style="color:#3B82F6;margin-top:24px;margin-bottom:12px;">❓ 思考题</h4>
+                <p style="color:#D1D5DB;">${lesson.question}</p>
+            `;
+        }
+        
+        if (lesson.practice_code) {
+            contentHtml += `
+                <div class="practice-area">
+                    <h5>✏️ 自己试一试</h5>
+                    <textarea id="practiceTextarea" rows="8">${lesson.practice_code}</textarea>
+                    <button class="run-btn" onclick="runPracticeCode()">▶ 运行代码</button>
+                    <div id="practiceOutput" class="practice-output">⚡ 点击运行按钮，代码输出会显示在这里</div>
+                </div>
+            `;
+        }
+        
+        contentHtml += `</div>`;
+        document.getElementById('lessonDetailContent').innerHTML = contentHtml;
+    }
+
+    // 标记小节完成
+    function markLessonComplete(courseId, lessonId) {
+        if (courses[courseId].lessons[lessonId].completed) {
+            return; // 已完成
+        }
+        courses[courseId].lessons[lessonId].completed = true;
+        saveProgress();
+        showLessonDetail(courseId, lessonId); // 刷新页面显示
+    }
+
+    // 显示课程列表
+    function showCoursesList() {
+        document.getElementById('courseDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectDetailPage').classList.add('hidden');
+        document.getElementById('coursesListPage').classList.remove('hidden');
+        renderCoursesList();
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-page="courses"]').classList.add('active');
+    }
+
+    // ==================== 项目相关 ====================
+
+    function renderProjects() {
+        const grid = document.getElementById('projectsGrid');
+        grid.innerHTML = '';
+        projectsData.forEach((p, idx) => {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.style.cursor = 'default';
+            
+            let difficultyClass;
+            if (p.difficulty === '入门') difficultyClass = 'beginner';
+            else if (p.difficulty === '进阶') difficultyClass = 'intermediate';
+            else if (p.difficulty === '高级') difficultyClass = 'advanced';
+            
+            card.innerHTML = `
+                <div class="course-emoji">💻</div>
+                <div class="course-title">${p.name}</div>
+                <div class="course-desc">${p.desc}</div>
+                <div class="course-meta">
+                    <span class="difficulty ${difficultyClass}">${p.difficulty}</span>
+                    <span>${p.duration}</span>
+                </div>
+                <div class="dataset-card">
+                    <div>📁 数据集：${p.dataset}</div>
+                    <button class="download-btn" onclick="downloadDataset('${p.dataset}')">📥 下载 ${p.dataset}</button>
+                </div>
+                <button class="run-btn" style="margin-top:12px;width:100%;" onclick="showProjectDetail(${p.id})">▶ 开始练习</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function showProjectDetail(projectId) {
+        document.getElementById('coursesListPage').classList.add('hidden');
+        document.getElementById('courseDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectDetailPage').classList.remove('hidden');
+        
+        const project = projectsData.find(p => p.id === projectId);
+        let difficultyClass;
+        if (project.difficulty === '入门') difficultyClass = 'beginner';
+        else if (project.difficulty === '进阶') difficultyClass = 'intermediate';
+        else if (project.difficulty === '高级') difficultyClass = 'advanced';
+        
+        document.getElementById('projectDetailHeader').innerHTML = `
+            <div class="course-icon">💻</div>
+            <div class="course-info">
+                <h1 style="margin:0;color:#FFFFFF;">${project.name}</h1>
+                <p style="color:#9CA3AF;margin:8px 0;">${project.desc}</p>
+                <div style="display:flex; gap:12px;">
+                    <span class="difficulty ${difficultyClass}">${project.difficulty}</span>
+                    <span style="color:#9CA3AF;">⏱ ${project.duration}</span>
+                </div>
+            </div>
+        `;
+        
+        let goalsHtml = '<ul style="margin-top:16px;padding-left:20px;">';
+        project.goals.forEach(goal => {
+            goalsHtml += `<li style="margin:8px 0;color:#9CA3AF;">✅ ${goal}</li>`;
+        });
+        goalsHtml += '</ul>';
+        
+        document.getElementById('projectDescription').innerHTML = `
+            <p style="color:#D1D5DB;line-height:1.8;">${project.description}</p>
+            <div style="margin-top:24px;">
+                <h4 style="color:#3B82F6;margin-bottom:12px;">🎯 学习目标</h4>
+                ${goalsHtml}
+            </div>
+        `;
+        
+        document.getElementById('projectDatasetInfo').innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#0A0A0A;padding:12px;border-radius:8px;border:1px solid #2A2A2A;">
+                <div>
+                    <div style="color:#FFFFFF;font-weight:500;">${project.dataset}</div>
+                    <div style="color:#6B7280;font-size:12px;margin-top:4px;">点击右侧按钮下载</div>
+                </div>
+                <button class="download-btn" onclick="downloadDataset('${project.dataset}')">📥 下载</button>
+            </div>
+            <div style="margin-top:16px;">
+                <h5 style="color:#9CA3AF;margin-bottom:8px;">📊 数据集预览：</h5>
+                <pre style="background:#0A0A0A;color:#6B7280;padding:12px;border-radius:8px;font-size:12px;overflow-x:auto;max-height:150px;overflow-y:auto;">${datasets[project.dataset]}</pre>
+            </div>
+        `;
+    }
+
+    function showProjectsList() {
+        document.getElementById('projectDetailPage').classList.add('hidden');
+        document.getElementById('coursesListPage').classList.add('hidden');
+        document.getElementById('courseDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.remove('hidden');
+        renderProjects();
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-page="projects"]').classList.add('active');
+    }
+
+    // 成就殿堂
+    function renderAchievements() {
+        const totalCompleted = courses.reduce((sum, c) => sum + getCompletedCount(c), 0);
+        const pythonCompleted = getCompletedCount(courses[0]);
+        const pythonTotal = courses[0].lessons.length;
+        
+        const achievements = [
+            { name: "🎯 入门学徒", desc: "完成3个小节", condition: totalCompleted >= 3, icon: "🎯" },
+            { name: "⭐ 代码新星", desc: "完成10个小节", condition: totalCompleted >= 10, icon: "⭐" },
+            { name: "🏆 学习达人", desc: "完成20个小节", condition: totalCompleted >= 20, icon: "🏆" },
+            { name: "🐍 Python入门", desc: "完成Python基础入门课程", condition: pythonCompleted >= pythonTotal, icon: "🐍" }
+        ];
+        
+        const grid = document.getElementById('achievementsGrid');
+        grid.innerHTML = '';
+        achievements.forEach(a => {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.style.opacity = a.condition ? '1' : '0.5';
+            card.style.filter = a.condition ? 'none' : 'grayscale(0.5)';
+            card.style.cursor = 'default';
+            card.innerHTML = `
+                <div class="course-emoji">${a.icon}</div>
+                <div class="course-title">${a.name}</div>
+                <div class="course-desc">${a.desc}</div>
+                <div class="course-meta">${a.condition ? '✅ 已解锁' : '🔒 未解锁'}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 页面切换
+    function switchPage(page) {
+        document.getElementById('coursesListPage').classList.add('hidden');
+        document.getElementById('courseDetailPage').classList.add('hidden');
+        document.getElementById('lessonDetailPage').classList.add('hidden');
+        document.getElementById('projectsPage').classList.add('hidden');
+        document.getElementById('achievementsPage').classList.add('hidden');
+        document.getElementById('projectDetailPage').classList.add('hidden');
+        
+        if (page === 'courses') {
+            showCoursesList();
+        } else if (page === 'projects') {
+            showProjectsList();
+        } else if (page === 'achievements') {
+            document.getElementById('achievementsPage').classList.remove('hidden');
+            renderAchievements();
+        }
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-page') === page) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    // 绑定导航
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchPage(btn.getAttribute('data-page'));
+        });
+    });
+
+    window.downloadDataset = downloadDataset;
+    
+    loadProgress();
+    renderCoursesList();
+    renderAchievements();
+    switchPage('courses');
+</script>
+</body>
+</html>

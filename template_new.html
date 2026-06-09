@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数析学院 - Python数据分析学习平台</title>
+    <style>
+        :root{--bg-primary:#0A0A0A;--bg-secondary:#1E1E1E;--bg-tertiary:#252526;--border-color:#333;--text-primary:#FFF;--text-secondary:#B0B0B0;--text-muted:#808080;--accent-blue:#58A6FF;--accent-green:#2C974B;--accent-yellow:#F0B429;--accent-red:#F85149;--accent-purple:#A371F7;--code-bg:#161B22;--hover-bg:#2D2D2D}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-height:100vh}
+        a{color:var(--accent-blue);text-decoration:none}
+        .navbar{position:fixed;top:0;left:0;right:0;height:60px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);z-index:1000}
+        .nav-container{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+        .nav-logo{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:bold;color:var(--text-primary)}
+        .logo-icon{font-size:24px}
+        .nav-menu{display:flex;list-style:none;gap:8px}
+        .nav-link{display:block;padding:8px 16px;color:var(--text-secondary);border-radius:6px;cursor:pointer}
+        .nav-link:hover,.nav-link.active{color:var(--text-primary);background:var(--hover-bg)}
+        .nav-login-btn{padding:8px 20px;background:var(--accent-blue);color:var(--bg-primary);border:none;border-radius:6px;cursor:pointer;font-weight:600}
+        .mobile-menu-btn{display:none;background:none;border:none;color:var(--text-primary);font-size:24px;cursor:pointer}
+        #app{min-height:calc(100vh - 60px);padding-top:60px}
+        .footer{background:var(--bg-secondary);border-top:1px solid var(--border-color);padding:48px 24px 24px;margin-top:80px}
+        .footer-content{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:48px}
+        .footer-section h4{color:var(--text-primary);margin-bottom:16px}
+        .footer-section ul{list-style:none}
+        .footer-section ul li{color:var(--text-secondary);margin-bottom:8px}
+        .footer-bottom{max-width:1200px;margin:48px auto 0;padding-top:24px;border-top:1px solid var(--border-color);text-align:center;color:var(--text-muted)}
+        .hero{padding:80px 24px;text-align:center;background:linear-gradient(180deg,var(--bg-secondary) 0%,var(--bg-primary) 100%)}
+        .hero-title{font-size:56px;font-weight:bold;margin-bottom:16px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-subtitle{font-size:20px;color:var(--text-secondary);margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
+        .hero-btn{display:inline-block;padding:16px 48px;background:var(--accent-blue);color:var(--bg-primary);font-size:18px;font-weight:bold;border-radius:8px;cursor:pointer}
+        .hero-btn:hover{background:#79B8FF;transform:translateY(-2px)}
+        .stats-section{max-width:1200px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .stat-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:32px;text-align:center}
+        .stat-number{font-size:48px;font-weight:bold;color:var(--accent-blue);margin-bottom:8px}
+        .stat-label{color:var(--text-secondary);font-size:16px}
+        .section{max-width:1200px;margin:0 auto;padding:48px 24px}
+        .section-title{font-size:32px;font-weight:bold;margin-bottom:32px}
+        .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+        .card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:24px;cursor:pointer;transition:all .2s}
+        .card:hover{border-color:var(--accent-blue);transform:translateY(-4px)}
+        .card-icon{font-size:48px;margin-bottom:16px}
+        .card-title{font-size:20px;font-weight:bold;margin-bottom:8px}
+        .card-desc{color:var(--text-secondary);margin-bottom:16px;font-size:14px}
+        .card-meta{display:flex;align-items:center;gap:16px;color:var(--text-muted);font-size:14px}
+        .card-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+        .tag-easy{background:rgba(44,151,75,.2);color:var(--accent-green)}
+        .tag-medium{background:rgba(240,180,41,.2);color:var(--accent-yellow)}
+        .tag-hard{background:rgba(248,81,73,.2);color:var(--accent-red)}
+        .progress-bar{width:100%;height:6px;background:var(--border-color);border-radius:3px;overflow:hidden;margin-top:12px}
+        .progress-fill{height:100%;background:var(--accent-blue);border-radius:3px;transition:width .3s}
+        .course-detail{display:flex;height:calc(100vh - 60px)}
+        .course-sidebar{width:30%;background:var(--bg-secondary);border-right:1px solid var(--border-color);overflow-y:auto;padding:24px}
+        .course-sidebar-title{font-size:24px;font-weight:bold;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border-color)}
+        .lesson-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:8px;cursor:pointer;margin-bottom:8px}
+        .lesson-item:hover{background:var(--hover-bg)}
+        .lesson-item.active{background:var(--accent-blue);color:var(--bg-primary)}
+        .lesson-item.completed{opacity:.7}
+        .lesson-info{display:flex;align-items:center;gap:8px}
+        .lesson-title{font-size:14px}
+        .lesson-duration{font-size:12px;color:var(--text-muted)}
+        .lesson-item.active .lesson-duration{color:rgba(0,0,0,.6)}
+        .course-content{flex:1;overflow-y:auto;padding:48px}
+        .content-header{margin-bottom:32px}
+        .content-title{font-size:32px;font-weight:bold;margin-bottom:16px}
+        .content-meta{display:flex;gap:24px;color:var(--text-secondary)}
+        .content-body{max-width:800px}
+        .content-section{margin-bottom:32px}
+        .content-section h3{font-size:20px;margin-bottom:16px;color:var(--accent-blue)}
+        .content-section p{color:var(--text-secondary);margin-bottom:16px;line-height:1.8}
+        .code-block{background:var(--code-bg);border:1px solid var(--border-color);border-radius:8px;padding:16px;margin:16px 0;overflow-x:auto}
+        .code-block pre{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap;word-break:break-all}
+        .code-title{background:var(--bg-tertiary);padding:8px 16px;border-bottom:1px solid var(--border-color);font-size:12px;color:var(--text-muted)}
+        .tip-box{background:rgba(88,166,255,.1);border-left:4px solid var(--accent-blue);padding:16px;border-radius:0 8px 8px 0;margin:16px 0}
+        .tip-box.warning{background:rgba(248,81,73,.1);border-left-color:var(--accent-red)}
+        .tip-content{color:var(--text-secondary);font-size:14px}
+        .project-detail{display:flex;height:calc(100vh - 60px)}
+        .project-docs{width:40%;background:var(--bg-secondary);border-right:1px solid var(--border-color);overflow-y:auto;padding:32px}
+        .project-docs h2{font-size:28px;margin-bottom:24px}
+        .docs-section{margin-bottom:32px}
+        .docs-section h3{font-size:18px;color:var(--accent-blue);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border-color)}
+        .docs-section ul{list-style:none;padding-left:0}
+        .docs-section li{padding:8px 0;color:var(--text-secondary)}
+        .docs-section li::before{content:"•";color:var(--accent-blue);margin-right:8px}
+        .step-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-color)}
+        .step-number{width:28px;height:28px;background:var(--accent-blue);color:var(--bg-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;flex-shrink:0}
+        .step-content{flex:1}
+        .step-title{font-weight:bold;margin-bottom:4px}
+        .step-desc{color:var(--text-secondary);font-size:14px}
+        .project-editor{width:60%;display:flex;flex-direction:column}
+        .editor-header{background:var(--bg-tertiary);border-bottom:1px solid var(--border-color);padding:16px;display:flex;justify-content:space-between;align-items:center}
+        .editor-title{display:flex;align-items:center;gap:8px;font-weight:bold}
+        .editor-area{flex:1;display:flex;flex-direction:column}
+        .code-editor{flex:1;background:var(--code-bg);padding:16px;font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:14px;line-height:1.6;color:var(--text-primary);border:none;resize:none;outline:none;min-height:200px;overflow-x:auto;white-space:pre}
+        .editor-footer{background:var(--bg-tertiary);border-top:1px solid var(--border-color);padding:16px}
+        .run-btn{padding:12px 32px;background:var(--accent-green);color:var(--text-primary);border:none;border-radius:6px;font-size:16px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:8px}
+        .run-btn:hover{background:#3CB371}
+        .run-btn:disabled{background:var(--text-muted);cursor:not-allowed}
+        .output-area{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;margin-top:16px;max-height:300px;overflow-y:auto}
+        .output-header{background:var(--bg-tertiary);padding:8px 16px;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-color)}
+        .output-content{padding:16px;font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+        .output-content.error{color:var(--accent-red)}
+        .output-content.success{color:var(--accent-green)}
+        .loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text-muted);border-top-color:var(--accent-blue);border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+        .achievement-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;transition:all .3s}
+        .achievement-card.locked{opacity:.5;filter:grayscale(100%)}
+        .achievement-card.unlocked{border-color:var(--accent-yellow);box-shadow:0 0 20px rgba(240,180,41,.2)}
+        .achievement-icon{font-size:64px;margin-bottom:16px}
+        .achievement-name{font-size:18px;font-weight:bold;margin-bottom:8px}
+        .achievement-desc{color:var(--text-secondary);font-size:14px;margin-bottom:12px}
+        .achievement-status{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+        .achievement-card.locked .achievement-status{background:var(--border-color);color:var(--text-muted)}
+        .achievement-card.unlocked .achievement-status{background:rgba(240,180,41,.2);color:var(--accent-yellow)}
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .modal-content{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;width:90%;max-width:400px}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border-color)}
+        .modal-header h3{font-size:20px}
+        .modal-close{background:none;border:none;color:var(--text-muted);font-size:28px;cursor:pointer;line-height:1}
+        .modal-close:hover{color:var(--text-primary)}
+        .modal-body{padding:24px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;margin-bottom:8px;color:var(--text-secondary)}
+        .form-group input{width:100%;padding:12px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:6px;color:var(--text-primary);font-size:14px}
+        .form-group input:focus{outline:none;border-color:var(--accent-blue)}
+        .modal-footer{padding:16px 24px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;gap:12px}
+        .btn{padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-primary{background:var(--accent-blue);color:var(--bg-primary);border:none}
+        .btn-secondary{background:transparent;color:var(--text-secondary);border:1px solid var(--border-color)}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px 24px;z-index:3000;opacity:0;transition:all .3s}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+        .toast-message{color:var(--text-primary)}
+        .back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;color:var(--text-secondary);cursor:pointer;margin-bottom:24px}
+        .back-btn:hover{background:var(--hover-bg);color:var(--text-primary)}
+        @media(max-width:768px){.mobile-menu-btn{display:block}.nav-menu{display:none;position:absolute;top:60px;left:0;right:0;background:var(--bg-secondary);flex-direction:column;padding:16px;border-bottom:1px solid var(--border-color)}.nav-menu.show{display:flex}.nav-login-btn{display:none}.hero-title{font-size:36px}.stats-section{grid-template-columns:1fr}.course-detail,.project-detail{flex-direction:column}.course-sidebar{width:100%;max-height:40vh}.course-content{padding:24px}.project-docs,.project-editor{width:100%}.project-editor{height:60vh}.achievement-grid{grid-template-columns:1fr}}
+        @media(max-width:480px){.hero{padding:48px 16px}.hero-title{font-size:28px}.stat-number{font-size:36px}}
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo"><span class="logo-icon">📊</span><span>数析学院</span></a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active" data-page="home">首页</a></li>
+                <li><a href="#courses" class="nav-link" data-page="courses">课程中心</a></li>
+                <li><a href="#projects" class="nav-link" data-page="projects">实战项目</a></li>
+                <li><a href="#achievements" class="nav-link" data-page="achievements">成就殿堂</a></li>
+            </ul>
+            <button class="nav-login-btn" id="loginBtn">登录</button>
+        </div>
+    </nav>
+    <main id="app"></main>
+    <footer class="footer" id="footer">
+        <div class="footer-content">
+            <div class="footer-section"><h4>关于数析学院</h4><p>专业的Python数据分析在线学习平台</p></div>
+            <div class="footer-section"><h4>快速链接</h4><ul><li><a href="#home">首页</a></li><li><a href="#courses">课程中心</a></li><li><a href="#projects">实战项目</a></li><li><a href="#achievements">成就殿堂</a></li></ul></div>
+            <div class="footer-section"><h4>技术栈</h4><ul><li>Python 3.x</li><li>Pandas & NumPy</li><li>Pyodide WebAssembly</li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>© 2024 数析学院 - 让数据分析学习更简单</p></div>
+    </footer>
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>登录数析学院</h3><button class="modal-close" id="closeLoginModal">×</button></div>
+            <div class="modal-body">
+                <p>这是一个模拟登录演示。</p>
+                <p>点击确定即可体验完整功能。</p>
+                <div class="form-group"><label>邮箱</label><input type="email" value="learner@datacademy.cn"></div>
+                <div class="form-group"><label>密码</label><input type="password" value="password123"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLogin">取消</button>
+                <button class="btn btn-primary" id="confirmLogin">确定登录</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+<!--COURSES_DATA_PLACEHOLDER-->
+<!--PROJECTS_DATA_PLACEHOLDER-->
+<!--DATASETS_PLACEHOLDER-->
+<!--ACHIEVEMENTS_DATA_PLACEHOLDER-->
+const Store={data:{courseProgress:{},projectProgress:{},codeRunCount:0,studyStreak:{current:0,lastStudyDate:null},achievements:[],isLoggedIn:false,user:null},init(){const saved=localStorage.getItem("shuxi_store");if(saved){try{this.data=JSON.parse(saved);}catch(e){console.error("Failed to load store:",e);}}},save(){try{localStorage.setItem("shuxi_store",JSON.stringify(this.data));}catch(e){console.error("Failed to save store:",e);}},getCourseProgress(courseId){return this.data.courseProgress[courseId]||{completedLessons:[],currentLesson:null,lastAccessed:null};},setCurrentLesson(courseId,lessonId){if(!this.data.courseProgress[courseId]){this.data.courseProgress[courseId]={completedLessons:[],currentLesson:null,lastAccessed:null};}this.data.courseProgress[courseId].currentLesson=lessonId;this.data.courseProgress[courseId].lastAccessed=new Date().toISOString();this.updateStudyStreak();this.save();this.checkCourseAchievements();},markLessonComplete(courseId,lessonId){if(!this.data.courseProgress[courseId]){this.data.courseProgress[courseId]={completedLessons:[],currentLesson:null,lastAccessed:null};}if(!this.data.courseProgress[courseId].completedLessons.includes(lessonId)){this.data.courseProgress[courseId].completedLessons.push(lessonId);}this.data.courseProgress[courseId].lastAccessed=new Date().toISOString();this.updateStudyStreak();this.save();this.checkCourseAchievements();},isLessonCompleted(courseId,lessonId){const progress=this.getCourseProgress(courseId);return progress.completedLessons.includes(lessonId);},getCourseCompletionRate(courseId,totalLessons){const progress=this.getCourseProgress(courseId);return Math.round((progress.completedLessons.length/totalLessons)*100);},isCourseCompleted(courseId,totalLessons){const progress=this.getCourseProgress(courseId);return progress.completedLessons.length>=totalLessons;},getProjectProgress(projectId){return this.data.projectProgress[projectId]||{completed:false,lastAccessed:null};},markProjectComplete(projectId){this.data.projectProgress[projectId]={completed:true,lastAccessed:new Date().toISOString()};this.updateStudyStreak();this.save();this.checkProjectAchievements();this.checkAllAchievements();},getCompletedProjectCount(){return Object.values(this.data.projectProgress).filter(p=>p.completed).length;},getCompletedCourseCount(){let count=0;COURSES_DATA.forEach(course=>{if(this.isCourseCompleted(course.id,course.lessons.length))count++;});return count;},incrementCodeRunCount(){this.data.codeRunCount++;this.save();this.checkRunAchievements();},getCodeRunCount(){return this.data.codeRunCount;},updateStudyStreak(){const today=new Date().toISOString().split("T")[0];const lastDate=this.data.studyStreak.lastStudyDate;if(!lastDate){this.data.studyStreak.current=1;this.data.studyStreak.lastStudyDate=today;return;}if(lastDate===today)return;const lastDateObj=new Date(lastDate);const todayObj=new Date(today);const diffDays=Math.floor((todayObj-lastDateObj)/(1000*60*60*24));if(diffDays===1){this.data.studyStreak.current++;}else if(diffDays>1){this.data.studyStreak.current=1;}this.data.studyStreak.lastStudyDate=today;this.checkStreakAchievements();},checkStreakAchievements(){if(this.data.studyStreak.current>=3)this.unlockAchievement("streak-3");if(this.data.studyStreak.current>=7)this.unlockAchievement("streak-7");if(this.data.studyStreak.current>=30)this.unlockAchievement("streak-30");},checkCourseAchievements(){const completedCount=this.getCompletedCourseCount();if(completedCount>=1)this.unlockAchievement("first-course");if(completedCount>=5)this.unlockAchievement("five-courses");if(completedCount>=12)this.unlockAchievement("all-courses");},checkProjectAchievements(){const completedCount=this.getCompletedProjectCount();if(completedCount>=1)this.unlockAchievement("first-project");if(completedCount>=5)this.unlockAchievement("five-projects");if(completedCount>=10)this.unlockAchievement("all-projects");},checkRunAchievements(){if(this.data.codeRunCount>=50)this.unlockAchievement("run-50");if(this.data.codeRunCount>=100)this.unlockAchievement("run-100");if(this.data.codeRunCount>=500)this.unlockAchievement("run-500");},checkAllAchievements(){this.checkCourseAchievements();this.checkProjectAchievements();this.checkStreakAchievements();this.checkRunAchievements();},unlockAchievement(achievementId){if(!this.data.achievements.includes(achievementId)){this.data.achievements.push(achievementId);this.save();this.showAchievementNotification(achievementId);}},isAchievementUnlocked(achievementId){return this.data.achievements.includes(achievementId);},showAchievementNotification(achievementId){const achievement=ACHIEVEMENTS_DATA.find(a=>a.id===achievementId);if(achievement)App.showToast("🎉 解锁成就: "+achievement.title);},login(email){this.data.isLoggedIn=true;this.data.user=email;this.save();this.checkAllAchievements();}};
+const Router={routes:{},currentRoute:null,currentParams:{},init(){window.addEventListener("hashchange",()=>this.handleRoute());window.addEventListener("load",()=>this.handleRoute());},register(path,handler){this.routes[path]=handler;},navigate(path){window.location.hash=path;},handleRoute(){const hash=window.location.hash.slice(1)||"home";const parts=hash.split("/");const route=parts[0];const param=parts[1];this.currentRoute=route;this.currentParams={id:param};if(this.routes[route])this.routes[route](param);else this.routes["home"]();this.updateActiveNav();},updateActiveNav(){document.querySelectorAll(".nav-link").forEach(link=>{link.classList.remove("active");if(link.dataset.page===this.currentRoute)link.classList.add("active");});},getParam(){return this.currentParams.id;}};
+
+const App={pyodide:null,pyodideReady:false,pyodideLoading:false,async init(){Router.init();this.setupRoutes();this.setupEventListeners();Store.init();console.log("App initialized");console.log("COURSES_DATA:", COURSES_DATA.length, "courses");},setupRoutes(){Router.register("home",()=>this.renderHome());Router.register("courses",()=>this.renderCourses());Router.register("course",(id)=>this.renderCourseDetail(id));Router.register("projects",()=>this.renderProjects());Router.register("project",(id)=>this.renderProjectDetail(id));Router.register("achievements",()=>this.renderAchievements());},setupEventListeners(){document.getElementById("mobileMenuBtn")?.addEventListener("click",()=>document.getElementById("navMenu").classList.toggle("show"));document.getElementById("loginBtn")?.addEventListener("click",()=>document.getElementById("loginModal").classList.add("show"));document.getElementById("closeLoginModal")?.addEventListener("click",()=>document.getElementById("loginModal").classList.remove("show"));document.getElementById("cancelLogin")?.addEventListener("click",()=>document.getElementById("loginModal").classList.remove("show"));document.getElementById("confirmLogin")?.addEventListener("click",()=>{Store.login("learner@datacademy.cn");document.getElementById("loginModal").classList.remove("show");this.showToast("登录成功！");this.updateLoginButton();});document.querySelectorAll(".nav-link").forEach(link=>link.addEventListener("click",()=>document.getElementById("navMenu").classList.remove("show")));},updateLoginButton(){const btn=document.getElementById("loginBtn");if(btn&&Store.data.isLoggedIn){btn.textContent="已登录";btn.disabled=true;}},showToast(message){const toast=document.getElementById("toast");const toastMessage=document.getElementById("toastMessage");if(toast&&toastMessage){toastMessage.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3000);}},renderHome(){console.log("Rendering home page");const app=document.getElementById("app");document.getElementById("footer").style.display="block";app.innerHTML='<section class="hero"><h1 class="hero-title">数析学院</h1><p class="hero-subtitle">专业的Python数据分析在线学习平台，从入门到精通</p><a href="#courses" class="hero-btn">开始学习</a></section><section class="stats-section"><div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">精品课程</div></div><div class="stat-card"><div class="stat-number">10</div><div class="stat-label">实战项目</div></div><div class="stat-card"><div class="stat-number">100+</div><div class="stat-label">学习课时</div></div></section><section class="section"><h2 class="section-title">精选课程</h2><div class="card-grid">'+COURSES_DATA.slice(0,3).map(course=>'<div class="card" onclick="Router.navigate(\'course/'+course.id+'\')"><div class="card-icon">'+course.icon+'</div><div class="card-title">'+course.title+'</div><div class="card-desc">'+course.description+'</div><div class="card-meta"><span class="card-tag tag-easy">'+course.difficulty+'</span><span>'+course.lessons.length+' 课时</span></div></div>').join('')+'</div><a href="#courses" class="hero-btn" style="margin-top:32px">查看全部课程</a></section><section class="section"><h2 class="section-title">精选项目</h2><div class="card-grid">'+PROJECTS_DATA.slice(0,3).map(project=>'<div class="card" onclick="Router.navigate(\'project/'+project.id+'\')"><div class="card-icon">'+project.icon+'</div><div class="card-title">'+project.title+'</div><div class="card-desc">'+project.description+'</div><div class="card-meta"><span class="card-tag '+(project.difficulty==='入门'?'tag-easy':project.difficulty==='进阶'?'tag-medium':'tag-hard')+'">'+project.difficulty+'</span><span>'+project.duration+'</span></div></div>').join('')+'</div><a href="#projects" class="hero-btn" style="margin-top:32px">查看全部项目</a></section>';},renderCourses(){const app=document.getElementById("app");document.getElementById("footer").style.display="none";const coursesHtml=COURSES_DATA.map(course=>'<div class="card" onclick="Router.navigate(\'course/'+course.id+'\')"><div class="card-icon">'+course.icon+'</div><div class="card-title">'+course.title+'</div><div class="card-desc">'+course.description+'</div><div class="card-meta"><span class="card-tag tag-easy">'+course.difficulty+'</span><span>'+course.lessons.length+' 课时</span></div></div>').join('');app.innerHTML='<div class="section"><h2 class="section-title">课程中心</h2><div class="card-grid">'+coursesHtml+'</div></div>';},renderCourseDetail(courseId){const course=COURSES_DATA.find(c=>c.id===courseId);if(!course){this.renderCourses();return;}const app=document.getElementById("app");document.getElementById("footer").style.display="none";const progress=Store.getCourseProgress(course.id);const currentLessonId=progress.currentLesson||(course.lessons.length>0?course.lessons[0].id:null);app.innerHTML='<div class="course-detail"><div class="course-sidebar"><div class="course-sidebar-title">'+course.icon+' '+course.title+'</div>'+course.lessons.map(lesson=>'<div class="lesson-item '+(lesson.id===currentLessonId?'active':'')+' '+(Store.isLessonCompleted(course.id,lesson.id)?'completed':'')+'" onclick="App.renderLessonContent(\''+course.id+'\',\''+lesson.id+'\')"><div class="lesson-info"><span>'+(Store.isLessonCompleted(course.id,lesson.id)?'✓':'○')+'</span><div><div class="lesson-title">'+lesson.title+'</div><div class="lesson-duration">'+lesson.duration+'</div></div></div><span class="card-tag tag-easy">'+lesson.type+'</span></div>').join('')+'</div><div class="course-content" id="lessonContent"></div></div>';if(currentLessonId)this.renderLessonContent(course.id,currentLessonId);},renderLessonContent(courseId,lessonId){const course=COURSES_DATA.find(c=>c.id===courseId);const lesson=course?.lessons.find(l=>l.id===lessonId);if(!lesson){return;}Store.setCurrentLesson(courseId,lessonId);const contentDiv=document.getElementById("lessonContent");contentDiv.innerHTML='<div class="content-header"><h2 class="content-title">'+lesson.title+'</h2><div class="content-meta"><span>'+lesson.duration+'</span><span class="card-tag tag-easy">'+lesson.type+'</span></div></div><div class="content-body"><p>'+(lesson.content.text||lesson.content)+'</p><button class="btn btn-primary" style="margin-top:24px" onclick="Store.markLessonComplete(\''+courseId+'\',\''+lessonId+'\')">标记为已完成</button></div>';},renderProjects(){const app=document.getElementById("app");document.getElementById("footer").style.display="none";const projectsHtml=PROJECTS_DATA.map(project=>'<div class="card" onclick="Router.navigate(\'project/'+project.id+'\')"><div class="card-icon">'+project.icon+'</div><div class="card-title">'+project.title+'</div><div class="card-desc">'+project.description+'</div><div class="card-meta"><span class="card-tag '+(project.difficulty==='入门'?'tag-easy':project.difficulty==='进阶'?'tag-medium':'tag-hard')+'">'+project.difficulty+'</span><span>'+project.duration+'</span><span>数据集: '+project.dataset+'</span></div></div>').join('');app.innerHTML='<div class="section"><h2 class="section-title">实战项目</h2><div class="card-grid">'+projectsHtml+'</div></div>';},async renderProjectDetail(projectId){const project=PROJECTS_DATA.find(p=>p.id===projectId);if(!project){this.renderProjects();return;}const app=document.getElementById("app");document.getElementById("footer").style.display="none";app.innerHTML='<div class="project-detail"><div class="project-docs"><div class="back-btn" onclick="Router.navigate(\'projects\')">← 返回项目列表</div><h2>'+project.icon+' '+project.title+'</h2><div class="docs-section"><p>'+project.description+'</p></div><div class="docs-section"><h3>数据集</h3><p>使用数据集: '+project.dataset+'</p></div><div class="docs-section"><h3>使用说明</h3><p>在右侧编辑器中编写Python代码，点击"运行代码"按钮执行。</p></div></div><div class="project-editor"><div class="editor-header"><div class="editor-title"><span>代码编辑器</span></div><button class="run-btn" id="runBtn" onclick="App.runCode(\''+project.dataset+'\')">▶ 运行代码</button></div><div class="editor-area"><textarea class="code-editor" id="codeEditor" placeholder="在这里编写Python代码..." spellcheck="false">import pandas as pd\\n\\n# 读取数据集\\ndf = pd.read_csv("'+project.dataset+'")\\n\\n# 显示数据\\nprint("数据形状:", df.shape)\\nprint("\\n前5行数据:")\\nprint(df.head())</textarea></div><div class="editor-footer"><div id="outputArea" class="output-area"><div class="output-header">输出</div><div class="output-content" id="outputContent">点击"运行代码"查看结果...</div></div></div></div></div>';},async loadPyodide(){if(this.pyodide)return Promise.resolve(this.pyodide);if(this.pyodideLoading)return new Promise(resolve=>{const check=setInterval(()=>{if(this.pyodideReady){clearInterval(check);resolve(this.pyodide);}},100);});this.pyodideLoading=true;try{this.pyodide=await loadPyodide({indexURL:"https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"});await this.pyodide.loadPackage(["pandas","numpy"]);this.pyodideReady=true;this.pyodideLoading=false;console.log("Pyodide loaded successfully");return this.pyodide;}catch(error){console.error("Failed to load Pyodide:",error);this.pyodideLoading=false;throw error;}},async runCode(datasetName){const runBtn=document.getElementById("runBtn");const outputContent=document.getElementById("outputContent");runBtn.disabled=true;runBtn.innerHTML='<span class="loading-spinner"></span> 加载中...';outputContent.innerHTML="正在加载Python环境...";outputContent.className="output-content";try{await this.loadPyodide();const code=document.getElementById("codeEditor").value;const dataset=DATASETS[datasetName];if(dataset){const csvData=dataset.replace(/"/g,'\\\\"').replace(/\\n/g,"\\\\n");const pyCode='import pandas as pd\\nfrom io import StringIO\\n\\ncsv_data = """'+csvData+'"""\\ndf = pd.read_csv(StringIO(csv_data))\\n\\n'+code;outputContent.innerHTML="正在执行代码...";const result=await this.pyodide.runPythonAsync(pyCode);Store.incrementCodeRunCount();outputContent.textContent=result||"代码执行完成";outputContent.className="output-content success";}else{outputContent.textContent="错误: 数据集不存在";outputContent.className="output-content error";}}catch(error){outputContent.textContent="执行错误: "+error.message;outputContent.className="output-content error";console.error("Code execution error:",error);}finally{runBtn.disabled=false;runBtn.innerHTML="▶ 运行代码";}},renderAchievements(){const app=document.getElementById("app");document.getElementById("footer").style.display="none";app.innerHTML='<div class="section"><h2 class="section-title">成就殿堂</h2><div class="achievement-grid">'+ACHIEVEMENTS_DATA.map(achievement=>'<div class="achievement-card '+(Store.isAchievementUnlocked(achievement.id)?'unlocked':'locked')+'"><div class="achievement-icon">'+achievement.icon+'</div><div class="achievement-name">'+achievement.title+'</div><div class="achievement-desc">'+achievement.description+'</div><div class="achievement-status">'+(Store.isAchievementUnlocked(achievement.id)?'已解锁':'未解锁')+'</div></div>').join('')+'</div></div>';}};
+
+document.addEventListener("DOMContentLoaded",()=>App.init());
+    </script>
+</body>
+</html>

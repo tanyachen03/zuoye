@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %}{{ chapter.title }} · {{ course.title }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">首页</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a></li>
+        <li class="breadcrumb-item active">第 {{ chapter_index }} 章 / {{ total_chapters }}</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-2">
+            <h2 class="mb-0"><span class="me-2">{{ course.icon }}</span>{{ chapter.title }}</h2>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-list-stars"></i> 章节目录</a>
+                <a href="{{ url_for('index') }}#courses" class="btn btn-sm btn-outline-secondary"><i class="bi bi-book"></i> 课程体系</a>
+                {% if next_chapter %}
+                <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=next_chapter.id) }}" class="btn btn-sm btn-warning"><i class="bi bi-arrow-right-circle"></i> 下一章 · {{ next_chapter.title }}</a>
+                {% else %}
+                <span class="btn btn-sm btn-success disabled"><i class="bi bi-trophy"></i> 本课程已完成</span>
+                {% endif %}
+            </div>
+        </div>
+        <small class="text-muted">📘 第 {{ chapter_index }} / {{ total_chapters }} 章 · ⏱ {{ chapter.duration }} {% if is_complete %}· <span class="badge bg-success ms-1"><i class="bi bi-check-circle"></i> 已完成</span>{% endif %}</small>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center py-3" style="background:linear-gradient(135deg,{{ course.color }}22 0%,#6366f122 100%);border-bottom:2px solid {{ course.color }};">
+                <h5 class="mb-0"><i class="bi bi-lightbulb-fill text-warning"></i> 理论知识</h5>
+                <small class="text-muted"><i class="bi bi-clock"></i> {{ chapter.duration }}</small>
+            </div>
+            <div class="card-body py-4 theory-content" style="line-height:1.8;font-size:15px;">
+                <div class="alert alert-info small mb-4 py-2"><i class="bi bi-info-circle"></i> 本章将带你从概念到代码完整掌握核心要点。读完理论后，跟随下方代码示例动手练习，效果最佳。</div>
+                {{ chapter.theory|safe }}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-code-slash text-primary"></i> 代码示例</h5>
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyCode('example')"><i class="bi bi-clipboard"></i> 复制</button>
+            </div>
+            <div class="card-body">
+                <pre class="code-block" id="example">{{ chapter.code_example }}</pre>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-terminal text-success"></i> 在线编辑器</h5>
+                <div>
+                    <button class="btn btn-sm btn-warning" onclick="pasteToEditor('editor-chapter', this)"><i class="bi bi-clipboard-plus"></i> 粘贴</button>
+                    <button class="btn btn-sm btn-success" onclick="runCode('chapter')"><i class="bi bi-play"></i> 运行</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="resetCode('chapter')"><i class="bi bi-arrow-counterclockwise"></i> 重置</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <textarea class="code-editor" id="editor-chapter" spellcheck="false">{{ chapter.starter_code }}</textarea>
+                <div class="mt-3 small text-muted">输出：</div>
+                <div class="output-box" id="output-chapter">（点击运行查看结果）</div>
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <small class="text-muted">完成本章学习后请标记为已完成</small>
+                    <button class="btn btn-{{ 'secondary' if is_complete else 'primary' }}" id="completeBtn" onclick="markComplete()">
+                        <i class="bi bi-{{ 'check-circle-fill' if is_complete else 'flag' }}"></i> {{ '已标记完成' if is_complete else '✓ 标记本章完成' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-question-circle text-info"></i> 随堂练习</h5></div>
+            <div class="card-body">
+                <form id="quizForm">
+                {% for q in chapter.quiz %}
+                    <div class="mb-4 pb-3 border-bottom" id="q-block-{{ loop.index0 }}">
+                        <h6 class="fw-bold">Q{{ loop.index }}. {{ q.q }}</h6>
+                        {% for opt in q.options %}
+                        <div class="quiz-opt d-block" id="q{{ loop.index0 }}-opt{{ loop.index0 }}">
+                            <input type="radio" name="q{{ loop.index0 }}" value="{{ loop.index0 }}" id="q{{ loop.index0 }}-r{{ loop.index0 }}" class="me-2">
+                            <label for="q{{ loop.index0 }}-r{{ loop.index0 }}" class="w-100 cursor-pointer">{{ opt }}</label>
+                        </div>
+                        {% endfor %}
+                        <div class="q-feedback mt-2 small" id="q-feedback-{{ loop.index0 }}"></div>
+                    </div>
+                {% endfor %}
+                <button type="button" class="btn btn-primary" onclick="checkQuiz()"><i class="bi bi-check2-square"></i> 提交答案</button>
+                <div class="mt-3" id="quizResult"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between gap-3">
+                    {% if prev_chapter %}
+                    <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=prev_chapter.id) }}" class="btn btn-outline-primary flex-fill"><i class="bi bi-arrow-left-circle"></i> 上一章 · {{ prev_chapter.title }}</a>
+                    {% else %}
+                    <span class="btn btn-outline-secondary flex-fill disabled"><i class="bi bi-arrow-left-circle"></i> 已是第一章</span>
+                    {% endif %}
+                    {% if next_chapter %}
+                    <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=next_chapter.id) }}" class="btn btn-warning flex-fill"><i class="bi bi-arrow-right-circle"></i> 下一章 · {{ next_chapter.title }}</a>
+                    {% else %}
+                    <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-success flex-fill"><i class="bi bi-trophy"></i> 完成全部章节 · 返回</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-journals"></i> 本课章节</h5>
+                <small class="text-muted">{{ chapter_index }} / {{ total_chapters }}</small>
+            </div>
+            <div class="list-group list-group-flush">
+            {% for c in course.chapters %}
+                {% set active = c.id == chapter.id %}
+                {% set ch_done = c.id in done_chapters %}
+                <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=c.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ 'active text-white' if active }}" {% if active %}style="background:{{ course.color }};border-color:{{ course.color }}"{% endif %}>
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center me-2" style="width:24px;height:24px;font-size:12px;background:{{ course.color }};color:#fff;{% if active %}background:#fff;color:{{ course.color }};{% endif %}">{{ loop.index }}</span>
+                        <small class="me-auto">{{ c.title }}</small>
+                    </div>
+                    {% if ch_done %}<i class="bi bi-check-circle-fill text-{{ 'white' if active else 'success' }} ms-2"></i>{% endif %}
+                </a>
+            {% endfor %}
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-outline-primary w-100 mb-2"><i class="bi bi-arrow-left"></i> 返回课程</a>
+                <a href="{{ url_for('projects_list') }}" class="btn btn-outline-success w-100 mb-2"><i class="bi bi-briefcase"></i> 项目实战</a>
+                {% if next_chapter %}
+                <a href="{{ url_for('chapter_page', course_id=course.id, chapter_id=next_chapter.id) }}" class="btn btn-warning w-100"><i class="bi bi-arrow-right-circle"></i> 下一章 · {{ next_chapter.title }}</a>
+                {% else %}
+                <div class="alert alert-success small text-center mb-2"><i class="bi bi-trophy"></i> 恭喜！本课程已全部完成</div>
+                <a href="{{ url_for('index') }}#courses" class="btn btn-outline-primary w-100"><i class="bi bi-book"></i> 返回课程体系</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const QUIZ = {{ chapter.quiz|tojson }};
+const ORIGINAL = `{{ chapter.starter_code|replace('`', '\\`')|safe }}`;
+
+function copyCode(id){
+    var el = document.getElementById(id);
+    var btn = el && el.previousElementSibling && el.previousElementSibling.querySelector ? el.previousElementSibling.querySelector('button') : null;
+    copyText(el ? el.innerText : '', btn);
+}
+function resetCode(id){
+    document.getElementById('editor-'+id).value = ORIGINAL;
+    document.getElementById('output-'+id).textContent = '（已重置）';
+}
+
+function runCode(id){
+    const code = document.getElementById('editor-'+id).value;
+    const out = document.getElementById('output-'+id);
+    out.textContent = '⏳ 正在运行...';
+    fetch("{{ url_for('api_run_code') }}", {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({code: code})
+    }).then(r => r.json()).then(data => {
+        out.textContent = data.output || '(无输出)';
+        if(data.status === 'error') out.style.color = '#fca5a5'; else out.style.color = '#86efac';
+    }).catch(e => out.textContent = '网络错误: '+e);
+}
+
+function checkQuiz(){
+    // 重置所有样式
+    document.querySelectorAll('.quiz-opt').forEach(function(el){
+        el.classList.remove('correct','wrong');
+    });
+    document.querySelectorAll('.q-feedback').forEach(function(el){
+        el.innerHTML = '';
+    });
+
+    var correct = 0;
+    var total = QUIZ.length;
+    var wrongList = [];
+
+    QUIZ.forEach(function(q, idx){
+        var picked = document.querySelector('input[name="q'+idx+']:checked');
+        var val = picked ? parseInt(picked.value) : -1;
+        var isRight = (val === q.answer);
+
+        // 渲染每个选项
+        q.options.forEach(function(opt, oi){
+            var el = document.getElementById('q'+idx+'-opt'+oi);
+            if(!el) return;
+            el.classList.remove('correct','wrong');
+            if(oi === q.answer){
+                el.classList.add('correct');
+                el.style.background = '#dcfce7';
+                el.style.borderColor = '#16a34a';
+                el.style.color = '#166534';
+            }
+            if(val === oi && !isRight){
+                el.classList.add('wrong');
+                el.style.background = '#fee2e2';
+                el.style.borderColor = '#dc2626';
+                el.style.color = '#991b1b';
+            }
+            if(oi !== q.answer && val !== oi){
+                el.style.background = '';
+                el.style.borderColor = '';
+                el.style.color = '';
+            }
+        });
+
+        var feedback = document.getElementById('q-feedback-'+idx);
+        if(isRight){
+            correct++;
+            feedback.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> 回答正确！</span>';
+        } else {
+            var yourOpt = val >= 0 ? q.options[val] : '未选择';
+            var correctOpt = q.options[q.answer];
+            var explanation = getExplanation(q, val, q.answer);
+            feedback.innerHTML = '<div class="alert alert-danger mb-0 py-2"><i class="bi bi-x-circle"></i> 错误！正确答案：<b>' + correctOpt + '</b><br><i class="bi bi-info-circle"></i> ' + explanation + '</div>';
+            wrongList.push(idx+1);
+        }
+    });
+
+    var pct = Math.round(correct / total * 100);
+    var summary = '<div class="alert alert-'+(pct===100?'success':(pct>=60?'info':'warning'))+'">';
+    summary += '<b>得分: ' + correct + ' / ' + total + ' (' + pct + '%)</b>';
+    if(pct===100) summary += ' 🎉 全对，太棒了！';
+    else if(pct>=60) summary += ' 不错，继续加油！';
+    else summary += ' 多复习后再试试吧！';
+    if(wrongList.length) summary += '<br><small>做错的题号：' + wrongList.join(', ') + '</small>';
+    summary += '</div>';
+    document.getElementById('quizResult').innerHTML = summary;
+}
+
+function getExplanation(q, userVal, correctVal){
+    var explanations = {
+        0: { 0:'📖 Pandas 是处理结构化/表格数据的主流工具。', 1:'Pandas 专门用于表格数据处理。', 2:'Pandas 不是处理音频数据的工具。', 3:'Pandas 不是处理二进制数据的工具。' },
+        1: { 0:'✅ pip install 是 Python 包安装的标准命令。', 1:'npm 是 Node.js 的包管理器。', 2:'apt 是 Debian/Ubuntu 的系统包管理器。', 3:'gem 是 Ruby 的包管理器。' },
+        2: { 0:'✅ NumPy 数组支持向量化运算，速度远快于 Python 原生 list。', 1:'NumPy 语法更简洁，但不是主要优势。', 2:'NumPy 支持更多数据类型，但不是主要优势。', 3:'NumPy 实际上更省内存，不是占用更多。' },
+        3: { 0:'✅ dropna() 是 Pandas 删除含缺失值行的标准方法。', 1:'df.nan() 不是 Pandas 的方法。', 2:'df.clean() 不是 Pandas 的方法。', 3:'df.rm_nan() 不是 Pandas 的方法。' },
+        4: { 0:'✅ groupby + sum 是按列分组聚合的标准链式调用。', 1:'语法错误，sum 不在 groupby 之前。', 2:'gather 不是 Pandas 方法。', 3:'sum.by 不是标准语法。' },
+        5: { 0:'✅ LEFT JOIN 保留左表全部记录，右表匹配不到填 NULL。', 1:'INNER JOIN 只保留两边都有的记录。', 2:'RIGHT JOIN 保留右表全部。', 3:'JOIN 不做随机保留。' },
+        6: { 0:'✅ IQR = Q3 - Q1，是检测异常值的经典统计量。', 1:'max-min 是全距，不是四分位距。', 2:'均值-中位数 是偏度的度量，不是 IQR。', 3:'std*2 是置信区间的近似，不是 IQR。' },
+        7: { 0:'✅ plt.bar() 是 Matplotlib 绘制柱状图的函数。', 1:'plt.pie() 绘制饼图，不是柱状图。', 2:'plt.scatter() 绘制散点图，不是柱状图。', 3:'plt.hist() 绘制直方图，不是柱状图。' },
+        8: { 0:'✅ 按周聚合使用频率代码 "W"。', 1:'"M" 是按月，"D" 是按天，"Y" 是按年。', 2:'"D" 是按天，"W" 是按周。', 3:'"Y" 是按年，"W" 是按周。' },
+        9: { 0:'✅ rolling(7).mean() 计算 7 期滚动窗口均值。', 1:'shift(7) 是平移数据，不是滚动窗口。', 2:'diff(7) 是差分，不是滚动均值。', 3:'take(7) 是按位置选取，不是滚动。' },
+        10: { 0:'✅ HAVING 用于对聚合后的结果进行过滤。', 1:'WHERE 用于过滤行，不能用于聚合结果。', 2:'IF 是条件表达式，不能用于聚合过滤。', 3:'GROUP BY 用于分组，不是过滤。' },
+        11: { 0:'✅ 样本方差的自由度为 n-1（贝塞尔校正）。', 1:'n 是样本量，不是自由度。', 2:'n+1 不是标准自由度。', 3:'n/2 不是自由度。' },
+        12: { 0:'✅ p<0.05 通常认为小概率事件发生，可拒绝原假设。', 1:'p 值小不能证明结果绝对正确。', 2:'p<0.05 是统计显著的门槛，不是数据无效。', 3:'p<0.05 与样本量大小无直接关系。' },
+        13: { 0:'✅ 独立样本 t 检验用于比较两组独立样本的均值差异。', 1:'卡方检验用于类别变量。', 2:'ANOVA 用于多组（≥3）均值比较。', 3:'Z 检验假设已知总体方差。' },
+        14: { 0:'✅ 相关系数 r 的取值范围是 [-1, 1]。', 1:'[0,1] 是概率的取值范围，不是相关系数。', 2:'[0,+∞) 不对。', 3:'相关系数不能超过 ±1。' },
+        15: { 0:'✅ AUC/F1/Recall 是逻辑回归等分类模型的核心评估指标。', 1:'MAE 是回归指标，不适合分类。', 2:'R² 是回归评估指标，不适合分类。', 3:'余弦相似度用于向量相似性，不是分类评估。' },
+        16: { 0:'✅ RFM 中 R = Recency，即最近一次消费距离现在多少天。', 1:'收益对应 Monetary，不是 R。', 2:'消费频次对应 Frequency，不是 R。', 3:'消费金额对应 Monetary，不是 R。' },
+        17: { 0:'✅ 流失预测中 Recall（召回率）最重要——要尽量找到更多真正的流失客户。', 1:'准确率在类别不平衡时虚高。', 2:'MAE 是回归指标。', 3:'R² 是回归指标。' },
+        18: { 0:'✅ Lift > 1 表示两商品正相关（比随机购买更可能同时出现）。', 1:'Lift < 1 表示负相关。', 2:'Lift = 1 表示无关联。', 3:'提升度不等于支持度。' },
+        19: { 0:'✅ 聚类前必须对特征做标准化/归一化，避免尺度大的特征主导距离计算。', 1:'不填充缺失值会导致聚类出错。', 2:'复制数据不会改善聚类质量。', 3:'KMeans 对尺度敏感，不标准化结果无意义。' },
+    };
+    var key = q.q.substring(0, 20).replace(/[^\d]/g, '');
+    var base = key.length > 3 ? parseInt(key.substring(0,3)) % 20 : 0;
+    var map = explanations[base] || {};
+    if(userVal >= 0 && userVal !== correctVal && map[userVal]){
+        return map[userVal];
+    }
+    if(map[correctVal]){
+        return '📚 ' + map[correctVal];
+    }
+    return '建议结合课程内容理解本题考点。';
+}
+
+function markComplete(){
+    fetch("{{ url_for('api_complete_chapter') }}", {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({course_id:{{ course.id }}, chapter_id:{{ chapter.id }}})
+    }).then(r=>r.json()).then(data=>{
+        if(data.ok){
+            const btn = document.getElementById('completeBtn');
+            btn.className = 'btn btn-secondary';
+            btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> 已标记完成';
+            if(data.new_badges && data.new_badges.length){
+                data.new_badges.forEach(b => showBadges([b]));
+            } else {
+                alert('✅ 已标记本章完成！');
+            }
+        } else alert('标记失败：'+ (data.error||'请先登录'));
+    });
+}
+</script>
+{% endblock %}
