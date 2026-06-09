@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matplotlib基础 - 数析学院</title>
+    <title>Matplotlib基础绘图 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -30,43 +30,142 @@
             </div>
 
             <div class="chapter-content">
-                <h1 class="chapter-title">Matplotlib基础</h1>
+                <h1 class="chapter-title">Matplotlib基础绘图</h1>
                 <p class="chapter-subtitle">课程：数据可视化</p>
 
                 <div class="section-block">
-                    <h3 class="section-title">Matplotlib介绍</h3>
-                    <p class="section-content">本节介绍Matplotlib介绍的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">Matplotlib介绍与设置</h3>
+                    <p class="section-content">Matplotlib是Python的基础绘图库，pyplot是其常用接口。import matplotlib.pyplot as plt 导入。支持折线图、柱状图、散点图、饼图、热力图等多种图形。使用 plt.style.use() 或 plt.rcParams 配置样式。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">折线图</h3>
-                    <p class="section-content">本节介绍折线图的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">折线图 plot</h3>
+                    <p class="section-content">plt.plot(x, y, marker="o", label="标签") 绘制折线图。marker 设置数据点样式，linewidth 线宽，color 颜色。plt.title() 标题，plt.xlabel()/plt.ylabel() 轴标签，plt.legend() 图例，plt.grid() 网格线。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">柱状图</h3>
-                    <p class="section-content">本节介绍柱状图的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">柱状图 bar</h3>
+                    <p class="section-content">plt.bar(x_pos, heights, width=0.6) 柱状图，plt.barh() 水平柱状图。用于展示分类数据的数值对比。设置 x_pos = range(len(categories))，再用 plt.xticks(x_pos, categories) 设置x轴标签。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">散点图</h3>
-                    <p class="section-content">本节介绍散点图的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">散点图 scatter</h3>
+                    <p class="section-content">plt.scatter(x, y, s=size, c=color, alpha=0.6) 散点图。s控制点大小，c控制点颜色（可以是数值数组），alpha控制透明度。用于观察两个变量之间的关系/聚类模式。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">饼图与热力图</h3>
-                    <p class="section-content">本节介绍饼图与热力图的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">饼图与组合图</h3>
+                    <p class="section-content">plt.pie(values, labels=labels, autopct="%1.1f%%") 饼图。plt.subplots(rows, cols, figsize=(w, h)) 创建多子图布局。可以在同一图中组合多种图形类型，更丰富地展示数据。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了Matplotlib基础的核心知识点，包括Matplotlib介绍、折线图等关键内容。</p>
+                    <p>本章介绍了Matplotlib基础绘图的核心知识点，包括Matplotlib介绍与设置、折线图 plot等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">绘制折线图的函数是？</div>
+                    <ul class="exercise-options">
+                    <li>A. plt.line()</li>
+                    <li class="correct-option">B. plt.plot()</li>
+                    <li>C. plt.linechart()</li>
+                    <li>D. plt.graph()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>plt.plot() 是Matplotlib绘制折线图的核心函数。可以传入多组y值同时画多条线。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">plt.bar 主要用于？</div>
+                    <ul class="exercise-options">
+                    <li>A. 展示趋势变化</li>
+                    <li class="correct-option">B. 展示分类数据对比</li>
+                    <li>C. 展示变量关系</li>
+                    <li>D. 展示分布</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>柱状图最适合比较不同类别间的数值大小。折线图展示趋势，散点图展示关系，直方图展示分布。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">散点图的 alpha 参数控制？</div>
+                    <ul class="exercise-options">
+                    <li>A. 点的大小</li>
+                    <li>B. 点的形状</li>
+                    <li class="correct-option">C. 透明度</li>
+                    <li>D. 颜色</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>alpha 取值0-1，控制透明度。1为不透明，接近0为几乎透明。点很多时降低alpha可看清点的密度分布。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">添加图例的函数是？</div>
+                    <ul class="exercise-options">
+                    <li>A. plt.label()</li>
+                    <li class="correct-option">B. plt.legend()</li>
+                    <li>C. plt.key()</li>
+                    <li>D. plt.title()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>plt.legend() 添加图例。需要在绘图时为每条线/图形指定 label 参数，legend 会自动收集并显示。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">创建2行3列子图用哪个？</div>
+                    <ul class="exercise-options">
+                    <li>A. plt.subplot(2, 3)</li>
+                    <li class="correct-option">B. plt.subplots(2, 3)</li>
+                    <li>C. plt.figure(2, 3)</li>
+                    <li>D. plt.grid(2, 3)</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>plt.subplots(rows, cols) 返回 (fig, axes) 元组。axes 是子图数组，可以用 axes[i,j] 或 axes.flat[i] 访问具体子图。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">月度销售趋势折线图 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建模拟的12个月销售数据（月份、销售额列表）</li><li>使用 plt.plot 绘制折线图</li><li>添加标题、x轴/ y轴标签</li><li>在每个数据点处用 marker="o" 显示圆点</li><li>添加网格线</li><li>在图上标注最高/最低点的数值</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">多产品销售对比柱状图 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>模拟5种产品的季度销售数据</li><li>绘制各产品的总销售额柱状图</li><li>将柱子设为不同颜色并添加图例</li><li>在每个柱子上方显示具体数值</li><li>尝试水平柱状图 plt.barh 展示</li><li>绘制分组柱状图（每季度一组展示不同产品对比）</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">相关性分析热力图 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个包含多个数值列的DataFrame（模拟产品各项指标数据：价格、评分、销量、库存量等，100行样本）</li><li>使用 df.corr() 计算各列的相关系数矩阵</li><li>绘制相关性热力图（用matplotlib或seaborn）</li><li>设置合适的配色方案，并在格子中显示相关系数值</li><li>分析哪些变量之间存在强正/负相关</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

@@ -34,39 +34,138 @@
                 <p class="chapter-subtitle">课程：Pandas数据处理</p>
 
                 <div class="section-block">
-                    <h3 class="section-title">缺失值处理</h3>
-                    <p class="section-content">本节介绍缺失值处理的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">处理缺失值</h3>
+                    <p class="section-content">df.isnull() 或 df.isna() 返回布尔掩码标记缺失值。df.dropna() 删除含缺失值的行或列，df.fillna(value) 用指定值填充，df.fillna(method="ffill") 用前一个值填充（前向填充）。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">数据类型转换</h3>
-                    <p class="section-content">本节介绍数据类型转换的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">df["col"].astype(new_type) 转换数据类型，如将字符串转为数字 int/float。pd.to_numeric(df["col"], errors="coerce") 安全转换（无法转换的设为NaN）。pd.to_datetime() 将字符串解析为日期时间类型。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">数据筛选</h3>
-                    <p class="section-content">本节介绍数据筛选的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">布尔筛选：df[df["age"] > 18]。多条件组合：df[(df["age"] > 18) & (df["score"] < 90)]（每个条件必须加括号）。df.query("age > 18") 使用字符串表达式筛选。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">数据排序</h3>
-                    <p class="section-content">本节介绍数据排序的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">df.sort_values("col_name") 按列值排序，ascending=False 降序。df.sort_values(["col1", "col2"], ascending=[True, False]) 多列排序。df.sort_index() 按索引排序。排名函数 df["col"].rank()。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">数据合并</h3>
-                    <p class="section-content">本节介绍数据合并的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">数据合并与连接</h3>
+                    <p class="section-content">pd.concat([df1, df2]) 简单拼接（按行或按列）。pd.merge(left, right, on="key") 类似SQL的JOIN操作，支持inner/left/right/outer四种连接方式。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了数据清洗与转换的核心知识点，包括缺失值处理、数据类型转换等关键内容。</p>
+                    <p>本章介绍了数据清洗与转换的核心知识点，包括处理缺失值、数据类型转换等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">删除含缺失值的行用哪个方法？</div>
+                    <ul class="exercise-options">
+                    <li>A. df.nan_drop()</li>
+                    <li class="correct-option">B. df.dropna()</li>
+                    <li>C. df.clean()</li>
+                    <li>D. df.remove_na()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>df.dropna() 删除包含NA/NaN的行或列。可用 axis 参数控制是删除行(0，默认)还是列(1)。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">df["a"].fillna(0) 的作用是？</div>
+                    <ul class="exercise-options">
+                    <li>A. 将0替换为NaN</li>
+                    <li class="correct-option">B. 将NaN替换为0</li>
+                    <li>C. 查找0值</li>
+                    <li>D. 删除0值</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>fillna(value) 将缺失值 NaN 用给定的 value 填充。也可以用字典为不同列指定不同填充值。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">筛选 age > 20 且 score < 80 的写法？</div>
+                    <ul class="exercise-options">
+                    <li>A. df[age > 20 and score < 80]</li>
+                    <li>B. df[df["age"]>20 and df["score"]<80]</li>
+                    <li class="correct-option">C. df[(df["age"]>20) & (df["score"]<80)]</li>
+                    <li>D. df.where(age>20, score<80)</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>多条件筛选要用 & 代替 and，| 代替 or，且每个条件必须用括号！这是最常见的Pandas错误之一。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">df.sort_values("price", ascending=False) 效果？</div>
+                    <ul class="exercise-options">
+                    <li>A. 按价格升序排序</li>
+                    <li class="correct-option">B. 按价格降序排序</li>
+                    <li>C. 按索引排序</li>
+                    <li>D. 随机排序</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>ascending=False 指定降序排序（从大到小）。默认值True为升序。可以传入列表对多列排序。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">pd.merge(df1, df2, on="id") 默认是？</div>
+                    <ul class="exercise-options">
+                    <li>A. LEFT JOIN</li>
+                    <li>B. RIGHT JOIN</li>
+                    <li class="correct-option">C. INNER JOIN</li>
+                    <li>D. FULL JOIN</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>merge 默认使用 inner 连接，即只保留两个表中id匹配的行。通过 how 参数可以指定 "left"、"right"、"outer" 等连接方式。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">缺失值处理练习 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个包含故意缺失值的DataFrame（如某些分数缺失）</li><li>检查每列有多少个缺失值（df.isnull().sum()）</li><li>用每列的平均值填充数值列的缺失值</li><li>用前向填充方法填充其他列的缺失值</li><li>删除任一包含缺失值的行，查看剩余行数</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">数据筛选与条件更新 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>模拟销售数据：创建含日期、产品、数量、单价、销售额（=数量×单价）的DataFrame（20行以上）</li><li>筛选出销售额大于某个值的记录</li><li>筛选某产品在特定日期范围的数据</li><li>将单价小于某个值的记录标记为"低价"，其他标记为"高价"，新增一列</li><li>按销售额降序排序并取前10行</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">多表连接实战 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建两个DataFrame：学生表 student(id, name, class_id) 包含10名学生</li><li>班级表 class_info(class_id, class_name, teacher) 包含3个班级</li><li>用merge将两表按 class_id 连接</li><li>使用 left join 确保所有学生都保留</li><li>使用 concat 垂直拼接两个班级的学生子表</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

@@ -35,38 +35,137 @@
 
                 <div class="section-block">
                     <h3 class="section-title">变量与赋值</h3>
-                    <p class="section-content">本节介绍变量与赋值的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">变量是存储数据的容器。在Python中，变量不需要声明类型，直接赋值即可。例如：name = "张三"，age = 25，price = 99.9。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">数字类型与运算</h3>
-                    <p class="section-content">本节介绍数字类型与运算的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">Python支持整数(int)、浮点数(float)、复数(complex)。运算符包括 + 加、- 减、* 乘、/ 除、// 整除、% 取余、** 幂运算。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">字符串操作</h3>
-                    <p class="section-content">本节介绍字符串操作的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">字符串用单引号或双引号包裹。常用操作：拼接 +、重复 *、索引 []、切片 [:]、len() 长度、.upper() 大写、.lower() 小写。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">列表与元组</h3>
-                    <p class="section-content">本节介绍列表与元组的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">列表 list 用 [] 创建，可修改、可混合类型。元组 tuple 用 () 创建，不可修改。常用方法：append() 添加、pop() 删除、len() 长度。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">字典与集合</h3>
-                    <p class="section-content">本节介绍字典与集合的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">字典 dict 用 {} 创建，键值对存储。person = {"name": "张三", "age": 25}。集合 set 用 set() 创建，自动去重，支持交并差运算。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了基础语法与数据类型的核心知识点，包括变量与赋值、数字类型与运算等关键内容。</p>
+                    <p>本章介绍了基础语法与数据类型的核心知识点，包括变量与赋值、数字类型与运算等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">以下哪个是合法的Python变量名？</div>
+                    <ul class="exercise-options">
+                    <li>A. 2name</li>
+                    <li>B. my-name</li>
+                    <li class="correct-option">C. my_name</li>
+                    <li>D. my name</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>变量名必须以字母或下划线开头，不能有空格和特殊字符（除下划线）。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">执行 print(10 // 3) 的结果是？</div>
+                    <ul class="exercise-options">
+                    <li>A. 3.333</li>
+                    <li class="correct-option">B. 3</li>
+                    <li>C. 4</li>
+                    <li>D. 1</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>// 是整除运算符，返回商的整数部分。10除以3商为3。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">list1 = [1,2,3], print(list1[-1]) 输出？</div>
+                    <ul class="exercise-options">
+                    <li>A. 1</li>
+                    <li>B. 2</li>
+                    <li class="correct-option">C. 3</li>
+                    <li>D. 报错</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>-1 表示最后一个元素。列表索引支持负数，从末尾向前数。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">dict1 = {"a": 1, "b": 2}, 如何获取值2？</div>
+                    <ul class="exercise-options">
+                    <li class="correct-option">A. dict1["b"]</li>
+                    <li>B. dict1.b</li>
+                    <li>C. dict1(2)</li>
+                    <li>D. dict1->b</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">A</span>
+                        <br><strong>解析：</strong>字典通过 字典名["键名"] 访问值。也可用 dict1.get("b")。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">s = "Hello", 哪个方法转为大写？</div>
+                    <ul class="exercise-options">
+                    <li class="correct-option">A. s.upper()</li>
+                    <li>B. s.up()</li>
+                    <li>C. upper(s)</li>
+                    <li>D. s.toUpper()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">A</span>
+                        <br><strong>解析：</strong>字符串对象的 .upper() 方法将字符串转为大写。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">数字计算器练习 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>定义两个数字变量 a = 15，b = 4</li><li>分别计算并打印它们的和、差、积、商、整除结果、余数</li><li>计算 a 的 b 次方</li><li>观察每种运算的结果类型</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">字符串处理练习 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建字符串 s = "Python数据分析很有趣"</li><li>打印字符串长度</li><li>打印前6个字符</li><li>将字符串全部转为大写</li><li>用"很"字分割字符串</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">学生信息管理 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个字典 student 包含 name、age、major、scores四个键</li><li>scores 是一个列表，包含3个成绩数值</li><li>打印学生姓名和各科成绩</li><li>修改 age 的值为一个新数值</li><li>计算 scores 的平均分并打印</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

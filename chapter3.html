@@ -34,39 +34,138 @@
                 <p class="chapter-subtitle">课程：Python编程基础</p>
 
                 <div class="section-block">
-                    <h3 class="section-title">条件语句</h3>
-                    <p class="section-content">本节介绍条件语句的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">条件语句 if-elif-else</h3>
+                    <p class="section-content">if 条件: 语句块用于分支判断。条件为 True 时执行缩进的代码块。elif 可以添加多个条件分支，else 处理所有其他情况。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">循环结构</h3>
-                    <p class="section-content">本节介绍循环结构的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">for循环与while循环</h3>
+                    <p class="section-content">for item in iterable: 遍历可迭代对象。配合 range() 可以生成数字序列。while 条件: 循环直到条件为False。循环中可用 break 跳出、continue 跳过。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">函数定义与调用</h3>
-                    <p class="section-content">本节介绍函数定义与调用的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">函数定义与参数</h3>
+                    <p class="section-content">def 函数名(参数): 定义函数。函数可以有位置参数、默认参数、可变参数 *args、关键字参数 **kwargs。调用函数时根据定义传入参数。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">函数参数与返回值</h3>
-                    <p class="section-content">本节介绍函数参数与返回值的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">函数返回值与作用域</h3>
+                    <p class="section-content">return 语句从函数返回值。不写 return 默认返回 None。作用域：函数内定义的变量是局部变量，函数外是全局变量。用 global 声明全局变量。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">模块与包</h3>
-                    <p class="section-content">本节介绍模块与包的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">模块导入与包管理</h3>
+                    <p class="section-content">import module 导入模块；from module import func 导入指定函数。Python标准库有丰富模块如 math、random、datetime。第三方包需先用 pip 安装再导入。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了控制流程与函数的核心知识点，包括条件语句、循环结构等关键内容。</p>
+                    <p>本章介绍了控制流程与函数的核心知识点，包括条件语句 if-elif-else、for循环与while循环等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">for i in range(1, 4): print(i) 输出？</div>
+                    <ul class="exercise-options">
+                    <li>A. 1 2 3 4</li>
+                    <li class="correct-option">B. 1 2 3</li>
+                    <li>C. 0 1 2 3</li>
+                    <li>D. 0 1 2</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>range(1, 4) 生成 1, 2, 3，不含结束值。Python的 range 是左闭右开区间。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">函数中不写return语句，默认返回？</div>
+                    <ul class="exercise-options">
+                    <li>A. 0</li>
+                    <li>B. 空字符串</li>
+                    <li class="correct-option">C. None</li>
+                    <li>D. 报错</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>Python函数如果没有return语句，或return后没有值，默认返回 None。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">以下哪种写法可以无限循环？</div>
+                    <ul class="exercise-options">
+                    <li>A. for i in range(inf):</li>
+                    <li class="correct-option">B. while True:</li>
+                    <li>C. for True:</li>
+                    <li>D. loop:</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>while True: 创建无限循环。需要在循环内使用 break 语句来退出。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">如何从模块导入特定函数？</div>
+                    <ul class="exercise-options">
+                    <li>A. import func from module</li>
+                    <li class="correct-option">B. from module import func</li>
+                    <li>C. include module.func</li>
+                    <li>D. use module.func</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>Python使用 from 模块 import 函数 的语法从指定模块导入函数。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">执行 3 > 2 and 1 < 0 的结果？</div>
+                    <ul class="exercise-options">
+                    <li>A. True</li>
+                    <li class="correct-option">B. False</li>
+                    <li>C. 报错</li>
+                    <li>D. None</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>3>2为True，但1<0为False。and 需要两边都为True，结果为False。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">成绩等级判断器 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>编写一个函数 get_grade(score)，接收分数(0-100)</li><li>使用 if-elif-else 判断并返回等级</li><li>90以上"A"，80-89"B"，70-79"C"，60-69"D"，60以下"E"</li><li>测试多个分数，验证返回结果是否正确</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">数字列表统计分析 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个包含20个随机整数的列表（1到100之间）</li><li>打印所有元素</li><li>统计并打印最大值、最小值、总和、平均值</li><li>筛选并打印所有大于平均值的数</li><li>将列表按降序排序并打印</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">自定义模块与函数 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个名为 math_utils.py 的文件</li><li>在其中编写 is_prime(n) 判断是否为素数的函数</li><li>再编写 factorial(n) 计算阶乘的函数</li><li>创建另一个Python文件测试这两个函数</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

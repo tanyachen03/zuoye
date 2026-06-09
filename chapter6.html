@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高级技巧与实战 - 数析学院</title>
+    <title>NumPy高级技巧 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -30,43 +30,142 @@
             </div>
 
             <div class="chapter-content">
-                <h1 class="chapter-title">高级技巧与实战</h1>
+                <h1 class="chapter-title">NumPy高级技巧</h1>
                 <p class="chapter-subtitle">课程：NumPy数据分析</p>
 
                 <div class="section-block">
-                    <h3 class="section-title">条件索引</h3>
-                    <p class="section-content">本节介绍条件索引的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">条件索引高级</h3>
+                    <p class="section-content">组合多个条件：arr[(arr > 3) & (arr < 10)] 同时满足两个条件（注意用 & 而不是 and，| 代替 or）。np.select() 根据条件列表选择值列表。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">文件读写</h3>
-                    <p class="section-content">本节介绍文件读写的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">np.save("file.npy", arr) 将数组保存为二进制文件，np.load("file.npy") 加载。np.savetxt("data.csv", arr, delimiter=",") 保存为文本CSV格式，np.loadtxt() 读取。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">性能优化</h3>
-                    <p class="section-content">本节介绍性能优化的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">性能优化技巧</h3>
+                    <p class="section-content">尽量避免Python循环，使用NumPy向量化运算。使用内置函数（如np.sum而非自己写循环）。了解 .copy() 与视图的区别避免意外修改。合理设置 dtype 节省内存。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">随机数生成</h3>
-                    <p class="section-content">本节介绍随机数生成的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">np.random 模块提供丰富的随机数函数。np.random.rand(n) 均匀分布[0,1)，np.random.randn(n) 标准正态分布，np.random.randint(low, high, size) 随机整数。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">综合实战</h3>
-                    <p class="section-content">本节介绍综合实战的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">综合实战案例</h3>
+                    <p class="section-content">使用NumPy进行数据分析的完整流程：加载数据 → 数据探查（形状、统计量）→ 数据清洗（缺失值、异常值处理）→ 统计分析 → 结果输出。通过真实数据集应用所学知识。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了高级技巧与实战的核心知识点，包括条件索引、文件读写等关键内容。</p>
+                    <p>本章介绍了NumPy高级技巧的核心知识点，包括条件索引高级、文件读写等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">保存NumPy数组为二进制文件用哪个函数？</div>
+                    <ul class="exercise-options">
+                    <li>A. np.write()</li>
+                    <li class="correct-option">B. np.save()</li>
+                    <li>C. np.store()</li>
+                    <li>D. np.dump()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>np.save() 将数组保存为 .npy 二进制格式，对应 np.load() 加载。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">切片产生的是视图还是副本？</div>
+                    <ul class="exercise-options">
+                    <li class="correct-option">A. 视图，修改会影响原数组</li>
+                    <li>B. 副本，互不影响</li>
+                    <li>C. 两者都是</li>
+                    <li>D. 随机</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">A</span>
+                        <br><strong>解析：</strong>切片产生的是视图（view）而非副本，修改视图会影响原数组。需要副本时用 .copy()。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">生成3个标准正态分布随机数用？</div>
+                    <ul class="exercise-options">
+                    <li>A. np.random.rand(3)</li>
+                    <li class="correct-option">B. np.random.randn(3)</li>
+                    <li>C. np.random.normal(3)</li>
+                    <li>D. np.random(3)</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>np.random.randn() 生成标准正态分布(均值0方差1)。np.random.rand()是均匀分布[0,1)。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">arr[arr > 3] 使用了哪种索引方式？</div>
+                    <ul class="exercise-options">
+                    <li>A. 位置索引</li>
+                    <li>B. 切片索引</li>
+                    <li class="correct-option">C. 布尔索引</li>
+                    <li>D. 花式索引</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>传入布尔数组作为索引的方式叫布尔索引，用于根据条件筛选元素。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">为什么NumPy比Python列表运算快？</div>
+                    <ul class="exercise-options">
+                    <li>A. 使用了GPU</li>
+                    <li class="correct-option">B. 向量化运算+C实现</li>
+                    <li>C. 用了多线程</li>
+                    <li>D. 不消耗内存</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>NumPy运算在连续内存块上执行，用C实现，避免了Python循环的解释器开销，称为向量化运算。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">数据分析完整流程 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>生成一个包含100个样本的数据集，每个样本包含3个特征（模拟学生成绩）</li><li>创建形状为(100, 3)的随机整数数组</li><li>计算每个学生的三科平均分</li><li>找出平均分最高和最低的学生索引</li><li>统计每科成绩的平均分和标准差</li><li>将数据保存为CSV文件</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">随机数模拟实验 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>编写一个模拟投硬币的程序</li><li>使用np.random.randint(0, 2, size=1000)模拟投1000次硬币（0反面1正面）</li><li>计算正面出现的比例并与0.5比较</li><li>模拟10000次和100000次，观察比例变化</li><li>用柱状图或文字展示各结果</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">矩阵图像处理模拟 <span class="practice-difficulty">[高级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个100×100的随机矩阵模拟图像像素值</li><li>对矩阵应用简单的平滑操作：每个像素替换为其与相邻8个像素的平均值</li><li>将大于平均值的像素设为255（白），其余设为0（黑）实现二值化</li><li>统计两种像素的数量比例</li><li>尝试对不同大小的矩阵执行相同操作</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

@@ -35,38 +35,137 @@
 
                 <div class="section-block">
                     <h3 class="section-title">Pandas介绍</h3>
-                    <p class="section-content">本节介绍Pandas介绍的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">Pandas是基于NumPy构建的数据分析库，提供两种核心数据结构：Series（一维带标签数组）和DataFrame（二维表格）。它简化了数据加载、清洗、转换、聚合等操作。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">Series数据结构</h3>
-                    <p class="section-content">本节介绍Series数据结构的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">创建和访问 Series</h3>
+                    <p class="section-content">pd.Series(data, index=labels) 创建Series，数据可以是列表、字典或数组。访问方式：s["index_label"] 按标签索引，s[0] 按位置索引，s.iloc[0] 整数位置，s.loc["label"] 标签索引。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">DataFrame基础</h3>
-                    <p class="section-content">本节介绍DataFrame基础的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">创建和访问 DataFrame</h3>
+                    <p class="section-content">pd.DataFrame(dict_of_lists) 或 pd.DataFrame(array, columns=col_names) 创建DataFrame。df["col_name"] 或 df.col_name 访问列，df.loc[row_label, col_name] 按标签访问单元格。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">读取CSV数据</h3>
-                    <p class="section-content">本节介绍读取CSV数据的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">读取和写入数据</h3>
+                    <p class="section-content">pd.read_csv("file.csv") 读取CSV文件，pd.read_excel("file.xlsx") 读取Excel。df.to_csv("out.csv", index=False) 保存为CSV。其他支持格式：JSON、SQL、Parquet等。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">基本操作</h3>
-                    <p class="section-content">本节介绍基本操作的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">基本数据探索</h3>
+                    <p class="section-content">df.head(n) 查看前n行，df.tail(n) 查看后n行。df.shape 返回形状，df.columns 查看列名，df.info() 查看数据结构。df.describe() 生成描述性统计（数值列的均值、分位数等）。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了Pandas基础入门的核心知识点，包括Pandas介绍、Series数据结构等关键内容。</p>
+                    <p>本章介绍了Pandas基础入门的核心知识点，包括Pandas介绍、创建和访问 Series等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">Pandas的两个主要数据结构是？</div>
+                    <ul class="exercise-options">
+                    <li>A. List和Dict</li>
+                    <li class="correct-option">B. Series和DataFrame</li>
+                    <li>C. Array和Matrix</li>
+                    <li>D. Table和Row</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>Series是一维带标签的数据结构，DataFrame是二维表格结构。两者是Pandas的核心。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">读取CSV文件的函数是？</div>
+                    <ul class="exercise-options">
+                    <li>A. pd.load_csv()</li>
+                    <li class="correct-option">B. pd.read_csv()</li>
+                    <li>C. pd.open_csv()</li>
+                    <li>D. pd.csv()</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>pd.read_csv() 是读取CSV文件的标准函数，类似的还有 read_excel、read_json 等。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">df.loc 是根据什么选择数据？</div>
+                    <ul class="exercise-options">
+                    <li>A. 整数位置</li>
+                    <li class="correct-option">B. 标签/索引名</li>
+                    <li>C. 条件表达式</li>
+                    <li>D. 列号</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>loc 使用标签索引（行名/列名）。iloc 使用整数位置索引。两者不要混淆！
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">df.describe() 对什么列生成统计？</div>
+                    <ul class="exercise-options">
+                    <li>A. 所有列</li>
+                    <li class="correct-option">B. 仅数值列</li>
+                    <li>C. 仅文本列</li>
+                    <li>D. 仅日期列</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>describe() 默认只对数值列生成描述性统计（计数、均值、标准差、分位数等）。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">如何获取DataFrame的行数？</div>
+                    <ul class="exercise-options">
+                    <li>A. df.length</li>
+                    <li>B. df.size</li>
+                    <li class="correct-option">C. len(df)</li>
+                    <li>D. df.rows</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>len(df) 返回行数。df.shape 返回(行数, 列数)元组，df.size 返回总元素数（行×列）。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">Series创建与操作 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个Series，包含5种水果名称及其价格（索引为水果名，值为价格）</li><li>打印Series查看数据</li><li>通过索引访问一种水果的价格</li><li>筛选出价格大于某个阈值的水果</li><li>计算所有水果的平均价格</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">学生成绩DataFrame分析 <span class="practice-difficulty">[初级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个DataFrame模拟10个学生的3科成绩（语文、数学、英语）</li><li>打印前5行数据</li><li>查看数据的shape、columns、dtypes</li><li>查看数学成绩列</li><li>查看第3名学生的所有成绩</li><li>生成描述性统计信息（平均分、标准差等）</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">CSV数据读写实战 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>创建一个DataFrame，包含日期、产品、销量、金额四列，至少10行数据</li><li>将数据保存为 sales.csv 文件（使用to_csv，不保存索引）</li><li>用read_csv重新加载数据并打印确认</li><li>对金额列求和计算总销售额</li><li>按销量排序并打印Top 5</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">

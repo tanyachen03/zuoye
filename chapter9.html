@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分组聚合与高级操作 - 数析学院</title>
+    <title>分组聚合与透视表 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -30,43 +30,142 @@
             </div>
 
             <div class="chapter-content">
-                <h1 class="chapter-title">分组聚合与高级操作</h1>
+                <h1 class="chapter-title">分组聚合与透视表</h1>
                 <p class="chapter-subtitle">课程：Pandas数据处理</p>
 
                 <div class="section-block">
-                    <h3 class="section-title">分组操作</h3>
-                    <p class="section-content">本节介绍分组操作的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">分组操作 groupby</h3>
+                    <p class="section-content">df.groupby("col") 将数据按指定列分组，生成GroupBy对象。后续可以链式调用聚合函数。df.groupby(["col1", "col2"]) 多列分组。分组后默认分组键变为索引，可用 as_index=False 保持为列。</p>
                 </div>
                 <div class="section-block">
                     <h3 class="section-title">聚合函数</h3>
-                    <p class="section-content">本节介绍聚合函数的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <p class="section-content">分组后常用聚合：.sum() 求和，.mean() 均值，.count() 计数，.max()/.min() 最值，.std() 标准差。.agg({"col1": "sum", "col2": ["mean", "max"]}) 对不同列应用不同聚合。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">透视表</h3>
-                    <p class="section-content">本节介绍透视表的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">透视表 pivot_table</h3>
+                    <p class="section-content">pd.pivot_table(df, values="val", index="row_col", columns="col_col", aggfunc="mean") 创建透视表。行由index列决定，列由columns列决定，values列进行聚合计算。类似Excel的数据透视表。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">时间序列</h3>
-                    <p class="section-content">本节介绍时间序列的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">时间序列处理</h3>
+                    <p class="section-content">pd.to_datetime(df["date_col"]) 转换为日期时间类型后，可访问 .dt.year、.dt.month、.dt.day 等属性。df.resample("M").mean() 按月重采样聚合。df.rolling(window=7).mean() 计算7日移动平均。</p>
                 </div>
                 <div class="section-block">
-                    <h3 class="section-title">综合案例</h3>
-                    <p class="section-content">本节介绍综合案例的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                    <h3 class="section-title">综合案例：销售分析</h3>
+                    <p class="section-content">典型销售分析流程：加载数据 → 清洗（缺失值/类型转换）→ 日期字段解析 → 按时间/产品/地区多维度分组聚合 → 生成透视表看交叉分析 → 识别Top N产品/客户 → 时间序列看趋势。</p>
                 </div>
 
                 <div class="key-point">
                     <h4>💡 要点总结</h4>
-                    <p>本章介绍了分组聚合与高级操作的核心知识点，包括分组操作、聚合函数等关键内容。</p>
+                    <p>本章介绍了分组聚合与透视表的核心知识点，包括分组操作 groupby、聚合函数等关键内容。通过系统学习，你将掌握相关概念和方法。</p>
                 </div>
 
                 <div class="tip-box">
-                    <h4>✏️ 小贴士</h4>
-                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
+                    <h4>✏️ 学习小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。遇到问题时多查文档、多动手实验，培养独立解决问题的能力。</p>
                 </div>
 
                 <div class="warn-box">
                     <h4>⚠️ 注意事项</h4>
-                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。从错误中学习是成长的重要途径。</p>
+                </div>
+
+                <div class="exercise-section">
+                    <h2 class="exercise-section-title">📝 课后习题</h2>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 1</div>
+                    <div class="exercise-question">groupby 后默认分组列会成为？</div>
+                    <ul class="exercise-options">
+                    <li>A. 普通列</li>
+                    <li class="correct-option">B. 索引</li>
+                    <li>C. 被删除</li>
+                    <li>D. 新列名加后缀</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>groupby 后分组键默认成为结果的索引。可以用 as_index=False 参数让分组键保持为普通列。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 2</div>
+                    <div class="exercise-question">df.groupby("dept")["salary"].mean() 计算？</div>
+                    <ul class="exercise-options">
+                    <li>A. 所有员工平均工资</li>
+                    <li class="correct-option">B. 每个部门的平均工资</li>
+                    <li>C. 工资的中位数</li>
+                    <li>D. 部门数</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>先按部门分组，再对每组的工资列求平均值。结果是每个部门的平均工资。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 3</div>
+                    <div class="exercise-question">透视表 pivot_table 中 aggfunc 参数？</div>
+                    <ul class="exercise-options">
+                    <li>A. 分组列</li>
+                    <li>B. 要聚合的值列</li>
+                    <li class="correct-option">C. 聚合函数</li>
+                    <li>D. 输出文件名</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">C</span>
+                        <br><strong>解析：</strong>aggfunc 指定聚合函数，如 "mean"、"sum"、"count" 或自定义函数。可以传入列表同时应用多种函数。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 4</div>
+                    <div class="exercise-question">df["date"].dt.year 提取什么？</div>
+                    <ul class="exercise-options">
+                    <li>A. 月份</li>
+                    <li class="correct-option">B. 年份</li>
+                    <li>C. 日期</li>
+                    <li>D. 星期几</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>.dt 是Pandas日期时间列的访问器。dt.year 年份、dt.month 月份、dt.day 日期、dt.dayofweek 星期几（0=周一）。
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-number">习题 5</div>
+                    <div class="exercise-question">df.rolling(window=30).mean() 计算？</div>
+                    <ul class="exercise-options">
+                    <li>A. 30个数据的均值</li>
+                    <li class="correct-option">B. 30天滚动均值</li>
+                    <li>C. 前30行均值</li>
+                    <li>D. 每月均值</li>
+                    </ul>
+                    <div class="explanation-box">
+                        <strong>正确答案：</strong><span class="correct-ans">B</span>
+                        <br><strong>解析：</strong>rolling(window=30) 创建30期滚动窗口，.mean()计算每期窗口的均值。常用于计算移动平均线平滑时间序列波动。
+                    </div>
+                </div>
+                </div>
+
+                <div class="practice-section">
+                    <h2 class="practice-section-title">💻 动手实践</h2>
+                <div class="practice-card">
+                    <div class="practice-number">实践 1</div>
+                    <div class="practice-title">分组聚合分析销售数据 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>模拟一份完整的销售数据（DataFrame，至少30行）</li><li>包含：日期、产品名（5种产品）、销售区域（3个区域）、数量、单价、销售额</li><li>按产品分组，计算每种产品的总销量和总销售额</li><li>按区域分组，计算每区域的平均单笔销售额</li><li>按产品+区域双维度分组，计算每个组合的销售统计</li><li>使用 agg 同时计算总和、均值、最大值</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 2</div>
+                    <div class="practice-title">创建销售数据透视表 <span class="practice-difficulty">[中级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>使用上面的销售数据</li><li>创建以产品为行、区域为列的销量透视表</li><li>创建以月份为行、产品为列的销售额透视表（先从日期提取月份）</li><li>创建行多层级（区域+产品）、列为月份的多维度透视表</li><li>添加 margins=True 查看汇总行列</li></ol>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-number">实践 3</div>
+                    <div class="practice-title">时间序列数据分析 <span class="practice-difficulty">[高级]</span></div>
+                    <div class="practice-content">
+                        <ol><li>使用 pd.date_range 生成过去一年（365天）的日期索引</li><li>创建每天销售额的时间序列数据（可用随机数模拟）</li><li>按月份（"M"）重采样计算每月总销售额</li><li>计算7日移动平均，观察趋势</li><li>找出销售额最高/最低的10天</li><li>按季度汇总销售额并分析季节性</li></ol>
+                    </div>
+                </div>
                 </div>
 
                 <div class="chapter-nav-bottom">
