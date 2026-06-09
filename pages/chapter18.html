@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无监督学习 - 数析学院</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter16.html" class=""><span class="chapter-number">16</span> 监督学习基础</a></li>
+<li><a href="chapter17.html" class=""><span class="chapter-number">17</span> 常用分类算法</a></li>
+<li><a href="chapter18.html" class="active"><span class="chapter-number">18</span> 无监督学习</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>无监督学习</h1>
+
+<h3>无监督学习概述</h3>
+<p>无监督学习处理没有标签的数据，目标是发现数据中隐藏的结构。主要应用包括聚类(发现数据分组)和降维(简化数据同时保留重要信息)。与监督学习相比，无监督学习更具探索性，但也更难评估结果质量。它在客户分群、异常检测、推荐系统等场景有广泛应用。</p>
+
+<h3>K-means聚类</h3>
+<p>K-means是最常用的聚类算法，将数据划分为K个簇，使样本到所属簇中心的距离最小。算法迭代执行：分配样本到最近中心，更新中心为簇内样本均值。需要预先指定K值，可用肘部法则观察不同K值下的簇内平方和来选择。sklearn.cluster.KMeans实现K-means。优点是简单快速，缺点是对初始值敏感且只能发现球形簇。</p>
+
+<h3>层次聚类与DBSCAN</h3>
+<p>层次聚类按层次逐步合并或分割簇，结果可以用树状图(dendrogram)可视化，帮助理解数据的层次结构。sklearn.cluster.AgglomerativeClustering实现凝聚层次聚类。DBSCAN是基于密度的聚类，可以发现任意形状的簇并自动识别异常点。它不需要预设簇数，对参数敏感。sklearn.cluster.DBSCAN提供实现。</p>
+
+<h3>主成分分析PCA</h3>
+<p>PCA是最常用的线性降维方法，通过正交变换将相关特征转换为不相关的主成分。主成分按方差递减排序，第一主成分解释最大方差。PCA可用于数据可视化(降维到2-3维)、去噪、特征提取和加速后续算法。sklearn.decomposition.PCA实现PCA，可以通过explained_variance_ratio_查看每个主成分解释的方差比例。</p>
+
+<h3>聚类评估与应用</h3>
+<p>当数据有真实标签时，可用调整兰德指数(ARI)和标准化互信息(NMI)评估聚类与真实分组的一致性。无标签时可用轮廓系数(silhouette score)衡量聚类质量，值越接近1表示簇内紧凑且簇间分离。聚类的典型应用：客户分群助力精准营销、文档聚类辅助内容组织、异常检测识别欺诈和质量问题。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    无监督学习发现无标签数据的内在结构。聚类包括K-means(简单高效)、层次聚类(可解释树状图)、DBSCAN(发现任意形状)。PCA是主流线性降维方法，可用于可视化和去噪。聚类质量可用轮廓系数等指标评估。实际应用包括客户分群和异常检测。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    在客户分群分析中，可以先用K-means尝试不同K值(如2-8)，画出肘部曲线确定合适的簇数。得到聚类结果后，通过描述性统计和可视化解释每个簇的特征，给出有业务意义的命名(如高价值客户、价格敏感客户)。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    K-means对特征尺度敏感，聚类前务必标准化特征。不要在聚类后再用标签验证来调整参数——这属于数据泄露。聚类结果的解释需要结合业务知识，不同的算法和参数可能给出不同结果，需要多次实验和业务验证。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter17.html">← 上一章</a><a href="chapter19.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

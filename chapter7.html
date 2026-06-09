@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandas数据结构 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter7.html" class="active"><span class="chapter-number">07</span> Pandas数据结构</a></li>
+<li><a href="chapter8.html" class=""><span class="chapter-number">08</span> 数据读取与清洗</a></li>
+<li><a href="chapter9.html" class=""><span class="chapter-number">09</span> 数据筛选与聚合</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>Pandas数据结构</h1>
+
+<h3>Pandas介绍</h3>
+<p>Pandas是基于NumPy构建的数据分析库，提供了两种核心数据结构：Series(一维)和DataFrame(二维)。Pandas使数据处理变得简单直观，支持从多种格式读取数据、处理缺失值、进行聚合分析等。它是Python数据分析的事实标准工具。</p>
+
+<h3>Series数据结构</h3>
+<p>Series是带有索引的一维数组。创建方式：s = pd.Series([1, 2, 3, 4], index=['a', 'b', 'c', 'd'])。可以通过索引访问元素：s['a']返回1，也可以像NumPy数组一样进行运算。Series同时具有数组和字典的特性，可以通过values获取值数组，通过index获取索引。</p>
+
+<h3>DataFrame数据结构</h3>
+<p>DataFrame是带有行索引和列索引的二维表格数据结构，类似Excel工作表。创建方式：df = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6], 'C': [7, 8, 9]})。每列是一个Series。通过df['A']或df.A访问列，通过df.loc[row]或df.iloc[pos]访问行。</p>
+
+<h3>索引与选择</h3>
+<p>Pandas提供多种数据选择方式。df[col_name]选择单列，df[[col1, col2]]选择多列。df.loc[label]按标签选择行，df.iloc[pos]按位置选择行。可以组合行和列的选择：df.loc[row_label, col_label]。布尔索引df[df['A'] > 0]可以筛选满足条件的行。</p>
+
+<h3>基本操作</h3>
+<p>df.head(n)查看前n行，df.tail(n)查看后n行。df.info()查看数据信息，包括列名、类型、非空数量。df.describe()生成描述性统计。df.shape返回(行数, 列数)。df.columns返回列名列表，df.index返回行索引。可以使用df.rename(columns={...})重命名列。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    Pandas的核心是Series和DataFrame。Series是带索引的一维数据，DataFrame是二维表格。选择数据的方式有多种：按列名选列、按loc标签选行、按iloc位置选行、布尔索引筛选行。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    使用df.head()快速查看数据是分析新数据集的第一步，配合df.info()和df.describe()可以快速了解数据概况。养成查看数据基本信息的习惯，有助于后续分析。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    注意df.A和df['A']的区别：前者只在列名不含特殊字符时有效，后者总是有效。选择行时，loc是按标签索引，iloc是按位置索引，两者不要混淆。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter6.html">← 上一章</a><a href="chapter8.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

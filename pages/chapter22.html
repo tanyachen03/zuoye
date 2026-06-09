@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售数据分析 - 数析学院</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter22.html" class="active"><span class="chapter-number">22</span> 销售数据分析</a></li>
+<li><a href="chapter23.html" class=""><span class="chapter-number">23</span> 客户分群分析</a></li>
+<li><a href="chapter24.html" class=""><span class="chapter-number">24</span> 综合项目实战</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>销售数据分析</h1>
+
+<h3>项目背景与目标</h3>
+<p>本项目分析某电商平台的销售数据。目标包括：了解销售的整体状况和趋势，识别销售的季节性和周期性特征，分析不同产品类别和地区的销售表现差异，识别畅销品和滞销品，为库存管理和营销策略提供数据支持。使用过去12个月的销售记录数据进行分析。</p>
+
+<h3>数据概览与清洗</h3>
+<p>首先加载并检查数据：订单ID、订单日期、商品ID、商品类别、销售数量、单价、金额、用户ID、地区等字段。查看数据行数、各列数据类型、缺失值情况。数据清洗包括：处理缺失的类别标签、修正异常的销售金额(如负数或极端高值)、统一日期格式、去重。处理后的数据保存为分析就绪数据。</p>
+
+<h3>销售趋势分析</h3>
+<p>按日/周/月汇总销售额，绘制趋势图。观察是否存在明显的增长或下降趋势。计算同比(与去年同期)和环比(与上期)变化率。识别销售峰值日——通常与促销活动或节假日相关。可以做季节性分解：将时间序列拆分为趋势项、季节项和残差项，更清晰地理解数据模式。</p>
+
+<h3>产品类别分析</h3>
+<p>按产品类别汇总销售额和销量，计算各类别占比。条形图对比不同类别的表现。进一步分析各类别下的子类别和单品表现，找出TOP10贡献最大的商品和BOTTOM10贡献最小的商品。结合库存数据，对高销量低毛利的商品谨慎评估，对持续滞销的商品考虑下架或清仓。</p>
+
+<h3>地区与渠道分析</h3>
+<p>按地区维度分析销售，识别核心市场和增长潜力市场。地图可视化展示不同地区的销售热力。分析各销售渠道(线上/线下、自有平台/第三方平台)的销售贡献和利润率差异。如果数据支持，进一步分析用户画像：新老客比例、复购率、客单价在不同地区的差异。综合发现业务增长机会。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    销售数据分析是最经典的数据分析项目。从时间维度做趋势分析，从产品维度做类别分析，从空间维度做地区分析。通过多维度切片理解销售全貌，识别机会和问题。分析结论要落实到具体的业务建议：哪些产品该推、哪些地区该加大投入、哪些商品该调整库存。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    做销售分析时，不要只看金额绝对值——要看增长率、占比变化、利润率等相对指标。金额高的类别可能在萎缩，金额不大但增长迅速的类别可能是未来之星。同时结合成本和利润数据，避免陷入'销售额高但不赚钱'的陷阱。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    数据分析的结论要注意因果与相关的区别。例如'促销期间销售额上升'不简单等于'促销有效'——可能是节假日效应正好叠加。需要控制变量或做A/B测试验证。做预测时要谨慎外推，外部环境变化可能使历史规律失效。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter21.html">← 上一章</a><a href="chapter23.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

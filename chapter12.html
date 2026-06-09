@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互式可视化 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter10.html" class=""><span class="chapter-number">10</span> Matplotlib基础</a></li>
+<li><a href="chapter11.html" class=""><span class="chapter-number">11</span> Seaborn高级图表</a></li>
+<li><a href="chapter12.html" class="active"><span class="chapter-number">12</span> 交互式可视化</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>交互式可视化</h1>
+
+<h3>Plotly介绍</h3>
+<p>Plotly是一个强大的交互式可视化库，生成的图表支持鼠标悬停查看数据、缩放、平移等交互操作。Plotly Express是Plotly的高级API，提供简洁的语法创建丰富的交互式图表。使用import plotly.express as px导入，通过fig.show()显示图表。</p>
+
+<h3>基础交互式图表</h3>
+<p>px.line(df, x='date', y='value', title='趋势图')创建交互式折线图。px.bar(df, x='category', y='value')创建交互式柱状图。px.scatter(df, x='x', y='y', color='category', size='size')创建交互式散点图，color按类别着色，size控制点大小。px.pie(df, values='value', names='category')创建交互式饼图。</p>
+
+<h3>高级交互式图表</h3>
+<p>px.histogram(df, x='column', nbins=20)创建交互式直方图。px.box(df, x='category', y='value')创建交互式箱线图。px.choropleth绘制地理热力图。px.treemap创建树图展示层级数据。px.sunburst创建旭日图。px.imshow矩阵热力图。px.density_contour密度等值线图。这些图表都支持悬停交互。</p>
+
+<h3>仪表盘与子图</h3>
+<p>Plotly的make_subplots可以创建复杂的子图布局：from plotly.subplots import make_subplots; fig = make_subplots(rows=2, cols=2); fig.add_trace(go.Scatter(x=x, y=y), row=1, col=1)。Dash是Plotly推出的构建交互式仪表盘的框架，可以用纯Python构建网页应用，包含下拉菜单、滑块等控件来控制图表。</p>
+
+<h3>导出与分享</h3>
+<p>Plotly图表可以导出为HTML文件保留交互功能：fig.write_html('chart.html')，这样生成的HTML文件可以在任何浏览器中打开并保持交互。也可以导出为静态图片：fig.write_image('chart.png')，需要安装kaleido包。在Jupyter Notebook中fig.show()可以直接渲染。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    Plotly提供交互式图表，支持悬停、缩放等操作。Plotly Express(px)是简洁的高级接口，提供line、bar、scatter、pie、histogram、box等图表。可以通过make_subplots组合多图，导出HTML或图片格式分享。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    在分析报告和演示中使用交互式图表可以让读者更深入地探索数据。Plotly生成的HTML文件可以直接嵌入网页或分享给他人，无需Python环境即可查看。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    交互式图表文件通常比静态图片大，在网页中大量使用可能影响加载速度。注意选择合适的数据量，必要时先进行数据聚合。导出图片时，确保安装了相应的渲染引擎。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter11.html">← 上一章</a><a href="chapter13.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

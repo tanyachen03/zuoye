@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据读取与清洗 - 数析学院</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter7.html" class=""><span class="chapter-number">07</span> Pandas数据结构</a></li>
+<li><a href="chapter8.html" class="active"><span class="chapter-number">08</span> 数据读取与清洗</a></li>
+<li><a href="chapter9.html" class=""><span class="chapter-number">09</span> 数据筛选与聚合</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>数据读取与清洗</h1>
+
+<h3>读取CSV数据</h3>
+<p>Pandas可以方便地读取多种格式的数据。读取CSV文件使用pd.read_csv('filename.csv')。常用参数：sep指定分隔符，header指定第几行作为列名，index_col指定哪列作为索引，encoding指定编码如'utf-8'或'gbk'，usecols指定读取哪些列。读取Excel用pd.read_excel。</p>
+
+<h3>缺失值处理</h3>
+<p>原始数据中常常有缺失值。df.isnull()或df.isna()生成布尔掩码标记缺失值。df.dropna(axis=0)删除含有缺失值的行，df.dropna(axis=1)删除含有缺失值的列。df.fillna(value)用指定值填充缺失值，也可以用df.fillna(method='ffill')用前向填充，或用df['col'].fillna(df['col'].mean())用均值填充。</p>
+
+<h3>重复值处理</h3>
+<p>df.duplicated()标记重复行，返回布尔Series。df.drop_duplicates()删除重复行，默认保留第一个。可以指定subset参数只根据某些列判断重复，如df.drop_duplicates(subset=['col1', 'col2'])。还可以通过keep='last'保留最后一个重复项。</p>
+
+<h3>数据类型转换</h3>
+<p>df.dtypes查看各列的数据类型。df['col'].astype(float)将列转换为浮点数类型，astype(int)转换为整数，astype(str)转换为字符串。pd.to_datetime(df['date_col'])将字符串列解析为日期时间类型。对于含有货币符号或百分号的字符串，需要先清洗再转换。</p>
+
+<h3>字符串操作</h3>
+<p>Pandas的str属性提供了丰富的字符串处理方法。df['col'].str.upper()转换大写，str.lower()转换小写，str.strip()去除首尾空格。str.contains('pattern')检查是否包含模式。str.replace(old, new)替换字符串。str.split(',')按分隔符拆分。str.extract(regex)使用正则提取内容。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    数据读取支持CSV、Excel等多种格式。数据清洗包括处理缺失值(dropna/fillna)、删除重复值(drop_duplicates)、转换数据类型(astype)和字符串处理(str方法)。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    数据清洗往往占据数据分析时间的70%以上，是非常关键的步骤。先查看数据的基本信息，理解各字段含义和类型，识别缺失值和异常值，然后制定清洗策略。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    使用fillna填充缺失值时要谨慎，要根据业务含义选择合适的填充方式。类型转换时，如果字符串中含有非数字字符会导致转换失败，需要先清洗这些字符。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter7.html">← 上一章</a><a href="chapter9.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

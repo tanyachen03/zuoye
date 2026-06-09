@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seaborn高级图表 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter10.html" class=""><span class="chapter-number">10</span> Matplotlib基础</a></li>
+<li><a href="chapter11.html" class="active"><span class="chapter-number">11</span> Seaborn高级图表</a></li>
+<li><a href="chapter12.html" class=""><span class="chapter-number">12</span> 交互式可视化</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>Seaborn高级图表</h1>
+
+<h3>Seaborn介绍</h3>
+<p>Seaborn是基于Matplotlib的高级可视化库，专门用于统计数据可视化。它提供了简洁美观的默认样式，以及更高级的统计图表类型。Seaborn与Pandas的DataFrame无缝集成，使数据探索变得更加直观高效。使用import seaborn as sns导入库。</p>
+
+<h3>统计分布图</h3>
+<p>sns.histplot(data=df, x='column', kde=True)绘制带核密度估计的直方图。sns.kdeplot(data=df, x='column')绘制核密度估计曲线。sns.boxplot(data=df, x='category', y='value')绘制箱线图展示数据的分位数分布和离群点。sns.violinplot是箱线图和密度图的结合。</p>
+
+<h3>分类数据图表</h3>
+<p>sns.barplot(data=df, x='category', y='value')绘制带误差线的柱状图。sns.countplot(data=df, x='category')统计每个类别的数量。sns.pointplot展示点估计和置信区间。sns.stripplot和sns.swarmplot将分类数据的原始数据点绘制出来，后者避免点重叠。</p>
+
+<h3>关系图与热力图</h3>
+<p>sns.scatterplot(data=df, x='x_col', y='y_col', hue='category')绘制散点图，hue参数按类别着色。sns.lineplot绘制折线图。sns.regplot添加回归线。热力图展示矩阵数据：corr = df.corr(); sns.heatmap(corr, annot=True, cmap='coolwarm')annot显示数值，cmap指定颜色映射。</p>
+
+<h3>多图组合与主题</h3>
+<p>sns.pairplot(df)绘制变量两两之间的关系图，快速探索多变量关系。sns.jointplot(x='x', y='y', data=df)在一张图中同时展示两个变量的联合分布和各自的边缘分布。sns.FacetGrid按分类创建子图网格。使用sns.set_style('whitegrid'/'darkgrid')设置背景风格，sns.set_context('talk')设置字体大小等级。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    Seaborn提供更美观的统计图表。分布图包括histplot、kdeplot、boxplot、violinplot；分类图包括barplot、countplot、pointplot；关系图包括scatterplot、heatmap；pairplot和jointplot用于多变量探索。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    Seaborn与Pandas DataFrame配合使用效果最佳。在探索性数据分析阶段，pairplot可以快速了解各变量之间的关系，heatmap展示相关性矩阵，是发现数据模式的有力工具。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    pairplot在变量很多时会生成大量图表，可能很慢或占用过多内存。建议先选择感兴趣的变量子集再使用。使用hue参数时，确保分类变量的类别数不要太多，否则颜色难以区分。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter10.html">← 上一章</a><a href="chapter12.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

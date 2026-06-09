@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matplotlib基础 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter10.html" class="active"><span class="chapter-number">10</span> Matplotlib基础</a></li>
+<li><a href="chapter11.html" class=""><span class="chapter-number">11</span> Seaborn高级图表</a></li>
+<li><a href="chapter12.html" class=""><span class="chapter-number">12</span> 交互式可视化</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>Matplotlib基础</h1>
+
+<h3>Matplotlib介绍</h3>
+<p>Matplotlib是Python最基础也是最流行的数据可视化库，提供了类似MATLAB的绘图API。它可以绘制各种静态图表，包括折线图、柱状图、散点图、饼图、直方图等。Matplotlib的优点是灵活可控，可以细致地调整图表的每个元素。</p>
+
+<h3>基本绘图流程</h3>
+<p>Matplotlib的基本绘图流程是：导入库(import matplotlib.pyplot as plt)，准备数据，创建图形和轴(fig, ax = plt.subplots())，绘制图形(ax.plot()/ax.bar()等)，设置标签和标题(ax.set_xlabel()/ax.set_title())，显示图形(plt.show())。可以设置figsize参数调整图表大小。</p>
+
+<h3>折线图与柱状图</h3>
+<p>折线图用于展示数据随时间的变化趋势。使用plt.plot(x, y, label='系列1', marker='o', linewidth=2)绘制。柱状图用于比较不同类别数据的大小。使用plt.bar(x_labels, values, color='steelblue')绘制垂直柱状图，plt.barh绘制水平柱状图。可以设置颜色、标签、图例等属性。</p>
+
+<h3>散点图与饼图</h3>
+<p>散点图展示两个变量之间的关系：plt.scatter(x, y, s=size, c=color, alpha=0.5)，s控制点的大小，c控制点的颜色，alpha控制透明度。饼图展示数据的比例分布：plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)，autopct设置百分比格式，startangle设置起始角度。</p>
+
+<h3>直方图与子图</h3>
+<p>直方图展示数据的分布情况：plt.hist(data, bins=20, edgecolor='black')，bins指定分箱数。子图可以在一个Figure中绘制多个图表：fig, axes = plt.subplots(2, 2, figsize=(12, 8))创建2×2的子图网格。axes[0, 0].plot(...)在左上角子图绘图。通过tight_layout()自动调整布局。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    Matplotlib使用plt.subplots创建图和轴对象，通过轴对象调用plot、bar、scatter、pie、hist等方法绘制不同类型的图表。设置xlabel/ylabel/title添加标注，legend添加图例，最后show展示。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    推荐使用面向对象的方式(fig, ax = plt.subplots())而非pyplot的状态机方式，这样更清晰且便于控制多子图。可以通过plt.style.use('seaborn'/'ggplot')快速切换绘图风格。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    中文字符在Matplotlib中默认显示为方框，需要设置中文字体：plt.rcParams['font.sans-serif'] = ['SimHei']，同时设置plt.rcParams['axes.unicode_minus'] = False确保负号正常显示。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter9.html">← 上一章</a><a href="chapter11.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

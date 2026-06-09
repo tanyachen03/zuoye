@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础语法与数据类型 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter1.html" class=""><span class="chapter-number">01</span> Python环境搭建</a></li>
+<li><a href="chapter2.html" class="active"><span class="chapter-number">02</span> 基础语法与数据类型</a></li>
+<li><a href="chapter3.html" class=""><span class="chapter-number">03</span> 控制流程与函数</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>基础语法与数据类型</h1>
+
+<h3>变量与赋值</h3>
+<p>在Python中，变量不需要声明类型，直接赋值即可使用。例如name = '数析学院'，age = 18，price = 99.9。Python会自动根据赋值推断变量的类型。变量名应该具有描述性，遵循小写加下划线的命名规范。</p>
+
+<h3>基本数据类型</h3>
+<p>Python有几个常用的基本数据类型：整数(int)如1, 100, -5；浮点数(float)如3.14, 2.5；字符串(str)如'hello', '数据分析'；布尔值(bool)如True, False；以及NoneType表示空值None。可以使用type()函数查看变量的类型。</p>
+
+<h3>字符串操作</h3>
+<p>字符串是Python中最常用的数据类型之一。可以使用单引号或双引号创建字符串。字符串支持很多操作：拼接用+号，重复用*号，取长度用len()，切片用s[start:end]，大小写转换用upper()和lower()，替换用replace()，分割用split()等。</p>
+
+<h3>列表与字典</h3>
+<p>列表(list)和字典(dict)是Python中最重要的两种容器类型。列表是有序的元素集合，用方括号创建：nums = [1, 2, 3, 4]。列表支持索引访问、切片、追加元素等操作。字典是键值对的集合，用花括号创建：info = {'name': '张三', 'age': 25}，通过键访问值。</p>
+
+<h3>运算符与表达式</h3>
+<p>Python支持丰富的运算符。算术运算符包括+、-、*、/、//(整除)、%(取模)、**(幂)。比较运算符包括==、!=、>、<、>=、<=。逻辑运算符包括and、or、not。赋值运算符包括=、+=、-=、*=、/=等。运算符有优先级，可以用括号改变运算顺序。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    Python的基本数据类型包括数字、字符串、布尔值，容器类型包括列表和字典。掌握这些基础是后续学习的前提。列表用方括号，是有序序列；字典用花括号，是键值对集合。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    可以使用print(type(variable))来查看变量的类型，这是调试代码时非常有用的方法。同时，Python的列表和字典是可变对象，在函数传递时要注意引用传递的特性。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    字符串和列表的索引从0开始，而不是从1开始。s[0]表示第一个元素，s[-1]表示最后一个元素。切片s[a:b]包含索引a但不包含索引b的元素。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter1.html">← 上一章</a><a href="chapter3.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

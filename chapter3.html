@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>控制流程与函数 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter1.html" class=""><span class="chapter-number">01</span> Python环境搭建</a></li>
+<li><a href="chapter2.html" class=""><span class="chapter-number">02</span> 基础语法与数据类型</a></li>
+<li><a href="chapter3.html" class="active"><span class="chapter-number">03</span> 控制流程与函数</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>控制流程与函数</h1>
+
+<h3>条件语句if</h3>
+<p>if语句用于根据条件执行不同的代码块。基本语法是if 条件: 代码块，后面可以跟elif和else。Python使用缩进来表示代码块，通常缩进4个空格。例如if score >= 60: print('及格') else: print('不及格')。</p>
+
+<h3>for循环</h3>
+<p>for循环用于遍历序列。基本语法是for 变量 in 序列: 代码块。例如for i in range(5): print(i)会输出0到4。for item in ['a', 'b', 'c']: print(item)会依次输出列表中的每个元素。range函数经常和for循环配合使用。</p>
+
+<h3>while循环</h3>
+<p>while循环在条件为真时重复执行代码块。基本语法是while 条件: 代码块。例如count = 0; while count < 3: print(count); count += 1。使用while循环时要注意更新循环变量，避免无限循环。可以使用break跳出循环，continue跳过当前迭代。</p>
+
+<h3>函数定义</h3>
+<p>函数是组织好的、可重复使用的代码块，用于执行特定任务。使用def关键字定义函数：def greet(name): print('Hello, ' + name)。函数可以有参数和返回值，使用return语句返回结果。函数可以设置默认参数，如def greet(name='world')。</p>
+
+<h3>函数的高级特性</h3>
+<p>Python函数支持很多高级特性。可以定义可变参数*args和关键字参数**kwargs。可以使用lambda创建匿名函数，如square = lambda x: x**2。Python还支持递归函数，即函数调用自身。列表推导式是一种简洁创建列表的方式：squares = [x**2 for x in range(10)]。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    控制流程包括条件判断和循环，是编写复杂程序的基础。函数可以将代码模块化，提高复用性。if/elif/else处理分支，for/while实现循环，def定义函数组织代码。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    Python的缩进是语法的一部分，正确的缩进非常重要。推荐使用4个空格作为缩进标准，在代码编辑器中设置自动将Tab转换为空格。函数命名遵循小写加下划线的风格。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    在循环中修改正在遍历的列表可能导致意外行为，建议创建新列表或使用列表推导式。递归函数必须有基准条件，否则会导致栈溢出。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter2.html">← 上一章</a><a href="chapter4.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

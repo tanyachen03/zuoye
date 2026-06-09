@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>概率分布 - 数析学院</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter13.html" class=""><span class="chapter-number">13</span> 描述性统计</a></li>
+<li><a href="chapter14.html" class="active"><span class="chapter-number">14</span> 概率分布</a></li>
+<li><a href="chapter15.html" class=""><span class="chapter-number">15</span> 假设检验</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>概率分布</h1>
+
+<h3>概率基础</h3>
+<p>概率描述事件发生可能性的大小，取值在0到1之间。条件概率P(A|B)是在B发生的条件下A发生的概率。贝叶斯定理P(A|B) = P(B|A)P(A)/P(B)描述了如何根据新证据更新概率。独立事件满足P(A and B) = P(A)*P(B)。理解概率是学习统计分布的基础。</p>
+
+<h3>离散概率分布</h3>
+<p>伯努利分布描述单次二元试验(成功/失败)的概率。二项分布描述n次独立伯努利试验中成功次数的分布。泊松分布描述单位时间内随机事件发生的次数，参数lambda是平均发生率。使用scipy.stats模块可以计算各种分布的概率质量函数(PMF)和累积分布函数(CDF)。</p>
+
+<h3>正态分布</h3>
+<p>正态分布(高斯分布)是最重要的连续概率分布，呈对称的钟形曲线。其概率密度函数由均值mu和标准差sigma两个参数决定。标准正态分布均值为0，标准差为1。68-95-99.7规则：约68%的数据在均值±1标准差内，95%在±2标准差内，99.7%在±3标准差内。很多自然现象和测量误差都服从正态分布。</p>
+
+<h3>其他连续分布</h3>
+<p>均匀分布在区间[a,b]内取任意值的概率相等。指数分布描述独立随机事件发生的时间间隔，常用来建模寿命或等待时间。t分布类似正态分布但尾部更厚，用于小样本统计推断。卡方分布是多个独立标准正态变量平方和的分布，常用于拟合优度检验。F分布是两个独立卡方变量的比值。</p>
+
+<h3>中心极限定理</h3>
+<p>中心极限定理是统计学最重要的定理之一：无论原始总体分布如何，当样本量足够大时，样本均值的分布趋近于正态分布。这解释了为什么正态分布在统计推断中如此重要。实际应用中，通常样本量n>=30即可认为中心极限定理成立。这使得我们可以基于正态分布理论进行参数估计和假设检验。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    概率分布是统计推断的基础。离散分布包括伯努利、二项、泊松分布；连续分布包括正态、均匀、指数、t、卡方、F分布。正态分布最为重要，中心极限定理保证了大样本下均值近似正态分布。scipy.stats提供了分布计算工具。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    在分析数据时，可以先绘制直方图和Q-Q图来判断数据是否接近正态分布。很多统计方法假设数据服从正态分布，检查分布假设是数据分析的必要步骤。可以用scipy.stats.normaltest进行正态性检验。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    不要滥用正态假设。如果数据明显偏离正态（如高度偏态），直接使用假设正态的统计方法可能导致错误结论。此时可以考虑数据变换（如对数变换）或使用非参数统计方法。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter13.html">← 上一章</a><a href="chapter15.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

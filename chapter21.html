@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B测试 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter19.html" class=""><span class="chapter-number">19</span> 业务指标分析</a></li>
+<li><a href="chapter20.html" class=""><span class="chapter-number">20</span> 用户行为分析</a></li>
+<li><a href="chapter21.html" class="active"><span class="chapter-number">21</span> A/B测试</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>A/B测试</h1>
+
+<h3>A/B测试原理</h3>
+<p>A/B测试是将用户随机分配到对照组(A)和实验组(B)，比较两组差异来判断新方案是否有效的实验方法。本质是随机对照试验(RCT)。关键假设是两组用户除实验变量外完全相同，因此结果差异可归因于实验变量。好的A/B测试需要：明确的假设、随机分配、足够的样本、单一变量变化、提前确定的评估指标。</p>
+
+<h3>实验设计要素</h3>
+<p>设计A/B测试需要确定：实验目标(想验证什么)、核心指标(衡量成功的标准)、实验流量(用户百分比)、实验时长(需要多少天)。核心指标最好是单一指标(如转化率)，避免指标过多导致多重比较问题。样本量计算需要预计的效应大小和统计功效(通常80%)。实验时长至少覆盖一个完整的业务周期(如一周)消除周内波动。</p>
+
+<h3>实验运行与监控</h3>
+<p>实验运行期间需要持续监控：流量分配是否均衡(两组用户数相近)、用户特征是否均衡(如地域、年龄分布无显著差异)、指标是否正常(无极端异常)。如果实验期间发生重大外部事件(如系统故障、节假日)，可能影响实验结果，需要记录并评估。不要在实验中途因为看起来有效果就提前停止——这会导致假阳性。</p>
+
+<h3>结果分析与解读</h3>
+<p>实验结束后进行统计分析：计算两组的核心指标值，计算差异的统计显著性(p值)，计算效应大小和置信区间。p<0.05且置信区间不包含0时可认为新方案显著不同。但不要只看p值：还要看效应大小(实际差异多大)、指标的业务意义、次要指标的一致性。如果核心指标改善但其他指标下降，需要综合评估。</p>
+
+<h3>常见误区</h3>
+<p>常见错误包括：多个实验同时运行互相干扰；实验期间修改实验配置；在达到样本量前提前停止；多重比较问题(看太多指标总有一个看起来显著)；忽略辛普森悖论(整体结论与分组结论相反)。正确做法是一次一个变量、充分样本量、预注册实验设计、谨慎解读结果。A/B测试是科学方法，不是随便分两组比一比。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    A/B测试是验证产品改进的黄金标准。核心是随机对照和统计显著性检验。实验设计需要明确假设、核心指标、样本量和时长。运行中监控数据质量。结果解读综合考虑p值、效应大小和业务意义。避免多重比较和提前停止等常见陷阱。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    小公司可能流量不足以支持频繁的A/B测试。替代方案是先做小范围灰度测试观察用户反馈，再决定是否全量上线。大公司建立实验平台可以同时运行数百个实验，但也要注意实验之间的相互干扰。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    A/B测试只能评估可测量的短期影响，可能忽略难以量化的长期影响(如品牌、用户信任、团队士气)。重要决策不仅要看数据，还要结合战略判断。同时，不要陷入'永无休止的测试'——有些决策即使有不确定性也要做出。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter20.html">← 上一章</a><a href="chapter22.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

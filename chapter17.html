@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常用分类算法 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter16.html" class=""><span class="chapter-number">16</span> 监督学习基础</a></li>
+<li><a href="chapter17.html" class="active"><span class="chapter-number">17</span> 常用分类算法</a></li>
+<li><a href="chapter18.html" class=""><span class="chapter-number">18</span> 无监督学习</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>常用分类算法</h1>
+
+<h3>决策树</h3>
+<p>决策树通过一系列是/否问题对数据进行分类，类似流程图。每个节点测试一个特征，每个叶节点给出预测结果。决策树的优点是直观可解释，不要求特征缩放。但单棵决策树容易过拟合。sklearn.tree.DecisionTreeClassifier实现决策树分类，可以通过max_depth等参数控制树的复杂度防止过拟合。</p>
+
+<h3>随机森林</h3>
+<p>随机森林是决策树的集成方法，通过训练多棵决策树并投票预测结果。每棵树在不同的数据样本和特征子集上训练，这种多样性使得集成效果优于单棵树。随机森林准确率高，对异常值不敏感，可解释性中等，是工业界最常用的算法之一。sklearn.ensemble.RandomForestClassifier提供实现。</p>
+
+<h3>支持向量机SVM</h3>
+<p>SVM通过寻找最优超平面分离不同类别的数据点。最优超平面最大化与最近样本点的间隔(margin)。通过核技巧(kernel trick)，SVM可以处理非线性问题。常用核函数有线性核、多项式核和RBF(径向基)核。SVM在小样本高维数据上表现良好，但训练时间随数据量增大快速增长。sklearn.svm.SVC实现SVM。</p>
+
+<h3>K近邻KNN</h3>
+<p>KNN是最简单的机器学习算法，基于相似样本有相似标签的思想：预测新样本时，在训练集中找K个最近邻样本，用它们的多数投票结果作为预测。KNN是惰性学习，训练时只存储数据，预测时才计算。优点是简单，缺点是预测慢且对特征尺度敏感。需要合理选择K值并用距离加权。sklearn.neighbors.KNeighborsClassifier实现KNN。</p>
+
+<h3>模型选择与调参</h3>
+<p>不同算法各有优劣，没有免费午餐定理表明不存在总是最优的算法。应该尝试多种算法并根据数据表现选择。超参数是算法开始前设定的参数(如KNN中的K、SVM中的C)，通过交叉验证和网格搜索(GridSearchCV)或随机搜索(RandomizedSearchCV)寻找最佳参数组合。始终留出测试集做最终评估，避免在测试集上调参。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    常用分类算法包括：决策树(简单可解释)、随机森林(集成方法性能好)、SVM(适合小样本高维)、KNN(简单但预测慢)。没有最优算法，需要在数据上实验比较。通过交叉验证搜索最优超参数，在独立测试集评估最终性能。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    实践中推荐先尝试逻辑回归和随机森林作为基线：逻辑回归快且可解释，随机森林通常性能不错。再根据结果决定是否尝试更复杂的模型。使用sklearn的Pipeline组合特征处理和模型训练，可以简化代码并避免数据泄露。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    不要只追求准确率而忽略模型的可解释性和计算成本。在商业场景中，简单可解释的模型可能比复杂的黑箱模型更容易获得业务方信任。同时，过拟合是机器学习的核心挑战：在训练集表现很好但在新数据上泛化能力差。使用正则化和交叉验证控制过拟合。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter16.html">← 上一章</a><a href="chapter18.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

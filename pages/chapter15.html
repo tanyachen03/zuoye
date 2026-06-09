@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>假设检验 - 数析学院</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter13.html" class=""><span class="chapter-number">13</span> 描述性统计</a></li>
+<li><a href="chapter14.html" class=""><span class="chapter-number">14</span> 概率分布</a></li>
+<li><a href="chapter15.html" class="active"><span class="chapter-number">15</span> 假设检验</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>假设检验</h1>
+
+<h3>假设检验的基本思想</h3>
+<p>假设检验是根据样本数据判断关于总体参数的某个假设是否成立的统计方法。基本步骤：提出原假设H0和备择假设H1，选择检验统计量，计算检验统计量的值，确定p值，根据显著性水平alpha(通常0.05)判断。p值小于alpha时拒绝原假设，认为差异具有统计显著性。</p>
+
+<h3>t检验</h3>
+<p>t检验用于比较均值。单样本t检验检验样本均值是否等于某个已知值。两独立样本t检验比较两组独立样本的均值是否不同，前提是两组数据服从正态分布且方差齐。配对t检验用于同一组对象前后测量的比较。Python中使用scipy.stats.ttest_1samp、ttest_ind、ttest_rel进行计算。</p>
+
+<h3>方差分析ANOVA</h3>
+<p>当需要比较三个或更多组的均值时，应该使用方差分析(ANOVA)而不是多次t检验(会增加一类错误)。单因素方差分析检验一个分类变量的多个水平下均值是否有差异。如果ANOVA显著，需要进行事后检验(如Tukey HSD)确定哪些组之间有差异。scipy.stats.f_oneway进行单因素ANOVA。</p>
+
+<h3>卡方检验</h3>
+<p>卡方检验用于分类数据的分析。卡方拟合优度检验验证观测频率是否符合理论分布。卡方独立性检验检验两个分类变量是否独立，原假设是两变量无关。构造列联表，计算期望频数，比较观测与期望的差异得到卡方统计量。scipy.stats.chi2_contingency进行独立性检验。</p>
+
+<h3>相关分析</h3>
+<p>皮尔逊相关系数衡量两个连续变量的线性相关程度，取值-1到1。绝对值越接近1相关性越强，接近0表示无线性相关。使用scipy.stats.pearsonr(x, y)计算相关系数和p值。需要注意：相关不等于因果；皮尔逊相关只捕捉线性关系；对异常值敏感。斯皮尔曼相关是基于秩的非参数相关，更稳健。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    假设检验通过计算p值判断差异是否显著。t检验比较均值，ANOVA比较多组均值，卡方检验分析分类变量关系，相关分析衡量变量关联。scipy.stats提供完整的假设检验函数。正确理解p值是避免统计错误的关键。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    报告假设检验结果时，不仅要说明是否显著(p<0.05)，还要报告具体的检验统计量和p值，并给出效应大小(如均值差、相关系数)。p值只说明是否存在效应，效应大小说明效应的实际重要性。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    显著不等于重要。大样本即使很小的效应也可能显著，但实际意义可能有限。反之，小样本中可能存在重要效应但未达到统计显著。结合p值、效应大小和样本量综合判断。此外注意检验的前提假设(如正态性)是否满足。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter14.html">← 上一章</a><a href="chapter16.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

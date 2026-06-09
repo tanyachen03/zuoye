@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户分群分析 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter22.html" class=""><span class="chapter-number">22</span> 销售数据分析</a></li>
+<li><a href="chapter23.html" class="active"><span class="chapter-number">23</span> 客户分群分析</a></li>
+<li><a href="chapter24.html" class=""><span class="chapter-number">24</span> 综合项目实战</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>客户分群分析</h1>
+
+<h3>项目背景</h3>
+<p>某电商平台积累了大量用户交易数据，但目前对用户的理解停留在整体平均值。本项目目标是：基于用户的购买行为数据将用户分群，识别不同类型的用户群体，为每个群体设计差异化的运营策略，提升用户生命周期价值和平台整体收入。使用过去12个月的用户行为数据。</p>
+
+<h3>特征工程</h3>
+<p>从原始数据中构建RFM特征：Recency(最近一次购买距今天数，值越小越好)、Frequency(购买频次)、Monetary(累计消费金额)。除RFM外，还可以构建更多特征：平均客单价、购买品类数、偏好品类、是否使用优惠券、平均折扣率、活动参与度等。对特征进行标准化处理，消除量纲影响。</p>
+
+<h3>K-means聚类</h3>
+<p>使用肘部法则确定最佳簇数：尝试K=2到K=8，绘制簇内平方和随K变化的曲线，寻找拐点。然后运行K-means算法得到用户分群。查看每个簇的样本量，确保没有过小的簇(可能是异常值)。输出每个用户所属的簇标签。用PCA将高维特征降维到二维，可视化聚类结果的分离程度。</p>
+
+<h3>分群画像与命名</h3>
+<p>对每个簇计算RFM和其他特征的平均值，与整体均值对比，理解每个簇的独特特征。例如：簇1可能R值小(最近购买)、F高(频次高)、M高(消费高)——命名为'核心价值客户'。簇2可能R大、F低、M低——命名为'流失风险客户'。用雷达图可视化各簇的特征轮廓，让分群结果更直观易懂。</p>
+
+<h3>策略建议</h3>
+<p>基于分群画像制定差异化运营策略：对核心价值客户提供VIP服务、专属礼遇、优先体验新产品；对潜力客户推荐高关联商品提升客单价；对流失风险客户发送召回优惠券和个性化推荐；对新客户设计引导路径完成首单和复购。预估各策略的成本和预期收益，按优先级落地执行，定期追踪策略效果。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    客户分群是数据驱动运营的基础。项目流程：构建RFM等行为特征 → K-means聚类分群 → 解释每个群的特征 → 设计差异化策略。分群的价值不在于算法有多复杂，而在于能否落地为有意义的运营动作。好的分群应该让业务方一听就懂，知道该怎么做。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    分群的数量不宜过多，4-6个群通常比较合适——太少无法体现差异化，太多难以执行差异化策略。分群命名要业务化，避免'簇1''簇2'这样的技术标签。'高价值客户''沉睡客户'这样的名字更容易获得业务认同。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    聚类结果不是一成不变的，应该定期(如每季度)重新运行聚类更新用户分群。用户在生命周期中会迁移：新用户成长为活跃用户，活跃用户可能流失。运营策略也要动态调整。此外，不要过度解读聚类结果——每个群内部仍有差异，分群只是简化决策的工具。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter22.html">← 上一章</a><a href="chapter24.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常用NumPy函数 - 数析学院</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="navbar">
+            <div class="logo">数析学院</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程体系</a>
+                <a href="projects.html">项目实战</a>
+            </div>
+        </nav>
+
+        <div class="chapter-layout">
+            <div class="sidebar">
+                <div class="sidebar-title">章节目录</div>
+                <ul class="chapter-list">
+<li><a href="chapter4.html" class=""><span class="chapter-number">04</span> NumPy数组基础</a></li>
+<li><a href="chapter5.html" class=""><span class="chapter-number">05</span> 数组操作与运算</a></li>
+<li><a href="chapter6.html" class="active"><span class="chapter-number">06</span> 常用NumPy函数</a></li>
+                </ul>
+            </div>
+
+            <div class="chapter-content">
+                <h1>常用NumPy函数</h1>
+
+<h3>统计函数</h3>
+<p>NumPy提供了丰富的统计函数。np.sum(arr)求和，np.mean(arr)计算均值，np.median(arr)计算中位数，np.std(arr)计算标准差，np.var(arr)计算方差，np.min(arr)和np.max(arr)求最值，np.argmax和np.argmin返回最值的索引。这些函数都可以指定axis参数按维度计算。</p>
+
+<h3>数学函数</h3>
+<p>NumPy包含完整的数学函数。np.sqrt(arr)计算平方根，np.exp(arr)计算指数，np.log(arr)计算自然对数，np.sin、np.cos、np.tan是三角函数。np.round(arr, n)四舍五入到n位小数。np.floor向下取整，np.ceil向上取整。这些函数都是逐元素运算的。</p>
+
+<h3>排序与搜索</h3>
+<p>np.sort(arr)返回排序后的数组。np.argsort返回排序后的索引数组。np.where(条件, 值1, 值2)根据条件选择元素，类似三元运算符。np.unique(arr)返回数组中的唯一元素并排序。np.in1d(arr1, arr2)检查arr1中的元素是否在arr2中，返回布尔数组。</p>
+
+<h3>线性代数函数</h3>
+<p>NumPy的linalg模块提供线性代数函数。np.linalg.det(matrix)计算矩阵的行列式。np.linalg.inv(matrix)计算矩阵的逆。np.linalg.eig(matrix)计算特征值和特征向量。np.dot(A, B)或A @ B进行矩阵乘法。np.linalg.solve(A, b)求解线性方程组Ax = b。</p>
+
+<h3>条件与聚合</h3>
+<p>np.any(arr)检查数组中是否有True元素，np.all(arr)检查是否全部为True。np.cumsum计算累积和，np.cumprod计算累积乘积。np.diff计算相邻元素的差值。np.percentile(arr, p)计算p分位数。这些函数在数据分析和统计计算中非常有用。</p>
+
+
+                <div class="key-point">
+                    <strong>💡 要点总结</strong><br>
+                    NumPy提供了丰富的统计、数学、线性代数函数。统计函数可以按轴计算，数学函数逐元素运算，linalg模块处理线性代数运算。这些函数是数据分析的基础工具。
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 小贴士</strong><br>
+                    在大型数组上使用NumPy函数比手写Python循环快得多，因为NumPy底层使用C实现。养成向量化思维，尽量避免显式循环，多用NumPy函数和运算。
+                </div>
+
+                <div class="warn-box">
+                    <strong>⚠️ 注意事项</strong><br>
+                    使用np.where时，条件必须是布尔数组或可转换为布尔数组。计算矩阵逆时，确保矩阵是方阵且可逆，否则会抛出LinAlgError异常。
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="chapter5.html">← 上一章</a><a href="chapter7.html">下一章 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
