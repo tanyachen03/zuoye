@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.theory-content h3 {
+  color: #1a73e8;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+}
+
+.theory-content h4 {
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.theory-content ul,
+.theory-content ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.theory-content li {
+  margin-bottom: 8px;
+  line-height: 1.8;
+}
+
+.theory-content p {
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.theory-content code {
+  background-color: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.9em;
+}
+
+.theory-content pre {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.theory-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.theory-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.theory-content th,
+.theory-content td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.theory-content th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.theory-content .key-point {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+.theory-content .tip-box {
+  background-color: #f3e5f5;
+  border-left: 4px solid #9c27b0;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+.theory-content .warn-box {
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-link.active {
+  background-color: #1a73e8 !important;
+  color: white !important;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.chapter-item:hover {
+  background-color: #f0f4f8;
+}
+
+.progress-bar {
+  transition: width 0.5s ease;
+}
