@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据筛选与聚合 - 数析学院</title>
+    <title>分组聚合与高级操作 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
             <div class="logo">数析学院</div>
             <div class="nav-links">
                 <a href="index.html">首页</a>
-                <a href="courses.html">课程体系</a>
+                <a href="courses.html" class="active">课程体系</a>
                 <a href="projects.html">项目实战</a>
             </div>
         </nav>
@@ -21,48 +21,58 @@
             <div class="sidebar">
                 <div class="sidebar-title">章节目录</div>
                 <ul class="chapter-list">
-<li><a href="chapter7.html" class=""><span class="chapter-number">07</span> Pandas数据结构</a></li>
-<li><a href="chapter8.html" class=""><span class="chapter-number">08</span> 数据读取与清洗</a></li>
-<li><a href="chapter9.html" class="active"><span class="chapter-number">09</span> 数据筛选与聚合</a></li>
+<li><a href="chapter7.html""><span class="chapter-number">01</span> Pandas基础入门</a></li>
+<li><a href="chapter8.html""><span class="chapter-number">02</span> 数据清洗与转换</a></li>
+<li><a href="chapter9.html" class="active""><span class="chapter-number">03</span> 分组聚合与高级操作</a></li>
                 </ul>
+                <a href="course3.html" class="back-btn">← 返回课程</a>
+                <a href="courses.html" class="back-btn">← 课程体系</a>
             </div>
 
             <div class="chapter-content">
-                <h1>数据筛选与聚合</h1>
+                <h1 class="chapter-title">分组聚合与高级操作</h1>
+                <p class="chapter-subtitle">课程：Pandas数据处理</p>
 
-<h3>条件筛选</h3>
-<p>Pandas可以灵活地按条件筛选数据。简单条件df[df['age'] > 18]选择age大于18的行。多个条件使用&(与)、|(或)、~(非)组合，每个条件用括号包裹：df[(df['age'] > 18) & (df['city'] == '北京')]。isin方法df[df['city'].isin(['北京', '上海'])]筛选城市在指定列表中的行。</p>
-
-<h3>排序</h3>
-<p>df.sort_values('col', ascending=False)按指定列降序排序。可以按多列排序：df.sort_values(['col1', 'col2'], ascending=[True, False])。df.sort_index()按索引排序。设置inplace=True直接修改原DataFrame。可以使用na_position参数指定缺失值放在最前还是最后。</p>
-
-<h3>分组聚合</h3>
-<p>groupby是Pandas最强大的功能之一。df.groupby('col1')['col2'].mean()按col1分组后计算col2的均值。可以同时计算多个聚合：df.groupby('col1').agg({'col2': 'mean', 'col3': ['sum', 'count']})。按多列分组df.groupby(['col1', 'col2'])。还可以自定义聚合函数传给agg。</p>
-
-<h3>透视表</h3>
-<p>pd.pivot_table(df, values='sales', index='region', columns='month', aggfunc='sum')创建透视表。index指定行索引，columns指定列索引，values指定聚合的数值列，aggfunc指定聚合函数。可以通过margins=True添加行列汇总。透视表是Excel常用功能，Pandas也提供了完整支持。</p>
-
-<h3>数据合并</h3>
-<p>pd.concat([df1, df2])沿轴拼接DataFrame，默认纵向拼接(axis=0)，axis=1横向拼接。pd.merge(df1, df2, on='key')类似SQL的JOIN操作，按指定列合并。how参数可选'inner'(内连接)、'left'(左连接)、'right'(右连接)、'outer'(全连接)。df.join()是基于索引的merge快捷方式。</p>
-
+                <div class="section-block">
+                    <h3 class="section-title">分组操作</h3>
+                    <p class="section-content">本节介绍分组操作的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">聚合函数</h3>
+                    <p class="section-content">本节介绍聚合函数的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">透视表</h3>
+                    <p class="section-content">本节介绍透视表的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">时间序列</h3>
+                    <p class="section-content">本节介绍时间序列的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">综合案例</h3>
+                    <p class="section-content">本节介绍综合案例的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
 
                 <div class="key-point">
-                    <strong>💡 要点总结</strong><br>
-                    条件筛选使用布尔索引，多个条件用&和|组合。groupby进行分组聚合分析，pivot_table创建透视表，concat和merge实现数据合并。这些是数据分析最常用的操作。
+                    <h4>💡 要点总结</h4>
+                    <p>本章介绍了分组聚合与高级操作的核心知识点，包括分组操作、聚合函数等关键内容。</p>
                 </div>
 
                 <div class="tip-box">
-                    <strong>📌 小贴士</strong><br>
-                    分组后可以使用size()快速查看每组的样本数，这是检查数据分布的好方法。透视表操作非常适合做报表，结果可以直接导出到Excel进行展示。
+                    <h4>✏️ 小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
                 </div>
 
                 <div class="warn-box">
-                    <strong>⚠️ 注意事项</strong><br>
-                    使用merge时注意检查是否有重复的键值导致数据行数膨胀。合并大数据集前先理解数据关系，必要时先去重。多条件筛选时每个条件必须用括号包围，因为运算符优先级问题。
+                    <h4>⚠️ 注意事项</h4>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
                 </div>
 
-                <div class="chapter-nav">
-                    <a href="chapter8.html">← 上一章</a><a href="chapter10.html">下一章 →</a>
+                <div class="chapter-nav-bottom">
+                    <a href="chapter8.html" class="prev-chapter-btn">← 上一章：数据清洗与转换</a>
+                    <a href="index.html" class="home-btn">🏠 回到首页</a>
+                    
                 </div>
             </div>
         </div>

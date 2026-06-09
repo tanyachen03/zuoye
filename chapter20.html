@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户行为分析 - 数析学院</title>
+    <title>客户行为分析 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
             <div class="logo">数析学院</div>
             <div class="nav-links">
                 <a href="index.html">首页</a>
-                <a href="courses.html">课程体系</a>
+                <a href="courses.html" class="active">课程体系</a>
                 <a href="projects.html">项目实战</a>
             </div>
         </nav>
@@ -21,48 +21,58 @@
             <div class="sidebar">
                 <div class="sidebar-title">章节目录</div>
                 <ul class="chapter-list">
-<li><a href="chapter19.html" class=""><span class="chapter-number">19</span> 业务指标分析</a></li>
-<li><a href="chapter20.html" class="active"><span class="chapter-number">20</span> 用户行为分析</a></li>
-<li><a href="chapter21.html" class=""><span class="chapter-number">21</span> A/B测试</a></li>
+<li><a href="chapter19.html""><span class="chapter-number">01</span> 销售数据分析</a></li>
+<li><a href="chapter20.html" class="active""><span class="chapter-number">02</span> 客户行为分析</a></li>
+<li><a href="chapter21.html""><span class="chapter-number">03</span> 商业智能与决策</a></li>
                 </ul>
+                <a href="course7.html" class="back-btn">← 返回课程</a>
+                <a href="courses.html" class="back-btn">← 课程体系</a>
             </div>
 
             <div class="chapter-content">
-                <h1>用户行为分析</h1>
+                <h1 class="chapter-title">客户行为分析</h1>
+                <p class="chapter-subtitle">课程：商业数据分析</p>
 
-<h3>用户生命周期</h3>
-<p>用户生命周期描述用户从获取到流失的全过程。典型阶段：获取(新注册)、激活(完成首次核心行为)、留存(持续使用)、收入(产生付费)、推荐(邀请他人)、流失(停止使用)。不同阶段关注不同指标：获客成本(CAC)、激活率、次日/7日/30日留存率、用户生命周期价值(LTV)、净推荐值(NPS)。分析各阶段转化和流失可以指导运营优化。</p>
-
-<h3>用户分群与RFM</h3>
-<p>用户不是铁板一块，分群分析比整体分析更有洞察力。RFM模型是客户分群的经典方法：Recency(最近购买时间)、Frequency(购买频次)、Monetary(消费金额)。按RFM各自分为高低两档，得到8个客户分群。重要价值客户(R↑F↑M↑)是重点维护的核心资产，流失客户(R↓F↓M↓)是流失预警对象。可以用分位数划分高低阈值。</p>
-
-<h3>用户画像</h3>
-<p>用户画像是对用户群特征的综合描述，包含人口属性(年龄、性别、地域)、行为特征(使用频率、偏好功能)、偏好和需求等。构建画像的方法：定量分析(行为数据统计)、定性分析(用户访谈)、数据建模(聚类算法)。好的用户画像应该具体到可以联想到一个真实的人——如张女士，30岁，一线城市白领，每天使用30分钟，偏好轻奢品牌。</p>
-
-<h3>留存分析</h3>
-<p>留存分析衡量用户持续使用产品的程度。经典的同期群分析(Cohort Analysis)按用户获取月份分组，追踪每组在后续各月的留存曲线。留存曲线通常快速下降后趋于稳定，稳定后的比例是产品粘性的反映。提升留存的本质是让用户持续感受到产品价值。可以按渠道、用户特征细分留存，识别高/低留存的用户群并分析原因。</p>
-
-<h3>用户行为路径分析</h3>
-<p>用户行为路径分析追踪用户在产品中的导航和操作序列。可以发现：最常见的路径是怎样的？用户在哪些节点退出？不同用户群的路径差异？桑基图是可视化行为流的好工具。路径分析结合漏斗分析能定位具体的体验瓶颈。在隐私合规的前提下收集匿名化的行为日志是路径分析的数据基础。</p>
-
+                <div class="section-block">
+                    <h3 class="section-title">客户数据概述</h3>
+                    <p class="section-content">本节介绍客户数据概述的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">购买行为分析</h3>
+                    <p class="section-content">本节介绍购买行为分析的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">客户生命周期</h3>
+                    <p class="section-content">本节介绍客户生命周期的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">RFM分析</h3>
+                    <p class="section-content">本节介绍RFM分析的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">客户价值</h3>
+                    <p class="section-content">本节介绍客户价值的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
 
                 <div class="key-point">
-                    <strong>💡 要点总结</strong><br>
-                    用户行为分析从生命周期、分群、画像、留存、路径等多个角度理解用户。RFM是经典客户分群方法，同期群分析是留存分析的标准工具。理解用户差异是精细化运营的前提。用户分析最终服务于提升用户价值和产品体验。
+                    <h4>💡 要点总结</h4>
+                    <p>本章介绍了客户行为分析的核心知识点，包括客户数据概述、购买行为分析等关键内容。</p>
                 </div>
 
                 <div class="tip-box">
-                    <strong>📌 小贴士</strong><br>
-                    做用户分群后不要停留在数字上，一定要用业务语言解释每个分群的特征和含义，并设计对应的运营策略：对高价值用户提供VIP服务，对流失边缘用户推送召回活动。分群+策略+执行+反馈形成闭环。
+                    <h4>✏️ 小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
                 </div>
 
                 <div class="warn-box">
-                    <strong>⚠️ 注意事项</strong><br>
-                    不要基于单一指标做用户价值判断。例如只看消费金额可能忽略高潜力的新用户。RFM综合三个维度更均衡。同时，用户分群应该定期更新——用户是动态变化的，今天的沉睡用户明天可能因为营销活动重新活跃。
+                    <h4>⚠️ 注意事项</h4>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
                 </div>
 
-                <div class="chapter-nav">
-                    <a href="chapter19.html">← 上一章</a><a href="chapter21.html">下一章 →</a>
+                <div class="chapter-nav-bottom">
+                    <a href="chapter19.html" class="prev-chapter-btn">← 上一章：销售数据分析</a>
+                    <a href="index.html" class="home-btn">🏠 回到首页</a>
+                    <a href="chapter21.html" class="next-chapter-btn">下一章：商业智能与决策 →</a>
                 </div>
             </div>
         </div>

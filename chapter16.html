@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>监督学习基础 - 数析学院</title>
+    <title>机器学习概述 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
             <div class="logo">数析学院</div>
             <div class="nav-links">
                 <a href="index.html">首页</a>
-                <a href="courses.html">课程体系</a>
+                <a href="courses.html" class="active">课程体系</a>
                 <a href="projects.html">项目实战</a>
             </div>
         </nav>
@@ -21,48 +21,58 @@
             <div class="sidebar">
                 <div class="sidebar-title">章节目录</div>
                 <ul class="chapter-list">
-<li><a href="chapter16.html" class="active"><span class="chapter-number">16</span> 监督学习基础</a></li>
-<li><a href="chapter17.html" class=""><span class="chapter-number">17</span> 常用分类算法</a></li>
-<li><a href="chapter18.html" class=""><span class="chapter-number">18</span> 无监督学习</a></li>
+<li><a href="chapter16.html" class="active""><span class="chapter-number">01</span> 机器学习概述</a></li>
+<li><a href="chapter17.html""><span class="chapter-number">02</span> 监督学习算法</a></li>
+<li><a href="chapter18.html""><span class="chapter-number">03</span> 无监督学习与模型评估</a></li>
                 </ul>
+                <a href="course6.html" class="back-btn">← 返回课程</a>
+                <a href="courses.html" class="back-btn">← 课程体系</a>
             </div>
 
             <div class="chapter-content">
-                <h1>监督学习基础</h1>
+                <h1 class="chapter-title">机器学习概述</h1>
+                <p class="chapter-subtitle">课程：机器学习入门</p>
 
-<h3>机器学习概述</h3>
-<p>机器学习是让计算机从数据中学习规律而不需要显式编程的方法。主要分为监督学习、无监督学习和强化学习。监督学习已知输入输出的对应关系，学习输入到输出的映射，用于预测和分类任务。典型的监督学习任务包括回归(预测连续值)和分类(预测离散类别)。</p>
-
-<h3>线性回归</h3>
-<p>线性回归假设输入特征与输出之间存在线性关系：y = w0 + w1*x1 + w2*x2 + ...。模型训练的目标是找到最优权重w使得预测值与真实值的误差(通常用均方误差MSE)最小。可以使用最小二乘法或梯度下降求解。使用sklearn.linear_model.LinearRegression建立模型，通过R平方(R²)评估拟合优度。</p>
-
-<h3>逻辑回归</h3>
-<p>逻辑回归虽然名字中有回归，但实际上是分类算法。它使用sigmoid函数将线性组合映射到0-1之间的概率值。输出概率大于阈值(通常0.5)预测为正类，否则为负类。逻辑回归可解释性好，训练快，是二分类问题的基准模型。sklearn.linear_model.LogisticRegression实现该算法。</p>
-
-<h3>模型评估</h3>
-<p>评估模型性能需要将数据划分为训练集和测试集，通常使用train_test_split按7:3或8:2分割。在训练集上训练模型，在测试集上评估。回归任务用MAE、MSE、RMSE、R²评估。分类任务用准确率、精确率(Precision)、召回率(Recall)、F1分数和混淆矩阵评估。交叉验证提供更稳定的性能估计。</p>
-
-<h3>特征工程</h3>
-<p>特征工程是将原始数据转换为模型可用特征的过程，是机器学习中非常重要的环节。数值特征可能需要标准化(StandardScaler)或归一化(MinMaxScaler)。分类特征需要编码：有序特征可使用LabelEncoder，无序特征用OneHotEncoder。可以创建交互特征和多项式特征增加模型复杂度。缺失值需要合理处理。</p>
-
+                <div class="section-block">
+                    <h3 class="section-title">机器学习介绍</h3>
+                    <p class="section-content">本节介绍机器学习介绍的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">监督与非监督</h3>
+                    <p class="section-content">本节介绍监督与非监督的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">训练与测试</h3>
+                    <p class="section-content">本节介绍训练与测试的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">模型评估</h3>
+                    <p class="section-content">本节介绍模型评估的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">常用库介绍</h3>
+                    <p class="section-content">本节介绍常用库介绍的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
 
                 <div class="key-point">
-                    <strong>💡 要点总结</strong><br>
-                    监督学习从标注数据中学习预测模型。线性回归用于回归任务，逻辑回归用于二分类。模型评估需要训练/测试集划分，使用合适的指标评估性能。特征工程对模型性能至关重要，包括数值缩放和类别编码。Scikit-learn是最流行的机器学习库。
+                    <h4>💡 要点总结</h4>
+                    <p>本章介绍了机器学习概述的核心知识点，包括机器学习介绍、监督与非监督等关键内容。</p>
                 </div>
 
                 <div class="tip-box">
-                    <strong>📌 小贴士</strong><br>
-                    建立机器学习模型的基本流程：数据准备(train_test_split)、特征处理(Scaler/Encoder)、模型训练(fit)、预测(predict)、评估(score/metrics)。始终先建立一个简单基准模型，再逐步改进复杂模型。
+                    <h4>✏️ 小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
                 </div>
 
                 <div class="warn-box">
-                    <strong>⚠️ 注意事项</strong><br>
-                    数据泄露是机器学习建模中的常见陷阱：不能在测试集上进行任何训练相关的操作(包括特征缩放的fit)。正确做法是在训练集上fit_transform，在测试集上transform。训练前的数据探索也要基于训练集，避免根据测试集特征做决策。
+                    <h4>⚠️ 注意事项</h4>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
                 </div>
 
-                <div class="chapter-nav">
-                    <a href="chapter15.html">← 上一章</a><a href="chapter17.html">下一章 →</a>
+                <div class="chapter-nav-bottom">
+                    
+                    <a href="index.html" class="home-btn">🏠 回到首页</a>
+                    <a href="chapter17.html" class="next-chapter-btn">下一章：监督学习算法 →</a>
                 </div>
             </div>
         </div>

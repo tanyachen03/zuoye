@@ -643,3 +643,162 @@ body {
     border-radius: 6px;
     font-size: 12px;
 }
+
+/* 课程详情页 - 大图标/标题 */
+.course-icon-large {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.course-title-large {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: #F9FAFB;
+    font-weight: bold;
+}
+
+.course-desc-large {
+    color: #9CA3AF;
+    font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 1.8;
+}
+
+.course-meta-large {
+    display: flex;
+    gap: 24px;
+    font-size: 14px;
+    color: #9CA3AF;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.course-meta-large span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.chapter-count {
+    color: #9CA3AF;
+}
+
+/* 章节内容块 */
+.section-block {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #2A2A2A;
+}
+
+.section-block .section-title {
+    font-size: 20px;
+    color: #3B82F6;
+    margin: 0 0 12px 0;
+    font-weight: 600;
+}
+
+.section-content {
+    color: #D1D5DB;
+    line-height: 1.8;
+    margin-bottom: 0;
+}
+
+/* 章节副标题 */
+.chapter-subtitle {
+    color: #9CA3AF;
+    font-size: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2A2A2A;
+}
+
+/* 返回按钮 */
+.back-btn, .home-btn, .next-chapter-btn, .prev-chapter-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2A2A2A;
+    color: #E0E0E0;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+
+.back-btn:hover, .home-btn:hover, .next-chapter-btn:hover, .prev-chapter-btn:hover {
+    background: #3B82F6;
+    color: white;
+}
+
+.sidebar .back-btn {
+    display: block;
+    margin-top: 16px;
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.sidebar .back-btn:first-of-type {
+    margin-top: 20px;
+}
+
+/* 章节底部导航 */
+.chapter-nav-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #2A2A2A;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* 项目卡片 - meta 和 skills */
+.project-meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.project-meta .tag {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3B82F6;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.project-meta .duration {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8B5CF6;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.project-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #2A2A2A;
+}
+
+.project-skills .tag {
+    background: #2A2A2A;
+    color: #9CA3AF;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+}

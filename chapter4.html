@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NumPy数组基础 - 数析学院</title>
+    <title>NumPy基础入门 - 数析学院</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
             <div class="logo">数析学院</div>
             <div class="nav-links">
                 <a href="index.html">首页</a>
-                <a href="courses.html">课程体系</a>
+                <a href="courses.html" class="active">课程体系</a>
                 <a href="projects.html">项目实战</a>
             </div>
         </nav>
@@ -21,48 +21,58 @@
             <div class="sidebar">
                 <div class="sidebar-title">章节目录</div>
                 <ul class="chapter-list">
-<li><a href="chapter4.html" class="active"><span class="chapter-number">04</span> NumPy数组基础</a></li>
-<li><a href="chapter5.html" class=""><span class="chapter-number">05</span> 数组操作与运算</a></li>
-<li><a href="chapter6.html" class=""><span class="chapter-number">06</span> 常用NumPy函数</a></li>
+<li><a href="chapter4.html" class="active""><span class="chapter-number">01</span> NumPy基础入门</a></li>
+<li><a href="chapter5.html""><span class="chapter-number">02</span> 数组操作与运算</a></li>
+<li><a href="chapter6.html""><span class="chapter-number">03</span> 高级技巧与实战</a></li>
                 </ul>
+                <a href="course2.html" class="back-btn">← 返回课程</a>
+                <a href="courses.html" class="back-btn">← 课程体系</a>
             </div>
 
             <div class="chapter-content">
-                <h1>NumPy数组基础</h1>
+                <h1 class="chapter-title">NumPy基础入门</h1>
+                <p class="chapter-subtitle">课程：NumPy数据分析</p>
 
-<h3>NumPy介绍</h3>
-<p>NumPy(Numerical Python)是Python科学计算的基础包。它提供了高效的多维数组对象ndarray，以及对数组进行快速运算的工具。NumPy数组比Python原生列表更节省内存，运算速度更快，是Pandas、Scikit-learn等库的基础。</p>
-
-<h3>导入NumPy</h3>
-<p>使用import numpy as np导入NumPy库，这是约定俗成的简写方式。导入后就可以使用np前缀调用NumPy的各种功能。首先确保已经安装了NumPy，可以使用pip install numpy或通过Anaconda安装。</p>
-
-<h3>创建NumPy数组</h3>
-<p>最基本的创建方法是使用np.array()函数，将Python列表转换为NumPy数组。例如arr = np.array([1, 2, 3, 4, 5])创建一维数组，np.array([[1,2], [3,4]])创建二维数组。还可以使用np.zeros、np.ones、np.full创建指定形状和值的数组。</p>
-
-<h3>数组的属性</h3>
-<p>ndarray对象有几个重要的属性。shape返回数组的维度，如(3,4)表示3行4列。ndim返回数组的维数。dtype返回数组中元素的数据类型，如int64、float64。size返回数组中元素的总个数。itemsize返回每个元素占用的字节数。</p>
-
-<h3>特殊数组创建</h3>
-<p>NumPy提供了多种创建特殊数组的函数。np.arange(起始, 结束, 步长)类似于Python的range，但返回数组。np.linspace(起始, 结束, 数量)创建等间距的数列。np.random.rand(shape)创建指定形状的随机数组。np.eye(n)创建n×n的单位矩阵。</p>
-
+                <div class="section-block">
+                    <h3 class="section-title">NumPy介绍</h3>
+                    <p class="section-content">本节介绍NumPy介绍的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">创建数组</h3>
+                    <p class="section-content">本节介绍创建数组的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">数组属性</h3>
+                    <p class="section-content">本节介绍数组属性的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">基本运算</h3>
+                    <p class="section-content">本节介绍基本运算的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
+                <div class="section-block">
+                    <h3 class="section-title">索引与切片</h3>
+                    <p class="section-content">本节介绍索引与切片的核心概念和应用方法。通过理论讲解和实例演示，帮助你理解并掌握相关知识。</p>
+                </div>
 
                 <div class="key-point">
-                    <strong>💡 要点总结</strong><br>
-                    NumPy数组ndarray是NumPy的核心对象。通过np.array从列表创建，或使用zeros、ones、arange、linspace等函数创建。shape、dtype、ndim是数组的重要属性。
+                    <h4>💡 要点总结</h4>
+                    <p>本章介绍了NumPy基础入门的核心知识点，包括NumPy介绍、创建数组等关键内容。</p>
                 </div>
 
                 <div class="tip-box">
-                    <strong>📌 小贴士</strong><br>
-                    在数据分析中，经常需要将各种数据转换为NumPy数组进行运算。熟悉数组的创建方法和属性查询是第一步。可以使用print(arr)查看数组内容，使用arr.shape查看数组形状。
+                    <h4>✏️ 小贴士</h4>
+                    <p>建议在学习时结合实际代码练习，理论结合实践是掌握数据分析技能的最佳方式。</p>
                 </div>
 
                 <div class="warn-box">
-                    <strong>⚠️ 注意事项</strong><br>
-                    NumPy数组一旦创建，其数据类型dtype是固定的。如果需要不同类型的数组，需要使用astype()方法进行显式转换，而不能直接修改元素类型。
+                    <h4>⚠️ 注意事项</h4>
+                    <p>学习过程中遇到问题不要气馁，数据分析是实践性很强的技能，需要持续练习和积累。</p>
                 </div>
 
-                <div class="chapter-nav">
-                    <a href="chapter3.html">← 上一章</a><a href="chapter5.html">下一章 →</a>
+                <div class="chapter-nav-bottom">
+                    
+                    <a href="index.html" class="home-btn">🏠 回到首页</a>
+                    <a href="chapter5.html" class="next-chapter-btn">下一章：数组操作与运算 →</a>
                 </div>
             </div>
         </div>
