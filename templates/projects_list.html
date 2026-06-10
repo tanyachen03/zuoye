@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}项目实战 · 商务数据分析{% endblock %}
+{% block content %}
+
+{# Hero 区域 #}
+<div class="position-relative overflow-hidden mb-6 py-5" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+    <div class="container position-relative">
+        <div class="row align-items-center py-3">
+            <div class="col-lg-8 text-white">
+                <div class="d-inline-flex align-items-center gap-2 bg-white bg-opacity-20 rounded-pill px-4 py-2 mb-4 border border-white border-opacity-20" style="backdrop-filter: blur(10px);">
+                    <i class="bi bi-rocket-takeoff-fill"></i>
+                    <span class="small fw-medium">🚀 实战驱动学习</span>
+                </div>
+                <h1 class="display-4 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3);">
+                    数据分析实战项目
+                </h1>
+                <p class="lead opacity-95 mb-0" style="font-size: 1.15rem;">
+                    10 个真实商业场景 · 从零开始完成数据分析全流程 · 提升你的实战能力
+                </p>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block">
+                <div class="bg-white bg-opacity-20 rounded-4 p-5 text-center text-white shadow-lg" style="backdrop-filter: blur(10px);">
+                    <div class="row align-items-center">
+                        <div class="col-6 border-end border-white border-opacity-30">
+                            <div class="display-4 fw-bold text-center">{{ projects|length }}</div>
+                            <div class="small opacity-90">📊 实战项目</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="display-4 fw-bold text-center">{{ completed_projects|length }}</div>
+                            <div class="small opacity-90">✅ 已完成</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-4 py-2 fw-semibold border border-white border-opacity-30">
+                    🏠 <a href="{{ url_for('index') }}" class="text-white text-decoration-none">回到首页</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# 项目难度说明 #}
+<div class="container mb-6">
+    <div class="card border-0 shadow bg-white rounded-4 overflow-hidden">
+        <div class="card-body py-4 px-5">
+            <div class="d-flex flex-wrap align-items-center justify-content-around gap-4">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-success rounded-pill px-4 py-2 fw-semibold" style="background: linear-gradient(135deg, #11998e, #38ef7d);">🟢 初级</span>
+                    <small class="text-muted fw-medium">基础清洗与简单分析</small>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-warning rounded-pill px-4 py-2 fw-semibold" style="background: linear-gradient(135deg, #f2994a, #f2c94c);">🟡 中级</span>
+                    <small class="text-muted fw-medium">复杂数据处理与模式挖掘</small>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-danger rounded-pill px-4 py-2 fw-semibold" style="background: linear-gradient(135deg, #ee0979, #ff6a00);">🔴 高级</span>
+                    <small class="text-muted fw-medium">建模预测与仪表板开发</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# 项目卡片列表 #}
+<div class="container mb-6">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-2 display-5">🎯 实战项目一览</h2>
+        <p class="text-muted mb-0" style="font-size: 1.1rem;">选择你感兴趣的项目，开始你的数据分析之旅</p>
+    </div>
+    <div class="row g-5">
+        {% for project in projects %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow hover-lift bg-white overflow-hidden position-relative rounded-4">
+                {# 卡片顶部渐变条 - 根据难度配色 #}
+                <div style="height: 8px; background: linear-gradient(90deg, 
+                    {% if project.level == '初级' %}#11998e, #38ef7d
+                    {% elif project.level == '中级' %}#f2994a, #f2c94c
+                    {% else %}#ee0979, #ff6a00{% endif %};"></div>
+                
+                {# 已完成标识 #}
+                {% if project.id in completed_projects %}
+                <div class="position-absolute top-0 end-0 bg-success text-white rounded-bottom-start-4 shadow px-3 py-2 z-2 fw-semibold" style="margin-top: 8px;">
+                    <i class="bi bi-check2-all"></i> 已完成
+                </div>
+                {% endif %}
+                
+                <div class="card-body p-5">
+                    {# 标题和状态 #}
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold mb-3" style="font-size: 1.25rem;">{{ project.title }}</h5>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: linear-gradient(135deg, 
+                                    {% if project.level == '初级' %}#11998e, #38ef7d
+                                    {% elif project.level == '中级' %}#f2994a, #f2c94c
+                                    {% else %}#ee0979, #ff6a00{% endif %}); color: white;">
+                                    {{ project.level }}
+                                </span>
+                                <span class="text-muted small fw-medium">
+                                    <i class="bi bi-clock-fill me-1"></i>{{ project.duration }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# 业务背景简介 #}
+                    <p class="text-muted mb-4" style="min-height: 60px; line-height: 1.7; font-size: 0.95rem;">
+                        {{ project.background[:120] }}...
+                    </p>
+
+                    {# 项目特色 #}
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 small fw-medium">
+                            <i class="bi bi-database-fill me-1"></i>{{ project.dataset }}
+                        </span>
+                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 small fw-medium">
+                            <i class="bi bi-lightbulb-fill me-1"></i>{{ project.tips|length }} 条小贴士
+                        </span>
+                    </div>
+
+                    {# 项目图标装饰 #}
+                    <div class="text-center mb-4 py-3 rounded-4" style="background: linear-gradient(135deg, 
+                        {% if project.level == '初级' %}rgba(17,153,142,0.08), rgba(56,239,125,0.12)
+                        {% elif project.level == '中级' %}rgba(242,153,74,0.08), rgba(242,201,76,0.12)
+                        {% else %}rgba(238,9,121,0.08), rgba(255,106,0,0.12){% endif %});">
+                        <span style="font-size: 3rem;">
+                            {% if '销售' in project.title %}📊
+                            {% elif '流失' in project.title or '客户' in project.title %}👥
+                            {% elif '仪表' in project.title %}📈
+                            {% elif '预测' in project.title %}🔮
+                            {% elif '测试' in project.title %}🧪
+                            {% elif '情感' in project.title %}💬
+                            {% elif '聚类' in project.title %}🎯
+                            {% else %}💻{% endif %}
+                        </span>
+                    </div>
+
+                    {# 进入按钮 #}
+                    <a href="{{ url_for('project_page', project_id=project.id) }}" 
+                       class="btn w-100 py-3 fw-bold shadow rounded-3 text-white"
+                       style="background: linear-gradient(135deg, 
+                           {% if project.level == '初级' %}#11998e, #38ef7d
+                           {% elif project.level == '中级' %}#f2994a, #f2c94c
+                           {% else %}#ee0979, #ff6a00{% endif %});
+                              border: none; transition: all 0.3s ease;">
+                        <i class="bi bi-arrow-right-circle-fill me-2"></i>开始实战
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# 学习建议 #}
+<div class="container mb-6">
+    <div class="card border-0 shadow-lg bg-white rounded-4 overflow-hidden">
+        <div class="card-body p-6 text-center" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">
+            <div class="rounded-circle mx-auto mb-4 d-flex align-items-center justify-center shadow" style="width: 70px; height: 70px; background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                <i class="bi bi-info-circle-fill text-white display-6"></i>
+            </div>
+            <h4 class="fw-bold mb-3 display-6" style="color: #78350f;">📖 学习建议</h4>
+            <p class="text-muted mb-0" style="line-height: 1.9; font-size: 1.05rem; color: #78350f;">
+                建议按照难度从初级到高级依次完成。每个项目都包含完整的业务背景、分析目标和代码示例。<br>
+                <strong>先尝试自己实现，遇到困难再参考完整代码示例。</strong>完成项目后标记完成，累积解锁徽章！
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-lift { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+.hover-lift:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+</style>
+{% endblock %}

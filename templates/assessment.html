@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}综合测评{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">首页</a></li>
+        <li class="breadcrumb-item active">综合测评</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="fw-bold"><i class="bi bi-file-text"></i> 综合测评</h2>
+        <p class="text-muted mt-2 mb-0">本测评共 <strong>{{ questions|length }}</strong> 道选择题，涵盖所有课程内容。60分及格，满分可获得"完美学霸"徽章。</p>
+    </div>
+</div>
+
+<form id="assessmentForm">
+{# 关键修复：保存外层循环索引 #}
+{% for q in questions %}
+    {% set question_index = loop.index0 %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">Q{{ loop.index }}. {{ q.q }}</h6>
+            {% for opt in q.options %}
+                {% set option_index = loop.index0 %}
+                <label class="quiz-opt d-block mb-2 p-3 rounded-3" 
+                       for="q{{ question_index }}-opt{{ option_index }}"
+                       style="cursor: pointer; border: 1px solid #dee2e6; transition: all 0.2s;">
+                    <div class="d-flex align-items-start">
+                        <input type="radio" 
+                               name="question_{{ question_index }}" 
+                               value="{{ option_index }}" 
+                               id="q{{ question_index }}-opt{{ option_index }}"
+                               class="me-3 mt-1"
+                               style="cursor: pointer;">
+                        <span class="flex-grow-1">{{ opt }}</span>
+                    </div>
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+</form>
+
+<button class="btn btn-primary btn-lg w-100 mt-4 py-3" onclick="submitAssessment()">
+    <i class="bi bi-check-circle-fill"></i> 提交答案
+</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const TOTAL_QUESTIONS = {{ questions|length }};
+
+function submitAssessment() {
+    var answers = {};
+    var unanswered = [];
+    
+    for(var i = 0; i < TOTAL_QUESTIONS; i++){
+        var selected = document.querySelector('input[name="question_'+i+'"]:checked');
+        if(selected){
+            answers[i] = selected.value;
+        } else {
+            unanswered.push(i+1);
+        }
+    }
+    
+    if(unanswered.length > 0){
+        if(confirm('还有 ' + unanswered.length + ' 道题未作答（题号: ' + unanswered.join(', ') + '），确定要提交吗？')){
+            submit(answers);
+        }
+    } else {
+        submit(answers);
+    }
+}
+
+function submit(answers) {
+    fetch("{{ url_for('submit_assessment') }}", {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({answers: answers})
+    }).then(function(r){ return r.json(); }).then(function(data){
+        if(data.score !== undefined){
+            // 跳转到结果页
+            var resultUrl = "{{ url_for('assessment_result', score=0) }}".replace('/0/', '/' + data.score + '/');
+            window.location.href = resultUrl;
+        } else {
+            alert('提交失败：'+(data.error||'未知错误'));
+        }
+    });
+}
+</script>
+{% endblock %}

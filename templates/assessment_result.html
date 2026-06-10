@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}测评结果{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">首页</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('assessment') }}">综合测评</a></li>
+        <li class="breadcrumb-item active">测评结果</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-8">
+        {% if score == 100 %}
+        <div class="text-6xl mb-4">🏆</div>
+        <h2 class="text-3xl font-bold text-success">满分通过！</h2>
+        <p class="text-muted mt-2">恭喜你获得「完美学霸」徽章！</p>
+        {% elif score >= 60 %}
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-primary">测评通过！</h2>
+        <p class="text-muted mt-2">继续努力，争取满分！</p>
+        {% else %}
+        <div class="text-6xl mb-4">💪</div>
+        <h2 class="text-3xl font-bold text-warning">未通过</h2>
+        <p class="text-muted mt-2">再接再厉，多复习后再试一次！</p>
+        {% endif %}
+        
+        <div class="mt-6">
+            <div class="text-6xl font-bold {% if score >= 80 %}text-success{% elif score >= 60 %}text-primary{% else %}text-warning{% endif %}">
+                {{ score }}
+            </div>
+            <div class="text-muted">得分 / 满分 100</div>
+            <div class="text-muted">正确题数：{{ score // 5 }} / 20</div>
+        </div>
+        
+        <div class="mt-6">
+            <div class="progress" style="height: 12px; max-width: 400px; margin: 0 auto;">
+                <div class="progress-bar {% if score >= 80 %}bg-success{% elif score >= 60 %}bg-primary{% else %}bg-warning{% endif %}" style="width: {{ score }}%"></div>
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <a href="{{ url_for('assessment') }}" class="btn btn-primary">重新测评</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary ml-2">返回个人中心</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

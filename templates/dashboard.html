@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}个人中心{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">首页</a></li>
+        <li class="breadcrumb-item active">个人中心</li>
+    </ol>
+</nav>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2>欢迎回来，{{ user.username }}！</h2>
+                <p class="text-muted">注册时间：{{ user.created_at.strftime('%Y-%m-%d') }}</p>
+            </div>
+            <div class="text-right">
+                <div class="text-muted">学习天数</div>
+                <div class="text-3xl font-bold text-primary">7</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-trophy"></i> 学习统计</h5></div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">完成章节</span>
+                    <span class="font-bold">{{ completed_chapters_count }} / 22</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-primary" style="width: {{ (completed_chapters_count / 22 * 100)|round }}%"></div>
+                </div>
+                <div class="d-flex justify-content-between mb-3 mt-3">
+                    <span class="text-muted">完成项目</span>
+                    <span class="font-bold">{{ completed_projects_count }} / 10</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: {{ (completed_projects_count / 10 * 100)|round }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-book-open"></i> 课程进度</h5></div>
+            <div class="card-body">
+                {% for course in course_progress %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>{{ course.title }}</span>
+                        <span class="text-sm">{{ course.completed }}/{{ course.total }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" style="width: {{ course.percent }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-award text-success"></i> 已获得徽章</h5></div>
+            <div class="card-body">
+                {% if earned_badges %}
+                <div class="row">
+                    {% for key, badge in earned_badges.items() %}
+                    <div class="col-6 mb-3">
+                        <div class="card border-0 bg-success/10">
+                            <div class="card-body text-center">
+                                <span class="text-4xl">{{ badge.icon }}</span>
+                                <div class="font-bold mt-2">{{ badge.name }}</div>
+                                <div class="text-xs text-muted">{{ badge.desc }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center text-muted">还没有获得徽章，开始学习吧！</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-lock text-muted"></i> 待解锁徽章</h5></div>
+            <div class="card-body">
+                {% if unlocked_badges %}
+                <div class="row">
+                    {% for key, badge in unlocked_badges.items() %}
+                    <div class="col-6 mb-3">
+                        <div class="card border-0 bg-gray-100 opacity-50">
+                            <div class="card-body text-center">
+                                <span class="text-4xl">{{ badge.icon }}</span>
+                                <div class="font-bold mt-2 text-gray-500">{{ badge.name }}</div>
+                                <div class="text-xs text-muted">{{ badge.desc }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center text-muted">🎉 恭喜！你已获得所有徽章！</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
