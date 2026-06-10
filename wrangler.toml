@@ -1,19 +1,70 @@
-# Cloudflare Pages 配置
-# 用于在 Cloudflare Pages 上部署 Python Flask 应用
+# ============================================
+# Cloudflare Workers + Pages 配置文件
+# ============================================
+# 
+# 这个项目使用混合架构：
+# - Cloudflare Pages：托管前端静态文件
+# - Cloudflare Workers：提供后端 API
+# - Cloudflare D1：SQLite 数据库
+#
+# 部署前请确保：
+# 1. 安装 Wrangler CLI: npm install -g wrangler
+# 2. 登录 Cloudflare: npx wrangler login
+# 3. 创建 D1 数据库: npx wrangler d1 create zuoye-db
+# ============================================
 
 name = "zuoye"
 compatibility_date = "2024-01-01"
 
-# Build 配置
-[builds]
-command = "pip install -r requirements.txt"
-directory = "/"
+# ============================================
+# Cloudflare D1 数据库
+# ============================================
+[[d1_databases]]
+binding = "DB"
+database_name = "zuoye-db"
+database_id = "YOUR_DATABASE_ID_HERE"  # 替换为你的数据库ID
 
-# 环境变量（如果需要）
-[vars]
-PYTHON_VERSION = "3.11"
+# ============================================
+# Cloudflare Workers 配置
+# ============================================
+[env.production]
+name = "zuoye-api"
+main = "workers/api/index.js"
 
-# Pages Functions 配置（如果有serverless函数）
-# [[pages.functions]]
-# directory = "./functions"
-# runtime = "python"
+# Workers 路由
+[[env.production.routes]]
+pattern = "api.zuoye.example.com"  # 替换为你的域名
+zone_name = "example.com"  # 替换为你的域名
+
+# Workers 设置
+[env.production.kv_namespaces]]
+binding = "CACHE"
+
+# ============================================
+# 开发环境配置
+# ============================================
+[env.dev]
+name = "zuoye-api-dev"
+main = "workers/api/index.js"
+
+[[env.dev.d1_databases]]
+binding = "DB"
+database_name = "zuoye-db-dev"
+database_id = "YOUR_DEV_DATABASE_ID"  # 开发数据库ID
+
+# ============================================
+# 构建配置
+# ============================================
+[build]
+command = ""
+directory = "./public"
+
+[build.environment]
+NODE_VERSION = "18"
+
+# ============================================
+# Pages 配置
+# ============================================
+[pages]
+# 静态文件目录
+bucket = "./public"
