@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程详情 · 数据分析学院</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .btn-primary-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .chapter-item {
+            background: #f8fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chapter-item:hover {
+            transform: translateX(8px);
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff, #e8eeff);
+        }
+        
+        .chapter-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            background: var(--primary-gradient);
+        }
+        
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .exercise-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .exercise-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .exercise-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="courses.html">课程</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects.html">项目</a></li>
+                    <li class="nav-item"><a class="nav-link" href="assessment.html">测评</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-6">
+        <div class="container">
+            <div class="card border-0 shadow-lg mb-5 overflow-hidden rounded-4">
+                <div class="card-body p-6" style="background: var(--primary-gradient); color: white;">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-4">
+                        <div>
+                            <div class="mb-3">
+                                <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-4 py-2 fw-semibold">入门</span>
+                                <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2 fw-semibold ms-2"><i class="bi bi-clock-fill"></i> 8小时</span>
+                            </div>
+                            <h1 class="fw-bold mb-3 display-4">🐍 Python 数据分析基础</h1>
+                            <p class="opacity-95 mb-0" style="line-height: 1.7;">从零开始学习 Python 基础语法和数据处理库 Pandas，为数据分析打下坚实基础。</p>
+                        </div>
+                        <a href="index.html" class="btn btn-light btn-sm px-4 py-2 rounded-3 fw-semibold shadow">
+                            <i class="bi bi-house-door-fill"></i> 回到首页
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow mb-5 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
+                    <h4 class="fw-bold mb-1">📚 章节目录</h4>
+                    <p class="text-muted small mb-0">共 5 个章节，系统学习数据分析</p>
+                </div>
+                <div class="card-body pt-0 px-5 pb-5">
+                    <div class="chapter-item" onclick="openChapter('python-intro')">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="chapter-number">1</div>
+                            <span class="fw-semibold">Python 环境搭建与基础语法</span>
+                        </div>
+                        <span class="text-muted small"><i class="bi bi-clock-fill"></i> 1.5小时</span>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('pandas-basics')">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="chapter-number">2</div>
+                            <span class="fw-semibold">Pandas 数据处理入门</span>
+                        </div>
+                        <span class="text-muted small"><i class="bi bi-clock-fill"></i> 2小时</span>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('data-cleaning')">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="chapter-number">3</div>
+                            <span class="fw-semibold">数据清洗与预处理</span>
+                        </div>
+                        <span class="text-muted small"><i class="bi bi-clock-fill"></i> 2.5小时</span>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('data-analysis')">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="chapter-number">4</div>
+                            <span class="fw-semibold">数据聚合与分析</span>
+                        </div>
+                        <span class="text-muted small"><i class="bi bi-clock-fill"></i> 1小时</span>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('practice')">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="chapter-number">5</div>
+                            <span class="fw-semibold">综合实战练习</span>
+                        </div>
+                        <span class="text-muted small"><i class="bi bi-clock-fill"></i> 1小时</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
+                    </h5>
+                    <p class="mb-0 opacity-75">专业的商务数据分析在线教育平台</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 opacity-75">© 2026 数据分析学院. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openChapter(chapterId) {
+            alert('章节页面开发中...\n章节ID: ' + chapterId);
+        }
+    </script>
+</body>
+</html>

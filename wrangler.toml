@@ -1,56 +1,35 @@
 # ============================================
-# Cloudflare Workers + Pages 配置文件
+# Cloudflare Pages 配置文件
 # ============================================
 # 
-# 这个项目使用混合架构：
-# - Cloudflare Pages：托管前端静态文件
-# - Cloudflare Workers：提供后端 API
-# - Cloudflare D1：SQLite 数据库
+# 这个配置适用于纯静态网站部署到 Cloudflare Pages
+# 无需 Workers 或 D1 数据库（使用前端模拟数据）
 #
-# 部署前请确保：
-# 1. 安装 Wrangler CLI: npm install -g wrangler
-# 2. 登录 Cloudflare: npx wrangler login
-# 3. 创建 D1 数据库: npx wrangler d1 create zuoye-db
+# 部署方式：
+# 1. 登录 Cloudflare Dashboard
+# 2. 进入 Pages > Create a project
+# 3. 连接 GitHub 仓库
+# 4. 设置：
+#    - Build command: （留空）
+#    - Output directory: public
+# 5. 点击 Deploy site
 # ============================================
 
 name = "zuoye"
 compatibility_date = "2024-01-01"
 
 # ============================================
-# Cloudflare D1 数据库
+# Pages 配置
 # ============================================
-[[d1_databases]]
-binding = "DB"
-database_name = "zuoye-db"
-database_id = "YOUR_DATABASE_ID_HERE"  # 替换为你的数据库ID
+[pages]
+# 静态文件目录
+bucket = "./public"
 
 # ============================================
-# Cloudflare Workers 配置
+# 环境变量（可选）
 # ============================================
 [env.production]
-name = "zuoye-api"
-main = "workers/api/index.js"
-
-# Workers 路由
-[[env.production.routes]]
-pattern = "api.zuoye.example.com"  # 替换为你的域名
-zone_name = "example.com"  # 替换为你的域名
-
-# Workers 设置
-[env.production.kv_namespaces]]
-binding = "CACHE"
-
-# ============================================
-# 开发环境配置
-# ============================================
-[env.dev]
-name = "zuoye-api-dev"
-main = "workers/api/index.js"
-
-[[env.dev.d1_databases]]
-binding = "DB"
-database_name = "zuoye-db-dev"
-database_id = "YOUR_DEV_DATABASE_ID"  # 开发数据库ID
+name = "zuoye"
 
 # ============================================
 # 构建配置
@@ -63,8 +42,9 @@ directory = "./public"
 NODE_VERSION = "18"
 
 # ============================================
-# Pages 配置
+# 路由规则（可选）
 # ============================================
-[pages]
-# 静态文件目录
-bucket = "./public"
+# [[routes]]
+# pattern = "example.com/*"
+# zone_name = "example.com"
+# ============================================

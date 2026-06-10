@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目实战 · 数据分析学院</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+            --danger-gradient: linear-gradient(135deg, #ee0979, #ff6a00);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .btn-primary-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .project-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="courses.html">课程</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="projects.html">项目</a></li>
+                    <li class="nav-item"><a class="nav-link" href="assessment.html">测评</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-6 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3 display-5">🎯 实战项目</h1>
+                <p class="text-muted lead">10个真实商业场景，从入门到精通</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--success-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">初级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 3小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">📈 电商销售数据分析</h5>
+                            <p class="text-muted small mb-4">分析销售趋势、识别爆款产品、发现客户购买行为模式。</p>
+                            <a href="project.html?id=sales-analysis" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--warning-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">中级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">👥 客户流失预测分析</h5>
+                            <p class="text-muted small mb-4">识别流失客户特征，建立预警机制。</p>
+                            <a href="project.html?id=customer-churn" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--danger-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">高级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 5小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">📊 经营仪表板开发</h5>
+                            <p class="text-muted small mb-4">使用可视化工具创建实时更新的经营仪表板。</p>
+                            <a href="project.html?id=dashboard" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--warning-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">中级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">🔍 异常交易检测</h5>
+                            <p class="text-muted small mb-4">使用统计方法识别异常交易和欺诈行为。</p>
+                            <a href="project.html?id=fraud-detection" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--success-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">初级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 2小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">🛒 购物篮分析</h5>
+                            <p class="text-muted small mb-4">发现商品关联规则，优化商品陈列和推荐。</p>
+                            <a href="project.html?id=market-basket" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="project-card bg-white">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="level-badge" style="background: var(--warning-gradient); color: white; padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;">中级</span>
+                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
+                            </div>
+                            <h5 class="fw-bold mb-3">👤 用户画像分析</h5>
+                            <p class="text-muted small mb-4">构建用户标签体系，实现精细化运营。</p>
+                            <a href="project.html?id=user-portrait" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
+                    </h5>
+                    <p class="mb-0 opacity-75">专业的商务数据分析在线教育平台</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 opacity-75">© 2026 数据分析学院. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
