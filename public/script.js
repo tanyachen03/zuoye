@@ -357,7 +357,7 @@ cap.getvalue()
 function clearCode() {
     const codeInput = document.getElementById('main-code-input');
     if (codeInput) {
-        codeInput.value = '# 在此输入Python代码\nimport pandas as pd\nimport numpy as np\n\n# 数据集已加载到 df 变量\n';
+        codeInput.value = '';
     }
 }
 
