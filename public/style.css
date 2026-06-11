@@ -868,6 +868,82 @@ body {
     padding: 1.5rem;
 }
 
+/* 数据集加载成功弹窗样式 */
+#datasetLoadedModal .modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: modalPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#datasetLoadedModal .icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#datasetLoadedModal .checkmark {
+    width: 80px;
+    height: 80px;
+    animation: checkmarkScale 0.5s ease-out 0.2s both;
+}
+
+@keyframes checkmarkScale {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#datasetLoadedModal .checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: circleDraw 0.6s ease-out 0.1s forwards;
+}
+
+@keyframes circleDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+#datasetLoadedModal .checkmark-check {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: checkDraw 0.4s ease-out 0.5s forwards;
+}
+
+@keyframes checkDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+#datasetLoadedModal .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+#datasetLoadedModal .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#datasetLoadedModal .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
 .form-control {
     background: rgba(15, 23, 42, 0.5);
     border: 1px solid var(--border-color);

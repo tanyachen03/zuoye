@@ -128,14 +128,28 @@ function showToast(type, message) {
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     `;
-    
     document.getElementById('toast-container').appendChild(toast);
+    
     const bsToast = new bootstrap.Toast(toast);
     bsToast.show();
     
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// 数据集加载成功弹窗
+function showDatasetLoadedModal(datasetName) {
+    const messageEl = document.getElementById('dataset-loaded-message');
+    if (messageEl) {
+        messageEl.textContent = `${datasetName} 已加载到在线编程区域，可以去试一试啦 🚀`;
+    }
+    const modal = new bootstrap.Modal(document.getElementById('datasetLoadedModal'));
+    modal.show();
+}
+
+// 工具函数
+function getProgress(type, id) {
+    if (!currentUser?.progress[type]) return null;
+    return currentUser.progress[type][id];
 }
 
 // 进度保存
@@ -391,6 +405,9 @@ print("\\n=== 统计摘要 ===")
 print(df.describe())`;
         
         outputEl.textContent = `✅ ${dataset.name} 已加载！\n数据已存储在变量 df 中，可以直接使用。`;
+        
+        // 显示加载成功弹窗
+        showDatasetLoadedModal(dataset.name);
         
     } catch (err) {
         outputEl.textContent = `加载失败: ${err.message}`;

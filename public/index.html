@@ -447,6 +447,25 @@ print("点击下方数据集卡片开始数据分析之旅")</textarea>
         </div>
     </div>
 
+    <!-- 数据集加载成功模态框 -->
+    <div class="modal fade" id="datasetLoadedModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center py-6">
+                    <div class="icon-wrapper mb-4">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#22c55e" stroke-width="3"/>
+                            <path class="checkmark-check" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14 27l7 7 16-16"/>
+                        </svg>
+                    </div>
+                    <h4 class="modal-title mb-2">🎉 加载成功！</h4>
+                    <p class="text-secondary" id="dataset-loaded-message">数据已加载到在线编程区域，可以去试一试啦</p>
+                    <button type="button" class="btn btn-primary mt-4" data-bs-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
