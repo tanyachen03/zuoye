@@ -645,13 +645,24 @@ function initChapter() {
                 <div class="dataset-columns">
                     <span class="text-xs text-secondary">列：${dataset.columns.join(', ')}</span>
                 </div>
-                <button class="btn-load-dataset">加载数据</button>
+                <div class="dataset-buttons">
+                    <button class="btn-load-dataset">加载数据</button>
+                    <button class="btn-download-dataset" data-id="${dataset.id}">
+                        <i class="bi bi-download"></i> 下载
+                    </button>
+                </div>
             `;
             datasetsList.appendChild(datasetCard);
-            
+
             // 添加加载按钮事件
             datasetCard.querySelector('.btn-load-dataset').addEventListener('click', () => {
                 loadDataset(dataset.id);
+            });
+
+            // 添加下载按钮事件
+            datasetCard.querySelector('.btn-download-dataset').addEventListener('click', (e) => {
+                e.stopPropagation();
+                downloadDataset(dataset.id);
             });
         });
     }
@@ -802,13 +813,20 @@ function initProject() {
     const errorsList = document.getElementById('errors-list');
     errorsList.innerHTML = project.errors.map(error => `<li>${error}</li>`).join('');
     
-    // 数据集加载按钮
+    // 数据集加载和下载按钮
     if (project.dataset && datasetsData[project.dataset]) {
         const datasetBtn = document.getElementById('load-dataset-btn');
+        const downloadBtn = document.getElementById('download-dataset-btn');
         if (datasetBtn) {
-            datasetBtn.style.display = 'block';
+            datasetBtn.style.display = 'inline-block';
             datasetBtn.addEventListener('click', () => {
                 loadDataset(project.dataset);
+            });
+        }
+        if (downloadBtn) {
+            downloadBtn.style.display = 'inline-block';
+            downloadBtn.addEventListener('click', () => {
+                downloadDataset(project.dataset);
             });
         }
     }
@@ -935,7 +953,68 @@ function initDashboard() {
 window.login = login;
 window.runCode = runCode;
 window.clearCode = clearCode;
+// 下载数据集到本地
+function downloadDataset(datasetId) {
+    const dataset = datasetsData[datasetId];
+    if (!dataset) {
+        showToast('error', '未找到数据集');
+        return;
+    }
+
+    const fileName = dataset.file.split('/').pop();
+
+    fetch(dataset.file)
+        .then(response => {
+            if (!response.ok) throw new Error('网络请求失败');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('success', `✅ ${dataset.name} 已下载到本地（${fileName}）`);
+        })
+        .catch(err => {
+            console.error('Download error:', err);
+            // 如果 fetch 失败，则使用预览数据生成 CSV 作为兜底方案
+            if (dataset.preview && dataset.preview.length > 0) {
+                try {
+                    let csvContent = dataset.columns.join(',') + '\n';
+                    dataset.preview.forEach(row => {
+                        csvContent += row.map(cell => {
+                            const str = String(cell ?? '');
+                            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                                return '"' + str.replace(/"/g, '""') + '"';
+                            }
+                            return str;
+                        }).join(',') + '\n';
+                    });
+                    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showToast('success', `✅ ${dataset.name} 已下载到本地（${fileName}）`);
+                } catch (e) {
+                    showToast('error', '下载失败，请重试');
+                }
+            } else {
+                showToast('error', '下载失败，请重试');
+            }
+        });
+}
+
 window.clearOutput = clearOutput;
 window.loadDataset = loadDataset;
+window.downloadDataset = downloadDataset;
 window.showLoginModal = showLoginModal;
 window.initPage = initPage;
