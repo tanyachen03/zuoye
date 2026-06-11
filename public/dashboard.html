@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>课程详情 - 数据分析学院</title>
+    <title>学习中心 - 数据分析学院</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -22,13 +22,13 @@
                         <a class="nav-link" href="index.html">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="course.html">课程</a>
+                        <a class="nav-link" href="course.html">课程</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.html#projects">项目</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">学习中心</a>
+                        <a class="nav-link active" href="dashboard.html">学习中心</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="assessment.html">综合测评</a>
@@ -51,65 +51,87 @@
         </div>
     </nav>
 
-    <!-- 课程内容 -->
+    <!-- 主要内容 -->
     <main class="py-8">
         <div class="container">
-            <div id="course-content">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <h1 id="course-title">课程标题</h1>
-                                <p id="course-desc" class="text-secondary mt-3"></p>
-                                <div class="d-flex gap-4 mt-4">
-                                    <span class="level-badge beginner" id="course-level"></span>
-                                    <span class="text-secondary"><i class="bi bi-clock"></i> <span id="course-duration"></span></span>
-                                </div>
-                            </div>
+            <div id="dashboard-content">
+                <!-- 统计卡片 -->
+                <div class="row g-4 mb-8">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-value" id="stat-courses">0/5</div>
+                            <div class="stat-label">课程完成</div>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-value" id="stat-projects">0/10</div>
+                            <div class="stat-label">项目完成</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-value" id="stat-badges">0/6</div>
+                            <div class="stat-label">成就徽章</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-value" id="stat-streak">1</div>
+                            <div class="stat-label">连续学习天数</div>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h3><i class="bi bi-list-check"></i> 章节列表</h3>
+                <!-- 进度条 -->
+                <div class="row g-4 mb-8">
+                    <div class="col-md-6">
+                        <div class="progress-bar-container">
+                            <div class="progress-text">
+                                <span>课程进度</span>
+                                <span id="course-progress-text">0%</span>
                             </div>
-                            <div class="card-body">
-                                <ul class="chapter-list" id="chapter-list"></ul>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" id="course-progress-fill"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>📚 课程概述</h4>
+                    <div class="col-md-6">
+                        <div class="progress-bar-container">
+                            <div class="progress-text">
+                                <span>项目进度</span>
+                                <span id="project-progress-text">0%</span>
                             </div>
-                            <div class="card-body">
-                                <p class="text-secondary">本课程将帮助您系统学习数据分析技能，从基础概念到实战应用，循序渐进地掌握数据分析的核心能力。</p>
-                                <div class="mt-4">
-                                    <h5>学习目标</h5>
-                                    <ul class="text-secondary small mt-2">
-                                        <li>掌握数据分析基础概念</li>
-                                        <li>学会使用Python进行数据处理</li>
-                                        <li>掌握数据可视化技巧</li>
-                                        <li>能够独立完成数据分析项目</li>
-                                    </ul>
-                                </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" id="project-progress-fill"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h4>💡 学习建议</h4>
-                            </div>
-                            <div class="card-body">
-                                <ul class="text-secondary small">
-                                    <li>按顺序完成每个章节的学习</li>
-                                    <li>认真完成每节的练习题</li>
-                                    <li>尝试修改代码示例，加深理解</li>
-                                    <li>完成课程后参与实战项目</li>
-                                </ul>
-                            </div>
+                <!-- 成就徽章 -->
+                <div class="card mb-8">
+                    <div class="card-header">
+                        <h3><i class="bi bi-award"></i> 成就徽章</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="badges-container">
                         </div>
+                    </div>
+                </div>
+
+                <!-- 学习记录 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="bi bi-clock-history"></i> 最近学习</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="recent-activity">
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -156,7 +178,7 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            initPage('course');
+            initPage('dashboard');
         });
     </script>
 </body>

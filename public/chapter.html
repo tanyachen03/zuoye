@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>章节学习 - 数据分析学院</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">📊 数据分析学院</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="course.html">课程</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#projects">项目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">学习中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assessment.html">综合测评</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="login-btn" class="btn btn-outline-primary">登录</button>
+                        <div id="user-menu" class="dropdown d-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <span id="username-span"></span>
+                            </button>
+                            <ul class="dropdown-menu bg-dark border border-gray-700">
+                                <li><a class="dropdown-item text-gray-300" href="dashboard.html">学习中心</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-gray-300" href="#" id="logout-btn">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 章节内容 -->
+    <main class="py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- 章节标题 -->
+                    <div class="card">
+                        <div class="card-body">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb bg-transparent">
+                                    <li class="breadcrumb-item"><a href="index.html">首页</a></li>
+                                    <li class="breadcrumb-item"><a href="course.html" id="course-link">课程</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page" id="chapter-title"></li>
+                                </ol>
+                            </nav>
+                            <h1 id="chapter-title-h1"></h1>
+                            <div class="mt-2 text-secondary"><i class="bi bi-clock"></i> <span id="chapter-duration"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- 理论内容 -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3><i class="bi bi-book-open"></i> 理论知识</h3>
+                        </div>
+                        <div class="card-body theory-content" id="theory-content"></div>
+                    </div>
+
+                    <!-- 小贴士 -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3><i class="bi bi-lightbulb"></i> 学习小贴士</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="tips-list" id="tips-list"></ul>
+                        </div>
+                    </div>
+
+                    <!-- 代码编辑器 -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3><i class="bi bi-code-slash"></i> 代码实践</h3>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="code-editor-container" id="code-editor-container">
+                                <div class="code-editor-header">
+                                    <div>
+                                        <h3><i class="bi bi-code-slash me-2"></i>Python 代码编辑器</h3>
+                                        <small class="opacity-75" id="py-status-text">⏳ 正在初始化 Python 环境...</small>
+                                    </div>
+                                    <div class="editor-buttons">
+                                        <span class="status-badge" id="py-status">⏳ 加载中</span>
+                                        <button class="btn-editor clear" onclick="clearCode()">
+                                            <i class="bi bi-eraser-fill"></i> 清除
+                                        </button>
+                                        <button class="btn-editor run" onclick="runCode()">
+                                            <i class="bi bi-play-fill"></i> 运行代码
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-editor-body">
+                                    <textarea class="code-input" id="main-code-input" spellcheck="false"></textarea>
+                                </div>
+                                <div class="output-header">
+                                    <span><i class="bi bi-terminal-fill me-2"></i>输出结果</span>
+                                    <button class="btn-editor clear-output" onclick="clearOutput()">
+                                        <i class="bi bi-x-lg"></i> 清除输出
+                                    </button>
+                                </div>
+                                <pre class="code-output" id="main-code-output">等待代码执行...</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 练习题 -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3><i class="bi bi-question-circle"></i> 课后练习</h3>
+                        </div>
+                        <div class="card-body" id="exercises-container"></div>
+                    </div>
+
+                    <!-- 导航按钮 -->
+                    <div class="mt-4 d-flex justify-content-between">
+                        <button id="back-to-home" class="btn btn-secondary">
+                            <i class="bi bi-home"></i> 回到首页
+                        </button>
+                        <button id="complete-chapter" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> 标记为已完成
+                        </button>
+                        <button id="next-chapter" class="btn btn-outline-primary">
+                            下一章节 <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- 数据集展示 -->
+                    <div class="card sticky-top" style="top: 100px;">
+                        <div class="card-header">
+                            <h4><i class="bi bi-database"></i> 可用数据集</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-secondary text-sm mb-3">点击加载数据集到代码编辑器</p>
+                            <div id="datasets-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center mt-6 text-secondary small">
+                <p>© 2024 数据分析学院. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="login-username" placeholder="请输入用户名">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">密码</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="login()">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage('chapter');
+        });
+    </script>
+</body>
+</html>

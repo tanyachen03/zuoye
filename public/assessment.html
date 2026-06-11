@@ -3,400 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>综合测评 · 数据分析学院</title>
+    <title>综合测评 - 数据分析学院</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #f8fafc;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-        
-        .btn-primary-gradient {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-gradient:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            color: white;
-        }
-        
-        .question-card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            background: white;
-        }
-        
-        .option-item {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .option-item:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-        
-        .option-item.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .option-item.correct {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-        }
-        
-        .option-item.incorrect {
-            border-color: #ef4444;
-            background: linear-gradient(135deg, #ef4444, #f87171);
-            color: white;
-        }
-        
-        footer {
-            background: #1e293b;
-            color: white;
-            padding: 40px 0;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            border-radius: 4px;
-        }
-        
-        .result-card {
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: white;
-            margin: 0 auto;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-            </a>
+            <a class="navbar-brand" href="index.html">📊 数据分析学院</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
-                    <li class="nav-item"><a class="nav-link" href="courses.html">课程</a></li>
-                    <li class="nav-item"><a class="nav-link" href="projects.html">项目</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="assessment.html">测评</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="course.html">课程</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#projects">项目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">学习中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="assessment.html">综合测评</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="login-btn" class="btn btn-outline-primary">登录</button>
+                        <div id="user-menu" class="dropdown d-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <span id="username-span"></span>
+                            </button>
+                            <ul class="dropdown-menu bg-dark border border-gray-700">
+                                <li><a class="dropdown-item text-gray-300" href="dashboard.html">学习中心</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-gray-300" href="#" id="logout-btn">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="py-6">
+    <!-- 测评内容 -->
+    <main class="py-8">
         <div class="container">
-            <div id="start-screen">
-                <div class="text-center mb-5">
-                    <h1 class="fw-bold mb-3 display-5">🧪 综合测评</h1>
-                    <p class="text-muted lead">检验你的数据分析知识掌握程度</p>
-                </div>
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
-                    <div class="card-body p-6 text-center">
-                        <i class="bi bi-clipboard-check display-1 text-primary mb-4"></i>
-                        <h4 class="fw-bold mb-4">测评说明</h4>
-                        <ul class="list-unstyled text-left mb-4" style="display: inline-block;">
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 共 10 道选择题</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 每题 10 分，满分 100 分</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 60 分以上合格</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 合格即可获得"数据分析师"徽章</li>
-                        </ul>
-                        <button class="btn btn-primary-gradient btn-lg" onclick="startAssessment()">
-                            <i class="bi bi-play-fill me-2"></i> 开始测评
-                        </button>
-                    </div>
+            <div class="card mb-6">
+                <div class="card-body text-center">
+                    <h1 class="text-2xl font-bold mb-2">📝 综合测评</h1>
+                    <p class="text-secondary">测试您对数据分析知识的掌握程度，共10道题目，60分及格</p>
                 </div>
             </div>
 
-            <div id="assessment-screen" style="display: none;">
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-muted fw-medium">题目进度</span>
-                        <span class="fw-bold" id="question-progress">1/10</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 10%; background: var(--primary-gradient);"></div>
-                    </div>
+            <!-- 题目列表 -->
+            <div id="questions-container" class="mb-6">
+                <!-- 问题1 -->
+                <div class="question-card" data-answer="0">
+                    <div class="question">1. Pandas中用于创建二维表格数据的数据结构是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>DataFrame</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>Series</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>Array</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>Matrix</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="question-card p-5 mb-4">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <span class="badge bg-primary text-white rounded-pill px-3 py-1">单选题</span>
-                        <span class="text-muted small">第 <span id="question-number">1</span> 题</span>
-                    </div>
-                    <h4 class="fw-bold mb-4" id="question-text">问题将在这里显示</h4>
-                    <div id="options-container"></div>
+                <!-- 问题2 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">2. 不受极端值影响的集中趋势指标是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>均值</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>中位数</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>众数</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>极差</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-outline-secondary rounded-pill px-5" onclick="prevQuestion()" id="prev-btn" disabled>
-                        <i class="bi bi-arrow-left me-2"></i> 上一题
-                    </button>
-                    <button class="btn btn-primary-gradient rounded-pill px-5" onclick="nextQuestion()" id="next-btn">
-                        下一题 <i class="bi bi-arrow-right me-2"></i>
-                    </button>
+                <!-- 问题3 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">3. SQL中用于筛选条件的关键字是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>FILTER</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>WHERE</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>IF</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>CONDITION</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题4 -->
+                <div class="question-card" data-answer="2">
+                    <div class="question">4. 通常认为统计显著的p值阈值是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>p < 0.01</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>p < 0.05</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>p < 0.10</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>p < 0.50</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题5 -->
+                <div class="question-card" data-answer="2">
+                    <div class="question">5. Matplotlib中创建柱状图的函数是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>plt.plot()</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>plt.pie()</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>plt.bar()</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>plt.scatter()</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题6 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">6. 按列进行分组的Pandas方法是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>sort()</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>groupby()</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>filter()</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>split()</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题7 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">7. 对分组后的数据进行筛选应该使用？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>WHERE</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>HAVING</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>FILTER</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>IF</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题8 -->
+                <div class="question-card" data-answer="2">
+                    <div class="question">8. 只返回两表匹配行的连接类型是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>LEFT JOIN</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>RIGHT JOIN</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>INNER JOIN</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>FULL JOIN</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题9 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">9. 评估回归模型拟合优度的常用指标是？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>p值</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>R-squared</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>t统计量</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>标准差</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 问题10 -->
+                <div class="question-card" data-answer="1">
+                    <div class="question">10. RFM分析中的R代表什么？</div>
+                    <ul class="options">
+                        <li class="option" data-index="0">
+                            <span class="option-indicator">A</span>
+                            <span>Revenue(收入)</span>
+                        </li>
+                        <li class="option" data-index="1">
+                            <span class="option-indicator">B</span>
+                            <span>Recency(最近)</span>
+                        </li>
+                        <li class="option" data-index="2">
+                            <span class="option-indicator">C</span>
+                            <span>Retention(留存)</span>
+                        </li>
+                        <li class="option" data-index="3">
+                            <span class="option-indicator">D</span>
+                            <span>Return(回报)</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div id="result-screen" style="display: none;">
-                <div class="text-center mb-5">
-                    <h1 class="fw-bold mb-3 display-5">🎉 测评完成</h1>
-                </div>
-                <div class="card border-0 shadow-lg result-card overflow-hidden mb-5">
-                    <div class="card-body p-6 text-center">
-                        <div class="score-circle mb-4" id="score-circle" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                            <span id="final-score">0</span>
-                        </div>
-                        <h4 class="fw-bold mb-2" id="result-title">测评结果</h4>
-                        <p class="text-muted mb-4" id="result-message"></p>
-                        <div id="badge-award"></div>
-                        <button class="btn btn-primary-gradient mt-4" onclick="restartAssessment()">
-                            <i class="bi bi-refresh me-2"></i> 重新测评
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                    <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
-                        <h4 class="fw-bold mb-1">📝 答题详情</h4>
-                    </div>
-                    <div class="card-body pt-0 px-5 pb-5">
-                        <div id="answers-review"></div>
-                    </div>
-                </div>
+            <!-- 提交按钮 -->
+            <div class="text-center mb-6">
+                <button id="submit-assessment" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> 提交答案
+                </button>
             </div>
+
+            <!-- 结果区域 -->
+            <div id="assessment-result"></div>
         </div>
-    </section>
+    </main>
 
-    <footer>
+    <!-- 页脚 -->
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-                    </h5>
-                    <p class="mb-0 opacity-75">专业的商务数据分析在线教育平台</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 opacity-75">© 2026 数据分析学院. All rights reserved.</p>
-                </div>
+            <div class="text-center mt-6 text-secondary small">
+                <p>© 2024 数据分析学院. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const questions = [
-            {
-                question: 'Python中用于数据分析的最常用库是？',
-                options: ['NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn'],
-                answer: 1
-            },
-            {
-                question: 'Pandas中用于读取CSV文件的函数是？',
-                options: ['pd.read_csv()', 'pd.load_csv()', 'pd.open_csv()', 'pd.import_csv()'],
-                answer: 0
-            },
-            {
-                question: '以下哪个方法可以删除DataFrame中的缺失值？',
-                options: ['drop()', 'remove()', 'dropna()', 'delete()'],
-                answer: 2
-            },
-            {
-                question: 'Matplotlib中用于创建折线图的函数是？',
-                options: ['plt.bar()', 'plt.plot()', 'plt.scatter()', 'plt.pie()'],
-                answer: 1
-            },
-            {
-                question: 'SQL中用于查询数据的关键字是？',
-                options: ['MODIFY', 'SELECT', 'GET', 'FETCH'],
-                answer: 1
-            },
-            {
-                question: '以下哪个不是常见的数据可视化图表类型？',
-                options: ['折线图', '柱状图', '饼图', '文字图'],
-                answer: 3
-            },
-            {
-                question: 'Pandas中DataFrame的shape属性返回什么？',
-                options: ['数据类型', '行列数', '列名', '索引'],
-                answer: 1
-            },
-            {
-                question: '统计分析中，描述数据集中趋势的指标不包括？',
-                options: ['均值', '中位数', '众数', '标准差'],
-                answer: 3
-            },
-            {
-                question: '以下哪个是Python中的列表推导式？',
-                options: ['for x in list:', '[x for x in list]', 'list(x)', 'list.append(x)'],
-                answer: 1
-            },
-            {
-                question: '在数据分析流程中，数据清洗通常在哪个阶段？',
-                options: ['数据收集之后', '数据分析之后', '报告撰写之后', '可视化之后'],
-                answer: 0
-            }
-        ];
-
-        let currentQuestion = 0;
-        let answers = [];
-
-        function startAssessment() {
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('assessment-screen').style.display = 'block';
-            currentQuestion = 0;
-            answers = Array(questions.length).fill(-1);
-            showQuestion();
-        }
-
-        function showQuestion() {
-            const question = questions[currentQuestion];
-            document.getElementById('question-number').textContent = currentQuestion + 1;
-            document.getElementById('question-progress').textContent = `${currentQuestion + 1}/${questions.length}`;
-            document.getElementById('question-text').textContent = question.question;
-            
-            const container = document.getElementById('options-container');
-            container.innerHTML = question.options.map((option, index) => `
-                <div class="option-item ${answers[currentQuestion] === index ? 'selected' : ''}" onclick="selectOption(${index})">
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="fw-bold">${String.fromCharCode(65 + index)}.</span>
-                        <span>${option}</span>
-                    </div>
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-            `).join('');
-
-            document.getElementById('prev-btn').disabled = currentQuestion === 0;
-            document.getElementById('next-btn').textContent = currentQuestion === questions.length - 1 ? '提交测评' : '下一题';
-
-            const progress = ((currentQuestion + 1) / questions.length) * 100;
-            document.querySelector('.progress-bar').style.width = `${progress}%`;
-        }
-
-        function selectOption(index) {
-            answers[currentQuestion] = index;
-            showQuestion();
-        }
-
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                showQuestion();
-            }
-        }
-
-        function nextQuestion() {
-            if (currentQuestion < questions.length - 1) {
-                currentQuestion++;
-                showQuestion();
-            } else {
-                submitAssessment();
-            }
-        }
-
-        function submitAssessment() {
-            const score = answers.reduce((acc, answer, index) => {
-                return acc + (answer === questions[index].answer ? 10 : 0);
-            }, 0);
-
-            document.getElementById('assessment-screen').style.display = 'none';
-            document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('final-score').textContent = score;
-
-            const scoreCircle = document.getElementById('score-circle');
-            const resultTitle = document.getElementById('result-title');
-            const resultMessage = document.getElementById('result-message');
-            const badgeAward = document.getElementById('badge-award');
-
-            if (score >= 60) {
-                scoreCircle.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
-                resultTitle.textContent = '🎉 恭喜通过！';
-                resultMessage.textContent = `你获得了 ${score} 分，成功通过测评！`;
-                badgeAward.innerHTML = `
-                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-4 inline-block mb-4">
-                        <i class="bi bi-award-fill text-white display-4"></i>
-                    </div>
-                    <h5 class="fw-bold text-success">🏆 获得徽章：数据分析师</h5>
-                `;
-            } else {
-                scoreCircle.style.background = 'linear-gradient(135deg, #ef4444, #f87171)';
-                resultTitle.textContent = '继续加油！';
-                resultMessage.textContent = `你获得了 ${score} 分，需要达到 60 分才能合格。`;
-                badgeAward.innerHTML = '<p class="text-muted">再接再厉，下次一定可以！</p>';
-            }
-
-            showAnswersReview();
-        }
-
-        function showAnswersReview() {
-            const container = document.getElementById('answers-review');
-            container.innerHTML = questions.map((question, index) => {
-                const isCorrect = answers[index] === question.answer;
-                return `
-                    <div class="border rounded-12 p-4 mb-3" style="border-radius: 12px; ${isCorrect ? 'border-color: #10b981; background: #ecfdf5;' : 'border-color: #ef4444; background: #fef2f2;'}">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="fw-bold">第 ${index + 1} 题</span>
-                            <span class="badge ${isCorrect ? 'bg-success' : 'bg-danger'} text-white">${isCorrect ? '✓ 正确' : '✗ 错误'}</span>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="login-username" placeholder="请输入用户名">
                         </div>
-                        <p class="text-muted mb-2">${question.question}</p>
-                        <p class="small">
-                            <span class="text-muted">你的答案：</span>
-                            <span ${isCorrect ? 'class="text-success"' : 'class="text-danger"'}>
-                                ${answers[index] >= 0 ? question.options[answers[index]] : '未作答'}
-                            </span>
-                            ${!isCorrect ? `<span class="text-success ml-3">正确答案：${question.options[question.answer]}</span>` : ''}
-                        </p>
-                    </div>
-                `;
-            }).join('');
-        }
+                        <div class="mb-3">
+                            <label class="form-label">密码</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="login()">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function restartAssessment() {
-            document.getElementById('result-screen').style.display = 'none';
-            document.getElementById('start-screen').style.display = 'block';
-        }
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage('assessment');
+        });
     </script>
 </body>
 </html>

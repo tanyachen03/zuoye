@@ -3,625 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商务数据分析教育平台</title>
+    <title>商务数据分析在线教育平台</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --warning-gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
-            --danger-gradient: linear-gradient(135deg, #ee0979, #ff6a00);
-            --info-gradient: linear-gradient(135deg, #2193b0, #6dd5ed);
-        }
-        
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #f8fafc;
-        }
-        
-        .hero-section {
-            background: var(--primary-gradient);
-            padding: 80px 0;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 80%;
-            height: 200%;
-            background: rgba(255,255,255,0.1);
-            transform: rotate(15deg);
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .course-card {
-            border: none;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .course-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-        
-        .course-header {
-            padding: 30px;
-            color: white;
-        }
-        
-        .chapter-item {
-            background: #f8fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .chapter-item:hover {
-            transform: translateX(8px);
-            border-color: #667eea;
-            background: linear-gradient(135deg, #f0f4ff, #e8eeff);
-        }
-        
-        .project-card {
-            border: none;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-8px);
-        }
-        
-        .level-badge {
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-        
-        .btn-primary-gradient {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-gradient:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            color: white;
-        }
-        
-        .feature-card {
-            border: none;
-            border-radius: 20px;
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-            transition: transform 0.3s ease;
-            background: white;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: white;
-        }
-        
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-        }
-        
-        .modal-header {
-            background: var(--primary-gradient);
-            color: white;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-        }
-        
-        .exercise-option {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .exercise-option:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-        
-        .exercise-option.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .exercise-option.correct {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-        }
-        
-        .exercise-option.incorrect {
-            border-color: #ef4444;
-            background: linear-gradient(135deg, #ef4444, #f87171);
-            color: white;
-        }
-        
-        footer {
-            background: #1e293b;
-            color: white;
-            padding: 40px 0;
-        }
-        
-        .timeline-step {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .timeline-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 2rem;
-            color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-            </a>
+            <a class="navbar-brand" href="index.html">📊 数据分析学院</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">首页</a></li>
-                    <li class="nav-item"><a class="nav-link" href="courses.html">课程</a></li>
-                    <li class="nav-item"><a class="nav-link" href="projects.html">项目</a></li>
-                    <li class="nav-item"><a class="nav-link" href="assessment.html">测评</a></li>
                     <li class="nav-item">
-                        <button class="btn btn-primary-gradient btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
-                            <i class="bi bi-box-arrow-in-right"></i> 登录
-                        </button>
+                        <a class="nav-link active" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#courses">课程</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">项目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">学习中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assessment.html">综合测评</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="login-btn" class="btn btn-outline-primary">登录</button>
+                        <div id="user-menu" class="dropdown d-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <span id="username-span"></span>
+                            </button>
+                            <ul class="dropdown-menu bg-dark border border-gray-700">
+                                <li><a class="dropdown-item text-gray-300" href="dashboard.html">学习中心</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-gray-300" href="#" id="logout-btn">退出登录</a></li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- 英雄区 -->
     <section class="hero-section">
-        <div class="container position-relative">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-4 py-2 mb-4">
-                        🚀 从零基础到实战专家
-                    </span>
-                    <h1 class="display-4 fw-bold mb-4">商务数据分析在线教育平台</h1>
-                    <p class="lead mb-5 opacity-90">
-                        5门精品课程 · 10个实战项目 · 6枚成就徽章<br>
-                        助你成为数据分析专家
-                    </p>
-                    <a href="courses.html" class="btn btn-light btn-lg rounded-pill px-5 shadow">
-                        <i class="bi bi-play-circle-fill"></i> 开始学习
-                    </a>
-                </div>
-                <div class="col-lg-5 mt-5 mt-lg-0">
-                    <div class="row g-4">
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="display-4 fw-bold text-center">5</div>
-                                <div class="small opacity-90">📚 精品课程</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="display-4 fw-bold text-center">10</div>
-                                <div class="small opacity-90">💼 实战项目</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="display-4 fw-bold text-center">6</div>
-                                <div class="small opacity-90">🏆 成就徽章</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="display-4 fw-bold text-center">22</div>
-                                <div class="small opacity-90">📖 章节内容</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 特色功能 -->
-    <section class="py-6">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3 display-5">💎 平台特色</h2>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon" style="background: var(--primary-gradient);">
-                            <i class="bi bi-book-half"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">📖 系统性课程体系</h5>
-                        <p class="text-muted mb-0">从基础到进阶，循序渐进的学习路径，涵盖数据分析全流程</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon" style="background: var(--success-gradient);">
-                            <i class="bi bi-briefcase-fill"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">💼 真实项目实战</h5>
-                        <p class="text-muted mb-0">10个真实商业场景项目，覆盖销售、用户、运营等多个领域</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon" style="background: var(--warning-gradient);">
-                            <i class="bi bi-trophy-fill"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">🏆 成就激励系统</h5>
-                        <p class="text-muted mb-0">完成学习和项目解锁徽章，获得成就感，保持学习动力</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 课程体系 -->
-    <section id="courses" class="py-6 bg-white">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3 display-5">📚 课程体系</h2>
-                <p class="text-muted">5门精品课程，涵盖数据分析全栈技能</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="course-card">
-                        <div class="course-header" style="background: var(--primary-gradient);">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white">入门</span>
-                                <span class="text-white opacity-75 small"><i class="bi bi-clock-fill"></i> 8小时</span>
-                            </div>
-                            <h4 class="fw-bold mb-2">🐍 Python 数据分析基础</h4>
-                            <p class="mb-0 opacity-90 small">从零开始学习 Python 基础语法和数据处理库 Pandas</p>
-                        </div>
-                        <div class="card-body bg-white">
-                            <div class="d-flex justify-content-between text-muted small mb-3">
-                                <span><i class="bi bi-list-ul"></i> 5 章节</span>
-                                <span><i class="bi bi-people-fill"></i> 热门课程</span>
-                            </div>
-                            <a href="course.html?id=python-basics" class="btn btn-outline-primary w-100 rounded-pill">
-                                开始学习
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="course-card">
-                        <div class="course-header" style="background: var(--success-gradient);">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white">入门</span>
-                                <span class="text-white opacity-75 small"><i class="bi bi-clock-fill"></i> 6小时</span>
-                            </div>
-                            <h4 class="fw-bold mb-2">📊 数据可视化与图表制作</h4>
-                            <p class="mb-0 opacity-90 small">学习使用 Matplotlib 和 Seaborn 创建专业图表</p>
-                        </div>
-                        <div class="card-body bg-white">
-                            <div class="d-flex justify-content-between text-muted small mb-3">
-                                <span><i class="bi bi-list-ul"></i> 4 章节</span>
-                                <span><i class="bi bi-people-fill"></i> 热门课程</span>
-                            </div>
-                            <a href="course.html?id=data-visualization" class="btn btn-outline-primary w-100 rounded-pill">
-                                开始学习
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="course-card">
-                        <div class="course-header" style="background: var(--info-gradient);">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white">入门</span>
-                                <span class="text-white opacity-75 small"><i class="bi bi-clock-fill"></i> 5小时</span>
-                            </div>
-                            <h4 class="fw-bold mb-2">🗄️ SQL 数据查询与分析</h4>
-                            <p class="mb-0 opacity-90 small">掌握 SQL 查询技巧，从数据库中高效提取业务数据</p>
-                        </div>
-                        <div class="card-body bg-white">
-                            <div class="d-flex justify-content-between text-muted small mb-3">
-                                <span><i class="bi bi-list-ul"></i> 4 章节</span>
-                                <span><i class="bi bi-people-fill"></i> 热门课程</span>
-                            </div>
-                            <a href="course.html?id=sql-analysis" class="btn btn-outline-primary w-100 rounded-pill">
-                                开始学习
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="course-card">
-                        <div class="course-header" style="background: var(--warning-gradient);">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white">进阶</span>
-                                <span class="text-white opacity-75 small"><i class="bi bi-clock-fill"></i> 10小时</span>
-                            </div>
-                            <h4 class="fw-bold mb-2">📈 统计分析基础</h4>
-                            <p class="mb-0 opacity-90 small">学习描述性统计、假设检验和回归分析等统计方法</p>
-                        </div>
-                        <div class="card-body bg-white">
-                            <div class="d-flex justify-content-between text-muted small mb-3">
-                                <span><i class="bi bi-list-ul"></i> 5 章节</span>
-                                <span><i class="bi bi-people-fill"></i> 热门课程</span>
-                            </div>
-                            <a href="course.html?id=statistical-analysis" class="btn btn-outline-primary w-100 rounded-pill">
-                                开始学习
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="course-card">
-                        <div class="course-header" style="background: var(--danger-gradient);">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white">进阶</span>
-                                <span class="text-white opacity-75 small"><i class="bi bi-clock-fill"></i> 12小时</span>
-                            </div>
-                            <h4 class="fw-bold mb-2">💼 商业智能与分析</h4>
-                            <p class="mb-0 opacity-90 small">综合运用各种分析工具和方法，解决真实商业问题</p>
-                        </div>
-                        <div class="card-body bg-white">
-                            <div class="d-flex justify-content-between text-muted small mb-3">
-                                <span><i class="bi bi-list-ul"></i> 4 章节</span>
-                                <span><i class="bi bi-people-fill"></i> 热门课程</span>
-                            </div>
-                            <a href="course.html?id=business-intelligence" class="btn btn-outline-primary w-100 rounded-pill">
-                                开始学习
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 项目实战 -->
-    <section id="projects" class="py-6">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3 display-5">🎯 实战项目</h2>
-                <p class="text-muted">10个真实商业场景，从入门到精通</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--success-gradient); color: white;">初级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 3小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">📈 电商销售数据分析</h5>
-                            <p class="text-muted small mb-4">分析销售趋势、识别爆款产品、发现客户购买行为模式。</p>
-                            <a href="project.html?id=sales-analysis" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--warning-gradient); color: white;">中级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">👥 客户流失预测分析</h5>
-                            <p class="text-muted small mb-4">识别流失客户特征，建立预警机制。</p>
-                            <a href="project.html?id=customer-churn" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--danger-gradient); color: white;">高级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 5小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">📊 经营仪表板开发</h5>
-                            <p class="text-muted small mb-4">使用可视化工具创建实时更新的经营仪表板。</p>
-                            <a href="project.html?id=dashboard" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--warning-gradient); color: white;">中级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">🔍 异常交易检测</h5>
-                            <p class="text-muted small mb-4">使用统计方法识别异常交易和欺诈行为。</p>
-                            <a href="project.html?id=fraud-detection" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--success-gradient); color: white;">初级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 2小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">🛒 购物篮分析</h5>
-                            <p class="text-muted small mb-4">发现商品关联规则，优化商品陈列和推荐。</p>
-                            <a href="project.html?id=market-basket" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card bg-white">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="level-badge" style="background: var(--warning-gradient); color: white;">中级</span>
-                                <span class="text-muted small"><i class="bi bi-clock-fill"></i> 4小时</span>
-                            </div>
-                            <h5 class="fw-bold mb-3">👤 用户画像分析</h5>
-                            <p class="text-muted small mb-4">构建用户标签体系，实现精细化运营。</p>
-                            <a href="project.html?id=user-portrait" class="btn btn-primary-gradient btn-sm w-100 rounded-pill">
-                                开始实战
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 学习路径 -->
-    <section class="py-6 bg-white">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3 display-5">🛤️ 推荐学习路径</h2>
-            </div>
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="card-body p-5">
-                    <div class="row g-4">
-                        <div class="col-md-3 col-6">
-                            <div class="timeline-step">
-                                <div class="timeline-icon" style="background: var(--primary-gradient);">1</div>
-                                <h6 class="fw-bold">🐍 Python 基础</h6>
-                                <p class="text-muted small mb-0">掌握基础语法</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="timeline-step">
-                                <div class="timeline-icon" style="background: var(--success-gradient);">2</div>
-                                <h6 class="fw-bold">📊 数据分析</h6>
-                                <p class="text-muted small mb-0">Pandas 数据处理</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="timeline-step">
-                                <div class="timeline-icon" style="background: var(--warning-gradient);">3</div>
-                                <h6 class="fw-bold">📈 数据可视化</h6>
-                                <p class="text-muted small mb-0">Matplotlib 图表</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="timeline-icon" style="background: var(--danger-gradient);">4</div>
-                            <h6 class="fw-bold">🧠 统计建模</h6>
-                            <p class="text-muted small mb-0">机器学习入门</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 综合测评 -->
-    <section id="assessment" class="py-6">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h2 class="fw-bold mb-3 display-5">🧪 综合测评</h2>
-                    <p class="text-muted lead mb-4">
-                        完成所有课程学习后，参加综合测评，检验学习成果！
-                    </p>
-                    <ul class="list-unstyled mb-4">
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 20道选择题，覆盖全部知识点</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 自动评分，即时查看结果</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 合格即可获得"数据分析师"徽章</li>
-                    </ul>
-                    <a href="assessment.html" class="btn btn-primary-gradient btn-lg">
-                        <i class="bi bi-play-fill"></i> 开始测评
-                    </a>
+                <div class="col-lg-8">
+                    <h1>掌握商务数据分析<br/>开启数据驱动决策之旅</h1>
+                    <p>从零基础到精通，系统学习Python、SQL、统计学和商业智能分析技能</p>
+                    <div class="d-flex gap-3">
+                        <a href="#courses" class="btn btn-primary">开始学习</a>
+                        <a href="#projects" class="btn btn-secondary">实战项目</a>
+                    </div>
                 </div>
-                <div class="col-lg-6 text-center mt-5 mt-lg-0">
-                    <div class="bg-white rounded-4 shadow-lg p-5 d-inline-block">
-                        <i class="bi bi-award-fill display-1 text-warning"></i>
-                        <h4 class="mt-3 fw-bold">🏆 数据分析师</h4>
-                        <p class="text-muted mb-0">完成测评即可获得</p>
+                <div class="col-lg-4">
+                    <div class="card p-4">
+                        <h3 class="mb-4">📈 在线编程</h3>
+                        <div class="code-editor-container" id="code-editor-container">
+                            <div class="code-editor-header">
+                                <div>
+                                    <h3><i class="bi bi-code-slash me-2"></i>Python 代码编辑器</h3>
+                                    <small class="opacity-75" id="py-status-text">⏳ 正在初始化 Python 环境...</small>
+                                </div>
+                                <div class="editor-buttons">
+                                    <span class="status-badge" id="py-status">⏳ 加载中</span>
+                                    <button class="btn-editor clear" onclick="clearCode()">
+                                        <i class="bi bi-eraser-fill"></i> 清除
+                                    </button>
+                                    <button class="btn-editor run" onclick="runCode()">
+                                        <i class="bi bi-play-fill"></i> 运行代码
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-editor-body">
+                                <textarea class="code-input" id="main-code-input" spellcheck="false"># 在此输入Python代码
+import pandas as pd
+import numpy as np
+
+# 点击下方数据集卡片加载真实数据
+# 数据将存储在变量 df 中
+print("欢迎使用数据分析学院在线编辑器！")
+print("点击下方数据集卡片开始数据分析之旅")</textarea>
+                            </div>
+                            <div class="output-header">
+                                <span><i class="bi bi-terminal-fill me-2"></i>输出结果</span>
+                                <button class="btn-editor clear-output" onclick="clearOutput()">
+                                    <i class="bi bi-x-lg"></i> 清除输出
+                                </button>
+                            </div>
+                            <pre class="code-output" id="main-code-output">等待代码执行...</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 统计数据 -->
+    <section class="py-8">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">精品课程</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value">10</div>
+                        <div class="stat-label">实战项目</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-value">45+</div>
+                        <div class="stat-label">学习时长</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">成就徽章</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据集展示 -->
+    <section class="py-8 bg-card/30">
+        <div class="container">
+            <h2 class="text-center mb-8">📊 真实数据集</h2>
+            <p class="text-center text-secondary mb-8">点击卡片加载数据集到编辑器，开始数据分析实战</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card dataset-card" data-dataset-id="sales_data">
+                        <div class="dataset-icon"><i class="bi bi-cart-fill"></i></div>
+                        <h5 class="fw-bold mb-2">销售数据分析</h5>
+                        <p class="text-muted small mb-2">50条电商销售记录</p>
+                        <small class="text-primary fw-semibold">点击加载 →</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card dataset-card" data-dataset-id="customer_data">
+                        <div class="dataset-icon"><i class="bi bi-users"></i></div>
+                        <h5 class="fw-bold mb-2">客户行为数据</h5>
+                        <p class="text-muted small mb-2">30位客户行为数据</p>
+                        <small class="text-primary fw-semibold">点击加载 →</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card dataset-card" data-dataset-id="inventory_data">
+                        <div class="dataset-icon"><i class="bi bi-box"></i></div>
+                        <h5 class="fw-bold mb-2">库存管理数据</h5>
+                        <p class="text-muted small mb-2">4款产品10天数据</p>
+                        <small class="text-primary fw-semibold">点击加载 →</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 课程列表 -->
+    <section id="courses" class="py-8">
+        <div class="container">
+            <h2 class="text-center mb-8">📚 课程体系</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card" style="--gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="card-body">
+                            <h3>🐍 Python 数据分析基础</h3>
+                            <p>从零开始学习 Python 基础语法和数据处理库 Pandas</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">入门</span>
+                                <span class="text-secondary small">8小时</span>
+                            </div>
+                            <a href="course.html?id=python-basics" class="btn btn-outline-primary btn-sm">开始学习</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card" style="--gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <div class="card-body">
+                            <h3>📊 数据可视化与图表制作</h3>
+                            <p>学习使用 Matplotlib 和 Seaborn 创建专业图表</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">入门</span>
+                                <span class="text-secondary small">6小时</span>
+                            </div>
+                            <a href="course.html?id=data-visualization" class="btn btn-outline-primary btn-sm">开始学习</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card" style="--gradient: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);">
+                        <div class="card-body">
+                            <h3>🗄️ SQL 数据查询与分析</h3>
+                            <p>掌握 SQL 查询技巧，从数据库高效提取业务数据</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">入门</span>
+                                <span class="text-secondary small">5小时</span>
+                            </div>
+                            <a href="course.html?id=sql-analysis" class="btn btn-outline-primary btn-sm">开始学习</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card" style="--gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
+                        <div class="card-body">
+                            <h3>📈 统计分析基础</h3>
+                            <p>学习描述性统计、假设检验和回归分析等统计方法</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">进阶</span>
+                                <span class="text-secondary small">10小时</span>
+                            </div>
+                            <a href="course.html?id=statistical-analysis" class="btn btn-outline-primary btn-sm">开始学习</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card" style="--gradient: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);">
+                        <div class="card-body">
+                            <h3>💼 商业智能与分析</h3>
+                            <p>综合运用各种分析工具和方法，解决真实商业问题</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">进阶</span>
+                                <span class="text-secondary small">12小时</span>
+                            </div>
+                            <a href="course.html?id=business-intelligence" class="btn btn-outline-primary btn-sm">开始学习</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目列表 -->
+    <section id="projects" class="py-8 bg-card/30">
+        <div class="container">
+            <h2 class="text-center mb-8">🎯 实战项目</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>📈 电商销售数据分析</h3>
+                            <p class="text-secondary small">分析销售趋势、识别爆款产品</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">初级</span>
+                                <span class="text-secondary small">3小时</span>
+                            </div>
+                            <a href="project.html?id=sales-analysis" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>👥 客户流失预测分析</h3>
+                            <p class="text-secondary small">识别流失客户特征，建立预警机制</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">中级</span>
+                                <span class="text-secondary small">4小时</span>
+                            </div>
+                            <a href="project.html?id=customer-churn" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>📦 库存管理分析</h3>
+                            <p class="text-secondary small">分析库存水平和销售预测</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">初级</span>
+                                <span class="text-secondary small">2小时</span>
+                            </div>
+                            <a href="project.html?id=inventory-analysis" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>🔍 异常交易检测</h3>
+                            <p class="text-secondary small">使用统计方法识别欺诈行为</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">中级</span>
+                                <span class="text-secondary small">4小时</span>
+                            </div>
+                            <a href="project.html?id=fraud-detection" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>🛒 购物篮分析</h3>
+                            <p class="text-secondary small">发现商品关联规则</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge beginner">初级</span>
+                                <span class="text-secondary small">2小时</span>
+                            </div>
+                            <a href="project.html?id=market-basket" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>👤 用户画像与分群</h3>
+                            <p class="text-secondary small">构建用户标签体系</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">中级</span>
+                                <span class="text-secondary small">4小时</span>
+                            </div>
+                            <a href="project.html?id=user-segmentation" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>💰 价格优化分析</h3>
+                            <p class="text-secondary small">分析价格弹性，优化定价策略</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge advanced">高级</span>
+                                <span class="text-secondary small">5小时</span>
+                            </div>
+                            <a href="project.html?id=price-optimization" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>📈 需求预测分析</h3>
+                            <p class="text-secondary small">使用时间序列分析预测未来需求</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge advanced">高级</span>
+                                <span class="text-secondary small">5小时</span>
+                            </div>
+                            <a href="project.html?id=demand-forecast" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>🔗 供应链分析</h3>
+                            <p class="text-secondary small">优化供应链流程，降低成本</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">中级</span>
+                                <span class="text-secondary small">4小时</span>
+                            </div>
+                            <a href="project.html?id=supply-chain" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3>📣 营销效果分析</h3>
+                            <p class="text-secondary small">评估营销活动效果，优化预算分配</p>
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="level-badge intermediate">中级</span>
+                                <span class="text-secondary small">4小时</span>
+                            </div>
+                            <a href="project.html?id=marketing-analysis" class="btn btn-outline-primary btn-sm">开始实战</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -629,101 +390,72 @@
     </section>
 
     <!-- 页脚 -->
-    <footer>
+    <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-                    </h5>
-                    <p class="mb-0 opacity-75">
-                        专业的商务数据分析在线教育平台
-                    </p>
+                <div class="col-md-4">
+                    <h4>📊 数据分析学院</h4>
+                    <p class="text-secondary small mt-2">系统学习商务数据分析技能，开启数据驱动决策之旅</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 opacity-75">
-                        © 2026 数据分析学院. All rights reserved.
-                    </p>
+                <div class="col-md-4">
+                    <h5>快速链接</h5>
+                    <ul class="footer-links">
+                        <li><a href="#courses">课程体系</a></li>
+                        <li><a href="#projects">实战项目</a></li>
+                        <li><a href="dashboard.html">学习中心</a></li>
+                        <li><a href="assessment.html">综合测评</a></li>
+                    </ul>
                 </div>
+                <div class="col-md-4">
+                    <h5>学习资源</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Python 教程</a></li>
+                        <li><a href="#">SQL 教程</a></li>
+                        <li><a href="#">数据分析案例</a></li>
+                        <li><a href="#">常见问题</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-6 text-secondary small">
+                <p>© 2024 数据分析学院. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
-    <!-- 登录 Modal -->
+    <!-- 登录模态框 -->
     <div class="modal fade" id="loginModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-person-circle"></i> 用户登录</h5>
+                    <h5 class="modal-title">登录</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label class="form-label">邮箱</label>
-                            <input type="email" class="form-control form-control-lg" id="loginEmail" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">密码</label>
-                            <input type="password" class="form-control form-control-lg" id="loginPassword" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary-gradient w-100 btn-lg">
-                            登录
-                        </button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <span class="text-muted">还没有账号？</span>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">立即注册</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 注册 Modal -->
-    <div class="modal fade" id="registerModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-person-plus-fill"></i> 用户注册</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="registerForm">
+                <div class="modal-body">
+                    <form>
                         <div class="mb-3">
                             <label class="form-label">用户名</label>
-                            <input type="text" class="form-control form-control-lg" id="registerUsername" required>
+                            <input type="text" class="form-control" id="login-username" placeholder="请输入用户名">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">邮箱</label>
-                            <input type="email" class="form-control form-control-lg" id="registerEmail" required>
-                        </div>
-                        <div class="mb-4">
                             <label class="form-label">密码</label>
-                            <input type="password" class="form-control form-control-lg" id="registerPassword" required>
+                            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
                         </div>
-                        <button type="submit" class="btn btn-primary-gradient w-100 btn-lg">
-                            注册
-                        </button>
+                        <button type="button" class="btn btn-primary w-100" onclick="login()">登录</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
     <script>
-        // 登录表单
-        document.getElementById('loginForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('登录功能开发中，请使用模拟账号测试：\n邮箱: test@example.com\n密码: 123456');
-        });
-
-        // 注册表单
-        document.getElementById('registerForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('注册成功！请使用登录功能登录。');
-            bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage('index');
         });
     </script>
 </body>

@@ -3,230 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目实战 · 数据分析学院</title>
+    <title>项目实战 - 数据分析学院</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --warning-gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
-            --danger-gradient: linear-gradient(135deg, #ee0979, #ff6a00);
-        }
-        
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #f8fafc;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-        
-        footer {
-            background: #1e293b;
-            color: white;
-            padding: 40px 0;
-        }
-        
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-        }
-        
-        .tip-card {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .tip-icon {
-            color: #f59e0b;
-            font-size: 1.2rem;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-            </a>
+            <a class="navbar-brand" href="index.html">📊 数据分析学院</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
-                    <li class="nav-item"><a class="nav-link" href="courses.html">课程</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="projects.html">项目</a></li>
-                    <li class="nav-item"><a class="nav-link" href="assessment.html">测评</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="course.html">课程</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html#projects">项目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">学习中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assessment.html">综合测评</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="login-btn" class="btn btn-outline-primary">登录</button>
+                        <div id="user-menu" class="dropdown d-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <span id="username-span"></span>
+                            </button>
+                            <ul class="dropdown-menu bg-dark border border-gray-700">
+                                <li><a class="dropdown-item text-gray-300" href="dashboard.html">学习中心</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-gray-300" href="#" id="logout-btn">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="py-6">
+    <!-- 项目内容 -->
+    <main class="py-8">
         <div class="container">
-            <div class="card border-0 shadow-lg mb-5 overflow-hidden rounded-4">
-                <div class="card-body p-6" style="background: var(--success-gradient); color: white;">
-                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-4">
-                        <div>
-                            <div class="mb-3">
-                                <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-4 py-2 fw-semibold">初级</span>
-                                <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2 fw-semibold ms-2"><i class="bi bi-clock-fill"></i> 3小时</span>
-                            </div>
-                            <h1 class="fw-bold mb-3 display-4">📈 电商销售数据分析</h1>
-                            <p class="opacity-95 mb-0" style="line-height: 1.7;">分析销售趋势、识别爆款产品、发现客户购买行为模式。</p>
-                        </div>
-                        <a href="projects.html" class="btn btn-light btn-sm px-4 py-2 rounded-3 fw-semibold shadow">
-                            <i class="bi bi-arrow-left"></i> 返回项目列表
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-5">
-                <div class="col-lg-8">
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
-                            <h4 class="fw-bold mb-1">📋 业务背景</h4>
-                        </div>
-                        <div class="card-body pt-0 px-5 pb-5">
-                            <p class="text-muted" style="line-height: 1.8;">
-                                某电商平台近一年的销售数据，包含订单信息、商品信息和客户信息。作为数据分析师，你需要帮助业务团队了解销售情况，发现业务机会。
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
-                            <h4 class="fw-bold mb-1">🎯 分析目标</h4>
-                        </div>
-                        <div class="card-body pt-0 px-5 pb-5">
-                            <ul class="list-unstyled">
-                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 分析月度销售趋势，识别旺季和淡季</li>
-                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 找出销售额最高的Top 10产品</li>
-                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 分析不同地区的销售分布</li>
-                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> 发现客户购买行为模式</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
-                            <h4 class="fw-bold mb-1">💡 小贴士</h4>
-                        </div>
-                        <div class="card-body pt-0 px-5 pb-5">
-                            <div class="tip-card">
-                                <i class="bi bi-lightbulb-fill tip-icon"></i>
-                                <span>注意处理缺失值和异常订单，确保数据质量</span>
-                            </div>
-                            <div class="tip-card">
-                                <i class="bi bi-lightbulb-fill tip-icon"></i>
-                                <span>按月聚合分析趋势更清晰，可以使用 resample 方法</span>
-                            </div>
-                            <div class="tip-card">
-                                <i class="bi bi-lightbulb-fill tip-icon"></i>
-                                <span>使用分组聚合发现产品规律，groupby 是强大的工具</span>
+            <div id="project-content">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- 项目标题 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb bg-transparent">
+                                        <li class="breadcrumb-item"><a href="index.html">首页</a></li>
+                                        <li class="breadcrumb-item"><a href="index.html#projects">实战项目</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page" id="project-title"></li>
+                                    </ol>
+                                </nav>
+                                <h1 id="project-title-h1"></h1>
+                                <p id="project-desc" class="text-secondary mt-3"></p>
+                                <div class="d-flex gap-4 mt-4">
+                                    <span class="level-badge beginner" id="project-level"></span>
+                                    <span class="text-secondary"><i class="bi bi-clock"></i> <span id="project-duration"></span></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-header bg-white border-bottom-0 pt-5 pb-4 px-5">
-                            <h4 class="fw-bold mb-1">📝 代码示例</h4>
-                        </div>
-                        <div class="card-body pt-0 px-5 pb-5">
-                            <div class="code-block">
-                                <pre><code># 导入必要的库
-import pandas as pd
-import numpy as np
-
-# 读取数据
-df = pd.read_csv('sales_data.csv')
-
-# 查看数据结构
-print(df.head())
-print(df.info())
-
-# 数据清洗
-# 1. 处理缺失值
-df = df.dropna(subset=['订单金额', '商品ID'])
-
-# 2. 转换日期格式
-df['订单日期'] = pd.to_datetime(df['订单日期'])
-
-# 3. 按月份分组统计销售额
-monthly_sales = df.groupby(df['订单日期'].dt.month)['订单金额'].sum()
-
-# 4. 找出Top 10产品
-top_products = df.groupby('商品ID')['订单金额'].sum().sort_values(ascending=False).head(10)
-
-print('\\n月度销售额:')
-print(monthly_sales)
-
-print('\\nTop 10产品:')
-print(top_products)</code></pre>
+                        <!-- 项目背景 -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h3><i class="bi bi-info-circle"></i> 项目背景</h3>
+                            </div>
+                            <div class="card-body">
+                                <p id="project-background" class="text-secondary"></p>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-4">
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-body p-5 text-center" style="background: linear-gradient(135deg, #ecfdf5, #d1fae5);">
-                            <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-center shadow" style="width: 80px; height: 80px; background: var(--success-gradient);">
-                                <i class="bi bi-file-spreadsheet-fill text-white fs-4"></i>
+                        <!-- 学习目标 -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h3><i class="bi bi-target"></i> 学习目标</h3>
                             </div>
-                            <h5 class="fw-bold mb-2">📊 数据集</h5>
-                            <p class="text-muted small mb-0">sales_data.csv</p>
-                            <div class="mt-3 text-left text-muted small">
-                                <p><i class="bi bi-database-fill me-2"></i>10,000+ 条记录</p>
-                                <p><i class="bi bi-columns me-2"></i>15 个字段</p>
-                                <p><i class="bi bi-calendar-fill me-2"></i>1年数据</p>
+                            <div class="card-body">
+                                <ul class="goals-list" id="project-goals"></ul>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
-                        <div class="card-body p-5">
-                            <h5 class="fw-bold mb-3">🏁 完成项目</h5>
-                            <button class="btn btn-success w-100 py-3 rounded-3 fw-semibold">
-                                <i class="bi bi-check-circle-fill me-2"></i> 标记为完成
+                        <!-- 小贴士 -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h3><i class="bi bi-lightbulb"></i> 小贴士</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="tips-list" id="tips-list"></ul>
+                            </div>
+                        </div>
+
+                        <!-- 代码编辑器 -->
+                        <div class="card mt-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3><i class="bi bi-code-slash"></i> 代码实战</h3>
+                                <button id="load-dataset-btn" class="btn btn-primary btn-sm" style="display: none;">
+                                    <i class="bi bi-download"></i> 加载数据集
+                                </button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="code-editor-container" id="code-editor-container">
+                                    <div class="code-editor-header">
+                                        <div>
+                                            <h3><i class="bi bi-code-slash me-2"></i>Python 代码编辑器</h3>
+                                            <small class="opacity-75" id="py-status-text">⏳ 正在初始化 Python 环境...</small>
+                                        </div>
+                                        <div class="editor-buttons">
+                                            <span class="status-badge" id="py-status">⏳ 加载中</span>
+                                            <button class="btn-editor clear" onclick="clearCode()">
+                                                <i class="bi bi-eraser-fill"></i> 清除
+                                            </button>
+                                            <button class="btn-editor run" onclick="runCode()">
+                                                <i class="bi bi-play-fill"></i> 运行代码
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="code-editor-body">
+                                        <textarea class="code-input" id="main-code-input" spellcheck="false"></textarea>
+                                    </div>
+                                    <div class="output-header">
+                                        <span><i class="bi bi-terminal-fill me-2"></i>输出结果</span>
+                                        <button class="btn-editor clear-output" onclick="clearOutput()">
+                                            <i class="bi bi-x-lg"></i> 清除输出
+                                        </button>
+                                    </div>
+                                    <pre class="code-output" id="main-code-output">等待代码执行...</pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 常见错误 -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h3><i class="bi bi-exclamation-triangle"></i> 常见错误与解决方案</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="errors-list" id="errors-list"></ul>
+                            </div>
+                        </div>
+
+                        <!-- 完成按钮 -->
+                        <div class="mt-4 text-center">
+                            <button id="complete-project" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> 标记为已完成
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <footer>
+    <!-- 页脚 -->
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-graph-up-arrow text-primary"></i> 数据分析学院
-                    </h5>
-                    <p class="mb-0 opacity-75">专业的商务数据分析在线教育平台</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 opacity-75">© 2026 数据分析学院. All rights reserved.</p>
-                </div>
+            <div class="text-center mt-6 text-secondary small">
+                <p>© 2024 数据分析学院. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="login-username" placeholder="请输入用户名">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">密码</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="login()">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage('project');
+        });
+    </script>
 </body>
 </html>
