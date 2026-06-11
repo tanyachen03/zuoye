@@ -449,85 +449,173 @@ body {
 
 /* 测评题目 */
 .question-card {
-    background: var(--bg-card);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.05) 100%);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .question-card .question {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-primary);
 }
 
 .question-card .options {
     list-style: none;
     padding: 0;
+    display: grid;
+    gap: 0.75rem;
 }
 
 .question-card .option {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem;
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    margin-bottom: 0;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.question-card .option::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: transparent;
+    transition: background 0.3s ease;
 }
 
 .question-card .option:hover {
     border-color: var(--primary-color);
-    background: rgba(102, 126, 234, 0.1);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 100%);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.question-card .option:hover::before {
+    background: var(--primary-color);
 }
 
 .question-card .option.selected {
     border-color: var(--primary-color);
-    background: rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+    transform: translateX(4px);
+}
+
+.question-card .option.selected::before {
+    background: var(--primary-color);
 }
 
 .question-card .option.correct {
     border-color: var(--success-color);
-    background: rgba(34, 197, 94, 0.2);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+    animation: correctPulse 0.5s ease;
+}
+
+.question-card .option.correct::before {
+    background: var(--success-color);
 }
 
 .question-card .option.incorrect {
     border-color: var(--error-color);
-    background: rgba(239, 68, 68, 0.2);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+    animation: shake 0.5s ease;
+}
+
+.question-card .option.incorrect::before {
+    background: var(--error-color);
 }
 
 .question-card .option.disabled {
     pointer-events: none;
+    opacity: 0.6;
 }
 
 .option .option-indicator {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.option:hover .option-indicator {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
 }
 
 .option.selected .option-indicator {
     background: var(--primary-color);
     border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
 }
 
 .option.correct .option-indicator {
     background: var(--success-color);
     border-color: var(--success-color);
+    color: white;
+    transform: scale(1.1);
 }
 
 .option.incorrect .option-indicator {
     background: var(--error-color);
     border-color: var(--error-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+@keyframes correctPulse {
+    0% { transform: scale(0.98); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.explanation {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* 数据集卡片样式 */
