@@ -571,9 +571,17 @@ function initChapter() {
     if (!chapter) return;
     
     // 渲染章节信息
-    document.getElementById('course-name').textContent = course.title;
-    document.getElementById('chapter-title').textContent = chapter.title;
-    document.getElementById('chapter-duration').textContent = chapter.duration;
+    const courseLink = document.getElementById('course-link');
+    if (courseLink) {
+        courseLink.textContent = course.title;
+        courseLink.href = `course.html?id=${courseId}`;
+    }
+    const chapterTitle = document.getElementById('chapter-title');
+    if (chapterTitle) chapterTitle.textContent = chapter.title;
+    const chapterTitleH1 = document.getElementById('chapter-title-h1');
+    if (chapterTitleH1) chapterTitleH1.textContent = chapter.title;
+    const chapterDuration = document.getElementById('chapter-duration');
+    if (chapterDuration) chapterDuration.textContent = chapter.duration;
     
     // 渲染理论内容
     const theoryDiv = document.getElementById('theory-content');
