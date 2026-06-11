@@ -1060,14 +1060,31 @@ body {
 .errors-list li {
     display: flex;
     align-items: flex-start;
-    padding: 1rem;
-    background: rgba(239, 68, 68, 0.1);
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
     border-left: 4px solid var(--error-color);
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
     font-family: 'Fira Code', monospace;
     font-size: 0.875rem;
-    color: #fca5a5;
+    color: #dc2626;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.errors-list li::before {
+    content: '⚠️';
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.errors-list li:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.06) 100%);
 }
 
 /* 响应式 */
