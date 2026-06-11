@@ -1,102 +1,18 @@
 # ============================================
-# Cloudflare Pages 配置文件
+# Cloudflare Pages 部署说明
 # ============================================
 #
 # 项目名称：商务数据分析在线教育平台
-# 部署方式：静态网站部署 (Static Site)
-# 框架预设：None (纯HTML/CSS/JavaScript)
+# 部署方式：纯静态网站 (Static Site)
 #
-# ============================================
-# 🚀 部署步骤 (Cloudflare Dashboard)
-# ============================================
-# 1. 登录 Cloudflare Dashboard: https://dash.cloudflare.com
-# 2. 进入 "Workers & Pages" > "Create" > "Pages" > "Connect to Git"
-# 3. 选择你的 GitHub 仓库
-# 4. 构建设置 (Build settings):
-#    - Framework preset: None (⚠️ 选择这个！)
+# 部署步骤：
+# 1. 登录 https://dash.cloudflare.com
+# 2. Workers & Pages > Create > Pages > Connect to Git
+# 3. 选择仓库: tanyachen03/zuoye
+# 4. 构建配置：
+#    - Framework preset: None
 #    - Build command: (留空)
 #    - Build output directory: public
-#    - Root directory: /
-# 5. 环境变量 (Environment variables): (无需设置)
-# 6. 点击 "Save and Deploy"
+# 5. 点击 Save and Deploy
 #
-# ============================================
-# 📁 项目结构说明
-# ============================================
-# public/                 ← 静态网站目录 (Cloudflare Pages从此目录提供服务)
-#   ├── index.html        ← 首页
-#   ├── courses.html      ← 课程列表
-#   ├── course.html       ← 课程详情 (动态加载，带 ?id= 参数)
-#   ├── projects.html     ← 项目列表
-#   ├── project.html      ← 项目详情 (动态加载，带 ?id= 参数)
-#   └── assessment.html   ← 综合测评
-#
-# ============================================
-# 🔗 页面路由映射
-# ============================================
-# 首页:           /index.html  或  /
-# 课程列表:       /courses.html
-# 课程详情:       /course.html?id=python-basics
-#                 /course.html?id=data-visualization
-#                 /course.html?id=sql-analysis
-#                 /course.html?id=statistical-analysis
-#                 /course.html?id=business-intelligence
-# 项目列表:       /projects.html
-# 项目详情:       /project.html?id=sales-analysis
-#                 /project.html?id=customer-churn
-#                 /project.html?id=dashboard
-#                 /project.html?id=fraud-detection
-#                 /project.html?id=market-basket
-#                 /project.html?id=user-portrait
-# 测评页面:       /assessment.html
-# ============================================
-
-name = "zuoye"
-compatibility_date = "2024-01-01"
-
-# ============================================
-# Pages 项目配置
-# ============================================
-[pages]
-# 静态文件目录 - Cloudflare Pages 将提供此目录下的文件
-bucket = "./public"
-
-# ============================================
-# 构建配置
-# ============================================
-# 由于是纯静态HTML网站，无需构建步骤
-# 直接将 public/ 目录部署即可
-[build]
-command = ""           # 无构建命令 (静态网站)
-directory = "./public" # 输出目录
-
-# ============================================
-# 环境变量 (可选)
-# ============================================
-[env.production]
-name = "zuoye"
-
-# ============================================
-# 路由配置 (可选 - 如需要自定义路径)
-# ============================================
-# 如需自定义路由规则，可在此配置
-# 示例:
-# [[routes]]
-# pattern = "example.com/*"
-# zone_name = "example.com"
-
-# ============================================
-# ⚠️ 常见问题
-# ============================================
-# Q: Build失败提示 "No package.json found"
-# A: 确保 Framework preset 选择 "None"，Build command 留空
-#
-# Q: 页面显示 "未找到课程/项目"
-# A: 检查 URL 参数是否正确，如 course.html?id=python-basics
-#
-# Q: 清除按钮点击跳转问题
-# A: 已修复 - 使用 type="button" 防止表单提交
-#
-# Q: 课程/项目详情页显示异常
-# A: 已重构 - 使用 JavaScript 动态加载数据
-# ============================================
+# 注意：此文件仅作说明，不影响 Pages 部署
