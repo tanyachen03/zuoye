@@ -138,12 +138,24 @@ function showToast(type, message) {
 
 // 数据集加载成功弹窗
 function showDatasetLoadedModal(datasetName) {
+    const modalElement = document.getElementById('datasetLoadedModal');
+    if (!modalElement) {
+        showToast('success', `✅ ${datasetName} 已加载到在线编程区域，可以去试一试啦！`);
+        return;
+    }
+    
     const messageEl = document.getElementById('dataset-loaded-message');
     if (messageEl) {
         messageEl.textContent = `${datasetName} 已加载到在线编程区域，可以去试一试啦 🚀`;
     }
-    const modal = new bootstrap.Modal(document.getElementById('datasetLoadedModal'));
-    modal.show();
+    
+    try {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    } catch (err) {
+        console.error('Modal show error:', err);
+        showToast('success', `✅ ${datasetName} 已加载到在线编程区域，可以去试一试啦！`);
+    }
 }
 
 // 工具函数
